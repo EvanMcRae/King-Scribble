@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private Transform groundCheck, roofCheck;
+    [SerializeField] private PolygonCollider2D groundCheck, roofCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
 
     // Start is called before the first frame update
@@ -253,28 +253,20 @@ public class PlayerController : MonoBehaviour
         lastOnLand = Mathf.Clamp(lastOnLand + Time.fixedDeltaTime, 0, 20f);
 
         isGrounded = false;
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundedRadius, whatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
+        if (groundCheck.IsTouchingLayers(whatIsGround))
         {
-            if (colliders[i].gameObject != gameObject && (colliders[i].gameObject.tag == "Ground"))
-            {
-                isGrounded = true;
-                lastOnLand = 0f;
-                lastLandHeight = transform.position.y;
-            }
+            isGrounded = true;
+            lastOnLand = 0f;
+            lastLandHeight = transform.position.y;
         }
     }
 
     void RoofCheck()
     {
         isRoofed = false;
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(roofCheck.position, roofedRadius, whatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
+        if (roofCheck.IsTouchingLayers(whatIsGround))
         {
-            if (colliders[i].gameObject != gameObject && (colliders[i].gameObject.tag == "Ground"))
-            {
-                isRoofed = true;
-            }
+            isRoofed = true;
         }
     }
 
