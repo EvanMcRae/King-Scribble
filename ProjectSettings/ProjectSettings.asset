@@ -155,7 +155,8 @@ PlayerSettings:
   resetResolutionOnWindowResize: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Standalone: com.DefaultCompany.King-Scribble
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -590,8 +591,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: King Scribble
-  metroPackageVersion: 
+  metroPackageName: KingScribble
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -599,7 +600,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: King Scribble
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: King Scribble
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
