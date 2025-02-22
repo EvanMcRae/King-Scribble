@@ -8,14 +8,16 @@ using UnityEngine.UI;
 // Referenced: https://www.youtube.com/watch?v=rtYCqVahq6A
 public class ScreenWipe : MonoBehaviour
 {
-    public Action PostWipe;
-    public Action PostUnwipe;
+    public static Action PostWipe;
+    public static Action PostUnwipe;
     public static bool over = false;
     [SerializeField] private Image ScreenBlocker;
+    public static ScreenWipe instance;
 
     public void Awake()
     {
         WipeOut();
+        instance = this;
     }
 
     public void WipeIn()

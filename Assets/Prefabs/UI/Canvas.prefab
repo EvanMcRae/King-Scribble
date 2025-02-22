@@ -212,11 +212,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2473681040653148434, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1920
+      value: 4000
       objectReference: {fileID: 0}
     - target: {fileID: 2473681040653148434, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1920
+      value: 4000
       objectReference: {fileID: 0}
     - target: {fileID: 2473681040653148434, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -273,6 +273,14 @@ PrefabInstance:
     - target: {fileID: 3094882671754754662, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
       propertyPath: m_Name
       value: ScreenWipe
+      objectReference: {fileID: 0}
+    - target: {fileID: 7856666492231321493, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 65332431ccd88fb42b5060064460df18, type: 3}
+    - target: {fileID: 7856666492231321493, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

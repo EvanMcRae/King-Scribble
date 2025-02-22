@@ -53,14 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cldr = GetComponent<CircleCollider2D>();
-
-        // Singleton
-        if (this != instance && instance != null)
-        {
-            Destroy(gameObject);
-        }
         instance = this;
-        DontDestroyOnLoad(gameObject);
 
         timeSinceJumpPressed = 0.2f;
         jumpSpeedMultiplier = 1f;
@@ -72,6 +65,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.paused)
+        {
+            // Check for releasing jump during pause
+            JumpCutCheck();
+            return;
+        } 
+            
+
         moveX = Input.GetAxisRaw("Horizontal");
         
         Jump();
@@ -81,7 +82,7 @@ public class PlayerController : MonoBehaviour
         if (timeSinceJump < 1f)
             timeSinceJump += Time.deltaTime;
 
-        if (Input.GetButtonDown("Sprint"))
+        if (Input.GetButton("Sprint"))
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
@@ -97,7 +98,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // TODO check for walls here?
-        
+
         if ((moveX < 0 && facingRight) || (moveX > 0 && !facingRight))
         {
             facingRight = !facingRight;
@@ -229,6 +230,11 @@ public class PlayerController : MonoBehaviour
             needToHalfVelocity = false;
         }
 
+        JumpCutCheck();
+    }
+
+    void JumpCutCheck()
+    {
         if (Input.GetButtonUp("Jump"))
         {
             if (holdingJump && isJumping && rb.velocity.y >= 0)

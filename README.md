@@ -12,3 +12,4 @@ Developed in Unity 2022.3.9f1 for UMBC CMSC493 Capstone Games Group Project (Spr
 - [Sloped Platformer Movement](https://www.youtube.com/watch?v=QPiZSTEuZnw)
 - [Drawable Platforms](https://www.youtube.com/watch?v=SmAwege_im8)
 - [Circle Fade Transition](https://www.youtube.com/watch?v=rtYCqVahq6A)
+- [Scene Changing Preserving Input](https://forum.unity.com/threads/application-loadlevel-resets-input-getaxis-work-arounds.118511/#post-700346)

@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+
+public class GameManager : MonoBehaviour
+{
+    public static bool resetting = false, paused = false;
+    public static GameManager instance;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        instance = this;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButtonDown("Pause") && ScreenWipe.over)
+        {
+            if (!paused) Pause();
+            else Unpause();
+        }
+
+        if (Input.GetButtonDown("Reset"))
+        {
+            if (!resetting && !ChangeScene.changingScene) StartCoroutine(ResetLevel());
+        }
+    }
+
+    void Pause()
+    {
+        paused = true;
+        Time.timeScale = 0;
+        // Stop all sounds
+        // Darken screen
+        // Bring up menu
+    }
+
+    void Unpause()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        // Resume all sounds
+        // Undarken screen
+        // Remove menu
+    }
+
+    IEnumerator ResetLevel()
+    {
+        resetting = true;
+        ScreenWipe.instance.WipeIn();
+        ScreenWipe.PostUnwipe += () => { resetting = false; };
+        yield return new WaitForSecondsRealtime(1f);
+        Unpause();
+        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        Destroy(eventSystem?.gameObject);
+        SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
+    }
+}
