@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -20,7 +22,8 @@ public class PlayerController : MonoBehaviour
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
     public bool isJumping = false, isSprinting = false, isRoofed = false, isDead = false, isFalling = false;
-    private bool releasedJumpSinceJump = false, needToHalfVelocity = false;
+    private bool isSprintMoving = false;
+    private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
     {
         get
@@ -47,6 +50,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private PolygonCollider2D groundCheck, roofCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
+    public CinemachineVirtualCamera virtualCamera;
+    private float realVelocity;
+    private Vector3 lastPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +66,7 @@ public class PlayerController : MonoBehaviour
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
         facingRight = true;
+        virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
     }
 
     // Update is called once per frame
@@ -70,8 +77,7 @@ public class PlayerController : MonoBehaviour
             // Check for releasing jump during pause
             JumpCutCheck();
             return;
-        } 
-            
+        }
 
         moveX = Input.GetAxisRaw("Horizontal");
         
@@ -86,10 +92,25 @@ public class PlayerController : MonoBehaviour
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
+            if (Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving)
+            {
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7.5f, 1f);
+                isSprintMoving = true;
+            }
+            else if (Mathf.Abs(realVelocity) < 0.01f && isSprintMoving)
+            {
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7f, 1f);
+                isSprintMoving = false;
+            }
         }
 
         if (Input.GetButtonUp("Sprint"))
         {
+            if (isSprintMoving)
+            {
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7, 1f);
+                isSprintMoving = false;
+            }
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
         }
@@ -97,7 +118,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // TODO check for walls here?
+        realVelocity = (transform.position.x - lastPosition.x) / Time.fixedDeltaTime;
+        lastPosition = transform.position;
 
         if ((moveX < 0 && facingRight) || (moveX > 0 && !facingRight))
         {
@@ -113,7 +135,8 @@ public class PlayerController : MonoBehaviour
 
         // check for ground/roof
         GroundCheck();
-        RoofCheck();
+        // TODO disabled for now, feels bad
+        // RoofCheck(); 
 
         // sloped movement
         SlopeCheck();
@@ -125,16 +148,15 @@ public class PlayerController : MonoBehaviour
         // apply velocity, dampening between current and target
         if (moveX == 0.0 && rb.velocity.x != 0.0f)
         {
-            if (canWalkOnSlope)
+            if (canWalkOnSlope || !isOnSlope)
                 cldr.sharedMaterial = friction;
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 2.5f);
+            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
         }
         else
         {
             cldr.sharedMaterial = slippery;
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
-
 
         // fall detection
         if (beenOnLand >= 0.1f && !isJumping && !isGrounded && !isFalling)
@@ -160,7 +182,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (!(rb.velocity.y > 0f && !isOnSlope) && isJumping)
+            if (isJumping)
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -173,7 +195,7 @@ public class PlayerController : MonoBehaviour
         if (isJumping && !releasedJumpSinceJump)
         {
             jumpTime += Time.fixedDeltaTime;
-            jumpSpeedMultiplier = 1f + 2f / (10f * jumpTime + 4f);
+            jumpSpeedMultiplier = 0.75f + 1f / (10f * jumpTime + 4f);
             if (holdingJump)
             {
                 jumpSpeedMultiplier *= 1.25f;
@@ -190,7 +212,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            if (isGrounded && !(rb.velocity.y > 0f) && isJumping)
+            if (isGrounded && isJumping)
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -207,10 +229,8 @@ public class PlayerController : MonoBehaviour
 
         if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
         {
-            if (isOnSlope && slopeDownAngle > maxSlopeAngle)
-            {
-                return;
-            }
+            // TODO disabled, would reject jumps if on too steep of a slope
+            // if (isOnSlope && slopeDownAngle > maxSlopeAngle) return;
 
             // Add a vertical force to the player
             isGrounded = false;
@@ -224,10 +244,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (needToHalfVelocity && rb.velocity.y > 0)
+        if (needToCutJump && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
-            needToHalfVelocity = false;
+            needToCutJump = false;
         }
 
         JumpCutCheck();
@@ -241,11 +261,11 @@ public class PlayerController : MonoBehaviour
             {
                 if (rb.velocity.y > 0)
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
+                    rb.velocity = new Vector2(rb.velocity.x, 0.75f * rb.velocity.y);
                 }
                 else
                 {
-                    needToHalfVelocity = true;
+                    needToCutJump = true;
                 }
                 releasedJumpSinceJump = true;
             }
@@ -292,14 +312,11 @@ public class PlayerController : MonoBehaviour
         if (slopeHitFront)
         {
             isOnSlope = true;
-
             slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
-
         }
         else if (slopeHitBack)
         {
             isOnSlope = true;
-
             slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
         }
         else
@@ -313,8 +330,13 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.down, slopeCheckDistance, whatIsGround);
 
-        if (hit)
+        if (hit || isGrounded)
         {
+            if (isGrounded || hit.distance <= 2f)
+
+            if (isGrounded && !hit)
+                return;
+
             slopeNormalPerp = Vector2.Perpendicular(hit.normal).normalized;
             slopeDownAngle = Vector2.Angle(hit.normal, Vector2.up);
             if (slopeDownAngle != lastSlopeAngle)

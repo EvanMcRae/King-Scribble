@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     public static bool resetting = false, paused = false;
     public static GameManager instance;
+    public GameObject screenDarkener;
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +37,8 @@ public class GameManager : MonoBehaviour
         paused = true;
         Time.timeScale = 0;
         // Stop all sounds
-        // Darken screen
         // Bring up menu
+        screenDarkener.SetActive(true);
     }
 
     void Unpause()
@@ -45,8 +46,8 @@ public class GameManager : MonoBehaviour
         paused = false;
         Time.timeScale = 1;
         // Resume all sounds
-        // Undarken screen
         // Remove menu
+        screenDarkener.SetActive(false);
     }
 
     IEnumerator ResetLevel()
