@@ -67,7 +67,6 @@ public class PlayerController : MonoBehaviour
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
-        facingRight = true;
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         doodleFuel = maxDoodleFuel;
     }
