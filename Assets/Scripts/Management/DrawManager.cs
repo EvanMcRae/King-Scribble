@@ -13,6 +13,9 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Can't draw if you're dead
+        if (PlayerController.instance.isDead) return;
+        
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Instantiate new line when/where player clicks down

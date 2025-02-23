@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
     private Rigidbody2D rb;
     private CircleCollider2D cldr;
+    [SerializeField] private GameObject mainBody; 
     [SerializeField] private float jumpForce = 800f;
     private float jumpTime, lastOnLand, lastLandHeight, timeSinceJump, timeSinceJumpPressed, beenOnLand, fallTime,  jumpSpeedMultiplier, sprintSpeedMultiplier;
     [SerializeField] private float maxSprintSpeedMultiplier;
@@ -53,12 +54,14 @@ public class PlayerController : MonoBehaviour
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
     private Vector3 lastPosition;
+    private int doodleFuel;
+    [SerializeField] private int maxDoodleFuel = 500;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        cldr = GetComponent<CircleCollider2D>();
+        cldr = GetComponentInChildren<CircleCollider2D>();
         instance = this;
 
         timeSinceJumpPressed = 0.2f;
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour
         jumpTime = 0f;
         facingRight = true;
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+        doodleFuel = maxDoodleFuel;
     }
 
     // Update is called once per frame
@@ -349,5 +353,18 @@ public class PlayerController : MonoBehaviour
         }
 
         canWalkOnSlope = !(slopeDownAngle > maxSlopeAngle || slopeSideAngle > maxSlopeAngle);
+    }
+
+    public void DrawDoodleFuel(int amt)
+    {
+        doodleFuel -= amt;
+        if (doodleFuel < 0) doodleFuel = 0;
+
+        mainBody.transform.localScale = Vector3.one * doodleFuel / maxDoodleFuel;
+        if (doodleFuel == 0 && !isDead)
+        {
+            isDead = true;
+            GameManager.instance.Reset();
+        }
     }
 }

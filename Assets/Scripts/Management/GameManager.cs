@@ -28,11 +28,11 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetButtonDown("Reset"))
         {
-            if (!resetting && !ChangeScene.changingScene) StartCoroutine(ResetLevel());
+            if (!resetting && !ChangeScene.changingScene) Reset();
         }
     }
 
-    void Pause()
+    public void Pause()
     {
         paused = true;
         Time.timeScale = 0;
@@ -41,13 +41,18 @@ public class GameManager : MonoBehaviour
         screenDarkener.SetActive(true);
     }
 
-    void Unpause()
+    public void Unpause()
     {
         paused = false;
         Time.timeScale = 1;
         // Resume all sounds
         // Remove menu
         screenDarkener.SetActive(false);
+    }
+
+    public void Reset()
+    {
+        StartCoroutine(ResetLevel());
     }
 
     IEnumerator ResetLevel()

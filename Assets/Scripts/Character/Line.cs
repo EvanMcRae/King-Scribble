@@ -24,6 +24,8 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount-1, position);
 
         cldr.points = points.ToArray();
+
+        PlayerController.instance.DrawDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)
