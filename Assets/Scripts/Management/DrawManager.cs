@@ -22,8 +22,18 @@ public class DrawManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) currentLine = Instantiate(linePrefab, mousePos, Quaternion.identity);
 
         // Keep adding line positions
-        if (Input.GetMouseButton(0)) currentLine.SetPosition(mousePos);
-
+        if (Input.GetMouseButton(0))
+        {
+            if (currentLine.canDraw || !currentLine.hasDrawn)
+            {
+                currentLine.SetPosition(mousePos);
+            }
+            else if (!currentLine.canDraw && currentLine.hasDrawn)
+            {
+                // We give up on the old line and instantiate a new one, which will wait until it can draw the line
+                currentLine = Instantiate(linePrefab, mousePos, Quaternion.identity);
+            }
+        } 
         // Don't allow single dots to spawn lingering instances
         if (Input.GetMouseButtonUp(0) && currentLine.GetPointsCount() < 2) Destroy(currentLine.gameObject);
     }

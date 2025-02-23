@@ -8,6 +8,7 @@ public class Line : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private EdgeCollider2D cldr;
     private readonly List<Vector2> points = new List<Vector2>();
+    public bool canDraw = true, hasDrawn = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,19 +20,27 @@ public class Line : MonoBehaviour
     {
         if (!CanAppend(position)) return;
 
+        if (lineRenderer.positionCount > 0) PlayerController.instance.DrawDoodleFuel(1);
+
         points.Add(position);
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount-1, position);
 
         cldr.points = points.ToArray();
 
-        PlayerController.instance.DrawDoodleFuel(1);
+        hasDrawn = true;
     }
 
     private bool CanAppend(Vector2 position)
     {
         // Unable to draw lines inside yourself
-        if (Vector2.Distance(position, PlayerController.instance.transform.position) < 1.1f) return false;
+        if (Vector2.Distance(position, PlayerController.instance.transform.position) < PlayerController.instance.GetSize() + 0.05f)
+        {
+            canDraw = false;
+            return false;
+        }
+
+        canDraw = true;
 
         // If not inside yourself, first point is always ok
         if (lineRenderer.positionCount == 0) return true;

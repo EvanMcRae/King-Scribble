@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3097893530824102551}
   m_Layer: 0
   m_Name: MainBody
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -282,6 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991c3940874c02541b3af7cf2b75ea66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cldr: {fileID: 3097893530824102551}
   mainBody: {fileID: 4988502447061475665}
   jumpForce: 600
   maxSprintSpeedMultiplier: 1.5

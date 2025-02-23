@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
     private Rigidbody2D rb;
-    private CircleCollider2D cldr;
+    [SerializeField] private CircleCollider2D cldr;
     [SerializeField] private GameObject mainBody; 
     [SerializeField] private float jumpForce = 800f;
     private float jumpTime, lastOnLand, lastLandHeight, timeSinceJump, timeSinceJumpPressed, beenOnLand, fallTime,  jumpSpeedMultiplier, sprintSpeedMultiplier;
@@ -61,7 +61,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        cldr = GetComponentInChildren<CircleCollider2D>();
         instance = this;
 
         timeSinceJumpPressed = 0.2f;
@@ -303,7 +302,7 @@ public class PlayerController : MonoBehaviour
     // Referenced: https://www.youtube.com/watch?v=QPiZSTEuZnw
     void SlopeCheck()
     {
-        Vector2 checkPos = transform.position - (Vector3)new Vector2(0.0f, cldr.radius / 2);
+        Vector2 checkPos = mainBody.transform.position - (Vector3)new Vector2(0.0f, cldr.radius * mainBody.transform.localScale.x);
         SlopeCheckHorizontal(checkPos);
         SlopeCheckVertical(checkPos);
     }
@@ -366,5 +365,10 @@ public class PlayerController : MonoBehaviour
             isDead = true;
             GameManager.instance.Reset();
         }
+    }
+
+    public float GetSize()
+    {
+        return cldr.radius * mainBody.transform.localScale.x;
     }
 }
