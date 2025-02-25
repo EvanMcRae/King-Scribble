@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
     private Rigidbody2D rb;
-    [SerializeField] private CircleCollider2D cldr;
+    [SerializeField] private Animator anim;
+    [SerializeField] private CircleCollider2D[] cldrs;
     [SerializeField] private GameObject mainBody; 
     [SerializeField] private float jumpForce = 800f;
     private float jumpTime, lastOnLand, lastLandHeight, timeSinceJump, timeSinceJumpPressed, beenOnLand, fallTime,  jumpSpeedMultiplier, sprintSpeedMultiplier;
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviour
         }
 
         moveX = Input.GetAxisRaw("Horizontal");
+        anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
         
         Jump();
 
@@ -151,12 +153,20 @@ public class PlayerController : MonoBehaviour
         if (moveX == 0.0 && rb.velocity.x != 0.0f)
         {
             if (canWalkOnSlope || !isOnSlope)
-                cldr.sharedMaterial = friction;
+            {
+                foreach (CircleCollider2D cldr in cldrs)
+                {
+                    cldr.sharedMaterial = friction;
+                }
+            }
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
         }
         else
         {
-            cldr.sharedMaterial = slippery;
+            foreach (CircleCollider2D cldr in cldrs)
+            {
+                cldr.sharedMaterial = slippery;
+            }
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
 
@@ -301,7 +311,7 @@ public class PlayerController : MonoBehaviour
     // Referenced: https://www.youtube.com/watch?v=QPiZSTEuZnw
     void SlopeCheck()
     {
-        Vector2 checkPos = mainBody.transform.position - (Vector3)new Vector2(0.0f, cldr.radius * mainBody.transform.localScale.x);
+        Vector2 checkPos = mainBody.transform.position - (Vector3)new Vector2(0.0f, cldrs[0].radius * mainBody.transform.localScale.x);
         SlopeCheckHorizontal(checkPos);
         SlopeCheckVertical(checkPos);
     }
@@ -368,6 +378,6 @@ public class PlayerController : MonoBehaviour
 
     public float GetSize()
     {
-        return cldr.radius * mainBody.transform.localScale.x;
+        return cldrs[0].radius * mainBody.transform.localScale.x;
     }
 }

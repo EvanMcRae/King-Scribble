@@ -10,6 +10,11 @@ public class GameManager : MonoBehaviour
     public static bool resetting = false, paused = false;
     public static GameManager instance;
     public GameObject screenDarkener;
+    public Texture2D cursorTex;
+    void Awake()
+    {
+        Cursor.SetCursor(cursorTex, Vector2.zero, CursorMode.ForceSoftware);
+    }
 
     // Start is called before the first frame update
     void Start()
