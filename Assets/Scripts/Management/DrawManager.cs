@@ -14,7 +14,10 @@ public class DrawManager : MonoBehaviour
     void Update()
     {
         // Can't draw if you're dead
-        if (PlayerController.instance.isDead) return;
+        if (PlayerController.instance.isDead) {
+            currentLine = null;
+            return;
+        }
         
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -24,17 +27,25 @@ public class DrawManager : MonoBehaviour
         // Keep adding line positions
         if (Input.GetMouseButton(0))
         {
-            if (currentLine.canDraw || !currentLine.hasDrawn)
+            if (currentLine != null)
             {
-                currentLine.SetPosition(mousePos);
+                if (currentLine.canDraw || !currentLine.hasDrawn)
+                {
+                    currentLine.SetPosition(mousePos);
+                }
+                else if (!currentLine.canDraw && currentLine.hasDrawn)
+                {
+                    // We give up on the old line and instantiate a new one, which will wait until it can draw the line
+                    currentLine = Instantiate(linePrefab, mousePos, Quaternion.identity);
+                }
             }
-            else if (!currentLine.canDraw && currentLine.hasDrawn)
+            else
             {
-                // We give up on the old line and instantiate a new one, which will wait until it can draw the line
+                // There was no line in the first place
                 currentLine = Instantiate(linePrefab, mousePos, Quaternion.identity);
             }
-        } 
+        }
         // Don't allow single dots to spawn lingering instances
-        if (Input.GetMouseButtonUp(0) && currentLine.GetPointsCount() < 2) Destroy(currentLine.gameObject);
+        if (Input.GetMouseButtonUp(0) && currentLine != null && currentLine.GetPointsCount() < 2) Destroy(currentLine.gameObject);
     }
 }
