@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameObject screenDarkener;
     public Texture2D cursorTex;
+    public const float VOID_DEATH = -100;
     void Awake()
     {
         if (cursorSet) return;
@@ -36,6 +37,11 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Reset"))
         {
             if (!resetting && !ChangeScene.changingScene) Reset();
+        }
+
+        if (PlayerController.instance.transform.position.y < VOID_DEATH && !resetting)
+        {
+            Reset();
         }
     }
 
