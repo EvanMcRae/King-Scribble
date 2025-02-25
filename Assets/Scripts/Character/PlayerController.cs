@@ -20,10 +20,11 @@ public class PlayerController : MonoBehaviour
     private float slopeSideAngle;
     private float lastSlopeAngle;
     private Vector2 slopeNormalPerp;
-    public bool isOnSlope, canWalkOnSlope;
+    private bool isOnSlope, canWalkOnSlope;
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
-    public bool isJumping = false, isSprinting = false, isRoofed = false, isDead = false, isFalling = false;
+    private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
+    public bool isDead = false;
     private bool isSprintMoving = false;
     private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
@@ -46,9 +47,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float movementSmoothing;
 
     private float calculatedSpeed;
-    public bool holdingJump;
+    private bool holdingJump;
 
-    public bool isGrounded = false;
+    private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private PolygonCollider2D groundCheck, roofCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastPosition;
     private int doodleFuel;
     [SerializeField] private int maxDoodleFuel = 500;
+    [SerializeField] private Transform checkPos;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +86,8 @@ public class PlayerController : MonoBehaviour
 
         moveX = Input.GetAxisRaw("Horizontal");
         anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
+
+        if (isDead) return;
         
         Jump();
 
@@ -311,9 +315,8 @@ public class PlayerController : MonoBehaviour
     // Referenced: https://www.youtube.com/watch?v=QPiZSTEuZnw
     void SlopeCheck()
     {
-        Vector2 checkPos = mainBody.transform.position - (Vector3)new Vector2(0.0f, cldrs[0].radius * mainBody.transform.localScale.x);
-        SlopeCheckHorizontal(checkPos);
-        SlopeCheckVertical(checkPos);
+        SlopeCheckHorizontal(checkPos.position);
+        SlopeCheckVertical(checkPos.position);
     }
 
     void SlopeCheckHorizontal(Vector2 checkPos)

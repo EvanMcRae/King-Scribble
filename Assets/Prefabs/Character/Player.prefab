@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2251429347952763151
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6508815763183056595}
+  m_Layer: 0
+  m_Name: SlopeCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6508815763183056595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2251429347952763151}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.186, y: -0.55, z: -0.011146938}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2568333704230369688}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2402003374264676338
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +219,7 @@ Transform:
   - {fileID: 4243185963778065223}
   - {fileID: 5492666523076774730}
   - {fileID: 4208287348502897301}
+  - {fileID: 6508815763183056595}
   - {fileID: 8952302316410279620}
   m_Father: {fileID: 8223119919425195956}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -482,6 +514,7 @@ MonoBehaviour:
   roofedRadius: 0.1
   virtualCamera: {fileID: 0}
   maxDoodleFuel: 500
+  checkPos: {fileID: 6508815763183056595}
 --- !u!1 &5978138057339113815
 GameObject:
   m_ObjectHideFlags: 0
