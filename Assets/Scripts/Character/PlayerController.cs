@@ -86,9 +86,11 @@ public class PlayerController : MonoBehaviour
 
         moveX = Input.GetAxisRaw("Horizontal");
         anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
-
+        anim.SetBool("isJumping", isJumping);
+        anim.SetBool("isFalling", isFalling);
+        anim.SetBool("isSprinting", isSprinting);
         if (isDead) return;
-        
+
         Jump();
 
         if (timeSinceJumpPressed < 1f)
