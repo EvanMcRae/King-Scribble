@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -59,6 +60,8 @@ public class PlayerController : MonoBehaviour
     private int doodleFuel;
     [SerializeField] private int maxDoodleFuel = 500;
     [SerializeField] private Transform checkPos;
+    public delegate void DrawDoodleEvent(float doodlePercent);
+    public DrawDoodleEvent doodleEvent;
 
     // Start is called before the first frame update
     void Start()
@@ -377,7 +380,13 @@ public class PlayerController : MonoBehaviour
         if (doodleFuel == 0 && !isDead)
         {
             isDead = true;
+            doodleEvent((float) doodleFuel / maxDoodleFuel);
             GameManager.instance.Reset();
+        }
+
+        if (!isDead)
+        {
+            doodleEvent((float) doodleFuel / maxDoodleFuel);
         }
     }
 
