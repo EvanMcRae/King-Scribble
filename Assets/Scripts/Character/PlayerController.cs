@@ -390,8 +390,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public float GetSize()
+    public bool OverlapsPosition(Vector2 position)
     {
-        return cldrs[0].radius * mainBody.transform.localScale.x;
+        foreach (CircleCollider2D cldr in cldrs)
+        {
+            if (Vector2.Distance(cldr.transform.position, position) <= cldr.radius * mainBody.transform.localScale.x * 1.5f)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

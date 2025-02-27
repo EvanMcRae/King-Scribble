@@ -34,7 +34,7 @@ public class Line : MonoBehaviour
     private bool CanAppend(Vector2 position)
     {
         // Unable to draw lines inside yourself
-        if (Vector2.Distance(position, PlayerController.instance.transform.position) < PlayerController.instance.GetSize() + 0.05f)
+        if (PlayerController.instance.OverlapsPosition(position))
         {
             canDraw = false;
             return false;
