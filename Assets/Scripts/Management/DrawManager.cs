@@ -51,7 +51,7 @@ public class DrawManager : MonoBehaviour
             if (currentLine != null && currentLine.GetPointsCount() < 2)
                 Destroy(currentLine.gameObject);
             else
-                currentLine.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+                currentLine.GetComponent<Rigidbody2D>().isKinematic = false;
         }
     }
 }
