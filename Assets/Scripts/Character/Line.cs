@@ -44,6 +44,11 @@ public class Line : MonoBehaviour
         if (lineRenderer.positionCount > 0) PlayerController.instance.DrawDoodleFuel(1);
 
         GameObject newPoint = Instantiate(linePoint, gameObject.transform, false);
+
+        // TODO DEBUG circle colliders
+        newPoint.AddComponent<CircleCollider2D>();
+        newPoint.GetComponent<CircleCollider2D>().radius = 0.1f;
+        newPoint.layer = 3;
         newPoint.transform.position = position;
         pointTransforms.Add(newPoint.transform);
         points.Add(position);
