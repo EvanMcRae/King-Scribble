@@ -71,7 +71,7 @@ public class Line : MonoBehaviour
         return (Vector2)lineRenderer.GetPosition(GetPointsCount() - 1);
     }
     public bool CheckClosedLoop()
-    {   
-        return ((Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE) && GetPointsCount() >= MIN_POINTS);
+    {
+        return GetPointsCount() >= MIN_POINTS && Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE;
     }
 }
