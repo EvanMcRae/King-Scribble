@@ -41,14 +41,14 @@ public class Line : MonoBehaviour
 
     private bool CanAppend(Vector2 position)
     {
-        position = transform.InverseTransformPoint(position);
-
         // Unable to draw lines inside yourself
         if (PlayerController.instance.OverlapsPosition(position))
         {
             canDraw = false;
             return false;
         }
+
+        position = transform.InverseTransformPoint(position);
 
         canDraw = true;
 
