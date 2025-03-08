@@ -10,7 +10,8 @@ public class Line : MonoBehaviour
     [SerializeField] private EdgeCollider2D cldr;
     private readonly List<Vector2> points = new List<Vector2>();
     public bool canDraw = true, hasDrawn = false;
-
+    public const float LOOP_ALLOWANCE = 0.1f; // Maximum distance between the first and last point of a line to be considered a closed loop
+    public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
     // Start is called before the first frame update
     void Start()
     {
@@ -61,10 +62,16 @@ public class Line : MonoBehaviour
     {
         return points.Count;
     }
-
-    public bool CheckClosedLoop()
+    public Vector2 GetFirstPoint()
     {
-        // TODO: Brian, implement closed loop detection here
-        return true;
+        return (Vector2)lineRenderer.GetPosition(0);
+    }
+    public Vector2 GetLastPoint()
+    {
+        return (Vector2)lineRenderer.GetPosition(GetPointsCount() - 1);
+    }
+    public bool CheckClosedLoop()
+    {   
+        return ((Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE) && GetPointsCount() >= MIN_POINTS);
     }
 }
