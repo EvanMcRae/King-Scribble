@@ -54,7 +54,7 @@ public class DrawManager : MonoBehaviour
             }   
         }
         else if (!currentLine.canDraw && currentLine.hasDrawn) // If the line was stopped by attempting to draw over an unavailable area, continue when available
-            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity);
+            BeginDraw(mouse_pos);
     }
 
     private void EndDraw()
