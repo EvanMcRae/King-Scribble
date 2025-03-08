@@ -46,11 +46,11 @@ public class DrawManager : MonoBehaviour
             }
         }
         // Don't allow single dots to spawn lingering instances
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && currentLine != null)
         {
-            if (currentLine != null && currentLine.GetPointsCount() < 2)
+            if (currentLine.GetPointsCount() < 2)
                 Destroy(currentLine.gameObject);
-            else
+            else if (currentLine.CheckClosedLoop())
                 currentLine.GetComponent<Rigidbody2D>().isKinematic = false;
         }
     }

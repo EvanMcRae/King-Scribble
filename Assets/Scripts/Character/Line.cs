@@ -61,4 +61,10 @@ public class Line : MonoBehaviour
     {
         return points.Count;
     }
+
+    public bool CheckClosedLoop()
+    {
+        // TODO: Brian, implement closed loop detection here
+        return true;
+    }
 }
