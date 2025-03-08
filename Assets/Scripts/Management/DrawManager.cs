@@ -27,7 +27,7 @@ public class DrawManager : MonoBehaviour
         
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
             BeginDraw(mousePos);
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && currentLine != null)
