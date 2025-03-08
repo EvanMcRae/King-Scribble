@@ -31,6 +31,7 @@ public class DrawManager : MonoBehaviour
             {
                 if (currentLine.canDraw || !currentLine.hasDrawn)
                 {
+                    // Add the current mouse position to the line's renderer + collider
                     currentLine.SetPosition(mousePos);
                 }
                 else if (!currentLine.canDraw && currentLine.hasDrawn)
@@ -45,11 +46,15 @@ public class DrawManager : MonoBehaviour
                 currentLine = Instantiate(linePrefab, mousePos, Quaternion.identity);
             }
         }
-        // Don't allow single dots to spawn lingering instances
+
+        // Upon releasing click with a valid line
         if (Input.GetMouseButtonUp(0) && currentLine != null)
         {
+            // Don't allow single dots to spawn lingering instances
             if (currentLine.GetPointsCount() < 2)
                 Destroy(currentLine.gameObject);
+
+            // Apply physics if there is a closed loop
             else if (currentLine.CheckClosedLoop())
                 currentLine.GetComponent<Rigidbody2D>().isKinematic = false;
         }
