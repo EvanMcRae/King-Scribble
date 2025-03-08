@@ -39,6 +39,9 @@ public class DrawManager : MonoBehaviour
     private void BeginDraw(Vector2 mouse_pos)
     {
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
+        
+        // TODO example of setting thickness, to be done later for specific drawing tools
+        // currentLine.SetThickness(0.5f);
     }
 
     private void Draw(Vector2 mouse_pos)

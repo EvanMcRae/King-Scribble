@@ -83,4 +83,20 @@ public class Line : MonoBehaviour
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
     }
+
+    // TODO Could be used in the future for other tools
+    public void SetThickness(float newThickness)
+    {
+        thickness = newThickness;
+        lineRenderer.widthMultiplier = thickness;
+
+        // If this is run after the line has been drawn, retroactively update colliders too
+        if (lineRenderer.positionCount > 0)
+        {
+            foreach (CircleCollider2D circleCollider in colliders)
+            {
+                circleCollider.radius = thickness;
+            }
+        }
+    }
 }
