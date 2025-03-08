@@ -61,7 +61,9 @@ public class DrawManager : MonoBehaviour
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
                 Destroy(currentLine.gameObject);
             else if (currentLine.CheckClosedLoop()) // Enable physics for the current line if it forms a closed loop (polygon)
-                currentLine.GetComponent<Rigidbody2D>().isKinematic = false;
+            {
+                currentLine.AddPhysics();
+            }
         }
     }
 }

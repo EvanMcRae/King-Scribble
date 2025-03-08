@@ -155,9 +155,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 4453454}
-  cldr: {fileID: 425240433}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &4453454
 LineRenderer:
   serializedVersion: 2
@@ -246,7 +247,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -345,9 +346,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 98049017}
-  cldr: {fileID: 2079460751}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &98049017
 LineRenderer:
   serializedVersion: 2
@@ -502,7 +504,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -644,9 +646,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 237073831}
-  cldr: {fileID: 815632986}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &237073831
 LineRenderer:
   serializedVersion: 2
@@ -1022,7 +1025,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1121,9 +1124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 319506410}
-  cldr: {fileID: 2029954683}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &319506410
 LineRenderer:
   serializedVersion: 2
@@ -1273,7 +1277,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1387,9 +1391,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 375740626}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &375740626
 LineRenderer:
   serializedVersion: 2
@@ -2554,9 +2559,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 622168430}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &622168430
 LineRenderer:
   serializedVersion: 2
@@ -3588,9 +3594,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1070984254}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1070984254
 LineRenderer:
   serializedVersion: 2
@@ -3745,9 +3752,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1109088458}
-  cldr: {fileID: 505677021}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1109088458
 LineRenderer:
   serializedVersion: 2
@@ -3940,7 +3948,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4054,9 +4062,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1141723770}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1141723770
 LineRenderer:
   serializedVersion: 2
@@ -4198,9 +4207,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1344636854}
-  cldr: {fileID: 1566910141}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1344636854
 LineRenderer:
   serializedVersion: 2
@@ -4362,7 +4372,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4461,9 +4471,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1431982794}
-  cldr: {fileID: 826421355}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1431982794
 LineRenderer:
   serializedVersion: 2
@@ -4614,7 +4625,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -4728,9 +4739,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1446555558}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1446555558
 LineRenderer:
   serializedVersion: 2
@@ -5033,9 +5045,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1474017947}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1474017947
 LineRenderer:
   serializedVersion: 2
@@ -5181,9 +5194,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1556385843}
-  cldr: {fileID: 1447684470}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1556385843
 LineRenderer:
   serializedVersion: 2
@@ -5311,7 +5325,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5425,9 +5439,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1557790256}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1557790256
 LineRenderer:
   serializedVersion: 2
@@ -5905,9 +5920,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1632073192}
-  cldr: {fileID: 2025902737}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1632073192
 LineRenderer:
   serializedVersion: 2
@@ -6048,7 +6064,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6147,9 +6163,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1656760461}
-  cldr: {fileID: 384086698}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1656760461
 LineRenderer:
   serializedVersion: 2
@@ -6322,7 +6339,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -6436,9 +6453,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1658997618}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1658997618
 LineRenderer:
   serializedVersion: 2
@@ -6624,9 +6642,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1725070395}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1725070395
 LineRenderer:
   serializedVersion: 2
@@ -6782,9 +6801,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1789339278}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1789339278
 LineRenderer:
   serializedVersion: 2
@@ -7110,9 +7130,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 1881682443}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &1881682443
 LineRenderer:
   serializedVersion: 2
@@ -7333,9 +7354,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 2001692364}
-  cldr: {fileID: 0}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &2001692364
 LineRenderer:
   serializedVersion: 2
@@ -8020,9 +8042,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePoint: {fileID: 0}
   lineRenderer: {fileID: 2131428180}
-  cldr: {fileID: 1600826810}
+  rigidBody: {fileID: 0}
   canDraw: 1
   hasDrawn: 1
+  thickness: 0.1
 --- !u!120 &2131428180
 LineRenderer:
   serializedVersion: 2
@@ -8149,7 +8172,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1003497
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
