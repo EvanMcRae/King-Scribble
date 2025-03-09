@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
@@ -103,6 +104,13 @@ public class Line : MonoBehaviour
 
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
+
+        // Set weight based on area
+        Vector3[] points = new Vector3[GetPointsCount()]; 
+        lineRenderer.GetPositions(points); // Get an array containing all points in the line
+        // Note: This is ugly. I know this is ugly. It works. (from https://stackoverflow.com/questions/2034540/calculating-area-of-irregular-polygon-in-c-sharp)
+        var area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
+        rigidBody.mass = area;
     }
     public bool CheckCollision()
     // Check if the most recently drawn point is within some small distance from any other point (aka, if the user has created a loop - closed or otherwise)
