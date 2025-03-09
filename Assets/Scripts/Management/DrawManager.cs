@@ -28,6 +28,8 @@ public class DrawManager : MonoBehaviour
     public float pencilThickness; // Thickness of pencil lines
     public float penThickness_start; // Thickness of pen lines while being drawn
     public float penThickness_fin; // Thickness of pen lines once finished
+    public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
+    public Texture2D penCursor; // The texture file for the cursor used for the pen
     // Update is called once per frame
     void Update()
     {
@@ -52,6 +54,18 @@ public class DrawManager : MonoBehaviour
         // If the mouse has been released, stop drawing
         if (Input.GetMouseButtonUp(0))
             EndDraw();
+        // [1] key pressed - switch to pencil
+        if (Input.GetKeyDown("1"))
+        {
+            cur_tool = ToolType.Pencil;
+            Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
+        }
+        // [2] key pressed - switch to pen
+        if (Input.GetKeyDown("2"))
+        {
+            cur_tool = ToolType.Pen;
+            Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
+        }
     }
     private void BeginDraw(Vector2 mouse_pos)
     {
@@ -59,12 +73,14 @@ public class DrawManager : MonoBehaviour
         
         if (cur_tool == ToolType.Pencil) {
             currentLine.SetThickness(pencilThickness);
+            currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
         }
 
         else if (cur_tool == ToolType.Pen) {
             currentLine.SetThickness(penThickness_start);
+            currentLine.collisionsActive = false;
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
         }
@@ -78,7 +94,7 @@ public class DrawManager : MonoBehaviour
 
             if (cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
-                if (currentLine.CheckClosedLoop()) // If a closed loop is created: end the line, enable physics, and start a short cooldown
+                if (currentLine.CheckClosedLoop() || currentLine.CheckCollision()) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
                 {
                     EndDraw(); // Enabling physics will take place in this function through a second (admittedly redundant) closed loop check
                     drawCooldown = DRAW_CD; // Set a short cooldown (to prevent accidentally drawing a new line immediately after)
@@ -105,6 +121,8 @@ public class DrawManager : MonoBehaviour
                     currentLine.SetThickness(penThickness_fin);
                     currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
                     currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
+                    currentLine.EnableColliders();
+                    currentLine = null;
                     // TODO: set weight based on area
                 }
                 
