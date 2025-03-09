@@ -11,6 +11,10 @@ public class DrawManager : MonoBehaviour
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
+    // TEMPORARY - REPLACE WITH AN ARRAY OR SOMETHING SOMEWHERE ELSE
+    public bool hasPencil = true;
+    public bool hasPen = false;
+    public bool hasEraser = false;
     // Update is called once per frame
     void Update()
     {
