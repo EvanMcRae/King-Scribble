@@ -117,13 +117,12 @@ public class DrawManager : MonoBehaviour
             {
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
-                    currentLine.AddPhysics();
+                    currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin);
                     currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
                     currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
                     currentLine.EnableColliders();
                     currentLine = null;
-                    // TODO: set weight based on area
                 }
                 
                 else // Otherwise, destroy the line (pen can only create closed loops)
