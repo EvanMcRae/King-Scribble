@@ -370,3 +370,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  hasPencil: 1
+  hasPen: 0
+  hasEraser: 0
+  cur_tool: 0
+  pencilColor: {r: 0.1509434, g: 0.14154504, b: 0.14154504, a: 1}
+  penColor_start: {r: 0.34763262, g: 0.42894444, b: 0.8490566, a: 1}
+  penColor_fin: {r: 0, g: 0.14088972, b: 0.8773585, a: 1}
+  pencilThickness: 0.1
+  penThickness_start: 0.05
+  penThickness_fin: 0.1
+  pencilCursor: {fileID: 0}
+  penCursor: {fileID: 0}
