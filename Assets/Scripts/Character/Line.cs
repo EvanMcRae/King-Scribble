@@ -107,7 +107,7 @@ public class Line : MonoBehaviour
     public bool CheckCollision()
     // Check if the most recently drawn point is within some small distance from any other point (aka, if the user has created a loop - closed or otherwise)
     {
-        for (int i = 0; i < GetPointsCount() - 1; i++) 
+        for (int i = 0; i < GetPointsCount() - 2; i++) // 2 instead of 1 to prevent detecting a collision with the previously drawn point (which would otherwise always happen)
         {
             if (Vector2.Distance((Vector2)lineRenderer.GetPosition(i), GetLastPoint()) < 0.08f)
                 return true;
