@@ -10,10 +10,10 @@ public class Line : MonoBehaviour
     [SerializeField] private Rigidbody2D rigidBody;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
-    public const float LOOP_ALLOWANCE = 0.1f; // Maximum distance between the first and last point of a line to be considered a closed loop
+    public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
     public float thickness = 0.1f; // How wide the line will be drawn
-
+    public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +31,7 @@ public class Line : MonoBehaviour
         CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
         circleCollider.offset = transform.InverseTransformPoint(position);
         circleCollider.radius = thickness / 2;
+        if (!collisionsActive) circleCollider.enabled = false;
         colliders.Add(circleCollider);
 
         // Add line renderer position for this point
@@ -83,7 +84,22 @@ public class Line : MonoBehaviour
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
     }
+    public bool CheckCollision()
+    // Check if the most recently drawn point is within some small distance from any other point (aka, if the user has created a loop - closed or otherwise)
+    {
+        for (int i = 0; i < GetPointsCount() - 1; i++) 
+        {
+            if (Vector2.Distance((Vector2)lineRenderer.GetPosition(i), GetLastPoint()) < 0.08f)
+                return true;
+        }
 
+        return false;
+    }
+    public void EnableColliders()
+    {
+        foreach (CircleCollider2D c in colliders)
+            c.enabled = true;
+    }
     // TODO Could be used in the future for other tools
     public void SetThickness(float newThickness)
     {
