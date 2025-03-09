@@ -139,7 +139,7 @@ public class Line : MonoBehaviour
         {
             foreach (CircleCollider2D circleCollider in colliders)
             {
-                circleCollider.radius = thickness;
+                circleCollider.radius = thickness / 2;
             }
         }
     }
