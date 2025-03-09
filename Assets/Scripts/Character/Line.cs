@@ -12,8 +12,10 @@ public class Line : MonoBehaviour
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
+    public const float OVERSHOOT = 0.025f; // How much a line march will attempt to overshoot over default resolution
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,21 +29,39 @@ public class Line : MonoBehaviour
     {
         if (!CanAppend(position)) return;
 
+        position = transform.InverseTransformPoint(position);
+
+        // If this point is too far away, march along it and add extra points
+        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION + OVERSHOOT)
+        {
+            Vector2 marchPos = GetLastPoint();
+            do
+            {
+                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION + OVERSHOOT);
+                AppendPos(marchPos);
+            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION + OVERSHOOT);
+        }
+
+        AppendPos(position);
+
+        hasDrawn = true;
+    }
+
+    private void AppendPos(Vector2 position)
+    {
         // Add circle collider component for this point
         CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
-        circleCollider.offset = transform.InverseTransformPoint(position);
+        circleCollider.offset = position;
         circleCollider.radius = thickness / 2;
         if (!collisionsActive) circleCollider.enabled = false;
         colliders.Add(circleCollider);
 
         // Add line renderer position for this point
         lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount-1, transform.InverseTransformPoint(position));
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Deduct doodle fuel if there's more than one point on this line
         if (lineRenderer.positionCount > 1) PlayerController.instance.DrawDoodleFuel(1);
-
-        hasDrawn = true;
     }
 
     private bool CanAppend(Vector2 position)
@@ -58,7 +78,7 @@ public class Line : MonoBehaviour
         if (lineRenderer.positionCount == 0) return true;
 
         // Then check for minimum distance between points with local space-transformed position
-        return Vector2.Distance(lineRenderer.GetPosition(lineRenderer.positionCount-1), transform.InverseTransformPoint(position)) > DrawManager.RESOLUTION;
+        return Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position)) > DrawManager.RESOLUTION;
     }
     public int GetPointsCount()
     {
@@ -66,11 +86,11 @@ public class Line : MonoBehaviour
     }
     public Vector2 GetFirstPoint()
     {
-        return (Vector2)lineRenderer.GetPosition(0);
+        return lineRenderer.GetPosition(0);
     }
     public Vector2 GetLastPoint()
     {
-        return (Vector2)lineRenderer.GetPosition(GetPointsCount() - 1);
+        return lineRenderer.GetPosition(GetPointsCount() - 1);
     }
     public bool CheckClosedLoop()
     {
