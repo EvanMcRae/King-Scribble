@@ -160,6 +160,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &4453454
 LineRenderer:
   serializedVersion: 2
@@ -352,6 +353,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &98049017
 LineRenderer:
   serializedVersion: 2
@@ -653,6 +655,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &237073831
 LineRenderer:
   serializedVersion: 2
@@ -1132,6 +1135,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &319506410
 LineRenderer:
   serializedVersion: 2
@@ -1400,6 +1404,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &375740626
 LineRenderer:
   serializedVersion: 2
@@ -2569,6 +2574,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &622168430
 LineRenderer:
   serializedVersion: 2
@@ -3605,6 +3611,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1070984254
 LineRenderer:
   serializedVersion: 2
@@ -3764,6 +3771,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1109088458
 LineRenderer:
   serializedVersion: 2
@@ -4075,6 +4083,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1141723770
 LineRenderer:
   serializedVersion: 2
@@ -4221,6 +4230,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1344636854
 LineRenderer:
   serializedVersion: 2
@@ -4486,6 +4496,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1431982794
 LineRenderer:
   serializedVersion: 2
@@ -4755,6 +4766,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1446555558
 LineRenderer:
   serializedVersion: 2
@@ -5062,6 +5074,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1474017947
 LineRenderer:
   serializedVersion: 2
@@ -5212,6 +5225,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1556385843
 LineRenderer:
   serializedVersion: 2
@@ -5458,6 +5472,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1557790256
 LineRenderer:
   serializedVersion: 2
@@ -5940,6 +5955,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1632073192
 LineRenderer:
   serializedVersion: 2
@@ -6184,6 +6200,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1656760461
 LineRenderer:
   serializedVersion: 2
@@ -6475,6 +6492,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1658997618
 LineRenderer:
   serializedVersion: 2
@@ -6665,6 +6683,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1725070395
 LineRenderer:
   serializedVersion: 2
@@ -6825,6 +6844,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1789339278
 LineRenderer:
   serializedVersion: 2
@@ -7155,6 +7175,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &1881682443
 LineRenderer:
   serializedVersion: 2
@@ -7380,6 +7401,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &2001692364
 LineRenderer:
   serializedVersion: 2
@@ -8069,6 +8091,7 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 1
   thickness: 0.1
+  collisionsActive: 1
 --- !u!120 &2131428180
 LineRenderer:
   serializedVersion: 2
@@ -8423,66 +8446,6 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 1486656333}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: pencilColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: pencilColor.b
-      value: 0.14154504
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: pencilColor.g
-      value: 0.14154504
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: pencilColor.r
-      value: 0.1509434
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_fin.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_fin.b
-      value: 0.8773585
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_fin.g
-      value: 0.14088972
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_fin.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: pencilThickness
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_start.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_start.b
-      value: 0.8490566
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_start.g
-      value: 0.42894444
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_start.r
-      value: 0.34763262
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penThickness_fin
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penThickness_start
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566
