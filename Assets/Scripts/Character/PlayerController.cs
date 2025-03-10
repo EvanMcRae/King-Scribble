@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D groundCheck, roofCheck;
+    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting);
+        anim.SetBool("isGrounded", isGrounded);
         if (isDead) return;
 
         Jump();
@@ -250,6 +251,7 @@ public class PlayerController : MonoBehaviour
 
         if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
         {
+            anim.SetTrigger("justJumped");
             // TODO disabled, would reject jumps if on too steep of a slope
             // if (isOnSlope && slopeDownAngle > maxSlopeAngle) return;
 
@@ -304,8 +306,23 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             lastOnLand = 0f;
+            anim.SetBool("isLanding", false);
+            anim.ResetTrigger("justJumped");
             lastLandHeight = transform.position.y;
         }
+        else if (rb.velocity.y < 0)
+        {
+            landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
+            if (landCheck.IsTouchingLayers(whatIsGround))
+            {
+                anim.SetBool("isLanding", true);
+            }
+        }
+        else
+        {
+            anim.SetBool("isLanding", false);
+        }
+
     }
 
     void RoofCheck()
