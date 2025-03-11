@@ -30,6 +30,8 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
+
+    public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
     // Update is called once per frame
     void Update()
     {
@@ -47,7 +49,12 @@ public class DrawManager : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        {
+          if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
             BeginDraw(mousePos);
+          if(cur_tool == ToolType.Eraser)
+            BeginErase(mousePos);
+        }
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && currentLine != null)
             Draw(mousePos);
@@ -66,16 +73,23 @@ public class DrawManager : MonoBehaviour
             cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
+        // [3] key pressed - switch to eraser
+        if (Input.GetKeyDown("3"))
+        {
+            cur_tool = ToolType.Eraser;
+            Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
+        }
     }
     private void BeginDraw(Vector2 mouse_pos)
     {
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
-        
+
         if (cur_tool == ToolType.Pencil) {
             currentLine.SetThickness(pencilThickness);
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
+            currentLine.gameObject.tag = "ErasableLine"; // This tag is assigned to GameObjects that can be erased by the player
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -132,6 +146,20 @@ public class DrawManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void BeginErase(Vector2 mouse_pos) {
+    	// Check to see if any lines are occupying this position
+		// GameObject[] lines = GameObject.FindGameObjectsWithTag("ErasableLine");
+		// var lineCount = lines.Length;
+		// foreach (var line in lines)
+		// {
+		// 	// Detect collision with line
+		// 	//if(mouse_pos == line.position)
+		// 	Debug.Log(line.transform.position);
+		// }
+
+		
     }
 }
 
