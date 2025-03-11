@@ -21,6 +21,8 @@ public class DrawManager : MonoBehaviour
     public bool hasPencil = true;
     public bool hasPen = false;
     public bool hasEraser = false;
+    public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
+    public bool isErasing = false; // True when the mouse is being held down with an erasing tool
     public ToolType cur_tool = ToolType.Pencil;
     public Color pencilColor; // Color of pencil lines
     public Color penColor_start; // Color of pen lines while being drawn
@@ -30,8 +32,8 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
-
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
+
     // Update is called once per frame
     void Update()
     {
@@ -45,51 +47,67 @@ public class DrawManager : MonoBehaviour
             drawCooldown -= Time.deltaTime;
             return;
         }
-        
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
-        {
-          if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
-            BeginDraw(mousePos);
-          if(cur_tool == ToolType.Eraser)
-            BeginErase(mousePos);
-        }
-        // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
-            Draw(mousePos);
-        // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
-            EndDraw();
+            
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1"))
         {
-            cur_tool = ToolType.Pencil;
+            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+				EndDraw();
+			cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
         if (Input.GetKeyDown("2"))
         {
-            cur_tool = ToolType.Pen;
+            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+				EndDraw();
+			cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
         if (Input.GetKeyDown("3"))
         {
-            cur_tool = ToolType.Eraser;
+            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+				EndDraw();
+			cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
+        
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // If the mouse has just been pressed, start drawing
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        {
+			if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
+				BeginDraw(mousePos);
+			if(cur_tool == ToolType.Eraser)
+				BeginErase(mousePos);
+        }
+        // If the mouse is continuously held, continue to draw
+        if (Input.GetMouseButton(0) && currentLine != null)
+		{
+			//if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+				Draw(mousePos);
+			//else
+				//EndDraw();
+		}
+		// If the mouse has been released, stop drawing
+        if (Input.GetMouseButtonUp(0))
+		{
+			if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+				EndDraw();
+		}
+        
     }
     private void BeginDraw(Vector2 mouse_pos)
     {
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
-
+		isDrawing = true; // the user is drawing
         if (cur_tool == ToolType.Pencil) {
             currentLine.SetThickness(pencilThickness);
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
-            currentLine.gameObject.tag = "ErasableLine"; // This tag is assigned to GameObjects that can be erased by the player
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -122,6 +140,8 @@ public class DrawManager : MonoBehaviour
 
     private void EndDraw()
     {
+        isDrawing = false; // the user has stopped drawing
+
         if (currentLine != null)
         {
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
@@ -145,6 +165,7 @@ public class DrawManager : MonoBehaviour
                 }
             }
         }
+		currentLine = null;
     }
 
     private void BeginErase(Vector2 mouse_pos) {
