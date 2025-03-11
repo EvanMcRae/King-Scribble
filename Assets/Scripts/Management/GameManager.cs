@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.SetCursor(cursorTex, Vector2.zero, CursorMode.ForceSoftware);
         instance = this;
     }
 
