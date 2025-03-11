@@ -13,7 +13,6 @@ public class Line : MonoBehaviour
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
-    public const float OVERSHOOT = 0.025f; // How much a line march will attempt to overshoot over default resolution
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
 
@@ -33,14 +32,14 @@ public class Line : MonoBehaviour
         position = transform.InverseTransformPoint(position);
 
         // If this point is too far away, march along it and add extra points
-        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION + OVERSHOOT)
+        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
-                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION + OVERSHOOT);
+                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
                 AppendPos(marchPos);
-            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION + OVERSHOOT);
+            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
         }
 
         AppendPos(position);
