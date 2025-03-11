@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public enum ToolType
@@ -73,7 +74,6 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         
-
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
@@ -86,10 +86,7 @@ public class DrawManager : MonoBehaviour
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && currentLine != null)
 		{
-			//if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				Draw(mousePos);
-			//else
-				//EndDraw();
+			Draw(mousePos);
 		}
 		// If the mouse has been released, stop drawing
         if (Input.GetMouseButtonUp(0))
@@ -100,7 +97,7 @@ public class DrawManager : MonoBehaviour
         
     }
     private void BeginDraw(Vector2 mouse_pos)
-    {
+    {	
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
 		isDrawing = true; // the user is drawing
         if (cur_tool == ToolType.Pencil) {
@@ -108,6 +105,7 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
+			//currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -121,6 +119,12 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
+		if(cur_tool == ToolType.Eraser)
+		{
+			BeginErase(mouse_pos);
+			return;
+		}
+		
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
 
@@ -156,7 +160,6 @@ public class DrawManager : MonoBehaviour
                     currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
                     currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
                     currentLine.EnableColliders();
-                    currentLine = null;
                 }
                 
                 else // Otherwise, destroy the line (pen can only create closed loops)
@@ -169,15 +172,19 @@ public class DrawManager : MonoBehaviour
     }
 
     private void BeginErase(Vector2 mouse_pos) {
-    	// Check to see if any lines are occupying this position
-		// GameObject[] lines = GameObject.FindGameObjectsWithTag("ErasableLine");
-		// var lineCount = lines.Length;
-		// foreach (var line in lines)
-		// {
-		// 	// Detect collision with line
-		// 	//if(mouse_pos == line.position)
-		// 	Debug.Log(line.transform.position);
-		// }
+		// need to shift to the left 8 times to get the layer mask of layer 8
+		// Ground is layer 3
+		//Debug.Log("Beginning Eraser");
+
+		/* Where I left off:
+			objects on the layer are not being detected~ unsure why but i'll experiment with OverlapPoint instead of Raycast next time :))
+			maybe the mouse_pos isn't the "point" parameter we need
+		*/
+    	GameObject g = Utils.Raycast(Camera.main, mouse_pos, 1<<3); // Raycast is in Utils.cs
+		if (g != null)
+			Debug.Log("Destroying!! ", g);
+
+		// Also need to call this while the mouse is being held down!
 
 		
     }
