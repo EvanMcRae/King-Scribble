@@ -155,6 +155,8 @@ MonoBehaviour:
   canDraw: 1
   hasDrawn: 0
   thickness: 0.1
+  collisionsActive: 1
+  is_pen: 0
 --- !u!50 &5692723398148555159
 Rigidbody2D:
   serializedVersion: 4
@@ -180,5 +182,5 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
