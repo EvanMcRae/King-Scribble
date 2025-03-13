@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public enum ToolType
 {
@@ -30,6 +31,15 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
+    
+    Vector2[] ConvertArray(Vector3[] v3){
+        Vector2 [] v2 = new Vector2[v3.Length];
+        for(int i = 0; i <  v3.Length; i++){
+            Vector3 tempV3 = v3[i];
+            v2[i] = new Vector2(tempV3.x, tempV3.y);
+        }
+        return v2;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -72,6 +82,7 @@ public class DrawManager : MonoBehaviour
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
         
         if (cur_tool == ToolType.Pencil) {
+            currentLine.is_pen = false;
             currentLine.SetThickness(pencilThickness);
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
@@ -79,6 +90,7 @@ public class DrawManager : MonoBehaviour
         }
 
         else if (cur_tool == ToolType.Pen) {
+            currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
@@ -121,7 +133,13 @@ public class DrawManager : MonoBehaviour
                     currentLine.SetThickness(penThickness_fin);
                     currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
                     currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
-                    currentLine.EnableColliders();
+                    // currentLine.EnableColliders();
+                    var polyCollider = currentLine.gameObject.AddComponent<PolygonCollider2D>();
+                    Vector3[] points = new Vector3[currentLine.GetPointsCount()];
+                    Vector2[] pointsv2 = new Vector2[currentLine.GetPointsCount()];
+                    currentLine.GetComponent<LineRenderer>().GetPositions(points);
+                    pointsv2 = ConvertArray(points);
+                    polyCollider.SetPath(0, pointsv2);
                     currentLine = null;
                 }
                 
@@ -133,4 +151,3 @@ public class DrawManager : MonoBehaviour
         }
     }
 }
-
