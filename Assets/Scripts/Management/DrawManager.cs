@@ -33,6 +33,7 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
+    public Material fillMat; // The material to fill pen objects with (temporary)
     
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
@@ -58,7 +59,21 @@ public class DrawManager : MonoBehaviour
             drawCooldown -= Time.deltaTime;
             return;
         }
-            
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (PlayerController.instance.OverlapsPosition(mousePos)) {
+            EndDraw();
+            currentLine = null;
+            return;
+        }
+        // If the mouse has just been pressed, start drawing
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+            BeginDraw(mousePos);
+        // If the mouse is continuously held, continue to draw
+        if (Input.GetMouseButton(0) && currentLine != null)
+            Draw(mousePos);
+        // If the mouse has been released, stop drawing
+        if (Input.GetMouseButtonUp(0))
+            EndDraw();
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1"))
         {
@@ -173,11 +188,18 @@ public class DrawManager : MonoBehaviour
                     currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
                     // currentLine.EnableColliders();
                     var polyCollider = currentLine.gameObject.AddComponent<PolygonCollider2D>();
-                    Vector3[] points = new Vector3[currentLine.GetPointsCount()];
+                    Vector3[] points = new Vector3[currentLine.GetPointsCount()]; // Do all the BS of converting the line renderer point list to be usable
                     Vector2[] pointsv2 = new Vector2[currentLine.GetPointsCount()];
                     currentLine.GetComponent<LineRenderer>().GetPositions(points);
                     pointsv2 = ConvertArray(points);
-                    polyCollider.SetPath(0, pointsv2);
+                    polyCollider.SetPath(0, pointsv2); // Using the line renderer's positions, create a polygon collider for the new object
+                    var tempMesh = polyCollider.CreateMesh(false, false); // Create a mesh with the bounds of the polygon collider for the pen object
+                    var tempRend = currentLine.gameObject.AddComponent<MeshRenderer>();
+                    var tempFilter = currentLine.gameObject.AddComponent<MeshFilter>();
+                    tempRend.material = fillMat;
+                    tempRend.sortingLayerName = "Ground"; // Render mesh on the same layer as the lines
+                    tempRend.sortingOrder = -3; // Render mesh below line
+                    tempFilter.mesh = tempMesh;
                     currentLine = null;
 
                 }
@@ -185,6 +207,7 @@ public class DrawManager : MonoBehaviour
                 else // Otherwise, destroy the line (pen can only create closed loops)
                 { 
                     Destroy(currentLine.gameObject);
+                    currentLine = null;
                 }
             }
         }
