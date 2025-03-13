@@ -179,8 +179,11 @@ public class DrawManager : MonoBehaviour
 		/* Where I left off:
 			objects on the layer are not being detected~ unsure why but i'll experiment with OverlapPoint instead of Raycast next time :))
 			maybe the mouse_pos isn't the "point" parameter we need
+
+			I assure that the mouse_pos = the collision pos
 		*/
     	GameObject g = Utils.Raycast(Camera.main, mouse_pos, 1<<3); // Raycast is in Utils.cs
+		Debug.Log(mouse_pos);
 		if (g != null)
 			Debug.Log("Destroying!! ", g);
 
