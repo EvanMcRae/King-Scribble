@@ -13,9 +13,9 @@ public class Line : MonoBehaviour
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
-    public const float OVERSHOOT = 0.025f; // How much a line march will attempt to overshoot over default resolution
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
+    public bool is_pen = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,14 +33,14 @@ public class Line : MonoBehaviour
         position = transform.InverseTransformPoint(position);
 
         // If this point is too far away, march along it and add extra points
-        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION + OVERSHOOT)
+        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
-                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION + OVERSHOOT);
+                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
                 AppendPos(marchPos);
-            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION + OVERSHOOT);
+            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
         }
 
         AppendPos(position);
@@ -51,12 +51,13 @@ public class Line : MonoBehaviour
     private void AppendPos(Vector2 position)
     {
         // Add circle collider component for this point
-        CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
-        circleCollider.offset = position;
-        circleCollider.radius = thickness / 2;
-        if (!collisionsActive) circleCollider.enabled = false;
-        colliders.Add(circleCollider);
-
+        if (!is_pen) {
+            CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
+            circleCollider.offset = position;
+            circleCollider.radius = thickness / 2;
+            if (!collisionsActive) circleCollider.enabled = false;
+            colliders.Add(circleCollider);
+        }
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
@@ -99,9 +100,16 @@ public class Line : MonoBehaviour
     }
     public void AddPhysics()
     {
+        /*
         // Properly connect close loops if within allowance
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, lineRenderer.GetPosition(0));
-
+        Vector2 marchPos = GetLastPoint();
+        while (Vector2.Distance(marchPos, GetFirstPoint()) > DrawManager.RESOLUTION)
+        {
+            marchPos = Vector2.MoveTowards(marchPos, GetFirstPoint(), DrawManager.RESOLUTION);
+            AppendPos(marchPos);
+        }
+        */
+        lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
 

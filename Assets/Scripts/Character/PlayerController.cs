@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // fall detection
-        if (beenOnLand >= 0.1f && !isJumping && !isGrounded && !isFalling)
+        if (lastOnLand >= 0.1f && !isJumping && !isGrounded && !isFalling)
         {
             isFalling = true;
         }
