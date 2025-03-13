@@ -59,21 +59,30 @@ public class DrawManager : MonoBehaviour
             drawCooldown -= Time.deltaTime;
             return;
         }
+
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (PlayerController.instance.OverlapsPosition(mousePos)) {
+        if (PlayerController.instance.OverlapsPosition(mousePos))
+        {
             EndDraw();
             currentLine = null;
-            return;
         }
+
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
-            BeginDraw(mousePos);
+        {
+            if (cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
+                BeginDraw(mousePos);
+            if (cur_tool == ToolType.Eraser)
+                BeginErase(mousePos);
+        }
+        
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && currentLine != null)
             Draw(mousePos);
         // If the mouse has been released, stop drawing
         if (Input.GetMouseButtonUp(0))
             EndDraw();
+
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1"))
         {
@@ -98,27 +107,6 @@ public class DrawManager : MonoBehaviour
 			cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
-        
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
-        {
-			if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
-				BeginDraw(mousePos);
-			if(cur_tool == ToolType.Eraser)
-				BeginErase(mousePos);
-        }
-        // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
-		{
-			Draw(mousePos);
-		}
-		// If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
-		{
-			if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-		}
         
     }
     private void BeginDraw(Vector2 mouse_pos)
