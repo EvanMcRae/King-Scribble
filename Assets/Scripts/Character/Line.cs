@@ -99,7 +99,12 @@ public class Line : MonoBehaviour
     public void AddPhysics()
     {
         // Properly connect close loops if within allowance
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, lineRenderer.GetPosition(0));
+        Vector2 marchPos = GetLastPoint();
+        while (Vector2.Distance(marchPos, GetFirstPoint()) > DrawManager.RESOLUTION)
+        {
+            marchPos = Vector2.MoveTowards(marchPos, GetFirstPoint(), DrawManager.RESOLUTION);
+            AppendPos(marchPos);
+        }
 
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
