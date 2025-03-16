@@ -34,16 +34,6 @@ public class DrawManager : MonoBehaviour
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
     public Material fillMat; // The material to fill pen objects with (temporary)
-    
-    Vector2[] ConvertArray(Vector3[] v3){
-        Vector2 [] v2 = new Vector2[v3.Length];
-        for(int i = 0; i <  v3.Length; i++){
-            Vector3 tempV3 = v3[i];
-            v2[i] = new Vector2(tempV3.x, tempV3.y);
-        }
-        return v2;
-    }
-
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
 
     // Update is called once per frame
@@ -170,23 +160,10 @@ public class DrawManager : MonoBehaviour
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
-                    currentLine.SetThickness(penThickness_fin);
-                    currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
-                    currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
-                    // currentLine.EnableColliders();
-                    var polyCollider = currentLine.gameObject.AddComponent<PolygonCollider2D>();
-                    Vector3[] points = new Vector3[currentLine.GetPointsCount()]; // Do all the BS of converting the line renderer point list to be usable
-                    Vector2[] pointsv2 = new Vector2[currentLine.GetPointsCount()];
-                    currentLine.GetComponent<LineRenderer>().GetPositions(points);
-                    pointsv2 = ConvertArray(points);
-                    polyCollider.SetPath(0, pointsv2); // Using the line renderer's positions, create a polygon collider for the new object
-                    var tempMesh = polyCollider.CreateMesh(false, false); // Create a mesh with the bounds of the polygon collider for the pen object
-                    var tempRend = currentLine.gameObject.AddComponent<MeshRenderer>();
-                    var tempFilter = currentLine.gameObject.AddComponent<MeshFilter>();
-                    tempRend.material = fillMat;
-                    tempRend.sortingLayerName = "Ground"; // Render mesh on the same layer as the lines
-                    tempRend.sortingOrder = -3; // Render mesh below line
-                    tempFilter.mesh = tempMesh;
+                    currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
+                    currentLine.SetColor(penColor_fin); // Set the color of the line 
+                    currentLine.AddPolyCollider(); // Add a polygon collider to the line using its lineRenderer points
+                    currentLine.AddMesh(fillMat); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
                 

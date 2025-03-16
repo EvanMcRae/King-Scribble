@@ -17,6 +17,15 @@ public class Line : MonoBehaviour
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
 
+    Vector2[] ConvertArray(Vector3[] v3){
+        Vector2 [] v2 = new Vector2[v3.Length];
+        for(int i = 0; i <  v3.Length; i++){
+            Vector3 tempV3 = v3[i];
+            v2[i] = new Vector2(tempV3.x, tempV3.y);
+        }
+        return v2;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -154,4 +163,37 @@ public class Line : MonoBehaviour
             }
         }
     }
+    // Set the color of the line
+    public void SetColor(Color color)
+    {
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+    }
+    // Create a polygon collider from the line renderer's points
+    public void AddPolyCollider()
+    {
+        // Get the list of points in the lineRenderer and convert to Vector2
+        Vector3[] points3 = new Vector3[GetPointsCount()];
+        lineRenderer.GetPositions(points3);
+        Vector2[] points2 = ConvertArray(points3);
+        // Create a polygon collider and set its path to the Vector2 list of points
+        PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
+        polyCollider.SetPath(0, points2);
+    }
+    // Add a mesh from the polygon collider (if it has been created)
+    public void AddMesh(Material mat)
+    {
+        PolygonCollider2D polyCollider = gameObject.GetComponent<PolygonCollider2D>();
+        if (!polyCollider) return; // Return if there is no polygon collider
+        // Create the mesh, mesh renderer, and mesh filter
+        Mesh polyMesh = polyCollider.CreateMesh(false, false); // (false, false allows its position to follow the rigidbody)
+        MeshRenderer polyRend = gameObject.AddComponent<MeshRenderer>();
+        MeshFilter polyFilter = gameObject.AddComponent<MeshFilter>();
+        // Set the material, mesh and layer parameters
+        polyRend.material = mat;
+        polyRend.sortingLayerName = "Ground";
+        polyRend.sortingOrder = -3;
+        polyFilter.mesh = polyMesh;
+    }
 }
+
