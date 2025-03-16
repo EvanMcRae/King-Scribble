@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -161,6 +160,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &4453454
 LineRenderer:
   serializedVersion: 2
@@ -354,6 +354,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &98049017
 LineRenderer:
   serializedVersion: 2
@@ -656,6 +657,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &237073831
 LineRenderer:
   serializedVersion: 2
@@ -1136,6 +1138,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &319506410
 LineRenderer:
   serializedVersion: 2
@@ -1405,6 +1408,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &375740626
 LineRenderer:
   serializedVersion: 2
@@ -2416,12 +2420,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -2575,6 +2579,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &622168430
 LineRenderer:
   serializedVersion: 2
@@ -3612,6 +3617,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1070984254
 LineRenderer:
   serializedVersion: 2
@@ -3772,6 +3778,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1109088458
 LineRenderer:
   serializedVersion: 2
@@ -4084,6 +4091,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1141723770
 LineRenderer:
   serializedVersion: 2
@@ -4231,6 +4239,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1344636854
 LineRenderer:
   serializedVersion: 2
@@ -4497,6 +4506,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1431982794
 LineRenderer:
   serializedVersion: 2
@@ -4767,6 +4777,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1446555558
 LineRenderer:
   serializedVersion: 2
@@ -5075,6 +5086,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1474017947
 LineRenderer:
   serializedVersion: 2
@@ -5226,6 +5238,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1556385843
 LineRenderer:
   serializedVersion: 2
@@ -5473,6 +5486,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1557790256
 LineRenderer:
   serializedVersion: 2
@@ -5956,6 +5970,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1632073192
 LineRenderer:
   serializedVersion: 2
@@ -6201,6 +6216,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1656760461
 LineRenderer:
   serializedVersion: 2
@@ -6493,6 +6509,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1658997618
 LineRenderer:
   serializedVersion: 2
@@ -6684,6 +6701,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1725070395
 LineRenderer:
   serializedVersion: 2
@@ -6845,6 +6863,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1789339278
 LineRenderer:
   serializedVersion: 2
@@ -7176,6 +7195,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1881682443
 LineRenderer:
   serializedVersion: 2
@@ -7398,6 +7418,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &2001692364
 LineRenderer:
   serializedVersion: 2
@@ -8088,6 +8109,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &2131428180
 LineRenderer:
   serializedVersion: 2
@@ -8442,6 +8464,10 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 1486656333}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: fillTexture
+      value: 
+      objectReference: {fileID: 21300000, guid: 6ff0727639429084c99e44c3b4fe8f6e, type: 3}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566
