@@ -32,6 +32,9 @@ public class Line : MonoBehaviour
 
         position = transform.InverseTransformPoint(position);
 
+        // Special case to activate first collider
+        if (lineRenderer.positionCount == 1 && collisionsActive) colliders[0].enabled = true;
+
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
@@ -55,7 +58,7 @@ public class Line : MonoBehaviour
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
             circleCollider.radius = thickness / 2;
-            if (!collisionsActive) circleCollider.enabled = false;
+            if (!collisionsActive || lineRenderer.positionCount == 0) circleCollider.enabled = false;
             colliders.Add(circleCollider);
         }
         // Add line renderer position for this point
