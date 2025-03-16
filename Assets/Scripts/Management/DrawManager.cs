@@ -117,7 +117,7 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
-			//currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+			currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -193,23 +193,91 @@ public class DrawManager : MonoBehaviour
     }
 
     private void BeginErase(Vector2 mouse_pos) {
-		// need to shift to the left 8 times to get the layer mask of layer 8
-		// Ground is layer 3
-		//Debug.Log("Beginning Eraser");
 
-		/* Where I left off:
-			objects on the layer are not being detected~ unsure why but i'll experiment with OverlapPoint instead of Raycast next time :))
-			maybe the mouse_pos isn't the "point" parameter we need
+    	CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
+       
+        // Collider index corresponds to the index in the Line Renderer Array
+		if (c != null) {
+            
+			int meow = c.gameObject.GetComponent<Line>().colliders.IndexOf(c);
+            LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
+            Debug.Log(meow);
 
-			I assure that the mouse_pos = the collision pos
-		*/
-    	GameObject g = Utils.Raycast(Camera.main, mouse_pos, 1<<3); // Raycast is in Utils.cs
-		Debug.Log(mouse_pos);
-		if (g != null)
-			Debug.Log("Destroying!! ", g);
+            if(lineRenderer != null) {
+                List<Vector3> points = new List<Vector3>();
+                Vector3[] pointsArray = new Vector3[lineRenderer.positionCount];
+                lineRenderer.GetPositions(pointsArray); // Get the positions into the array
+                points.AddRange(pointsArray); // Convert to a list
 
-		// Also need to call this while the mouse is being held down!
+                // Optimizing the split:
+                if(lineRenderer.positionCount/2.0 <= meow) { // delete the left side of the Vector3
 
-		
+                }
+                else { // delete the right part
+
+                }
+
+                
+                if(meow == lineRenderer.positionCount || meow == 0) { // we are at the edge, delete the first/last point only
+                    points.RemoveAt(meow);
+                    // Update the line renderer
+                    lineRenderer.positionCount = points.Count;
+                    lineRenderer.SetPositions(points.ToArray());
+                    Debug.Log("destroying: " + meow);
+                    Destroy(c);
+                }
+                else if(meow == lineRenderer.positionCount - 1) { // we are at the 2nd to last point, delete the last two point only
+                    points.RemoveAt(meow);
+                    points.RemoveAt(meow+1);
+                    // Update the line renderer
+                    lineRenderer.positionCount = points.Count;
+                    lineRenderer.SetPositions(points.ToArray());
+                    Debug.Log("destroying: " + meow);
+                    Destroy(c);
+                    // Destroy (c+1)!!!
+                }
+                else {
+                    // Create a new Line
+                    Line newLine = Instantiate(linePrefab, points[meow+1], Quaternion.identity);
+                    newLine.is_pen = false;
+                    newLine.SetThickness(pencilThickness);
+                    newLine.collisionsActive = true;
+                    newLine.GetComponent<LineRenderer>().startColor = pencilColor;
+                    newLine.GetComponent<LineRenderer>().endColor = pencilColor;
+
+                    for(int i = meow+1; i < lineRenderer.positionCount; i++) {
+                    newLine.SetPosition(points[i]); // Copy point into a newLine
+                    points.RemoveAt(i); // Delete the point
+                    lineRenderer.positionCount = points.Count;
+                    lineRenderer.SetPositions(points.ToArray());
+                    Debug.Log("destroying: " + meow);
+                    // Delete the collider
+
+                    }
+                    // Update the current Line Renderer
+                    lineRenderer.positionCount = points.Count;
+                    lineRenderer.SetPositions(points.ToArray());
+
+                    // checkpoint: change CircleCast to CircleCastAll so we can have a bigger eraser size!
+                    // fix the index bug... figure out how to increment the circle colliders 
+                }
+                
+
+               
+
+                
+                
+            }
+                    
+			
+			
+            c = null;
+		}
+
+		// Can we return all points in the CircleCast or just one?
+		// Split the array
+		// Create a new Line with the second half of the array
+		// Also need to set the lines on a certain layer
+     
     }
 }
