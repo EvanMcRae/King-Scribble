@@ -33,8 +33,19 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
-    public Material fillMat; // The material to fill pen objects with (temporary)
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
+
+    public Material fillMat; // The material to fill pen objects with (temporary)
+    public Sprite fillTexture; // The texture to fill pen objects with (temporary)
+    public Color fillColor; // The color to fill pen objects with (temporary)
+    private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
+
+    private void Awake()
+    {
+        fillMatBlock = new MaterialPropertyBlock();
+        fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
+        fillMatBlock.SetColor("_Color", fillColor);
+    }
 
     // Update is called once per frame
     void Update()
@@ -163,7 +174,7 @@ public class DrawManager : MonoBehaviour
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line 
                     currentLine.AddPolyCollider(); // Add a polygon collider to the line using its lineRenderer points
-                    currentLine.AddMesh(fillMat); // Create a mesh from the polygon collider and assign the set material
+                    currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
                 

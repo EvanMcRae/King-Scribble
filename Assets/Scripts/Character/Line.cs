@@ -181,18 +181,29 @@ public class Line : MonoBehaviour
         polyCollider.SetPath(0, points2);
     }
     // Add a mesh from the polygon collider (if it has been created)
-    public void AddMesh(Material mat)
+    public void AddMesh(Material mat, MaterialPropertyBlock matBlock)
     {
         PolygonCollider2D polyCollider = gameObject.GetComponent<PolygonCollider2D>();
         if (!polyCollider) return; // Return if there is no polygon collider
         // Create the mesh, mesh renderer, and mesh filter
         Mesh polyMesh = polyCollider.CreateMesh(false, false); // (false, false allows its position to follow the rigidbody)
-        MeshRenderer polyRend = gameObject.AddComponent<MeshRenderer>();
-        MeshFilter polyFilter = gameObject.AddComponent<MeshFilter>();
+        MeshRenderer polyRend = GetComponentInChildren<MeshRenderer>();
+        MeshFilter polyFilter = GetComponentInChildren<MeshFilter>();
         // Set the material, mesh and layer parameters
         polyRend.material = mat;
         polyRend.sortingLayerName = "Ground";
         polyRend.sortingOrder = -3;
+        polyRend.SetPropertyBlock(matBlock);
+
+        // Apply UV coordinates for texture rendering
+        Vector2[] uvs = new Vector2[polyMesh.vertexCount];
+        Bounds bounds = polyMesh.bounds;
+        for (int i = 0; i < polyMesh.vertexCount; i++)
+        {
+            // Map each vertex to a UV based on its position relative to the bounds
+            uvs[i] = new Vector2((polyMesh.vertices[i].x - bounds.min.x) / bounds.size.x, (polyMesh.vertices[i].y - bounds.min.y) / bounds.size.y);
+        }
+        polyMesh.uv = uvs;
         polyFilter.mesh = polyMesh;
     }
 }
