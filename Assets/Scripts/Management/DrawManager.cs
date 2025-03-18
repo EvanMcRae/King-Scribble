@@ -92,7 +92,7 @@ public class DrawManager : MonoBehaviour
 			if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
 				BeginDraw(mousePos);
 			if(cur_tool == ToolType.Eraser)
-				BeginErase(mousePos);
+				Erase(mousePos);
         }
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && currentLine != null)
@@ -134,7 +134,7 @@ public class DrawManager : MonoBehaviour
     {
 		if(cur_tool == ToolType.Eraser)
 		{
-			BeginErase(mouse_pos);
+			Erase(mouse_pos);
 			return;
 		}
 		
@@ -192,92 +192,124 @@ public class DrawManager : MonoBehaviour
 		currentLine = null;
     }
 
-    private void BeginErase(Vector2 mouse_pos) {
+    private void Erase(Vector2 mouse_pos) {
 
     	CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
        
         // Collider index corresponds to the index in the Line Renderer Array
 		if (c != null) {
-            
-			int meow = c.gameObject.GetComponent<Line>().colliders.IndexOf(c);
             LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
-            Debug.Log(meow);
 
             if(lineRenderer != null) {
-                List<Vector3> points = new List<Vector3>();
+                List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
+                int c_index = collidersList.IndexOf(c);
+
+                List<Vector3> points = new List<Vector3>(); // Line renderer positions
                 Vector3[] pointsArray = new Vector3[lineRenderer.positionCount];
                 lineRenderer.GetPositions(pointsArray); // Get the positions into the array
-                points.AddRange(pointsArray); // Convert to a list
+                points.AddRange(pointsArray); // Convert pointsArray to a list
 
-                // Optimizing the split:
-                if(lineRenderer.positionCount/2.0 <= meow) { // delete the left side of the Vector3
-
+                int size = 0;
+                // size of our points vector ( i forget the method xD)
+                foreach (Vector3 point in points)
+                {
+                    size++;
                 }
-                else { // delete the right part
 
+                Debug.Log("size is " + size + "\nc_index is " + c_index);
+                Debug.Log("position count: " + lineRenderer.positionCount); // position count starts at 1 while c_index starts at 0
+
+                if((size == 2) || (size == 3 && c_index == 1)) { // Destroy the line!
+                    Debug.Log("Line will be too small, destroying Line!");
+                    Destroy(c.gameObject);
+                    c = null;
+                    return;
                 }
+                else if(c_index == lineRenderer.positionCount - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
+                    Debug.Log("edge detected!");
 
-                
-                if(meow == lineRenderer.positionCount || meow == 0) { // we are at the edge, delete the first/last point only
-                    points.RemoveAt(meow);
-                    // Update the line renderer
-                    lineRenderer.positionCount = points.Count;
-                    lineRenderer.SetPositions(points.ToArray());
-                    Debug.Log("destroying: " + meow);
+                    points.RemoveAt(c_index); // Remove point
+                    Debug.Log("destroying: " + c_index);
+                    Destroy(c); // Destroy collider
+                    collidersList.RemoveAt(c_index);
+                }
+                else if(c_index == 1) {
+                    Debug.Log("2nd to start detected!");
+                    
+                    points.RemoveAt(1);
+                    Debug.Log("destroying: " + 1);
                     Destroy(c);
+                    collidersList.RemoveAt(1);
+
+                    points.RemoveAt(0);
+                    Debug.Log("destroying: 0");
+                    Destroy(collidersList[0]);
+                    collidersList.RemoveAt(0);
                 }
-                else if(meow == lineRenderer.positionCount - 1) { // we are at the 2nd to last point, delete the last two point only
-                    points.RemoveAt(meow);
-                    points.RemoveAt(meow+1);
-                    // Update the line renderer
-                    lineRenderer.positionCount = points.Count;
-                    lineRenderer.SetPositions(points.ToArray());
-                    Debug.Log("destroying: " + meow);
+                else if(c_index == lineRenderer.positionCount - 2) { // we are at the 2nd to last point, delete the last two point only
+                    Debug.Log("2nd to edge detected!");
+
+                    points.RemoveAt(c_index+1);
+                    Debug.Log("destroying: " + c_index+1);
+                    Destroy(collidersList[c_index+1]); // Destroy (c+1)!!!
+                    collidersList.RemoveAt(c_index+1);
+
+                    points.RemoveAt(c_index);
+                    Debug.Log("destroying: " + c_index);
                     Destroy(c);
-                    // Destroy (c+1)!!!
+                    collidersList.RemoveAt(c_index);
                 }
                 else {
-                    // Create a new Line
-                    Line newLine = Instantiate(linePrefab, points[meow+1], Quaternion.identity);
+                    // Optimizing the split:
+                    if(lineRenderer.positionCount/2.0 <= c_index) { // delete the left side of the Vector3
+
+                    }
+                    else { // delete the right part
+
+                    }
+                    Debug.Log("collider position is " + c.bounds.center);
+                    // Create a new Line to fill with the remainder of the points
+                    Debug.Log("Creating new line");
+                    Line newLine = Instantiate(linePrefab, c.bounds.center, Quaternion.identity);
                     newLine.is_pen = false;
                     newLine.SetThickness(pencilThickness);
                     newLine.collisionsActive = true;
                     newLine.GetComponent<LineRenderer>().startColor = pencilColor;
                     newLine.GetComponent<LineRenderer>().endColor = pencilColor;
+                    newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
 
-                    for(int i = meow+1; i < lineRenderer.positionCount; i++) {
-                    newLine.SetPosition(points[i]); // Copy point into a newLine
-                    points.RemoveAt(i); // Delete the point
-                    lineRenderer.positionCount = points.Count;
-                    lineRenderer.SetPositions(points.ToArray());
-                    Debug.Log("destroying: " + meow);
-                    // Delete the collider
+                    // Fill the new line and delete from the current line
+                    int positionCount = lineRenderer.positionCount;
+                    int currPos = c_index+1; // When we delete a point, we actually dont move in the List
+                    for(int i = c_index+1; i < positionCount; i++) {
+                        Debug.Log("points[currPos] " + (points[currPos] + collidersList[0].bounds.center));
+                        newLine.SetPosition(points[currPos] + collidersList[0].bounds.center); // Copy point into a newLine
 
+                        points.RemoveAt(currPos); // Delete the point
+                        Debug.Log("destroying: " + currPos);
+                        Destroy(collidersList[currPos]); // Delete the collider
+                        collidersList.RemoveAt(currPos);
                     }
-                    // Update the current Line Renderer
-                    lineRenderer.positionCount = points.Count;
-                    lineRenderer.SetPositions(points.ToArray());
-
-                    // checkpoint: change CircleCast to CircleCastAll so we can have a bigger eraser size!
-                    // fix the index bug... figure out how to increment the circle colliders 
-                }
-                
-
-               
-
-                
-                
-            }
                     
-			
-			
+
+                    // checkpoint: change CircleCast to CircleCastAll so we can have a bigger eraser size?
+                    // line colliders and points have an offset when instantiated
+                    // rn it is points[currPos] + c.bounds.center 
+                    // points[currPos] + collidersList[0].bounds.center works better!
+                }
+                // Update the current Line Renderer
+                lineRenderer.positionCount = points.Count;
+                lineRenderer.SetPositions(points.ToArray());
+            }
             c = null;
 		}
-
-		// Can we return all points in the CircleCast or just one?
-		// Split the array
-		// Create a new Line with the second half of the array
-		// Also need to set the lines on a certain layer
-     
     }
 }
+
+
+/* Questions:
+
+How are we going to reformat the code?
+Eraser currently depletes health...
+
+*/
