@@ -18,10 +18,7 @@ public class DrawManager : MonoBehaviour
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
-    // TEMPORARY - REPLACE WITH AN ARRAY OR SOMETHING SOMEWHERE ELSE
-    public bool hasPencil = true;
-    public bool hasPen = false;
-    public bool hasEraser = false;
+    public GameObject player; // For accessing the player's available tools (and other player vars)
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
     public ToolType cur_tool = ToolType.Pencil;
@@ -85,7 +82,7 @@ public class DrawManager : MonoBehaviour
             EndDraw();
 
         // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1"))
+        if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil"))
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
@@ -93,7 +90,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2"))
+        if (Input.GetKeyDown("2") && player.GetComponent<PlayerVars>().inventory.hasTool("Pen"))
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
@@ -101,7 +98,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3"))
+        if (Input.GetKeyDown("3") && player.GetComponent<PlayerVars>().inventory.hasTool("Eraser"))
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();

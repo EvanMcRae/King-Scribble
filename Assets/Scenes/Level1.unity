@@ -3740,6 +3740,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1075752809 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5822156443712500876, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+  m_PrefabInstance: {fileID: 1970385613}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1109088456
 GameObject:
   m_ObjectHideFlags: 0
@@ -6648,6 +6653,63 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1001 &1717818894
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7297494632872281567, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_Name
+      value: Eraser Tool Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -16.315966
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.22814965
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
 --- !u!1 &1725070392
 GameObject:
   m_ObjectHideFlags: 0
@@ -8303,6 +8365,63 @@ Transform:
   - {fileID: 1600826811}
   m_Father: {fileID: 2035140177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &4405028096048649156
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -21.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894298149609094211, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_Name
+      value: Pen Tool Item
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 84c879b32b198e14282236054e16b504, type: 3}
 --- !u!1001 &6509239627727789495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8465,6 +8584,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1486656333}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1075752809}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566
       objectReference: {fileID: 0}
@@ -8498,3 +8621,5 @@ SceneRoots:
   - {fileID: 2035140177}
   - {fileID: 225907986}
   - {fileID: 997320440}
+  - {fileID: 4405028096048649156}
+  - {fileID: 1717818894}
