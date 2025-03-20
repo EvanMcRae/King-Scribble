@@ -219,7 +219,7 @@ public class DrawManager : MonoBehaviour
                 Debug.Log("size is " + size + "\nc_index is " + c_index);
                 Debug.Log("position count: " + lineRenderer.positionCount); // position count starts at 1 while c_index starts at 0
 
-                if((size == 2) || (size == 3 && c_index == 1)) { // Destroy the line!
+                if((size == 1) || (size == 2) || (size == 3 && c_index == 1)) { // Destroy the line!
                     Debug.Log("Line will be too small, destroying Line!");
                     Destroy(c.gameObject);
                     c = null;
@@ -260,17 +260,15 @@ public class DrawManager : MonoBehaviour
                     collidersList.RemoveAt(c_index);
                 }
                 else {
-                    // Optimizing the split:
-                    if(lineRenderer.positionCount/2.0 <= c_index) { // delete the left side of the Vector3
+                    int positionCount = lineRenderer.positionCount; // positionCount returns the size (counts from 1 not 0)
+                    GameObject idk = c.gameObject;
+                    Transform help = c.gameObject.GetComponent<Transform>();
+                    Vector3 positiontime = help.position;
+                    Debug.Log("collider position is " + positiontime);
 
-                    }
-                    else { // delete the right part
-
-                    }
-                    Debug.Log("collider position is " + c.bounds.center);
                     // Create a new Line to fill with the remainder of the points
                     Debug.Log("Creating new line");
-                    Line newLine = Instantiate(linePrefab, c.bounds.center, Quaternion.identity);
+                    Line newLine = Instantiate(linePrefab, positiontime, Quaternion.identity);
                     newLine.is_pen = false;
                     newLine.SetThickness(pencilThickness);
                     newLine.collisionsActive = true;
@@ -279,23 +277,20 @@ public class DrawManager : MonoBehaviour
                     newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
 
                     // Fill the new line and delete from the current line
-                    int positionCount = lineRenderer.positionCount;
                     int currPos = c_index+1; // When we delete a point, we actually dont move in the List
-                    for(int i = c_index+1; i < positionCount; i++) {
-                        Debug.Log("points[currPos] " + (points[currPos] + collidersList[0].bounds.center));
-                        newLine.SetPosition(points[currPos] + collidersList[0].bounds.center); // Copy point into a newLine
+                    for(int i = currPos; i < positionCount; i++) {
+                        //Debug.Log("points[currPos] " + (points[currPos] + collidersList[0].bounds.center));
+                        newLine.SetPosition(points[currPos] + positiontime); // Copy point into a newLine
 
                         points.RemoveAt(currPos); // Delete the point
                         Debug.Log("destroying: " + currPos);
                         Destroy(collidersList[currPos]); // Delete the collider
                         collidersList.RemoveAt(currPos);
-                    }
+                    }                   
                     
 
                     // checkpoint: change CircleCast to CircleCastAll so we can have a bigger eraser size?
-                    // line colliders and points have an offset when instantiated
-                    // rn it is points[currPos] + c.bounds.center 
-                    // points[currPos] + collidersList[0].bounds.center works better!
+                    // newLines are not being destroyed properly from the heirarchy
                 }
                 // Update the current Line Renderer
                 lineRenderer.positionCount = points.Count;
@@ -304,7 +299,12 @@ public class DrawManager : MonoBehaviour
             c = null;
 		}
     }
+
+    private void removePoint (int index) {
+        return;
+    }
 }
+
 
 
 /* Questions:
