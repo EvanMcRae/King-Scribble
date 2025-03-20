@@ -12,7 +12,7 @@ public class ScribbleMeter : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        PlayerController.instance.doodleEvent += UpdateSprite;
+        PlayerController.instance.GetComponent<PlayerVars>().doodleEvent += UpdateSprite;
     }
 
     void UpdateSprite(float doodlePercent)

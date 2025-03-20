@@ -75,7 +75,8 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Deduct doodle fuel if there's more than one point on this line
-        if (lineRenderer.positionCount > 1) PlayerController.instance.DrawDoodleFuel(1);
+        // if (lineRenderer.positionCount > 1) PlayerController.instance.DrawDoodleFuel(1);
+        if (lineRenderer.positionCount > 1) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)

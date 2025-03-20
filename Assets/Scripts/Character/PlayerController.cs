@@ -8,6 +8,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
+    private PlayerVars vars;
     private Rigidbody2D rb;
     [SerializeField] private Animator anim;
     [SerializeField] private CircleCollider2D[] cldrs;
@@ -46,10 +47,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     [SerializeField] private float speed;
     [SerializeField] private float movementSmoothing;
-
     private float calculatedSpeed;
     private bool holdingJump;
-
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck;
@@ -57,24 +56,20 @@ public class PlayerController : MonoBehaviour
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
     private Vector3 lastPosition;
-    private int doodleFuel;
-    [SerializeField] private int maxDoodleFuel = 500;
     [SerializeField] private Transform checkPos;
-    public delegate void DrawDoodleEvent(float doodlePercent);
-    public DrawDoodleEvent doodleEvent;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         instance = this;
-
+        vars = instance.GetComponent<PlayerVars>();
         timeSinceJumpPressed = 0.2f;
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        doodleFuel = maxDoodleFuel;
+        // doodleFuel = maxDoodleFuel;
     }
 
     // Update is called once per frame
@@ -387,24 +382,10 @@ public class PlayerController : MonoBehaviour
 
         canWalkOnSlope = !(slopeDownAngle > maxSlopeAngle || slopeSideAngle > maxSlopeAngle);
     }
-
-    public void DrawDoodleFuel(int amt)
+    
+    public void ResizePlayer(float fuel_left)
     {
-        doodleFuel -= amt;
-        if (doodleFuel < 0) doodleFuel = 0;
-
-        mainBody.transform.localScale = Vector3.one * doodleFuel / maxDoodleFuel;
-        if (doodleFuel == 0 && !isDead)
-        {
-            isDead = true;
-            doodleEvent((float) doodleFuel / maxDoodleFuel);
-            GameManager.instance.Reset();
-        }
-
-        if (!isDead)
-        {
-            doodleEvent((float) doodleFuel / maxDoodleFuel);
-        }
+        mainBody.transform.localScale = Vector3.one * fuel_left;
     }
 
     public bool OverlapsPosition(Vector2 position)
