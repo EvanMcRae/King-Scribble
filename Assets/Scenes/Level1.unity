@@ -576,6 +576,11 @@ Transform:
   - {fileID: 2079460752}
   m_Father: {fileID: 2035140177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &213642978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4607459938104291038, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &225907985
 GameObject:
   m_ObjectHideFlags: 0
@@ -4206,6 +4211,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1146875957 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6996805768717727190, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1344636852
 GameObject:
   m_ObjectHideFlags: 0
@@ -7384,7 +7394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7087994594828487266, guid: b6505642186acb743af7036cb5b81b46, type: 3}
       propertyPath: maxPenFuel
-      value: 500
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 7087994594828487266, guid: b6505642186acb743af7036cb5b81b46, type: 3}
       propertyPath: maxDoodleFuel
@@ -8595,6 +8605,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1075752809}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penMeter
+      value: 
+      objectReference: {fileID: 1146875957}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: scribbleMeter
+      value: 
+      objectReference: {fileID: 213642978}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566

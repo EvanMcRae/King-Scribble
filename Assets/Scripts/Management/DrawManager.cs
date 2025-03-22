@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public enum ToolType
@@ -14,6 +14,8 @@ public enum ToolType
 public class DrawManager : MonoBehaviour
 {
     [SerializeField] private Line linePrefab;
+    [SerializeField] private GameObject scribbleMeter;
+    [SerializeField] private GameObject penMeter;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
@@ -42,8 +44,21 @@ public class DrawManager : MonoBehaviour
         fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
         fillMatBlock.SetColor("_Color", fillColor);
+        penMeter.GetComponent<Image>().enabled = false;
     }
-
+    // Swap the positions and scales of the scribble and other active tool meters
+    void SwapMeters()
+    {
+        Vector3 tempPosition = scribbleMeter.transform.position;
+        Vector3 tempScale = scribbleMeter.GetComponent<RectTransform>().sizeDelta;
+        int tempOrder = scribbleMeter.GetComponent<Canvas>().sortingOrder;
+        scribbleMeter.transform.position = penMeter.transform.position;
+        scribbleMeter.GetComponent<RectTransform>().sizeDelta = penMeter.GetComponent<RectTransform>().sizeDelta;
+        scribbleMeter.GetComponent<Canvas>().sortingOrder = penMeter.GetComponent<Canvas>().sortingOrder;
+        penMeter.transform.position = tempPosition;
+        penMeter.GetComponent<RectTransform>().sizeDelta = tempScale;
+        penMeter.GetComponent<Canvas>().sortingOrder = tempOrder;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -56,6 +71,12 @@ public class DrawManager : MonoBehaviour
         if (drawCooldown > 0) { 
             drawCooldown -= Time.deltaTime;
             return;
+        }
+
+        // Enable the penMeter once the pen is acquired (ugly implementation, too lazy to do it properly right now)
+        if (!(penMeter.GetComponent<Image>().enabled) && (player.GetComponent<PlayerVars>().inventory.hasTool("Pen")))
+        {
+            penMeter.GetComponent<Image>().enabled = true;
         }
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -82,23 +103,25 @@ public class DrawManager : MonoBehaviour
             EndDraw();
 
         // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil"))
+        if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil") && cur_tool != ToolType.Pencil)
         {
+            SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2") && player.GetComponent<PlayerVars>().inventory.hasTool("Pen"))
+        if (Input.GetKeyDown("2") && player.GetComponent<PlayerVars>().inventory.hasTool("Pen") && cur_tool != ToolType.Pen)
         {
+            SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3") && player.GetComponent<PlayerVars>().inventory.hasTool("Eraser"))
+        if (Input.GetKeyDown("3") && player.GetComponent<PlayerVars>().inventory.hasTool("Eraser") && cur_tool != ToolType.Eraser)
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();

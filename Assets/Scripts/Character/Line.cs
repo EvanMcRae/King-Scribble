@@ -62,7 +62,7 @@ public class Line : MonoBehaviour
 
     private void AppendPos(Vector2 position)
     {
-        // Add circle collider component for this point
+        // Add circle collider component for this point if using pencil
         if (!is_pen) {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
@@ -74,9 +74,8 @@ public class Line : MonoBehaviour
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
-        // Deduct doodle fuel if there's more than one point on this line
-        // if (lineRenderer.positionCount > 1) PlayerController.instance.DrawDoodleFuel(1);
-        if (lineRenderer.positionCount > 1) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
+        // Deduct doodle fuel if there's more than one point on this line and using pencil
+        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)
@@ -113,19 +112,11 @@ public class Line : MonoBehaviour
     }
     public void AddPhysics()
     {
-        /*
-        // Properly connect close loops if within allowance
-        Vector2 marchPos = GetLastPoint();
-        while (Vector2.Distance(marchPos, GetFirstPoint()) > DrawManager.RESOLUTION)
-        {
-            marchPos = Vector2.MoveTowards(marchPos, GetFirstPoint(), DrawManager.RESOLUTION);
-            AppendPos(marchPos);
-        }
-        */
         lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
-
+        // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
+        PlayerController.instance.GetComponent<PlayerVars>().SpendPenFuel(lineRenderer.positionCount);
         // Set weight based on area
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line

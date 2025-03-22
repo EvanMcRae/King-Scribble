@@ -20,6 +20,5 @@ public class Inventory
     public void addTool(string tool) // Adds a given tool to the player's tool inventory
     {
         if (toolUnlocks.ContainsKey(tool)) toolUnlocks[tool] = true;
-        // Debug.Log("Tool " + tool + " added.");
     }
 }
