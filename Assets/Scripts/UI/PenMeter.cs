@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScribbleMeter : MonoBehaviour
+public class PenMeter : MonoBehaviour
 {
     const int NUM_SPRITES = 10; 
     [SerializeField] private Sprite[] sprites = new Sprite[NUM_SPRITES+1];
@@ -12,11 +12,11 @@ public class ScribbleMeter : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        PlayerController.instance.GetComponent<PlayerVars>().doodleEvent += UpdateSprite;
+        PlayerController.instance.GetComponent<PlayerVars>().penEvent += UpdateSprite;
     }
 
-    void UpdateSprite(float doodlePercent)
+    void UpdateSprite(float penPercent)
     {
-        image.sprite = sprites[Mathf.CeilToInt(doodlePercent * NUM_SPRITES)];
+        image.sprite = sprites[Mathf.CeilToInt(penPercent * NUM_SPRITES)];
     }
 }

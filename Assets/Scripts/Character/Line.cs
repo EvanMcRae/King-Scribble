@@ -17,6 +17,15 @@ public class Line : MonoBehaviour
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
 
+    Vector2[] ConvertArray(Vector3[] v3){
+        Vector2 [] v2 = new Vector2[v3.Length];
+        for(int i = 0; i <  v3.Length; i++){
+            Vector3 tempV3 = v3[i];
+            v2[i] = new Vector2(tempV3.x, tempV3.y);
+        }
+        return v2;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +40,9 @@ public class Line : MonoBehaviour
         if (!CanAppend(position)) return;
 
         position = transform.InverseTransformPoint(position);
+
+        // Special case to activate first collider
+        if (lineRenderer.positionCount == 1 && collisionsActive) colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
@@ -50,20 +62,20 @@ public class Line : MonoBehaviour
 
     private void AppendPos(Vector2 position)
     {
-        // Add circle collider component for this point
+        // Add circle collider component for this point if using pencil
         if (!is_pen) {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
             circleCollider.radius = thickness / 2;
-            if (!collisionsActive) circleCollider.enabled = false;
+            if (!collisionsActive || lineRenderer.positionCount == 0) circleCollider.enabled = false;
             colliders.Add(circleCollider);
         }
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
-        // Deduct doodle fuel if there's more than one point on this line
-        if (lineRenderer.positionCount > 1) PlayerController.instance.DrawDoodleFuel(1);
+        // Deduct doodle fuel if there's more than one point on this line and using pencil
+        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)
@@ -100,19 +112,11 @@ public class Line : MonoBehaviour
     }
     public void AddPhysics()
     {
-        /*
-        // Properly connect close loops if within allowance
-        Vector2 marchPos = GetLastPoint();
-        while (Vector2.Distance(marchPos, GetFirstPoint()) > DrawManager.RESOLUTION)
-        {
-            marchPos = Vector2.MoveTowards(marchPos, GetFirstPoint(), DrawManager.RESOLUTION);
-            AppendPos(marchPos);
-        }
-        */
         lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
-
+        // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
+        PlayerController.instance.GetComponent<PlayerVars>().SpendPenFuel(lineRenderer.positionCount);
         // Set weight based on area
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
@@ -151,4 +155,48 @@ public class Line : MonoBehaviour
             }
         }
     }
+    // Set the color of the line
+    public void SetColor(Color color)
+    {
+        lineRenderer.startColor = color;
+        lineRenderer.endColor = color;
+    }
+    // Create a polygon collider from the line renderer's points
+    public void AddPolyCollider()
+    {
+        // Get the list of points in the lineRenderer and convert to Vector2
+        Vector3[] points3 = new Vector3[GetPointsCount()];
+        lineRenderer.GetPositions(points3);
+        Vector2[] points2 = ConvertArray(points3);
+        // Create a polygon collider and set its path to the Vector2 list of points
+        PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
+        polyCollider.SetPath(0, points2);
+    }
+    // Add a mesh from the polygon collider (if it has been created)
+    public void AddMesh(Material mat, MaterialPropertyBlock matBlock)
+    {
+        PolygonCollider2D polyCollider = gameObject.GetComponent<PolygonCollider2D>();
+        if (!polyCollider) return; // Return if there is no polygon collider
+        // Create the mesh, mesh renderer, and mesh filter
+        Mesh polyMesh = polyCollider.CreateMesh(false, false); // (false, false allows its position to follow the rigidbody)
+        MeshRenderer polyRend = GetComponentInChildren<MeshRenderer>();
+        MeshFilter polyFilter = GetComponentInChildren<MeshFilter>();
+        // Set the material, mesh and layer parameters
+        polyRend.material = mat;
+        polyRend.sortingLayerName = "Ground";
+        polyRend.sortingOrder = -3;
+        polyRend.SetPropertyBlock(matBlock);
+
+        // Apply UV coordinates for texture rendering
+        Vector2[] uvs = new Vector2[polyMesh.vertexCount];
+        Bounds bounds = polyMesh.bounds;
+        for (int i = 0; i < polyMesh.vertexCount; i++)
+        {
+            // Map each vertex to a UV based on its position relative to the bounds
+            uvs[i] = new Vector2((polyMesh.vertices[i].x - bounds.min.x) / bounds.size.x, (polyMesh.vertices[i].y - bounds.min.y) / bounds.size.y);
+        }
+        polyMesh.uv = uvs;
+        polyFilter.mesh = polyMesh;
+    }
 }
+

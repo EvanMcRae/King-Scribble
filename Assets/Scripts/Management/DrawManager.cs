@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-
+using UnityEngine.UI;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public enum ToolType
@@ -15,14 +14,13 @@ public enum ToolType
 public class DrawManager : MonoBehaviour
 {
     [SerializeField] private Line linePrefab;
+    [SerializeField] private GameObject scribbleMeter;
+    [SerializeField] private GameObject penMeter;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
-    // TEMPORARY - REPLACE WITH AN ARRAY OR SOMETHING SOMEWHERE ELSE
-    public bool hasPencil = true;
-    public bool hasPen = false;
-    public bool hasEraser = false;
+    public GameObject player; // For accessing the player's available tools (and other player vars)
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
     public ToolType cur_tool = ToolType.Pencil;
@@ -34,18 +32,33 @@ public class DrawManager : MonoBehaviour
     public float penThickness_fin; // Thickness of pen lines once finished
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
-    
-    Vector2[] ConvertArray(Vector3[] v3){
-        Vector2 [] v2 = new Vector2[v3.Length];
-        for(int i = 0; i <  v3.Length; i++){
-            Vector3 tempV3 = v3[i];
-            v2[i] = new Vector2(tempV3.x, tempV3.y);
-        }
-        return v2;
-    }
-
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
 
+    public Material fillMat; // The material to fill pen objects with (temporary)
+    public Sprite fillTexture; // The texture to fill pen objects with (temporary)
+    public Color fillColor; // The color to fill pen objects with (temporary)
+    private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
+
+    private void Awake()
+    {
+        fillMatBlock = new MaterialPropertyBlock();
+        fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
+        fillMatBlock.SetColor("_Color", fillColor);
+        penMeter.GetComponent<Image>().enabled = false;
+    }
+    // Swap the positions and scales of the scribble and other active tool meters
+    void SwapMeters()
+    {
+        Vector3 tempPosition = scribbleMeter.transform.position;
+        Vector3 tempScale = scribbleMeter.GetComponent<RectTransform>().sizeDelta;
+        int tempOrder = scribbleMeter.GetComponent<Canvas>().sortingOrder;
+        scribbleMeter.transform.position = penMeter.transform.position;
+        scribbleMeter.GetComponent<RectTransform>().sizeDelta = penMeter.GetComponent<RectTransform>().sizeDelta;
+        scribbleMeter.GetComponent<Canvas>().sortingOrder = penMeter.GetComponent<Canvas>().sortingOrder;
+        penMeter.transform.position = tempPosition;
+        penMeter.GetComponent<RectTransform>().sizeDelta = tempScale;
+        penMeter.GetComponent<Canvas>().sortingOrder = tempOrder;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -59,53 +72,62 @@ public class DrawManager : MonoBehaviour
             drawCooldown -= Time.deltaTime;
             return;
         }
-            
-        // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1"))
+
+        // Enable the penMeter once the pen is acquired (ugly implementation, too lazy to do it properly right now)
+        if (!(penMeter.GetComponent<Image>().enabled) && (player.GetComponent<PlayerVars>().inventory.hasTool("Pen")))
         {
+            penMeter.GetComponent<Image>().enabled = true;
+        }
+
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (PlayerController.instance.OverlapsPosition(mousePos))
+        {
+            EndDraw();
+            currentLine = null;
+        }
+
+        // If the mouse has just been pressed, start drawing
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        {
+            if (cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
+                BeginDraw(mousePos);
+            if (cur_tool == ToolType.Eraser)
+                BeginErase(mousePos);
+        }
+        
+        // If the mouse is continuously held, continue to draw
+        if (Input.GetMouseButton(0) && currentLine != null)
+            Draw(mousePos);
+        // If the mouse has been released, stop drawing
+        if (Input.GetMouseButtonUp(0))
+            EndDraw();
+
+        // [1] key pressed - switch to pencil
+        if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil") && cur_tool != ToolType.Pencil)
+        {
+            SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2"))
+        if (Input.GetKeyDown("2") && player.GetComponent<PlayerVars>().inventory.hasTool("Pen") && cur_tool != ToolType.Pen)
         {
+            SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3"))
+        if (Input.GetKeyDown("3") && player.GetComponent<PlayerVars>().inventory.hasTool("Eraser") && cur_tool != ToolType.Eraser)
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
-        
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
-        {
-			if(cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
-				BeginDraw(mousePos);
-			if(cur_tool == ToolType.Eraser)
-				Erase(mousePos);
-        }
-        // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
-		{
-			Draw(mousePos);
-		}
-		// If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
-		{
-			if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-		}
-        
     }
     private void BeginDraw(Vector2 mouse_pos)
     {	
@@ -117,7 +139,8 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
-			currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+			      currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -169,23 +192,17 @@ public class DrawManager : MonoBehaviour
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
-                    currentLine.SetThickness(penThickness_fin);
-                    currentLine.GetComponent<LineRenderer>().startColor = penColor_fin;
-                    currentLine.GetComponent<LineRenderer>().endColor = penColor_fin;
-                    // currentLine.EnableColliders();
-                    var polyCollider = currentLine.gameObject.AddComponent<PolygonCollider2D>();
-                    Vector3[] points = new Vector3[currentLine.GetPointsCount()];
-                    Vector2[] pointsv2 = new Vector2[currentLine.GetPointsCount()];
-                    currentLine.GetComponent<LineRenderer>().GetPositions(points);
-                    pointsv2 = ConvertArray(points);
-                    polyCollider.SetPath(0, pointsv2);
+                    currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
+                    currentLine.SetColor(penColor_fin); // Set the color of the line 
+                    currentLine.AddPolyCollider(); // Add a polygon collider to the line using its lineRenderer points
+                    currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
-
                 }
                 
                 else // Otherwise, destroy the line (pen can only create closed loops)
                 { 
                     Destroy(currentLine.gameObject);
+                    currentLine = null;
                 }
             }
         }

@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -161,6 +160,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &4453454
 LineRenderer:
   serializedVersion: 2
@@ -354,6 +354,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &98049017
 LineRenderer:
   serializedVersion: 2
@@ -575,6 +576,11 @@ Transform:
   - {fileID: 2079460752}
   m_Father: {fileID: 2035140177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &213642978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4607459938104291038, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &225907985
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +662,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &237073831
 LineRenderer:
   serializedVersion: 2
@@ -1136,6 +1143,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &319506410
 LineRenderer:
   serializedVersion: 2
@@ -1405,6 +1413,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &375740626
 LineRenderer:
   serializedVersion: 2
@@ -2416,12 +2425,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -2575,6 +2584,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &622168430
 LineRenderer:
   serializedVersion: 2
@@ -3612,6 +3622,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1070984254
 LineRenderer:
   serializedVersion: 2
@@ -3734,6 +3745,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1075752809 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5822156443712500876, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+  m_PrefabInstance: {fileID: 1970385613}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1109088456
 GameObject:
   m_ObjectHideFlags: 0
@@ -3772,6 +3788,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1109088458
 LineRenderer:
   serializedVersion: 2
@@ -4084,6 +4101,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1141723770
 LineRenderer:
   serializedVersion: 2
@@ -4193,6 +4211,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1146875957 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6996805768717727190, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1344636852
 GameObject:
   m_ObjectHideFlags: 0
@@ -4231,6 +4254,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1344636854
 LineRenderer:
   serializedVersion: 2
@@ -4497,6 +4521,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1431982794
 LineRenderer:
   serializedVersion: 2
@@ -4767,6 +4792,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1446555558
 LineRenderer:
   serializedVersion: 2
@@ -5075,6 +5101,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1474017947
 LineRenderer:
   serializedVersion: 2
@@ -5226,6 +5253,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1556385843
 LineRenderer:
   serializedVersion: 2
@@ -5473,6 +5501,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1557790256
 LineRenderer:
   serializedVersion: 2
@@ -5956,6 +5985,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1632073192
 LineRenderer:
   serializedVersion: 2
@@ -6201,6 +6231,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1656760461
 LineRenderer:
   serializedVersion: 2
@@ -6493,6 +6524,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1658997618
 LineRenderer:
   serializedVersion: 2
@@ -6631,6 +6663,63 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1001 &1717818894
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7297494632872281567, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_Name
+      value: Eraser Tool Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -16.315966
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.22814965
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292702277631985370, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fba8c9b8ef1ef0d42b37ef151ddc77ae, type: 3}
 --- !u!1 &1725070392
 GameObject:
   m_ObjectHideFlags: 0
@@ -6684,6 +6773,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1725070395
 LineRenderer:
   serializedVersion: 2
@@ -6845,6 +6935,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1789339278
 LineRenderer:
   serializedVersion: 2
@@ -7176,6 +7267,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &1881682443
 LineRenderer:
   serializedVersion: 2
@@ -7300,6 +7392,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7087994594828487266, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+      propertyPath: maxPenFuel
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 7087994594828487266, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+      propertyPath: maxDoodleFuel
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 8223119919425195956, guid: b6505642186acb743af7036cb5b81b46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -24.89
@@ -7398,6 +7498,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &2001692364
 LineRenderer:
   serializedVersion: 2
@@ -8088,6 +8189,7 @@ MonoBehaviour:
   hasDrawn: 1
   thickness: 0.1
   collisionsActive: 1
+  is_pen: 0
 --- !u!120 &2131428180
 LineRenderer:
   serializedVersion: 2
@@ -8281,6 +8383,63 @@ Transform:
   - {fileID: 1600826811}
   m_Father: {fileID: 2035140177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &4405028096048649156
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -21.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4381453223133740624, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5894298149609094211, guid: 84c879b32b198e14282236054e16b504, type: 3}
+      propertyPath: m_Name
+      value: Pen Tool Item
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 84c879b32b198e14282236054e16b504, type: 3}
 --- !u!1001 &6509239627727789495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8443,6 +8602,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1486656333}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1075752809}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penMeter
+      value: 
+      objectReference: {fileID: 1146875957}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: scribbleMeter
+      value: 
+      objectReference: {fileID: 213642978}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566
       objectReference: {fileID: 0}
@@ -8476,3 +8647,5 @@ SceneRoots:
   - {fileID: 2035140177}
   - {fileID: 225907986}
   - {fileID: 997320440}
+  - {fileID: 4405028096048649156}
+  - {fileID: 1717818894}
