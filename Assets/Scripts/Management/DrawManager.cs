@@ -128,7 +128,6 @@ public class DrawManager : MonoBehaviour
 			cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
-        
     }
     private void BeginDraw(Vector2 mouse_pos)
     {	
@@ -140,6 +139,8 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
+			      currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+
         }
 
         else if (cur_tool == ToolType.Pen) {
@@ -156,7 +157,7 @@ public class DrawManager : MonoBehaviour
     {
 		if(cur_tool == ToolType.Eraser)
 		{
-			BeginErase(mouse_pos);
+			Erase(mouse_pos);
 			return;
 		}
 		
@@ -208,24 +209,98 @@ public class DrawManager : MonoBehaviour
 		currentLine = null;
     }
 
-    private void BeginErase(Vector2 mouse_pos) {
-		// need to shift to the left 8 times to get the layer mask of layer 8
-		// Ground is layer 3
-		//Debug.Log("Beginning Eraser");
+    private void Erase(Vector2 mouse_pos) {
 
-		/* Where I left off:
-			objects on the layer are not being detected~ unsure why but i'll experiment with OverlapPoint instead of Raycast next time :))
-			maybe the mouse_pos isn't the "point" parameter we need
+        RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, mouse_pos, LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
 
-			I assure that the mouse_pos = the collision pos
-		*/
-    	GameObject g = Utils.Raycast(Camera.main, mouse_pos, 1<<3); // Raycast is in Utils.cs
-		Debug.Log(mouse_pos);
-		if (g != null)
-			Debug.Log("Destroying!! ", g);
+        foreach (RaycastHit2D hit in hit2D) {
+            // Collider index corresponds to the index in the Line Renderer Array
+            CircleCollider2D c = (CircleCollider2D) hit.collider;
+            // CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines"));
+            if (c != null) {
+                LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
 
-		// Also need to call this while the mouse is being held down!
+                if(lineRenderer != null) {
+                    List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
+                    int c_index = collidersList.IndexOf(c); // the collider's index in the list
+                    int numPoints = lineRenderer.positionCount; // position count starts at 1 while c_index starts at 0
 
-		
+                    List<Vector3> pointsList = new List<Vector3>(); // Line renderer positions
+                    Vector3[] tempArray = new Vector3[numPoints];
+                    lineRenderer.GetPositions(tempArray); // Get the positions into the array
+                    pointsList.AddRange(tempArray); // Convert tempArray to a list
+
+                    
+                    if(c_index == -1) {
+                        // ignore the collider because it is no longer a part of the Line object :))
+                    }
+                    else if( (numPoints == 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
+                        //Debug.Log("destroying Line!");
+                        Destroy(c.gameObject);
+                        c = null;
+                        return;
+                    }
+                    else if(c_index == numPoints - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
+                        //Debug.Log("edge detected!");
+                        removePoint(c_index, c, pointsList, collidersList);
+                    }
+                    else if(c_index == 1) {
+                       //Debug.Log("2nd to start detected!");
+                        removePoint(1, c, pointsList, collidersList);
+                        removePoint(0, collidersList[0], pointsList, collidersList);
+                    }
+                    else if(c_index == numPoints - 2) { // we are at the 2nd to last point, delete the last two point only
+                        //Debug.Log("2nd to edge detected!");
+                        removePoint(c_index + 1, collidersList[c_index+1], pointsList, collidersList); // Destroy (c+1) first
+                        removePoint(c_index, c, pointsList, collidersList);
+                    }
+                    else { // Create a new Line to fill with the remainder of the points
+                        Debug.Log("Creating new line of size " + (numPoints - c_index+1));
+                        Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
+                        Line newLine = Instantiate(linePrefab, transformPosition, Quaternion.identity);
+                        newLine.is_pen = false;
+                        newLine.SetThickness(pencilThickness);
+                        newLine.collisionsActive = true;
+                        newLine.GetComponent<LineRenderer>().startColor = pencilColor;
+                        newLine.GetComponent<LineRenderer>().endColor = pencilColor;
+                        newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
+                        
+                        // Fill the new line and delete from the current line
+                        int currPos = c_index+1; // When we delete a point, we actually dont move in the List
+                        for(int i = currPos; i < numPoints; i++) {
+                            newLine.SetPosition(pointsList[currPos] + transformPosition); // Copy point into a newLine
+                            removePoint(currPos, collidersList[currPos], pointsList, collidersList);
+                        }
+                                      
+                        //Debug.Log("Deleting current point");
+                        removePoint(c_index, c, pointsList, collidersList); // Delete the current collider
+
+                        // sometimes there are stray colliders with no lines, could be that lines of size 1 cannot render the points
+                        // There is a bug where empty line clones are being left behind, only occurs on newly generated lines i think
+                    }
+                    // Update the current Line Renderer
+                    lineRenderer.positionCount = pointsList.Count;
+                    lineRenderer.SetPositions(pointsList.ToArray());
+                }
+                c = null;
+            }
+       }
+    }
+
+    private void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl) {
+        pl.RemoveAt(index); // Remove point from the list
+        //Debug.Log("destroying: " + index);
+        cl.RemoveAt(index); // Remove collider from the list
+        Destroy(c); // Destroy collider
+        return;
     }
 }
+
+
+
+/* Questions:
+
+How are we going to reformat the code?
+Eraser currently depletes health...
+
+*/
