@@ -36,6 +36,12 @@ public class PlayerVars : MonoBehaviour
         if (curPenFuel < 0) curPenFuel = 0;
         penEvent(penFuelLeft());
     }
+    public void AddDoodleFuel(int amount) {
+        curDoodleFuel += amount;
+        if (curDoodleFuel > maxDoodleFuel) curDoodleFuel = maxDoodleFuel; // shouldn't happen but just in case
+        PlayerController.instance.ResizePlayer(doodleFuelLeft());
+        doodleEvent(doodleFuelLeft());
+    }
     void Start()
     {
         inventory = new Inventory(); // Initialize a tool inventory containing only the pencil by default
