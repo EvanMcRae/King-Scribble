@@ -370,9 +370,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
-  hasPencil: 1
-  hasPen: 0
-  hasEraser: 0
+  scribbleMeter: {fileID: 0}
+  penMeter: {fileID: 0}
+  player: {fileID: 0}
   isDrawing: 0
   isErasing: 0
   cur_tool: 0
@@ -382,9 +382,10 @@ MonoBehaviour:
   pencilThickness: 0.1
   penThickness_start: 0.05
   penThickness_fin: 0.1
-  pencilCursor: {fileID: 2800000, guid: 935eed24d236a654d97c44a93f1a512a, type: 3}
-  penCursor: {fileID: 2800000, guid: d26f0a72ce432d044b3f030a1dc51187, type: 3}
-  eraserCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: 08148291e79704fe5ba4dc368c8a78d7, type: 3}
+  pencilCursor: {fileID: 2800000, guid: af4a0f8b72e884c05b666768ff9637cd, type: 3}
+  penCursor: {fileID: 2800000, guid: 775783f421b7e4fa1a9fdee3e919740a, type: 3}
+  eraserCursor: {fileID: 2800000, guid: 10728b136319e40b58619b069e19e633, type: 3}
   fillMat: {fileID: 2100000, guid: eae29e82f8aa244d6b87cb90f9a109f7, type: 2}
   fillTexture: {fileID: 21300000, guid: 6ff0727639429084c99e44c3b4fe8f6e, type: 3}
   fillColor: {r: 0, g: 0.14117648, b: 0.8784314, a: 1}

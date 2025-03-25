@@ -20,6 +20,7 @@ public class DrawManager : MonoBehaviour
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
+
     public GameObject player; // For accessing the player's available tools (and other player vars)
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
@@ -30,6 +31,8 @@ public class DrawManager : MonoBehaviour
     public float pencilThickness; // Thickness of pencil lines
     public float penThickness_start; // Thickness of pen lines while being drawn
     public float penThickness_fin; // Thickness of pen lines once finished
+
+    public Texture2D defaultCursor; // The texture file for the cursor used by default
     public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
     public Texture2D penCursor; // The texture file for the cursor used for the pen
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
@@ -41,6 +44,8 @@ public class DrawManager : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+
         fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
         fillMatBlock.SetColor("_Color", fillColor);
