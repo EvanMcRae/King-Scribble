@@ -92,7 +92,7 @@ public class DrawManager : MonoBehaviour
             if (cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
                 BeginDraw(mousePos);
             if (cur_tool == ToolType.Eraser)
-                BeginErase(mousePos);
+                Erase(mousePos);
         }
         
         // If the mouse is continuously held, continue to draw
@@ -236,6 +236,9 @@ public class DrawManager : MonoBehaviour
                     }
                     else if( (numPoints == 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log("destroying Line!");
+                        if(numPoints == 2) {PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(1);}
+                        if(numPoints == 3) {PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(2);} 
+
                         Destroy(c.gameObject);
                         c = null;
                         return;
@@ -255,7 +258,7 @@ public class DrawManager : MonoBehaviour
                         removePoint(c_index, c, pointsList, collidersList);
                     }
                     else { // Create a new Line to fill with the remainder of the points
-                        Debug.Log("Creating new line of size " + (numPoints - c_index+1));
+                        //Debug.Log("Creating new line of size " + (numPoints - c_index+1));
                         Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
                         Line newLine = Instantiate(linePrefab, transformPosition, Quaternion.identity);
                         newLine.is_pen = false;
@@ -292,6 +295,7 @@ public class DrawManager : MonoBehaviour
         //Debug.Log("destroying: " + index);
         cl.RemoveAt(index); // Remove collider from the list
         Destroy(c); // Destroy collider
+        PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(1); // Add fuel
         return;
     }
 }
