@@ -25,6 +25,5 @@ public class ChangeScene : MonoBehaviour
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(scene);
-        PlayerVars.instance.Reset(GameObject.Find("PlayerSpawnpoint").transform.position);
     }
 }

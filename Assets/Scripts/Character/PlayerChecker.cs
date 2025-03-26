@@ -16,6 +16,7 @@ public class PlayerChecker : MonoBehaviour
         }
         else
         {
+            PlayerVars.instance.Reset(transform.position);
             cam.Follow = PlayerVars.instance.transform;
         }
     }
