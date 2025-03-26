@@ -21,4 +21,10 @@ public class Inventory
     {
         if (toolUnlocks.ContainsKey(tool)) toolUnlocks[tool] = true;
     }
+    public void copy(Inventory other)
+    {
+        foreach (var tool in other.toolUnlocks) {
+            if (tool.Value) addTool(tool.Key);
+        }
+    }
 }

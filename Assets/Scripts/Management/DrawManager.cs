@@ -21,7 +21,7 @@ public class DrawManager : MonoBehaviour
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
-
+    private ToolType onTopMeter = ToolType.Pencil;
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
 
@@ -115,9 +115,11 @@ public class DrawManager : MonoBehaviour
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool("Pencil") && PlayerVars.instance.cur_tool != ToolType.Pencil)
         {
-            if (PlayerVars.instance.cur_tool != ToolType.None)
+            if (onTopMeter != ToolType.Pencil) {
                 SwapMeters();
-            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+                onTopMeter = ToolType.Pencil;
+            }
+            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
@@ -125,16 +127,23 @@ public class DrawManager : MonoBehaviour
         // [2] key pressed - switch to pen
         if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool("Pen") && PlayerVars.instance.cur_tool != ToolType.Pen)
         {
-            SwapMeters();
-            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+            if (onTopMeter != ToolType.Pen) {
+                SwapMeters();
+                onTopMeter = ToolType.Pen;
+            }
+            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
         if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool("Eraser") && PlayerVars.instance.cur_tool != ToolType.Eraser)
-        {
-            if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+        { 
+            if (onTopMeter == ToolType.Pen) {
+                SwapMeters();
+                onTopMeter = ToolType.Pencil;
+            }
+            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);

@@ -8,6 +8,5 @@ public class KeyPickup : Collectible
     public override void OnPickup(Collider2D player)
     {
         door.GetComponent<DoorScript>().removeLock();
-        Debug.Log("ae");
     }
 }

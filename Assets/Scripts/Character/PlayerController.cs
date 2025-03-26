@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
-    
+    private float levelZoom;
     private bool isSprintMoving = false;
     private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
@@ -63,14 +63,15 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         instance = this;
-
+        
         vars = GetComponent<PlayerVars>();
         timeSinceJumpPressed = 0.2f;
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        // doodleFuel = maxDoodleFuel;
+        levelZoom = virtualCamera.m_Lens.OrthographicSize;
+
     }
 
     // Update is called once per frame
@@ -104,12 +105,12 @@ public class PlayerController : MonoBehaviour
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
             if (Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7.5f, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
             else if (Mathf.Abs(realVelocity) < 0.01f && isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7f, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
         }
@@ -118,7 +119,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
             isSprinting = false;
