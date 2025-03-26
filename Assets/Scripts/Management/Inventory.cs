@@ -23,8 +23,6 @@ public class Inventory
     }
     public void copy(Inventory other)
     {
-        foreach (var tool in other.toolUnlocks) {
-            if (tool.Value) addTool(tool.Key);
-        }
+        toolUnlocks = other.toolUnlocks;
     }
 }
