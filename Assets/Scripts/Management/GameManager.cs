@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour
     public static bool resetting = false, paused = false;
     public static GameManager instance;
     public GameObject screenDarkener;
+    public Transform spawnpoint;
     public const float VOID_DEATH = -100;
+    public Texture2D defaultCursor, previousCursor;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
             if (!resetting && !ChangeScene.changingScene) Reset();
         }
 
-        if (PlayerController.instance.transform.position.y < VOID_DEATH && !resetting)
+        if (PlayerVars.instance.transform.position.y < VOID_DEATH && !resetting)
         {
             Reset();
         }
@@ -42,9 +44,12 @@ public class GameManager : MonoBehaviour
     {
         paused = true;
         Time.timeScale = 0;
+
         // Stop all sounds
         // Bring up menu
         screenDarkener.SetActive(true);
+
+        DrawManager.instance.SetCursor(ToolType.None);
     }
 
     public void Unpause()
@@ -54,6 +59,8 @@ public class GameManager : MonoBehaviour
         // Resume all sounds
         // Remove menu
         screenDarkener.SetActive(false);
+
+        DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
     }
 
     public void Reset()
@@ -71,5 +78,6 @@ public class GameManager : MonoBehaviour
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
+        PlayerVars.instance.Reset(spawnpoint.position);
     }
 }

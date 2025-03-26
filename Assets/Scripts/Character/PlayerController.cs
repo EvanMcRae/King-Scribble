@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
-    public bool isDead = false;
+    
     private bool isSprintMoving = false;
     private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
@@ -63,7 +63,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         instance = this;
-        vars = instance.GetComponent<PlayerVars>();
+
+        vars = GetComponent<PlayerVars>();
         timeSinceJumpPressed = 0.2f;
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
-        if (isDead) return;
+        if (vars.isDead) return;
 
         Jump();
 
@@ -140,7 +141,7 @@ public class PlayerController : MonoBehaviour
         calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f);
 
         // calculate target velocity
-        Vector3 targetVelocity = new Vector2(isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
+        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
 
         // check for ground/roof
         GroundCheck();
@@ -151,7 +152,7 @@ public class PlayerController : MonoBehaviour
         SlopeCheck();
         if (isOnSlope && isGrounded && !isJumping && canWalkOnSlope)
         {
-            targetVelocity.Set(isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * speed * -slopeNormalPerp.y, 0.0f);
+            targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * speed * -slopeNormalPerp.y, 0.0f);
         }
 
         // apply velocity, dampening between current and target

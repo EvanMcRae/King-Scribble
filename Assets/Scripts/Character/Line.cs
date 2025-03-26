@@ -75,7 +75,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
-        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
+        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerVars.instance.SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)
@@ -116,7 +116,7 @@ public class Line : MonoBehaviour
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
-        PlayerController.instance.GetComponent<PlayerVars>().SpendPenFuel(lineRenderer.positionCount);
+        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount);
         // Set weight based on area
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line

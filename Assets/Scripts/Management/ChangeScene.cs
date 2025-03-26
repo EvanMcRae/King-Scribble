@@ -10,7 +10,7 @@ public class ChangeScene : MonoBehaviour
     public string scene; // Name of the scene to change to
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!changingScene && collision.gameObject.CompareTag("Player") && PlayerController.instance != null && !PlayerController.instance.isDead && !GameManager.resetting) // && !GameSaver.loading)
+        if (!changingScene && collision.gameObject.CompareTag("Player") && PlayerVars.instance != null && !PlayerVars.instance.isDead && !GameManager.resetting) // && !GameSaver.loading)
         {
             StartCoroutine(LoadNextScene());
         }

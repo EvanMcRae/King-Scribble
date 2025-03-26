@@ -22,10 +22,9 @@ public class DrawManager : MonoBehaviour
     private Line currentLine;
     private float drawCooldown = 0f;
 
-    public GameObject player; // For accessing the player's available tools (and other player vars)
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
-    public ToolType cur_tool = ToolType.None;
+
     public Color pencilColor_start; // Color of pencil lines at the start of the gradient
     public Color pencilColor_end; // Color of pencil lines at the end of the gradient
     public Color penColor_start; // Color of pen lines while being drawn
@@ -44,8 +43,12 @@ public class DrawManager : MonoBehaviour
     public Color fillColor; // The color to fill pen objects with (temporary)
     private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
 
+    public static DrawManager instance;
+
     private void Awake()
     {
+        instance = this;
+
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
 
         fillMatBlock = new MaterialPropertyBlock();
@@ -70,7 +73,7 @@ public class DrawManager : MonoBehaviour
     void Update()
     {
         // Can't draw if you're dead
-        if (PlayerController.instance.isDead) {
+        if (PlayerVars.instance.isDead) {
             currentLine = null;
             return;
         }
@@ -81,7 +84,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // Enable the penMeter once the pen is acquired (ugly implementation, too lazy to do it properly right now)
-        if (!(penMeter.GetComponent<Image>().enabled) && (player.GetComponent<PlayerVars>().inventory.hasTool("Pen")))
+        if (!(penMeter.GetComponent<Image>().enabled) && PlayerVars.instance.inventory.hasTool("Pen"))
         {
             penMeter.GetComponent<Image>().enabled = true;
         }
@@ -96,9 +99,9 @@ public class DrawManager : MonoBehaviour
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
         {
-            if (cur_tool == ToolType.Pencil || cur_tool == ToolType.Pen)
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil || PlayerVars.instance.cur_tool == ToolType.Pen)
                 BeginDraw(mousePos);
-            if (cur_tool == ToolType.Eraser)
+            if (PlayerVars.instance.cur_tool == ToolType.Eraser)
                 Erase(mousePos);
         }
         
@@ -110,30 +113,30 @@ public class DrawManager : MonoBehaviour
             EndDraw();
 
         // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil") && cur_tool != ToolType.Pencil)
+        if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool("Pencil") && PlayerVars.instance.cur_tool != ToolType.Pencil)
         {
-            if (cur_tool != ToolType.None)
+            if (PlayerVars.instance.cur_tool != ToolType.None)
                 SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
-			cur_tool = ToolType.Pencil;
+			PlayerVars.instance.cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2") && player.GetComponent<PlayerVars>().inventory.hasTool("Pen") && cur_tool != ToolType.Pen)
+        if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool("Pen") && PlayerVars.instance.cur_tool != ToolType.Pen)
         {
             SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
-			cur_tool = ToolType.Pen;
+			PlayerVars.instance.cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3") && player.GetComponent<PlayerVars>().inventory.hasTool("Eraser") && cur_tool != ToolType.Eraser)
+        if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool("Eraser") && PlayerVars.instance.cur_tool != ToolType.Eraser)
         {
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
-			cur_tool = ToolType.Eraser;
+			PlayerVars.instance.cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
     }
@@ -141,17 +144,16 @@ public class DrawManager : MonoBehaviour
     {	
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
 		isDrawing = true; // the user is drawing
-        if (cur_tool == ToolType.Pencil) {
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
             currentLine.is_pen = false;
             currentLine.SetThickness(pencilThickness);
             currentLine.collisionsActive = true;
             currentLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
-			      currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
-
+			currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
         }
 
-        else if (cur_tool == ToolType.Pen) {
+        else if (PlayerVars.instance.cur_tool == ToolType.Pen) {
             currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
@@ -163,7 +165,7 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
-		if(cur_tool == ToolType.Eraser)
+		if(PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
 			Erase(mouse_pos);
 			return;
@@ -172,7 +174,7 @@ public class DrawManager : MonoBehaviour
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
 
-            if (cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
+            if (PlayerVars.instance.cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
                 if (currentLine.CheckClosedLoop() || currentLine.CheckCollision()) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
                 {
@@ -195,7 +197,7 @@ public class DrawManager : MonoBehaviour
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
                 Destroy(currentLine.gameObject);
 
-            if (cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
+            if (PlayerVars.instance.cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
@@ -244,8 +246,8 @@ public class DrawManager : MonoBehaviour
                     }
                     else if( (numPoints == 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log("destroying Line!");
-                        if(numPoints == 2) {PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(1);}
-                        if(numPoints == 3) {PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(2);} 
+                        if(numPoints == 2) {PlayerVars.instance.AddDoodleFuel(1);}
+                        if(numPoints == 3) {PlayerVars.instance.AddDoodleFuel(2);} 
 
                         Destroy(c.gameObject);
                         c = null;
@@ -303,8 +305,29 @@ public class DrawManager : MonoBehaviour
         //Debug.Log("destroying: " + index);
         cl.RemoveAt(index); // Remove collider from the list
         Destroy(c); // Destroy collider
-        PlayerController.instance.GetComponent<PlayerVars>().AddDoodleFuel(1); // Add fuel
+        PlayerVars.instance.AddDoodleFuel(1); // Add fuel
         return;
+    }
+
+    public void SetCursor(ToolType tool)
+    {
+        Texture2D texture;
+        switch (tool)
+        {
+            case ToolType.Pencil:
+                texture = pencilCursor;
+                break;
+            case ToolType.Pen:
+                texture = penCursor;
+                break;
+            case ToolType.Eraser:
+                texture = eraserCursor;
+                break;
+            default:
+                texture = defaultCursor;
+                break;
+        }
+        Cursor.SetCursor(texture, Vector2.zero, CursorMode.ForceSoftware);
     }
 }
 
@@ -313,6 +336,5 @@ public class DrawManager : MonoBehaviour
 /* Questions:
 
 How are we going to reformat the code?
-Eraser currently depletes health...
 
 */
