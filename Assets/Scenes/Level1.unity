@@ -4329,11 +4329,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6996805768717727190, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 6509239627727789495}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1339694214 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8136064663288634364, guid: d543b05aee12690479007aa93e26909d, type: 3}
-  m_PrefabInstance: {fileID: 6652482066997626212}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1344636852
 GameObject:
   m_ObjectHideFlags: 0
@@ -8837,10 +8832,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -10
       objectReference: {fileID: 0}
-    - target: {fileID: 4640975014570479838, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: spawnpoint
-      value: 
-      objectReference: {fileID: 1339694214}
     - target: {fileID: 4640975014570479838, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: screenDarkener
       value: 
