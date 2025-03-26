@@ -8,10 +8,10 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
     [SerializeField] private Sprite[] sprites = new Sprite[NUM_SPRITES]; // To easily change sprites when a lock is removed
     private Sprite sprite; // The current sprite for the door
     [SerializeField] private int numLocks; // The number of locks (if any) that must be removed to use the door 
-    void start()
+    void Awake()
     {
-        sprite = sprites[numLocks];
         if (numLocks > 3) numLocks = 3; // A door may have no more than three locks
+        sprite = sprites[numLocks];
         GetComponent<SpriteRenderer>().sprite = sprite;
     }
     public void removeLock() // Remove a lock from the door, called by each collected key that connects to the door
