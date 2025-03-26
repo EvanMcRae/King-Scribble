@@ -221,7 +221,7 @@ public class DrawManager : MonoBehaviour
 
     private void Erase(Vector2 mouse_pos) {
 
-        RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, mouse_pos, LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
+        RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, mouse_pos + new Vector2(0.5f,-0.5f), LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
 
         foreach (RaycastHit2D hit in hit2D) {
             // Collider index corresponds to the index in the Line Renderer Array
@@ -282,7 +282,7 @@ public class DrawManager : MonoBehaviour
                         int currPos = c_index+1; // When we delete a point, we actually dont move in the List
                         for(int i = currPos; i < numPoints; i++) {
                             newLine.SetPosition(pointsList[currPos] + transformPosition); // Copy point into a newLine
-                            removePoint(currPos, collidersList[currPos], pointsList, collidersList);
+                            removePoint(currPos, collidersList[currPos], pointsList, collidersList, false);
                         }
                                       
                         //Debug.Log("Deleting current point");
@@ -300,12 +300,12 @@ public class DrawManager : MonoBehaviour
        }
     }
 
-    private void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl) {
+    private void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel = true) {
         pl.RemoveAt(index); // Remove point from the list
         //Debug.Log("destroying: " + index);
         cl.RemoveAt(index); // Remove collider from the list
         Destroy(c); // Destroy collider
-        PlayerVars.instance.AddDoodleFuel(1); // Add fuel
+        if (addFuel) PlayerVars.instance.AddDoodleFuel(1); // Add fuel
         return;
     }
 

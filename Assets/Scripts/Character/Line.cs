@@ -75,7 +75,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
-        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerVars.instance.SpendDoodleFuel(1);
+        if ((lineRenderer.positionCount > 1) && PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)

@@ -78,6 +78,7 @@ public class PlayerVars : MonoBehaviour
         transform.position = spawnpoint;
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
+        isDead = false;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
     }
 }
