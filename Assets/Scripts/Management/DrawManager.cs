@@ -7,6 +7,7 @@ using UnityEngine.UI;
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public enum ToolType
 {
+    None,
     Pencil,
     Pen,
     Eraser
@@ -24,8 +25,9 @@ public class DrawManager : MonoBehaviour
     public GameObject player; // For accessing the player's available tools (and other player vars)
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
-    public ToolType cur_tool = ToolType.Pencil;
-    public Color pencilColor; // Color of pencil lines
+    public ToolType cur_tool = ToolType.None;
+    public Color pencilColor_start; // Color of pencil lines at the start of the gradient
+    public Color pencilColor_end; // Color of pencil lines at the end of the gradient
     public Color penColor_start; // Color of pen lines while being drawn
     public Color penColor_fin; // Color of pen lines once finished
     public float pencilThickness; // Thickness of pencil lines
@@ -110,7 +112,8 @@ public class DrawManager : MonoBehaviour
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1") && player.GetComponent<PlayerVars>().inventory.hasTool("Pencil") && cur_tool != ToolType.Pencil)
         {
-            SwapMeters();
+            if (cur_tool != ToolType.None)
+                SwapMeters();
             if(isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			cur_tool = ToolType.Pencil;
@@ -142,8 +145,8 @@ public class DrawManager : MonoBehaviour
             currentLine.is_pen = false;
             currentLine.SetThickness(pencilThickness);
             currentLine.collisionsActive = true;
-            currentLine.GetComponent<LineRenderer>().startColor = pencilColor;
-            currentLine.GetComponent<LineRenderer>().endColor = pencilColor;
+            currentLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
+            currentLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
 			      currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
 
         }
@@ -269,8 +272,8 @@ public class DrawManager : MonoBehaviour
                         newLine.is_pen = false;
                         newLine.SetThickness(pencilThickness);
                         newLine.collisionsActive = true;
-                        newLine.GetComponent<LineRenderer>().startColor = pencilColor;
-                        newLine.GetComponent<LineRenderer>().endColor = pencilColor;
+                        newLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
+                        newLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
                         newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
                         
                         // Fill the new line and delete from the current line
