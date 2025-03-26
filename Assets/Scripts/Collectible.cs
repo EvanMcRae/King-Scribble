@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
+    private bool beenCollected = false;
     // Called on collision with the player, generic "pickup" function
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !beenCollected)
         {
+            beenCollected = true;
             OnPickup(other);
             Destroy(this.gameObject);
         }
