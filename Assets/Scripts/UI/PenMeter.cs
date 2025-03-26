@@ -12,11 +12,16 @@ public class PenMeter : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        PlayerController.instance.GetComponent<PlayerVars>().penEvent += UpdateSprite;
+        PlayerVars.instance.penEvent += UpdateSprite;
     }
 
     void UpdateSprite(float penPercent)
     {
         image.sprite = sprites[Mathf.CeilToInt(penPercent * NUM_SPRITES)];
+    }
+
+    void OnDestroy()
+    {
+        PlayerVars.instance.penEvent -= UpdateSprite;
     }
 }

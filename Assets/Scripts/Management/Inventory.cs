@@ -5,10 +5,10 @@ using UnityEngine;
 public class Inventory
 {
     private Dictionary<string, bool> toolUnlocks;
-    public Inventory() // By default, the player only starts with the pencil
+    public Inventory() // By default, the player starts with no tools
     {
         toolUnlocks = new Dictionary<string, bool>();
-        toolUnlocks.Add("Pencil", true);
+        toolUnlocks.Add("Pencil", false);
         toolUnlocks.Add("Pen", false);
         toolUnlocks.Add("Eraser", false);
     }
@@ -20,5 +20,9 @@ public class Inventory
     public void addTool(string tool) // Adds a given tool to the player's tool inventory
     {
         if (toolUnlocks.ContainsKey(tool)) toolUnlocks[tool] = true;
+    }
+    public void copy(Inventory other)
+    {
+        toolUnlocks = other.toolUnlocks;
     }
 }

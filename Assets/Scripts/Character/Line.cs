@@ -35,14 +35,15 @@ public class Line : MonoBehaviour
         lineRenderer.widthMultiplier = thickness;
     }
 
-    public void SetPosition(Vector2 position)
+    public void SetPosition(Vector2 position, bool forced = false)
     {
-        if (!CanAppend(position)) return;
+        if (!forced && !CanAppend(position)) return;
 
         position = transform.InverseTransformPoint(position);
 
         // Special case to activate first collider
-        if (lineRenderer.positionCount == 1 && collisionsActive) colliders[0].enabled = true;
+        if (lineRenderer.positionCount >= 1 && collisionsActive && !colliders[0].enabled)
+            colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
@@ -75,7 +76,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
-        if ((lineRenderer.positionCount > 1) && (!is_pen)) PlayerController.instance.GetComponent<PlayerVars>().SpendDoodleFuel(1);
+        if ((lineRenderer.positionCount > 1) && PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(1);
     }
 
     private bool CanAppend(Vector2 position)
@@ -116,7 +117,7 @@ public class Line : MonoBehaviour
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
-        PlayerController.instance.GetComponent<PlayerVars>().SpendPenFuel(lineRenderer.positionCount);
+        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount);
         // Set weight based on area
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
