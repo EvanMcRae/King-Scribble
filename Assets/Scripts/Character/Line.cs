@@ -35,14 +35,15 @@ public class Line : MonoBehaviour
         lineRenderer.widthMultiplier = thickness;
     }
 
-    public void SetPosition(Vector2 position)
+    public void SetPosition(Vector2 position, bool forced = false)
     {
-        if (!CanAppend(position)) return;
+        if (!forced && !CanAppend(position)) return;
 
         position = transform.InverseTransformPoint(position);
 
         // Special case to activate first collider
-        if (lineRenderer.positionCount == 1 && collisionsActive) colliders[0].enabled = true;
+        if (lineRenderer.positionCount >= 1 && collisionsActive && !colliders[0].enabled)
+            colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)

@@ -240,17 +240,14 @@ public class DrawManager : MonoBehaviour
                     lineRenderer.GetPositions(tempArray); // Get the positions into the array
                     pointsList.AddRange(tempArray); // Convert tempArray to a list
 
-                    
+
                     if(c_index == -1) {
                         // ignore the collider because it is no longer a part of the Line object :))
                     }
-                    else if( (numPoints == 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
+                    else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log("destroying Line!");
-                        if(numPoints == 2) {PlayerVars.instance.AddDoodleFuel(1);}
-                        if(numPoints == 3) {PlayerVars.instance.AddDoodleFuel(2);} 
-
+                        PlayerVars.instance.AddDoodleFuel(numPoints);
                         Destroy(c.gameObject);
-                        c = null;
                         return;
                     }
                     else if(c_index == numPoints - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
@@ -281,7 +278,7 @@ public class DrawManager : MonoBehaviour
                         // Fill the new line and delete from the current line
                         int currPos = c_index+1; // When we delete a point, we actually dont move in the List
                         for(int i = currPos; i < numPoints; i++) {
-                            newLine.SetPosition(pointsList[currPos] + transformPosition); // Copy point into a newLine
+                            newLine.SetPosition(pointsList[currPos] + transformPosition, true); // Copy point into a newLine
                             removePoint(currPos, collidersList[currPos], pointsList, collidersList, false);
                         }
                                       
@@ -291,11 +288,18 @@ public class DrawManager : MonoBehaviour
                         // sometimes there are stray colliders with no lines, could be that lines of size 1 cannot render the points
                         // There is a bug where empty line clones are being left behind, only occurs on newly generated lines i think
                     }
+
                     // Update the current Line Renderer
                     lineRenderer.positionCount = pointsList.Count;
                     lineRenderer.SetPositions(pointsList.ToArray());
+
+                    // Extra check for good measure
+                    if (pointsList.Count <= 1)
+                    {
+                        PlayerVars.instance.AddDoodleFuel(pointsList.Count);
+                        Destroy(c.gameObject);
+                    }
                 }
-                c = null;
             }
        }
     }
