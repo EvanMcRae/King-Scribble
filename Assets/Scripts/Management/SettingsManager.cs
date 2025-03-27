@@ -59,9 +59,9 @@ public class SettingsManager : MonoBehaviour
 
         if (currentSettings.fullScreen)
         {
-            currentSettings.xRes = (float)Screen.width / Display.main.systemWidth;
-            currentSettings.yRes = (float)Screen.height / Display.main.systemHeight;
-            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, true);
+            currentSettings.xRes = (float)3840 / Display.main.systemWidth;
+            currentSettings.yRes = (float)2160 / Display.main.systemHeight;
+            Screen.SetResolution(3940, 2160, true);
         }
         else
         {
