@@ -21,7 +21,6 @@ public class EraserMeter : MonoBehaviour
 
     void UpdateSprite(float eraserPercent)
     {
-        Debug.Log(Mathf.FloorToInt(eraserPercent * NUM_SPRITES));
         image.sprite = sprites[Mathf.FloorToInt(eraserPercent * NUM_SPRITES)];
         if (eraserPercent <= 0)
         {

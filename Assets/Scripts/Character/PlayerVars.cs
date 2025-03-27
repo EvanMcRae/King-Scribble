@@ -17,9 +17,11 @@ public class PlayerVars : MonoBehaviour
     private int curEraserFuel;
     public delegate void DrawDoodleEvent(float doodlePercent);
     public delegate void DrawPenEvent(float penPercent);
+    public delegate void PenMonitorEvent(float penPercent);
     public delegate void EraseEvent(float erasePercent);
     public DrawDoodleEvent doodleEvent;
     public DrawPenEvent penEvent;
+    public PenMonitorEvent penMonitorEvent;
     public EraseEvent eraseEvent;
     public Action releaseEraser;
     public bool isDead = false;
@@ -56,10 +58,12 @@ public class PlayerVars : MonoBehaviour
     {
         tempPenFuel -= amount;
         if (tempPenFuel < 0) tempPenFuel = 0;
+        penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
     public void ResetTempPenFuel() // Called if the pen fails to draw a physics object
     {
         tempPenFuel = curPenFuel;
+        penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
 
     public void SpendEraserFuel(int amount) // Called every time eraser fuel is consumed

@@ -5,21 +5,27 @@ using UnityEngine.UI;
 
 public class PenMeter : MonoBehaviour
 {
-    private Image image;
+    [SerializeField] private Image sprite, monitor;
 
     void Start()
     {
-        image = GetComponent<Image>();
         PlayerVars.instance.penEvent += UpdateSprite;
+        PlayerVars.instance.penMonitorEvent += UpdateMonitor;
     }
 
     void UpdateSprite(float penPercent)
     {
-        image.fillAmount = penPercent;
+        sprite.fillAmount = penPercent;
+    }
+
+    void UpdateMonitor(float penPercent)
+    {
+        monitor.fillAmount = penPercent;
     }
 
     void OnDestroy()
     {
         PlayerVars.instance.penEvent -= UpdateSprite;
+        PlayerVars.instance.penMonitorEvent -= UpdateMonitor;
     }
 }
