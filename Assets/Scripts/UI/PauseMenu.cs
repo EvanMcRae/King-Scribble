@@ -59,6 +59,7 @@ public class PauseMenu : MonoBehaviour
         pauseScreen.SetActive(false);
 
         DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+        previousButton.GetComponent<MenuButton>().OnDeselect(null);
         EventSystem.current.SetSelectedGameObject(null);
     }
 
