@@ -7,6 +7,8 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject resumeButton;
+    [SerializeField] private GameObject SettingsPanel;
+
     private GameObject previousButton;
 
     // Start is called before the first frame update
@@ -64,6 +66,14 @@ public class PauseMenu : MonoBehaviour
     {
         Unpause();
         GameManager.instance.Reset();
+    }
+
+    public void Settings()
+    {
+        if (!PopupPanel.open)
+        {
+            SettingsPanel.gameObject.SetActive(true);
+        }
     }
 
     public void MainMenu()
