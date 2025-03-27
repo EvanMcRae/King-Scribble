@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,20 +8,28 @@ public class PlayerVars : MonoBehaviour
     public static PlayerVars instance;
 
     public Inventory inventory, lastSavedInventory;
-    [SerializeField] private int maxDoodleFuel = 500;
+    [SerializeField] private int maxDoodleFuel = 750;
     [SerializeField] private int maxPenFuel = 1000;
+    [SerializeField] private int maxEraserFuel = 500;
     public ToolType cur_tool = ToolType.None;
     private int curDoodleFuel;
-    private int curPenFuel;
+    private int curPenFuel, tempPenFuel;
+    private int curEraserFuel;
     public delegate void DrawDoodleEvent(float doodlePercent);
     public delegate void DrawPenEvent(float penPercent);
+    public delegate void EraseEvent(float erasePercent);
     public DrawDoodleEvent doodleEvent;
     public DrawPenEvent penEvent;
+    public EraseEvent eraseEvent;
+    public Action releaseEraser;
     public bool isDead = false;
     public int getDoodleFuel() {return curDoodleFuel;}
     public float doodleFuelLeft() {return (float) curDoodleFuel / maxDoodleFuel;}
     public int getPenFuel() {return curPenFuel;}
     public float penFuelLeft() {return (float) curPenFuel / maxPenFuel;}
+    public float tempPenFuelLeft() { return (float)tempPenFuel / maxPenFuel; }
+    public int getEraserFuel() { return curEraserFuel; }
+    public float eraserFuelLeft() { return (float)curEraserFuel / maxEraserFuel; }
 
     public void SpendDoodleFuel(int amount) // Called every time doodle fuel (pencil) is consumed
     {
@@ -35,12 +44,36 @@ public class PlayerVars : MonoBehaviour
         if (!isDead)
             doodleEvent(doodleFuelLeft());
     }
+
     public void SpendPenFuel(int amount) // Called every time pen fuel (pen - obviously) is consumed
     {
         curPenFuel -= amount;
         if (curPenFuel < 0) curPenFuel = 0;
+        tempPenFuel = curPenFuel;
         penEvent(penFuelLeft());
     }
+    public void SpendTempPenFuel(int amount) // Called while pen is drawing to monitor maximum draw amount
+    {
+        tempPenFuel -= amount;
+        if (tempPenFuel < 0) tempPenFuel = 0;
+    }
+    public void ResetTempPenFuel() // Called if the pen fails to draw a physics object
+    {
+        tempPenFuel = curPenFuel;
+    }
+
+    public void SpendEraserFuel(int amount) // Called every time eraser fuel is consumed
+    {
+        curEraserFuel -= amount;
+        if (curEraserFuel < 0) curEraserFuel = 0;
+        eraseEvent(eraserFuelLeft());
+    }
+    public void ReplenishEraser()
+    {
+        curEraserFuel = maxEraserFuel;
+        eraseEvent(1);
+    }
+
     public void AddDoodleFuel(int amount) {
         curDoodleFuel += amount;
         if (curDoodleFuel > maxDoodleFuel) curDoodleFuel = maxDoodleFuel; // shouldn't happen but just in case
@@ -60,6 +93,8 @@ public class PlayerVars : MonoBehaviour
         lastSavedInventory = new Inventory();
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
+        tempPenFuel = maxPenFuel;
+        curEraserFuel = maxEraserFuel;
     }
 
     private void Update()

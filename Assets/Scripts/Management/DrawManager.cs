@@ -59,9 +59,9 @@ public class DrawManager : MonoBehaviour
     void LoadSubmeter(ToolType tool)
     {
         // TODO fancier animation here or something, for now this will have to do :(
-        submeters[(int)activeSubmeter].SetActive(false);
+        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = false;
         activeSubmeter = tool;
-        submeters[(int)activeSubmeter].SetActive(true);
+        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = true;
     }
     
     // Update is called once per frame
@@ -88,10 +88,18 @@ public class DrawManager : MonoBehaviour
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
         {
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil || PlayerVars.instance.cur_tool == ToolType.Pen)
-                BeginDraw(mousePos);
-            if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-                Erase(mousePos);
+            switch (PlayerVars.instance.cur_tool)
+            {
+                case ToolType.Pencil:
+                    if (PlayerVars.instance.doodleFuelLeft() > 0) BeginDraw(mousePos);
+                    break;
+                case ToolType.Pen:
+                    if (PlayerVars.instance.penFuelLeft() > 0) BeginDraw(mousePos);
+                    break;
+                case ToolType.Eraser:
+                    if (PlayerVars.instance.eraserFuelLeft() > 0) Erase(mousePos);
+                    break;
+            }
         }
         
         // If the mouse is continuously held, continue to draw
@@ -99,7 +107,14 @@ public class DrawManager : MonoBehaviour
             Draw(mousePos);
         // If the mouse has been released, stop drawing
         if (Input.GetMouseButtonUp(0))
+        {
             EndDraw();
+            if (PlayerVars.instance.cur_tool == ToolType.Eraser)
+            {
+                PlayerVars.instance.releaseEraser?.Invoke();
+            }
+        }
+            
 
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
@@ -154,9 +169,11 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
-		if(PlayerVars.instance.cur_tool == ToolType.Eraser)
+		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
-			Erase(mouse_pos);
+            if (PlayerVars.instance.eraserFuelLeft() > 0)
+                Erase(mouse_pos);
+            else EndDraw();
 			return;
 		}
 		
@@ -165,7 +182,7 @@ public class DrawManager : MonoBehaviour
 
             if (PlayerVars.instance.cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
-                if (currentLine.CheckClosedLoop() || currentLine.CheckCollision()) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
+                if (currentLine.CheckClosedLoop() || currentLine.CheckCollision() || PlayerVars.instance.tempPenFuelLeft() < 0) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
                 {
                     EndDraw(); // Enabling physics will take place in this function through a second (admittedly redundant) closed loop check
                     drawCooldown = DRAW_CD; // Set a short cooldown (to prevent accidentally drawing a new line immediately after)
@@ -202,10 +219,11 @@ public class DrawManager : MonoBehaviour
                 { 
                     Destroy(currentLine.gameObject);
                     currentLine = null;
+                    PlayerVars.instance.ResetTempPenFuel();
                 }
             }
         }
-		currentLine = null;
+        currentLine = null;
     }
 
     private void Erase(Vector2 mouse_pos) {
@@ -229,13 +247,13 @@ public class DrawManager : MonoBehaviour
                     lineRenderer.GetPositions(tempArray); // Get the positions into the array
                     pointsList.AddRange(tempArray); // Convert tempArray to a list
 
-
                     if(c_index == -1) {
                         // ignore the collider because it is no longer a part of the Line object :))
                     }
                     else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log("destroying Line!");
                         PlayerVars.instance.AddDoodleFuel(numPoints);
+                        PlayerVars.instance.SpendEraserFuel(numPoints);
                         Destroy(c.gameObject);
                         return;
                     }
@@ -286,6 +304,7 @@ public class DrawManager : MonoBehaviour
                     if (pointsList.Count <= 1)
                     {
                         PlayerVars.instance.AddDoodleFuel(pointsList.Count);
+                        PlayerVars.instance.SpendEraserFuel(pointsList.Count);
                         Destroy(c.gameObject);
                     }
                 }
@@ -298,7 +317,11 @@ public class DrawManager : MonoBehaviour
         //Debug.Log("destroying: " + index);
         cl.RemoveAt(index); // Remove collider from the list
         Destroy(c); // Destroy collider
-        if (addFuel) PlayerVars.instance.AddDoodleFuel(1); // Add fuel
+        if (addFuel)
+        {
+            PlayerVars.instance.AddDoodleFuel(1); // Add fuel
+            PlayerVars.instance.SpendEraserFuel(1); // Spend eraser
+        }
         return;
     }
 

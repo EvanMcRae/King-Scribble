@@ -70,6 +70,7 @@ public class MainMenuManager : MonoBehaviour
             SettingsPanel.gameObject.SetActive(true);
         }
     }
+
     public void Credits()
     {
         if (!PopupPanel.open && !playing && !quitting)
