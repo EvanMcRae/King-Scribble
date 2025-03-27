@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edaa4413538828b4ea0ceb2844426081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenDarkener: {fileID: 0}
-  cursorTex: {fileID: 2800000, guid: 935eed24d236a654d97c44a93f1a512a, type: 3}
+  spawnpoint: {fileID: 8136064663288634364}
+  defaultCursor: {fileID: 0}
+  previousCursor: {fileID: 0}
 --- !u!1 &2129543429095961876
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,12 +164,59 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8136064663288634364}
   - {fileID: 8682166164529487460}
   - {fileID: 3831710433818556173}
   - {fileID: 6306996565702211968}
   - {fileID: 9146674026293768127}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4224953702399715076
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8136064663288634364}
+  - component: {fileID: 8542659324521561911}
+  m_Layer: 0
+  m_Name: PlayerSpawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 2800000, guid: c87b157c07015fc42ba7c5b857be80cb, type: 3}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8136064663288634364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4224953702399715076}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3676933707795059544}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8542659324521561911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4224953702399715076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c1d1828c76a646bd91a9b6f8450a64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 5822156443712500876, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+  cam: {fileID: 6201593291800123279}
 --- !u!1 &4648267746133774761
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,3 +418,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  scribbleMeter: {fileID: 0}
+  penMeter: {fileID: 0}
+  isDrawing: 0
+  isErasing: 0
+  pencilColor_start: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+  pencilColor_end: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 1}
+  penColor_start: {r: 0.745283, g: 0.08788714, b: 0.6973935, a: 1}
+  penColor_fin: {r: 0.45882353, g: 0.05882353, b: 0.43137255, a: 1}
+  pencilThickness: 0.1
+  penThickness_start: 0.05
+  penThickness_fin: 0.1
+  defaultCursor: {fileID: 2800000, guid: 08148291e79704fe5ba4dc368c8a78d7, type: 3}
+  pencilCursor: {fileID: 2800000, guid: af4a0f8b72e884c05b666768ff9637cd, type: 3}
+  penCursor: {fileID: 2800000, guid: 775783f421b7e4fa1a9fdee3e919740a, type: 3}
+  eraserCursor: {fileID: 2800000, guid: 10728b136319e40b58619b069e19e633, type: 3}
+  fillMat: {fileID: 2100000, guid: eae29e82f8aa244d6b87cb90f9a109f7, type: 2}
+  fillTexture: {fileID: 21300000, guid: 6ff0727639429084c99e44c3b4fe8f6e, type: 3}
+  fillColor: {r: 0.45882353, g: 0.05882353, b: 0.43137255, a: 1}
+  submeters: []

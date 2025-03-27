@@ -8,6 +8,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
+    private PlayerVars vars;
     private Rigidbody2D rb;
     [SerializeField] private Animator anim;
     [SerializeField] private CircleCollider2D[] cldrs;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
-    public bool isDead = false;
+    private float levelZoom;
     private bool isSprintMoving = false;
     private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
@@ -46,35 +47,31 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity = Vector3.zero;
     [SerializeField] private float speed;
     [SerializeField] private float movementSmoothing;
-
     private float calculatedSpeed;
     private bool holdingJump;
-
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D groundCheck, roofCheck;
+    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
     private Vector3 lastPosition;
-    private int doodleFuel;
-    [SerializeField] private int maxDoodleFuel = 500;
     [SerializeField] private Transform checkPos;
-    public delegate void DrawDoodleEvent(float doodlePercent);
-    public DrawDoodleEvent doodleEvent;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         instance = this;
-
+        
+        vars = GetComponent<PlayerVars>();
         timeSinceJumpPressed = 0.2f;
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        doodleFuel = maxDoodleFuel;
+        levelZoom = virtualCamera.m_Lens.OrthographicSize;
+
     }
 
     // Update is called once per frame
@@ -92,7 +89,8 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting);
-        if (isDead) return;
+        anim.SetBool("isGrounded", isGrounded);
+        if (vars.isDead) return;
 
         Jump();
 
@@ -107,12 +105,12 @@ public class PlayerController : MonoBehaviour
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
             if (Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7.5f, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
             else if (Mathf.Abs(realVelocity) < 0.01f && isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7f, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
         }
@@ -121,7 +119,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, 7, 1f);
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
             isSprinting = false;
@@ -144,7 +142,7 @@ public class PlayerController : MonoBehaviour
         calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f);
 
         // calculate target velocity
-        Vector3 targetVelocity = new Vector2(isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
+        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
 
         // check for ground/roof
         GroundCheck();
@@ -155,7 +153,7 @@ public class PlayerController : MonoBehaviour
         SlopeCheck();
         if (isOnSlope && isGrounded && !isJumping && canWalkOnSlope)
         {
-            targetVelocity.Set(isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * speed * -slopeNormalPerp.y, 0.0f);
+            targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * speed * -slopeNormalPerp.y, 0.0f);
         }
 
         // apply velocity, dampening between current and target
@@ -180,7 +178,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // fall detection
-        if (beenOnLand >= 0.1f && !isJumping && !isGrounded && !isFalling)
+        if (lastOnLand >= 0.1f && !isJumping && !isGrounded && !isFalling)
         {
             isFalling = true;
         }
@@ -250,6 +248,7 @@ public class PlayerController : MonoBehaviour
 
         if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
         {
+            anim.SetTrigger("justJumped");
             // TODO disabled, would reject jumps if on too steep of a slope
             // if (isOnSlope && slopeDownAngle > maxSlopeAngle) return;
 
@@ -304,8 +303,23 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             lastOnLand = 0f;
+            anim.SetBool("isLanding", false);
+            anim.ResetTrigger("justJumped");
             lastLandHeight = transform.position.y;
         }
+        else if (rb.velocity.y < 0)
+        {
+            landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
+            if (landCheck.IsTouchingLayers(whatIsGround))
+            {
+                anim.SetBool("isLanding", true);
+            }
+        }
+        else
+        {
+            anim.SetBool("isLanding", false);
+        }
+
     }
 
     void RoofCheck()
@@ -370,24 +384,10 @@ public class PlayerController : MonoBehaviour
 
         canWalkOnSlope = !(slopeDownAngle > maxSlopeAngle || slopeSideAngle > maxSlopeAngle);
     }
-
-    public void DrawDoodleFuel(int amt)
+    
+    public void ResizePlayer(float fuel_left)
     {
-        doodleFuel -= amt;
-        if (doodleFuel < 0) doodleFuel = 0;
-
-        mainBody.transform.localScale = Vector3.one * doodleFuel / maxDoodleFuel;
-        if (doodleFuel == 0 && !isDead)
-        {
-            isDead = true;
-            doodleEvent((float) doodleFuel / maxDoodleFuel);
-            GameManager.instance.Reset();
-        }
-
-        if (!isDead)
-        {
-            doodleEvent((float) doodleFuel / maxDoodleFuel);
-        }
+        mainBody.transform.localScale = Vector3.one * fuel_left;
     }
 
     public bool OverlapsPosition(Vector2 position)
