@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Reset"))
+        if (!paused && Input.GetButtonDown("Reset"))
         {
             if (!resetting && !ChangeScene.changingScene) Reset();
         }
