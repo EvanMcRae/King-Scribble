@@ -14,7 +14,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnDeselect(BaseEventData eventData)
     {
-        image.sprite = normal;
+        if (normal != null)
+            image.sprite = normal;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -56,7 +57,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!MainMenuManager.quitting && !MainMenuManager.playing)
         {
-            image.sprite = selected;
+            if (selected != null)
+                image.sprite = selected;
         }
     }
 }
