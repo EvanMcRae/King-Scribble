@@ -71,8 +71,9 @@ public class PlayerVars : MonoBehaviour
     // Runs on level reset/death/transition
     public void Reset(Vector3 spawnpoint)
     {
-        cur_tool = ToolType.None;
         inventory = lastSavedInventory;
+        if (!inventory.hasTool(cur_tool))
+            cur_tool = ToolType.None;
 
         GetComponent<PlayerController>().facingRight = false;
         transform.position = spawnpoint;

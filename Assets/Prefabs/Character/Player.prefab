@@ -496,7 +496,6 @@ MonoBehaviour:
   maxSlopeAngle: 45
   slippery: {fileID: 6200000, guid: 92c73c7f3e6bfd047bb6b5c36d4d6322, type: 2}
   friction: {fileID: 6200000, guid: f36a8a45d392d5145ba43dbb3928e89d, type: 2}
-  isDead: 0
   speed: 6
   movementSmoothing: 0.05
   whatIsGround:
@@ -508,7 +507,6 @@ MonoBehaviour:
   groundedRadius: 0.1
   roofedRadius: 0.1
   virtualCamera: {fileID: 0}
-  maxDoodleFuel: 1000
   checkPos: {fileID: 6508815763183056595}
 --- !u!114 &7087994594828487266
 MonoBehaviour:
@@ -522,6 +520,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b583c914e2e7542bdc8fd4579900f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDoodleFuel: 750
+  maxPenFuel: 1000
+  cur_tool: 0
+  isDead: 0
 --- !u!1 &5978138057339113815
 GameObject:
   m_ObjectHideFlags: 0

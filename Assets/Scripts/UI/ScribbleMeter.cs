@@ -5,19 +5,16 @@ using UnityEngine.UI;
 
 public class ScribbleMeter : MonoBehaviour
 {
-    const int NUM_SPRITES = 10; 
-    [SerializeField] private Sprite[] sprites = new Sprite[NUM_SPRITES+1];
-    private Image image;
+    [SerializeField] private Animator anim;
 
     void Start()
     {
-        image = GetComponent<Image>();
         PlayerVars.instance.doodleEvent += UpdateSprite;
     }
 
     void UpdateSprite(float doodlePercent)
     {
-        image.sprite = sprites[Mathf.CeilToInt(doodlePercent * NUM_SPRITES)];
+        anim.SetFloat("Fullness", doodlePercent);
     }
 
     void OnDestroy()

@@ -251,6 +251,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pencil Tool Item
       objectReference: {fileID: 0}
+    - target: {fileID: 5894298149609094211, guid: e4bd13b01211547c699243486c89d25d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -913,11 +917,6 @@ Transform:
   - {fileID: 1824291848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1146875957 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6996805768717727190, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-  m_PrefabInstance: {fileID: 6509239627727789495}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1326992217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,7 +1691,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4270231310239928293, guid: 60a8addfe544d4f4582142629abb9023, type: 3}
       propertyPath: scene
-      value: Level3
+      value: Level1_3
       objectReference: {fileID: 0}
     - target: {fileID: 4270231310239928293, guid: 60a8addfe544d4f4582142629abb9023, type: 3}
       propertyPath: numLocks
@@ -1752,6 +1751,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 998409445567399408, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 998409445567399408, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 998409445567399408, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 998409445567399408, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1808,6 +1819,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+--- !u!1 &6509239627727789496 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 778424000651713258, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6509239627727789497 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 34827629965978551, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6509239627727789498 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 298621836182011744, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 6509239627727789495}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6652482066997626212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1883,11 +1909,15 @@ PrefabInstance:
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penMeter
       value: 
-      objectReference: {fileID: 1146875957}
+      objectReference: {fileID: 0}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: scribbleMeter
       value: 
       objectReference: {fileID: 213642978}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: submeters.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: penColor_inProgress.b
       value: 0.8490566
@@ -1900,6 +1930,22 @@ PrefabInstance:
       propertyPath: penColor_inProgress.r
       value: 0.3155927
       objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: submeters.Array.data[0]
+      value: 
+      objectReference: {fileID: 6509239627727789498}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: submeters.Array.data[1]
+      value: 
+      objectReference: {fileID: 6509239627727789498}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: submeters.Array.data[2]
+      value: 
+      objectReference: {fileID: 6509239627727789497}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: submeters.Array.data[3]
+      value: 
+      objectReference: {fileID: 6509239627727789496}
     - target: {fileID: 6201593291800123279, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Follow
       value: 

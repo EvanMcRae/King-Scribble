@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class PenMeter : MonoBehaviour
 {
-    const int NUM_SPRITES = 10; 
-    [SerializeField] private Sprite[] sprites = new Sprite[NUM_SPRITES+1];
     private Image image;
 
     void Start()
@@ -17,7 +15,7 @@ public class PenMeter : MonoBehaviour
 
     void UpdateSprite(float penPercent)
     {
-        image.sprite = sprites[Mathf.CeilToInt(penPercent * NUM_SPRITES)];
+        image.fillAmount = penPercent;
     }
 
     void OnDestroy()

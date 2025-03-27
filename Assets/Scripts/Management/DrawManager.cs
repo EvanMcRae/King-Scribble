@@ -15,13 +15,11 @@ public enum ToolType
 public class DrawManager : MonoBehaviour
 {
     [SerializeField] private Line linePrefab;
-    [SerializeField] private GameObject scribbleMeter;
-    [SerializeField] private GameObject penMeter;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
     private float drawCooldown = 0f;
-    private ToolType onTopMeter = ToolType.Pencil;
+    private ToolType activeSubmeter = ToolType.Pencil;
     public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
     public bool isErasing = false; // True when the mouse is being held down with an erasing tool
 
@@ -43,32 +41,29 @@ public class DrawManager : MonoBehaviour
     public Color fillColor; // The color to fill pen objects with (temporary)
     private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
 
+    [SerializeField] private List<GameObject> submeters;
+
     public static DrawManager instance;
 
     private void Awake()
     {
         instance = this;
 
-        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+        SetCursor(PlayerVars.instance.cur_tool);
 
         fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
         fillMatBlock.SetColor("_Color", fillColor);
-        penMeter.GetComponent<Image>().enabled = false;
     }
-    // Swap the positions and scales of the scribble and other active tool meters
-    void SwapMeters()
+
+    void LoadSubmeter(ToolType tool)
     {
-        Vector3 tempPosition = scribbleMeter.transform.position;
-        Vector3 tempScale = scribbleMeter.GetComponent<RectTransform>().sizeDelta;
-        int tempOrder = scribbleMeter.GetComponent<Canvas>().sortingOrder;
-        scribbleMeter.transform.position = penMeter.transform.position;
-        scribbleMeter.GetComponent<RectTransform>().sizeDelta = penMeter.GetComponent<RectTransform>().sizeDelta;
-        scribbleMeter.GetComponent<Canvas>().sortingOrder = penMeter.GetComponent<Canvas>().sortingOrder;
-        penMeter.transform.position = tempPosition;
-        penMeter.GetComponent<RectTransform>().sizeDelta = tempScale;
-        penMeter.GetComponent<Canvas>().sortingOrder = tempOrder;
+        // TODO fancier animation here or something, for now this will have to do :(
+        submeters[(int)activeSubmeter].SetActive(false);
+        activeSubmeter = tool;
+        submeters[(int)activeSubmeter].SetActive(true);
     }
+    
     // Update is called once per frame
     void Update()
     {
@@ -81,12 +76,6 @@ public class DrawManager : MonoBehaviour
         if (drawCooldown > 0) { 
             drawCooldown -= Time.deltaTime;
             return;
-        }
-
-        // Enable the penMeter once the pen is acquired (ugly implementation, too lazy to do it properly right now)
-        if (!(penMeter.GetComponent<Image>().enabled) && PlayerVars.instance.inventory.hasTool("Pen"))
-        {
-            penMeter.GetComponent<Image>().enabled = true;
         }
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -113,36 +102,27 @@ public class DrawManager : MonoBehaviour
             EndDraw();
 
         // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool("Pencil") && PlayerVars.instance.cur_tool != ToolType.Pencil)
+        if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
         {
-            if (onTopMeter != ToolType.Pencil) {
-                SwapMeters();
-                onTopMeter = ToolType.Pencil;
-            }
+            LoadSubmeter(ToolType.Pencil);
             if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool("Pen") && PlayerVars.instance.cur_tool != ToolType.Pen)
+        if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
         {
-            if (onTopMeter != ToolType.Pen) {
-                SwapMeters();
-                onTopMeter = ToolType.Pen;
-            }
+            LoadSubmeter(ToolType.Pen);
             if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
         }
         // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool("Eraser") && PlayerVars.instance.cur_tool != ToolType.Eraser)
+        if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
         { 
-            if (onTopMeter == ToolType.Pen) {
-                SwapMeters();
-                onTopMeter = ToolType.Pencil;
-            }
+            LoadSubmeter(ToolType.Eraser);
             if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Eraser;
