@@ -15,10 +15,13 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel;
     private GameObject currentSelection;
     public static bool firstopen = false, quitting = false, playing = false;
+    public Texture2D defaultCursor;
 
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+
         EventSystem.current.SetSelectedGameObject(PlayButton.gameObject);
         firstopen = true;
     }
