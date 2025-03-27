@@ -1551,18 +1551,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 34827629965978551, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 778424000651713258, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 859153862831928906, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 998409445567399408, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1658,14 +1646,6 @@ PrefabInstance:
     - target: {fileID: 2451790977883974578, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_Name
       value: Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387461450313817228, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 211.74854
-      objectReference: {fileID: 0}
-    - target: {fileID: 5387461450313817228, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 193.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

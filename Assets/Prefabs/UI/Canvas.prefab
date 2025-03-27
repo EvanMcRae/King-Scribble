@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &9120067380030282359
 RectTransform:
   m_ObjectHideFlags: 0
@@ -434,7 +434,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7775354942911371813
 RectTransform:
   m_ObjectHideFlags: 0
@@ -821,7 +821,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 295, y: -20.931396}
+  m_AnchoredPosition: {x: 197, y: -20.931396}
   m_SizeDelta: {x: -710.8353, y: -41.8627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9169373333128418805
@@ -1702,7 +1702,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -100.93118, y: -20.931}
+  m_AnchoredPosition: {x: -209, y: -20.931}
   m_SizeDelta: {x: -751.382, y: -41.8627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8305620672268819201
@@ -1833,7 +1833,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 188, y: -20.931396}
+  m_AnchoredPosition: {x: 88, y: -20.931396}
   m_SizeDelta: {x: -717.852, y: -41.8627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3392141298531153779
@@ -1912,7 +1912,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -15, y: -20.931396}
+  m_AnchoredPosition: {x: -121, y: -20.931396}
   m_SizeDelta: {x: -717.852, y: -41.8627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2214499841570912935
@@ -2703,8 +2703,12 @@ PrefabInstance:
       value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 4638809711701871817, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 211.74854
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638809711701871817, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 193.25195
+      value: 193.25
       objectReference: {fileID: 0}
     - target: {fileID: 4839564305340144047, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
       propertyPath: m_AnchorMax.y
