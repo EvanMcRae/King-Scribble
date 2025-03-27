@@ -25,7 +25,7 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Pause") && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)
+        if (Input.GetButtonDown("Pause") && PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)
         {
             if (!GameManager.paused) Pause();
             else Unpause();
@@ -72,7 +72,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (!PopupPanel.open)
         {
-            SettingsPanel.gameObject.SetActive(true);
+            SettingsPanel.SetActive(true);
         }
     }
 
