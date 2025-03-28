@@ -93,7 +93,8 @@ public class PauseMenu : MonoBehaviour
     public void GoToMainMenu()
     {
         GameManager.resetting = false;
-        Destroy(PlayerVars.instance);
+        PlayerController.instance.KillTweens();
+        Destroy(PlayerVars.instance.gameObject);
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");

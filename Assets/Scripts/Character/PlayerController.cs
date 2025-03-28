@@ -69,9 +69,7 @@ public class PlayerController : MonoBehaviour
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
-        virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         levelZoom = virtualCamera.m_Lens.OrthographicSize;
-
     }
 
     // Update is called once per frame
@@ -103,12 +101,12 @@ public class PlayerController : MonoBehaviour
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
-            if (Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving)
+            if (Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
-            else if (Mathf.Abs(realVelocity) < 0.01f && isSprintMoving)
+            else if (Mathf.Abs(realVelocity) < 0.01f && isSprintMoving && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
@@ -126,6 +124,12 @@ public class PlayerController : MonoBehaviour
             sprintSpeedMultiplier = 1f;
         }
     }
+
+    public void KillTweens()
+    {
+        DOTween.KillAll();
+    }
+
 
     void FixedUpdate()
     {

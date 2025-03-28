@@ -12,11 +12,14 @@ public class PlayerChecker : MonoBehaviour
     {
         if (PlayerVars.instance == null)
         {
-            cam.Follow = Instantiate(playerPrefab, transform.position, Quaternion.identity).transform;
+            GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+            cam.Follow = player.transform;
+            player.GetComponent<PlayerController>().virtualCamera = cam;
         }
         else
         {
             PlayerVars.instance.Reset(transform.position);
+            PlayerController.instance.virtualCamera = cam;
             cam.Follow = PlayerVars.instance.transform;
         }
     }
