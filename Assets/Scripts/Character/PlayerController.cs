@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
         if (timeSinceJump < 1f)
             timeSinceJump += Time.deltaTime;
 
-        if (Input.GetButton("Sprint"))
+        if (Input.GetButton("Sprint") && moveX != 0)
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
