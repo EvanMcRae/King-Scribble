@@ -49,7 +49,6 @@ public class Line : MonoBehaviour
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
-            Debug.Log("marching");
             Vector2 marchPos = GetLastPoint();
             do
             {
