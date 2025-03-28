@@ -22,6 +22,7 @@ public class ChangeScene : MonoBehaviour
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostUnwipe += () => { changingScene = false; };
         yield return new WaitForSeconds(1f);
+        PlayerController.instance.KillTweens();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(scene);
