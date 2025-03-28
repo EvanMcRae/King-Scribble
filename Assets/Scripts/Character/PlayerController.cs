@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public PhysicsMaterial2D slippery, friction;
     private float moveX;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
-    private float levelZoom;
+    public float levelZoom;
     private bool isSprintMoving = false;
     private bool releasedJumpSinceJump = false, needToCutJump = false;
     public bool facingRight
@@ -69,7 +69,6 @@ public class PlayerController : MonoBehaviour
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
-        levelZoom = virtualCamera.m_Lens.OrthographicSize;
     }
 
     // Update is called once per frame
