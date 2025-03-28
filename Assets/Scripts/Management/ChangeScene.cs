@@ -18,6 +18,7 @@ public class ChangeScene : MonoBehaviour
 
     public IEnumerator LoadNextScene()
     {
+        PlayerVars.instance.SaveInventory();
         changingScene = true;
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostUnwipe += () => { changingScene = false; };

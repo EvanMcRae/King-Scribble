@@ -107,10 +107,15 @@ public class PlayerVars : MonoBehaviour
             instance = this;
     }
 
+    public void SaveInventory()
+    {
+        lastSavedInventory = inventory;
+    }
+
     // Runs on level reset/death/transition
     public void Reset(Vector3 spawnpoint)
     {
-        inventory = lastSavedInventory;
+        inventory.copy(lastSavedInventory);
         if (!inventory.hasTool(cur_tool))
             cur_tool = ToolType.None;
 

@@ -23,6 +23,6 @@ public class Inventory
     }
     public void copy(Inventory other)
     {
-        toolUnlocks = other.toolUnlocks;
+        toolUnlocks = new Dictionary<ToolType, bool>(other.toolUnlocks);
     }
 }
