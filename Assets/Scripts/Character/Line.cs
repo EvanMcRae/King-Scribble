@@ -16,6 +16,7 @@ public class Line : MonoBehaviour
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
+    public bool hasOverlapped = false;
 
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
@@ -48,6 +49,7 @@ public class Line : MonoBehaviour
         // If this point is too far away, march along it and add extra points
         if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
+            Debug.Log("marching");
             Vector2 marchPos = GetLastPoint();
             do
             {
@@ -74,6 +76,8 @@ public class Line : MonoBehaviour
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
+        if (is_pen)
+            CheckOverlap();
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
         if (lineRenderer.positionCount > 1)
@@ -129,17 +133,21 @@ public class Line : MonoBehaviour
         var area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
         rigidBody.mass = area;
     }
-    public bool CheckCollision()
+
+    public void CheckOverlap()
     // Check if the most recently drawn point is within some small distance from any other point (aka, if the user has created a loop - closed or otherwise)
     {
+        if (hasOverlapped) return;
         for (int i = 0; i < GetPointsCount() - 2; i++) // 2 instead of 1 to prevent detecting a collision with the previously drawn point (which would otherwise always happen)
         {
-            if (Vector2.Distance((Vector2)lineRenderer.GetPosition(i), GetLastPoint()) < 0.08f)
-                return true;
+            if (Vector2.Distance(lineRenderer.GetPosition(i), GetLastPoint()) < 0.08f)
+            {
+                hasOverlapped = true;
+                return;
+            }
         }
-
-        return false;
     }
+
     public void EnableColliders()
     {
         foreach (CircleCollider2D c in colliders)

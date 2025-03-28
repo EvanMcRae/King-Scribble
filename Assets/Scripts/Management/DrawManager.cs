@@ -182,7 +182,7 @@ public class DrawManager : MonoBehaviour
 
             if (PlayerVars.instance.cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
-                if (currentLine.CheckClosedLoop() || currentLine.CheckCollision() || PlayerVars.instance.tempPenFuelLeft() <= 0) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
+                if (currentLine.CheckClosedLoop() || currentLine.hasOverlapped || PlayerVars.instance.tempPenFuelLeft() <= 0) // If a closed loop or collision is created: end the line, enable physics, and start a short cooldown
                 {
                     EndDraw(); // Enabling physics will take place in this function through a second (admittedly redundant) closed loop check
                     drawCooldown = DRAW_CD; // Set a short cooldown (to prevent accidentally drawing a new line immediately after)
