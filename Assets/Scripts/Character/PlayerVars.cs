@@ -109,7 +109,7 @@ public class PlayerVars : MonoBehaviour
 
     public void SaveInventory()
     {
-        lastSavedInventory = inventory;
+        lastSavedInventory.copy(inventory);
     }
 
     // Runs on level reset/death/transition
