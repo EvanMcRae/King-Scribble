@@ -80,7 +80,11 @@ public class PlayerController : MonoBehaviour
             JumpCutCheck();
             return;
         }
-
+        if (!GameManager.canMove)
+        {
+            moveX = 0;
+            return;
+        }
         moveX = Input.GetAxisRaw("Horizontal");
         anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
         anim.SetBool("isJumping", isJumping);
