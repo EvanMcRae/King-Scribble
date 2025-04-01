@@ -197,7 +197,7 @@ Transform:
   m_GameObject: {fileID: 4224953702399715076}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -418,8 +418,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
-  scribbleMeter: {fileID: 0}
-  penMeter: {fileID: 0}
   isDrawing: 0
   isErasing: 0
   pencilColor_start: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
