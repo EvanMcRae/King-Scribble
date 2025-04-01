@@ -9,5 +9,6 @@ public class ToolPickup : Collectible
     {
         // Add the tool to the player's inventory 
         player.gameObject.transform.root.GetComponent<PlayerVars>().inventory.addTool(type);
+        ToolIndicator.instance.UpdateMenu();
     }
 }
