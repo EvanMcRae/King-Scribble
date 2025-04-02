@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
-                transform.DOMove(new Vector3(0, 0, 1), 1).SetEase(Ease.OutElastic);
             }
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
