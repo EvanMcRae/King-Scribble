@@ -54,7 +54,7 @@ public class Line : MonoBehaviour
             do
             {
                 marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
-                AppendPos(marchPos);
+                AppendPos(marchPos, forced);
             } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
         }
 
