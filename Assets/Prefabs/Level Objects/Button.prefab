@@ -245,6 +245,9 @@ MonoBehaviour:
           m_StringArgument: removeLock()
           m_BoolArgument: 0
         m_CallState: 2
+  on_first_press:
+    m_PersistentCalls:
+      m_Calls: []
   on_release:
     m_PersistentCalls:
       m_Calls:
@@ -275,7 +278,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

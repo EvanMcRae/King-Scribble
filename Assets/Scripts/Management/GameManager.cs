@@ -66,5 +66,6 @@ public class GameManager : MonoBehaviour
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
+        canMove = true;
     }
 }
