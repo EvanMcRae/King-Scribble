@@ -83,15 +83,26 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.canMove)
         {
             moveX = 0;
-            return;
+            JumpCutCheck();
+            if (isSprintMoving)
+            {
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
+                isSprintMoving = false;
+                transform.DOMove(new Vector3(0, 0, 1), 1).SetEase(Ease.OutElastic);
+            }
+            isSprinting = false;
+            sprintSpeedMultiplier = 1f;
         }
-        moveX = Input.GetAxisRaw("Horizontal");
-        anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
+        
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
-        if (vars.isDead) return;
+
+        if (vars.isDead || !GameManager.canMove) return;
+
+        moveX = Input.GetAxisRaw("Horizontal");
+        anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
 
         Jump();
 
