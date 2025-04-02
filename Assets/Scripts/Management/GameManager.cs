@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static bool resetting = false, paused = false, canMove = true;
     public static GameManager instance;
     public Transform spawnpoint;
-    public const float VOID_DEATH = -100;
+    public const float VOID_DEATH = -50;
     public Texture2D defaultCursor, previousCursor;
     public static Action ResetAction;
 
