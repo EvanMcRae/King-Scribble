@@ -88,7 +88,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null) && GameManager.canMove)
         {
             switch (PlayerVars.instance.cur_tool)
             {
@@ -105,10 +105,10 @@ public class DrawManager : MonoBehaviour
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
+        if (Input.GetMouseButton(0) && currentLine != null && GameManager.canMove)
             Draw(mousePos);
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || (currentLine != null && !GameManager.canMove))
         {
             EndDraw();
             if (PlayerVars.instance.cur_tool == ToolType.Eraser)
