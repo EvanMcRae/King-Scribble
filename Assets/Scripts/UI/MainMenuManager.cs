@@ -41,6 +41,12 @@ public class MainMenuManager : MonoBehaviour
     public void PlayGame()
     {
         if (playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= PlayGame;
         SettingsManager.SaveSettings();
         playing = true;
         ScreenWipe.instance.WipeIn();
@@ -57,6 +63,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void Instructions()
     {
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Instructions);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Instructions;
         if (!PopupPanel.open && !playing && !quitting)
         {
             InstructionsPanel.gameObject.SetActive(true);
@@ -65,7 +77,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void Settings()
     {
-        if (!PopupPanel.open && !playing && !quitting)
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Settings);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Settings;
+        if (ScreenWipe.over && !PopupPanel.open && !playing && !quitting)
         {
             SettingsPanel.gameObject.SetActive(true);
         }
@@ -73,7 +91,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void Credits()
     {
-        if (!PopupPanel.open && !playing && !quitting)
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Credits);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Credits;
+        if (ScreenWipe.over && !PopupPanel.open && !playing && !quitting)
         {
             CreditsPanel.gameObject.SetActive(true);
         }
@@ -82,6 +106,12 @@ public class MainMenuManager : MonoBehaviour
     public void Quit()
     {
         if (quitting || playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Quit);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Quit;
         quitting = true;
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += ExitGame;

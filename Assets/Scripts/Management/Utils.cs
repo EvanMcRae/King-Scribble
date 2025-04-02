@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class Utils
@@ -23,4 +24,15 @@ public static class Utils
         return null;
     }
 
+    public static void SetExclusiveAction(ref Action source, Action target)
+    {
+        if (source != null)
+        {
+            foreach (Action action in source.GetInvocationList())
+            {
+                source -= action;
+            }
+        }
+        source += target;
+    }
 }
