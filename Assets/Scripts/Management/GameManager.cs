@@ -34,7 +34,15 @@ public class GameManager : MonoBehaviour
             Reset();
         }
     }
-
+    
+    public void SetCamera(CinemachineVirtualCamera cam)
+    {
+        cam.gameObject.SetActive(true);
+    }
+    public void DeactivateCamera(CinemachineVirtualCamera cam)
+    {
+        cam.gameObject.SetActive(false);
+    }
     public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
     {
         StartCoroutine(cameraSwitch(cam1,cam2, time));
@@ -43,11 +51,11 @@ public class GameManager : MonoBehaviour
     IEnumerator cameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
     {
         canMove = false;
-        cam1.gameObject.SetActive(false);
+        // cam1.gameObject.SetActive(false);
         cam2.gameObject.SetActive(true);
         yield return new WaitForSeconds(5);
         cam2.gameObject.SetActive(false);
-        cam1.gameObject.SetActive(true);
+        // cam1.gameObject.SetActive(true);
         canMove = true;
     }
 
