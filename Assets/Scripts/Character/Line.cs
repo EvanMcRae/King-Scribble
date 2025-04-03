@@ -18,6 +18,7 @@ public class Line : MonoBehaviour
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
     public bool hasOverlapped = false;
+    public bool deleted = false;
 
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
@@ -48,7 +49,7 @@ public class Line : MonoBehaviour
             colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
-        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
+        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
@@ -82,8 +83,9 @@ public class Line : MonoBehaviour
         // Deduct doodle fuel if there's more than one point on this line and using pencil
         if (lineRenderer.positionCount > 1 && addFuel)
         {
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(1);
-            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(1);
+            int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost);
+            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost);
         }
     }
 
