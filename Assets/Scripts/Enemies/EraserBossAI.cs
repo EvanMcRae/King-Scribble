@@ -16,8 +16,7 @@ public class EraserBossAI : MonoBehaviour
         Nothing // testing
     }
     [SerializeField] public float speed = 3f; // Base speed
-    [SerializeField] public float slowDownDistance = 5f; // Distance at which to start slowing down
-    [SerializeField] public float maxSpeed = 5f; // Maximum speed
+    [SerializeField] public float eraserRadius = 1f;
     private Vector2 currentPosition;
     public GameObject KingScribble;
     private GameObject target; // current target: either KS or a LineRenderer
@@ -30,7 +29,7 @@ public class EraserBossAI : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         switch (state) {
             default:
@@ -52,6 +51,7 @@ public class EraserBossAI : MonoBehaviour
 
             case State.Charging:
                 MoveTo(destination);
+                EraserFunctions.Erase(transform.position, eraserRadius, false);
                 break;
 
             case State.Nothing:
@@ -60,15 +60,14 @@ public class EraserBossAI : MonoBehaviour
     }
 
     void MoveTo(Vector2 destination) {
-        float distance = Vector2.Distance(transform.position, destination); // distance to target
-        float maxDistanceDelta = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
-
+        //float distance = Vector2.Distance(transform.position, destination); // distance to target
+        float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
+        /*
         if (distance <= slowDownDistance) { // Slow down as we get closer to the target
-            maxDistanceDelta = Mathf.Lerp(0, maxSpeed, distance / slowDownDistance) * Time.deltaTime;
+            step = Mathf.Lerp(0, maxSpeed, distance / slowDownDistance) * Time.deltaTime;
         }
-
-        currentPosition = Vector2.MoveTowards(transform.position, destination, maxDistanceDelta); // move towards the target
-        transform.position = currentPosition;
+        */
+        transform.position =  Vector2.MoveTowards(transform.position, destination, step);
 
         // If destination reached, start charge cool down
         if(Vector2.Distance(transform.position, destination) < .1f) {
@@ -108,7 +107,7 @@ public class EraserBossAI : MonoBehaviour
     {
         state = State.Nothing;
         Debug.Log("WindUp timer");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         state = State.Charging;
     }
 
