@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 6843296991978755678}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Player
+  m_TagString: PlayerMain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 3097893530824102551}
   m_Layer: 0
   m_Name: MainBody
-  m_TagString: Player
+  m_TagString: PlayerMain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -424,7 +424,7 @@ GameObject:
   - component: {fileID: 7087994594828487266}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: PlayerMain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -496,6 +496,7 @@ MonoBehaviour:
   maxSlopeAngle: 45
   slippery: {fileID: 6200000, guid: 92c73c7f3e6bfd047bb6b5c36d4d6322, type: 2}
   friction: {fileID: 6200000, guid: f36a8a45d392d5145ba43dbb3928e89d, type: 2}
+  levelZoom: 0
   speed: 6
   movementSmoothing: 0.05
   whatIsGround:
@@ -522,6 +523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDoodleFuel: 750
   maxPenFuel: 1000
+  maxEraserFuel: 500
   cur_tool: 0
   isDead: 0
 --- !u!1 &5978138057339113815

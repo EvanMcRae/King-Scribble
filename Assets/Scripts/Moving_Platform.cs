@@ -109,4 +109,25 @@ public class Moving_Platform : MonoBehaviour
         if ((!(moving && move_stopped)) && (!(returning && ret_stopped)))
             transform.position = Vector2.MoveTowards(transform.position, dest, curSpeed*Time.deltaTime);
     }
+    
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "PlayerMain") // Only one collider on the player prefab has this tag
+        {
+            if ((other.transform.parent != null) && (other.transform.parent.transform.parent != null))
+                other.transform.parent.transform.parent.SetParent(transform);
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "PlayerMain")
+        {
+            if ((other.transform.parent != null) && (other.transform.parent.transform.parent != null))
+            {
+                other.transform.parent.transform.parent.SetParent(null);
+                DontDestroyOnLoad(other.transform.parent.transform.parent);
+            }
+        }
+    }
 }
