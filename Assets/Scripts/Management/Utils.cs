@@ -4,14 +4,10 @@ using UnityEngine;
 public static class Utils
 {
     // Functions in this class are accessible by all scripts in the current folder
-    public static RaycastHit2D[] RaycastAll(Camera maincamera, Vector2 screenPosition, int layermask)
+    public static RaycastHit2D[] RaycastAll(Camera maincamera, Vector2 screenPosition, int layermask, float radius)
     {
         Ray ray = maincamera.ScreenPointToRay(screenPosition);
-        RaycastHit2D[] hit2D = Physics2D.CircleCastAll(screenPosition, 0.5f, Vector2.zero, Mathf.Infinity, layermask); // returns all colliders in the circle
-        Debug.DrawLine(screenPosition, screenPosition + new Vector2(0, 0.5f), Color.red);
-        Debug.DrawLine(screenPosition, screenPosition + new Vector2(0, -0.5f), Color.red);
-        Debug.DrawLine(screenPosition, screenPosition + new Vector2(0.5f, 0f), Color.red);
-        Debug.DrawLine(screenPosition, screenPosition + new Vector2(-0.5f, 0f), Color.red);
+        RaycastHit2D[] hit2D = Physics2D.CircleCastAll(screenPosition, radius, Vector2.zero, Mathf.Infinity, layermask); // returns all colliders in the circle
         return hit2D;
     }
 

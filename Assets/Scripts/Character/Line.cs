@@ -37,7 +37,7 @@ public class Line : MonoBehaviour
         lineRenderer.widthMultiplier = thickness;
     }
 
-    public void SetPosition(Vector2 position, bool forced = false)
+    public void SetPosition(Vector2 position, bool forced = false, bool addFuel = true)
     {
         if (!forced && !CanAppend(position)) return;
 
@@ -54,16 +54,16 @@ public class Line : MonoBehaviour
             do
             {
                 marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
-                AppendPos(marchPos, forced);
+                AppendPos(marchPos, addFuel);
             } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
         }
 
-        AppendPos(position, forced);
+        AppendPos(position, addFuel);
 
         hasDrawn = true;
     }
 
-    private void AppendPos(Vector2 position, bool forced = false)
+    private void AppendPos(Vector2 position, bool addFuel = true)
     {
         // Add circle collider component for this point if using pencil
         if (!is_pen) {
@@ -80,7 +80,7 @@ public class Line : MonoBehaviour
             CheckOverlap();
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
-        if (lineRenderer.positionCount > 1 && !forced)
+        if (lineRenderer.positionCount > 1 && addFuel)
         {
             if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(1);
             else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(1);
