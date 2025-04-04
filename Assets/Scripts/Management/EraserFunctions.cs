@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EraserFunctions : MonoBehaviour
 {
-    public static void Erase(Vector2 pos, float radius, bool addFuel) {
+    public static void Erase(Vector2 pos, float radius, bool addFuel, GameObject parent = null) {
 
         RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius); // Raycast is in Utils.cs
 
@@ -58,8 +58,15 @@ public class EraserFunctions : MonoBehaviour
                     }
                     else { // Create a new Line to fill with the remainder of the points
                         //Debug.Log("Creating new line of size " + (numPoints - c_index - 1));
+                        Line newLine;
                         Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
-                        Line newLine = Instantiate(DrawManager.instance.linePrefab, transformPosition, Quaternion.identity);
+                        if(parent != null) {
+                            newLine = Instantiate(DrawManager.instance.linePrefab, transformPosition, Quaternion.identity, parent.transform);
+                        }
+                        else {
+                            newLine = Instantiate(DrawManager.instance.linePrefab, transformPosition, Quaternion.identity);
+                        }
+                        
                         DrawManager.instance.SetPencilParams(newLine);
 
                         // Fill the new line and delete from the current line

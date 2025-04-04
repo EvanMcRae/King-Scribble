@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class EraserBossAI : MonoBehaviour
 {
+    private IEnumerator chargingCooldown;
+    [SerializeField] private GameObject PencilLinesFolder;
+    
     private enum State {
-        Hovering,
+        Searching, // search for a position
         Moving,
-        WindingUp,
-        Charging,
+        ChargePrep,
+        Charging, // for lines
         Dizzied,
         Damaged,
-        Slamming,
+        SlamPrep, // hovering above KS before slam
+        Slamming, // for KS on ground
         Nothing // testing
     }
     [SerializeField] public float speed = 3f; // Base speed
@@ -20,102 +24,103 @@ public class EraserBossAI : MonoBehaviour
     private Vector2 currentPosition;
     public GameObject KingScribble;
     private GameObject target; // current target: either KS or a LineRenderer
-    private Vector2 destination;
+    private Vector3 destination;
     private State state;
     private SpriteRenderer spriteRenderer;
+    private float timer = 0.0f;
+    private float searchTime = 3.0f;
+    private float slamCooldownTime = 2.0f;
+    private float slamPrepTime = 2.0f;
 
     void Start() {
-        KingScribble = GameObject.Find("Player(Clone)");
+        KingScribble = PlayerVars.instance.gameObject;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     void FixedUpdate()
     {
+        timer += Time.deltaTime;
+
         switch (state) {
             default:
-            case State.Hovering:
+            case State.Searching:
                 SearchForPosition();
-                StartCoroutine(SearchTimer());
                 break;
 
             case State.Moving:
-                MoveTo(target.transform.position);
+                Hover(target.transform.position);
                 state = State.Nothing;
                 break;
 
-            case State.WindingUp:
+            case State.ChargePrep:
                 destination = target.transform.position;
-                spriteRenderer.color = Color.red;
-                StartCoroutine(WindUpTimer());
                 break;
-
+            
             case State.Charging:
-                MoveTo(destination);
-                EraserFunctions.Erase(transform.position, eraserRadius, false);
+                // get the line renderer position CLOSEST to boss.transform.position
+                // MoveTo the first point of the LineRenderer and loop thru all the remaining positions to delete
                 break;
 
-            case State.Nothing:
+            case State.SlamPrep:
+                destination = target.transform.position;
+                Hover(destination + new Vector3(0.0f, 10.0f)); // hover above KS
+                if(timer >= slamPrepTime) {
+                    timer = 0;
+                    spriteRenderer.color = Color.red;
+                    state = State.Slamming;
+                }
+                break;
+
+            case State.Slamming:
+                Slam(destination);
+                EraserFunctions.Erase(transform.position, eraserRadius, false, PencilLinesFolder);
+                break;
+
+            case State.Nothing: // used for slamCoolDown
+                if(timer >= slamCooldownTime) {
+                    Color color;
+                    if( ColorUtility.TryParseHtmlString("#FFB8EF", out color))
+                    {
+                        spriteRenderer.color = color;
+                    }
+                    timer = 0;
+                    state = State.Searching;
+                }
                 break;
         }
     }
 
-    void MoveTo(Vector2 destination) {
-        //float distance = Vector2.Distance(transform.position, destination); // distance to target
-        float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
-        /*
-        if (distance <= slowDownDistance) { // Slow down as we get closer to the target
-            step = Mathf.Lerp(0, maxSpeed, distance / slowDownDistance) * Time.deltaTime;
+     void SearchForPosition() {
+        // If line renderer present, goes for the biggest one
+        target = KingScribble;
+        if(timer >= searchTime){
+            timer = 0;
+            spriteRenderer.color = Color.yellow;
+            state = State.SlamPrep;    
         }
-        */
+    }
+
+    void Hover(Vector2 destination) {
+        float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
+        transform.position =  Vector2.MoveTowards(transform.position, destination, step);
+    }
+
+    void Slam(Vector2 destination) {
+        float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
+
         transform.position =  Vector2.MoveTowards(transform.position, destination, step);
 
-        // If destination reached, start charge cool down
+        // If destination reached, start slam cool down
         if(Vector2.Distance(transform.position, destination) < .1f) {
-            StartCoroutine(ChargingCooldown());
+            Debug.Log("Destination Reached");
+            timer = 0;
+            spriteRenderer.color = Color.yellow;
+            state = State.Nothing;
         }
-
         // on collision with KS: deal damage to KS
 
         // on collsion with LineRenderer: erase
 
         // on collision with pen wall of enough mass: shatter wall and state = State.Dizzied
-    }
-
-    void SearchForPosition() {
-        // If line renderer present, goes for the biggest one
-        target = KingScribble;
-    }
-
-    // All coroutines below:
-
-    private IEnumerator ChargingCooldown()
-    {
-        state = State.Nothing;
-        Debug.Log("Charging Cooldown");
-        spriteRenderer.color = Color.yellow;
-        yield return new WaitForSeconds(3);
-        // dumb code for hex values:
-        Color color;
-        if( ColorUtility.TryParseHtmlString("#FFB8EF", out color))
-        {
-            spriteRenderer.color = color;
-        }
-        state = State.Hovering;
-    }
-
-    private IEnumerator WindUpTimer()
-    {
-        state = State.Nothing;
-        Debug.Log("WindUp timer");
-        yield return new WaitForSeconds(1);
-        state = State.Charging;
-    }
-
-    private IEnumerator SearchTimer()
-    {
-        state = State.Nothing;
-        Debug.Log("Search timer");
-        yield return new WaitForSeconds(3);
-        state = State.WindingUp;
     }
 }

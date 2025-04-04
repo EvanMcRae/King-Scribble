@@ -486,7 +486,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f1c3a178ef24dae8c02d0078d2fdc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PencilLinesFolder: {fileID: 2132652788}
   speed: 30
+  eraserRadius: 1
   KingScribble: {fileID: 0}
 --- !u!1 &927284064
 GameObject:
@@ -868,6 +870,37 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!1 &2132652788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132652789}
+  m_Layer: 0
+  m_Name: EraseableLines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2132652789
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132652788}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.6784198, y: -0.6489409, z: 0.029819068}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6509239627727789495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1085,6 +1118,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 213642978}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: PencilLinesFolder
+      value: 
+      objectReference: {fileID: 2132652788}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -1162,3 +1199,4 @@ SceneRoots:
   - {fileID: 1678589826}
   - {fileID: 1427499982}
   - {fileID: 238847047}
+  - {fileID: 2132652789}

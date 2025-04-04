@@ -16,6 +16,7 @@ public class DrawManager : MonoBehaviour
 {
     [SerializeField] public Line linePrefab;
     [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased
+    [SerializeField] private GameObject PencilLinesFolder;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
@@ -152,13 +153,20 @@ public class DrawManager : MonoBehaviour
     }
     private void BeginDraw(Vector2 mouse_pos)
     {	
-        currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
+
+        
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
+            if(PencilLinesFolder != null) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity, PencilLinesFolder.transform); // Create a new line with the first point at the mouse's current position
+            }
+            else {
+                currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity);
+            }
             SetPencilParams(currentLine);
         }
-
         else if (PlayerVars.instance.cur_tool == ToolType.Pen) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
             currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
