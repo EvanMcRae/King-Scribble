@@ -114,9 +114,10 @@ public class Moving_Platform : MonoBehaviour
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
     }
     
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
-        Mount(other.gameObject);
+        if (moving)
+            Mount(other.gameObject);
     }
 
     void OnTriggerExit2D(Collider2D other)
