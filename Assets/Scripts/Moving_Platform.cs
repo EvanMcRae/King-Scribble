@@ -21,6 +21,10 @@ public class Moving_Platform : MonoBehaviour
     public CinemachineVirtualCamera tempView; // The secondary virtual camera positioned to briefly show the entirety of the affected area (optional)
     public float viewTime = 2.5f; // The time the camera will linger on the secondary position before returning to the player (optional)
     // Start is called before the first frame update
+
+    [SerializeField] private Rigidbody2D rigidBody;
+    public Dictionary<Transform, Transform> passengerRoots = new();
+
     void Start()
     {
         start = transform.position;
@@ -104,9 +108,40 @@ public class Moving_Platform : MonoBehaviour
         }
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if ((!(moving && move_stopped)) && (!(returning && ret_stopped)))
-            transform.position = Vector2.MoveTowards(transform.position, dest, curSpeed*Time.deltaTime);
+            rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
+    }
+    
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (moving)
+            Mount(other.gameObject);
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        Dismount(other.gameObject);
+    }
+
+    public void Mount(GameObject passenger)
+    {
+        if (passenger.transform.root != null && passenger.transform.root != transform.parent)
+        {
+            passengerRoots.TryAdd(passenger.transform, passenger.transform.root);
+            passenger.transform.root.SetParent(transform.parent, true);
+        }
+    }
+
+    public void Dismount(GameObject passenger)
+    {
+        if (gameObject.activeInHierarchy && passengerRoots.ContainsKey(passenger.transform))
+        {
+            passengerRoots[passenger.transform].SetParent(null, true);
+            if (passenger.CompareTag("Player"))
+                DontDestroyOnLoad(passengerRoots[passenger.transform]);
+            passengerRoots.Remove(passenger.transform);
+        }
     }
 }
