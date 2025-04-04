@@ -121,6 +121,7 @@ public class Line : MonoBehaviour
     }
     public void AddPhysics()
     {
+        gameObject.layer = 7; // Pen line layer
         lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;

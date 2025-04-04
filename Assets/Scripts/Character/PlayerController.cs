@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     private PlayerVars vars;
     private Rigidbody2D rb;
     [SerializeField] private Animator anim;
-    [SerializeField] private CircleCollider2D[] cldrs;
     [SerializeField] private GameObject mainBody; 
     [SerializeField] private float jumpForce = 800f;
     private float jumpTime, lastOnLand, lastLandHeight, timeSinceJump, timeSinceJumpPressed, beenOnLand, fallTime,  jumpSpeedMultiplier, sprintSpeedMultiplier;
@@ -37,10 +36,9 @@ public class PlayerController : MonoBehaviour
         }
         set
         {
-            int neg = 1;
+            int neg = -1;
             if (value)
                 neg *= -1;
-
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * neg, transform.localScale.y, transform.localScale.z);
         }
     }
@@ -69,6 +67,7 @@ public class PlayerController : MonoBehaviour
         jumpSpeedMultiplier = 1f;
         sprintSpeedMultiplier = 1f;
         jumpTime = 0f;
+        facingRight = true;
     }
 
     // Update is called once per frame
@@ -151,7 +150,6 @@ public class PlayerController : MonoBehaviour
         if ((moveX < 0 && facingRight) || (moveX > 0 && !facingRight))
         {
             facingRight = !facingRight;
-            transform.localScale = new Vector3(-1 * transform.localScale.x, 1, 1);
         }
 
         // calculate speed
@@ -177,19 +175,13 @@ public class PlayerController : MonoBehaviour
         {
             if (canWalkOnSlope || !isOnSlope)
             {
-                foreach (CircleCollider2D cldr in cldrs)
-                {
-                    cldr.sharedMaterial = friction;
-                }
+                mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
             }
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
         }
         else
         {
-            foreach (CircleCollider2D cldr in cldrs)
-            {
-                cldr.sharedMaterial = slippery;
-            }
+            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
 
@@ -408,13 +400,6 @@ public class PlayerController : MonoBehaviour
 
     public bool OverlapsPosition(Vector2 position)
     {
-        foreach (CircleCollider2D cldr in cldrs)
-        {
-            if (Vector2.Distance(cldr.transform.position, position) <= cldr.radius * mainBody.transform.localScale.x * 1.5f)
-            {
-                return true;
-            }
-        }
-        return false;
+        return mainBody.GetComponent<PolygonCollider2D>().OverlapPoint(position);
     }
 }

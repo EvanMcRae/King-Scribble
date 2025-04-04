@@ -119,11 +119,17 @@ public class PlayerVars : MonoBehaviour
         if (!inventory.hasTool(cur_tool))
             cur_tool = ToolType.None;
 
-        GetComponent<PlayerController>().facingRight = false;
+        GetComponent<PlayerController>().facingRight = true;
         transform.position = spawnpoint;
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
         isDead = false;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
+    }
+
+    public void Dismount()
+    {
+        transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
     }
 }
