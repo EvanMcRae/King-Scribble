@@ -80,14 +80,28 @@ public class PlayerController : MonoBehaviour
             JumpCutCheck();
             return;
         }
-
-        moveX = Input.GetAxisRaw("Horizontal");
-        anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
+        if (!GameManager.canMove)
+        {
+            moveX = 0;
+            JumpCutCheck();
+            if (isSprintMoving)
+            {
+                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
+                isSprintMoving = false;
+            }
+            isSprinting = false;
+            sprintSpeedMultiplier = 1f;
+        }
+        
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
-        if (vars.isDead) return;
+
+        if (vars.isDead || !GameManager.canMove) return;
+
+        moveX = Input.GetAxisRaw("Horizontal");
+        anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
 
         Jump();
 
@@ -128,7 +142,6 @@ public class PlayerController : MonoBehaviour
     {
         DOTween.KillAll();
     }
-
 
     void FixedUpdate()
     {

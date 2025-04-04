@@ -42,6 +42,8 @@ public class DrawManager : MonoBehaviour
     public Color fillColor; // The color to fill pen objects with (temporary)
     private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
 
+    private float scrollThreshold;
+
     [SerializeField] private List<GameObject> submeters;
 
     public static DrawManager instance;
@@ -87,7 +89,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null) && GameManager.canMove)
         {
             switch (PlayerVars.instance.cur_tool)
             {
@@ -104,10 +106,10 @@ public class DrawManager : MonoBehaviour
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
+        if (Input.GetMouseButton(0) && currentLine != null && GameManager.canMove)
             Draw(mousePos);
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) || (currentLine != null && !GameManager.canMove))
         {
             EndDraw();
             if (PlayerVars.instance.cur_tool == ToolType.Eraser)
@@ -125,6 +127,7 @@ public class DrawManager : MonoBehaviour
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pencil;
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
+            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
         // [2] key pressed - switch to pen
         if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
@@ -134,6 +137,7 @@ public class DrawManager : MonoBehaviour
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Pen;
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
+            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
         // [3] key pressed - switch to eraser
         if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
@@ -143,6 +147,7 @@ public class DrawManager : MonoBehaviour
 				EndDraw();
 			PlayerVars.instance.cur_tool = ToolType.Eraser;
             Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
+            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
     }
     private void BeginDraw(Vector2 mouse_pos)
@@ -260,5 +265,7 @@ public class DrawManager : MonoBehaviour
 /* Questions:
 
 How are we going to reformat the code?
+
+Do we need to?
 
 */

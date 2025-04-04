@@ -39,13 +39,8 @@ public class ScreenWipe : MonoBehaviour
 
     public void ScreenRevealed()
     {
-        PostUnwipe?.Invoke();
-        Invoke("PostCooldown", 0.1f);
-    }
-
-    public void PostCooldown()
-    {
         over = true;
+        PostUnwipe?.Invoke();
         ScreenBlocker.raycastTarget = false;
     }
 }

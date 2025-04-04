@@ -5,13 +5,13 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-
+using Cinemachine;
 public class GameManager : MonoBehaviour
 {
-    public static bool resetting = false, paused = false;
+    public static bool resetting = false, paused = false, canMove = true;
     public static GameManager instance;
     public Transform spawnpoint;
-    public const float VOID_DEATH = -100;
+    public const float VOID_DEATH = -50;
     public Texture2D defaultCursor, previousCursor;
     public static Action ResetAction;
 
@@ -34,6 +34,30 @@ public class GameManager : MonoBehaviour
             Reset();
         }
     }
+    
+    public void SetCamera(CinemachineVirtualCamera cam)
+    {
+        cam.gameObject.SetActive(true);
+    }
+    public void DeactivateCamera(CinemachineVirtualCamera cam)
+    {
+        cam.gameObject.SetActive(false);
+    }
+    public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    {
+        StartCoroutine(cameraSwitch(cam1,cam2, time));
+    }
+
+    IEnumerator cameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    {
+        canMove = false;
+        // cam1.gameObject.SetActive(false);
+        cam2.gameObject.SetActive(true);
+        yield return new WaitForSeconds(5);
+        cam2.gameObject.SetActive(false);
+        // cam1.gameObject.SetActive(true);
+        canMove = true;
+    }
 
     public void Reset()
     {
@@ -50,5 +74,6 @@ public class GameManager : MonoBehaviour
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
+        canMove = true;
     }
 }
