@@ -8,7 +8,8 @@ public class EraserFunctions : MonoBehaviour
 
         RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius); // Raycast is in Utils.cs
 
-        foreach (RaycastHit2D hit in hit2D) {
+        for (int h = 0; h < hit2D.Length; h++) {
+            RaycastHit2D hit = hit2D[h];
             // Collider index corresponds to the index in the Line Renderer Array
             CircleCollider2D c = (CircleCollider2D) hit.collider;
             // CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines"));
@@ -72,6 +73,9 @@ public class EraserFunctions : MonoBehaviour
                         //Debug.Log(newLine.GetInstanceID() + " new line of size " + ct); ;
 
                         removePoint(c_index, c, pointsList, collidersList, addFuel); // Delete the current collider
+
+                        hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius);
+                        h = 0;
 
                         // sometimes there are stray colliders with no lines, could be that lines of size 1 cannot render the points
                         // There is a bug where empty line clones are being left behind, only occurs on newly generated lines i think

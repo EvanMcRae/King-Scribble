@@ -11,10 +11,10 @@ public static class Utils
         return hit2D;
     }
 
-    public static CircleCollider2D Raycast(Camera maincamera, Vector2 screenPosition, int layermask)
+    public static CircleCollider2D Raycast(Camera maincamera, Vector2 screenPosition, int layermask, float radius)
     {
         Ray ray = maincamera.ScreenPointToRay(screenPosition);
-        RaycastHit2D hit2D = Physics2D.CircleCast(screenPosition, 0.1f, Vector2.zero, Mathf.Infinity, layermask); // returns all colliders in the circle
+        RaycastHit2D hit2D = Physics2D.CircleCast(screenPosition, radius, Vector2.zero, Mathf.Infinity, layermask); // returns all colliders in the circle
         if (hit2D.collider != null) return (CircleCollider2D)hit2D.collider;
 
         return null;
