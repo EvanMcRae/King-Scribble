@@ -176,7 +176,7 @@ public class Line : MonoBehaviour
         lineRenderer.endColor = color;
     }
     // Create a polygon collider from the line renderer's points
-    public void AddPolyCollider()
+    public bool AddPolyCollider() // Return false if a collision overlap is found, true otherwise
     {
         // Get the list of points in the lineRenderer and convert to Vector2
         Vector3[] points3 = new Vector3[GetPointsCount()];
@@ -185,6 +185,14 @@ public class Line : MonoBehaviour
         // Create a polygon collider and set its path to the Vector2 list of points
         PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
         polyCollider.SetPath(0, points2);
+        List<Collider2D> results = new();
+        ContactFilter2D def = new();
+        if (polyCollider.OverlapCollider(def, results) != 0)
+        {
+            Destroy(gameObject);
+            return false;
+        }
+        return true;    
     }
     // Add a mesh from the polygon collider (if it has been created)
     public void AddMesh(Material mat, MaterialPropertyBlock matBlock)

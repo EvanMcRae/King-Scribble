@@ -151,6 +151,12 @@ public class DrawManager : MonoBehaviour
     }
     private void BeginDraw(Vector2 mouse_pos)
     {	
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null) {
+            return;
+        }
         currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
@@ -174,6 +180,14 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null) {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
             if (PlayerVars.instance.eraserFuelLeft() > 0)
@@ -212,10 +226,15 @@ public class DrawManager : MonoBehaviour
             {
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
+                    if (!currentLine.AddPolyCollider()) // Add a polygon collider to the line using its lineRenderer points
+                    { // AddPolyCollider() returns false if a collision was found inside the object, and the line is destroyed
+                        currentLine = null;
+                        PlayerVars.instance.ResetTempPenFuel();
+                        return;
+                    }
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line 
-                    currentLine.AddPolyCollider(); // Add a polygon collider to the line using its lineRenderer points
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
