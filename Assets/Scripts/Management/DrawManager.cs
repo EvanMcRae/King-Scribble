@@ -159,7 +159,6 @@ public class DrawManager : MonoBehaviour
         if (hit.collider != null) {
             return;
         }
-        currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
 
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
