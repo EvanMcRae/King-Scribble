@@ -173,6 +173,7 @@ public class DrawManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
+            beganDraw = false;
             return;
         }
 
@@ -263,7 +264,7 @@ public class DrawManager : MonoBehaviour
     private void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
-
+        beganDraw = false;
         if (currentLine != null)
         {
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
