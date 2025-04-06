@@ -38,16 +38,16 @@ public class EraserBossAI : MonoBehaviour
     private float searchTime = 5.0f; // variables ending in "Time" relate to the timer
     private float slamCooldownTime = 2.0f;
     private float slamPrepTime = 2.0f;
-    private float KSKnockbackCooldown = 2.0f; // cooldown for how long until KS can be hit again
+    private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
     private bool isErasingLine = false; // booleans for states that are not independent enough for the state machine
     private bool isTweening = false;
     private bool isRotated = false;
-    private bool isKSKnockbacked = false;
+    private bool isKSHit = false;
 
     private Tween slamTween;
     
-    private Rigidbody2D playerRigidbody;
-    private CapsuleCollider2D physicalCollider;
+    private Rigidbody2D KSrb; // King Scribble's Rigidbody
+    private CapsuleCollider2D physicalCollider; // EB's collider with physics
 
     void Start() {
         KingScribble = PlayerVars.instance.gameObject;
@@ -56,7 +56,7 @@ public class EraserBossAI : MonoBehaviour
         bounds1 = transform.Find("Bounds1").gameObject;
         bounds2 = transform.Find("Bounds2").gameObject;
         disable = true;
-        playerRigidbody = KingScribble.GetComponent<Rigidbody2D>();
+        KSrb = KingScribble.GetComponent<Rigidbody2D>();
 
         foreach (CapsuleCollider2D col in GetComponents<CapsuleCollider2D>())
         {
@@ -157,7 +157,7 @@ public class EraserBossAI : MonoBehaviour
             KingScribble.transform.position += new Vector3(-10f, 0f, 0f);
 
             /* WORK IN PROGRESS
-            if(!isKSKnockbacked) {
+            if(!isKSHit) {
                 physicalCollider.enabled = false;
                 PlayerVars.instance.SpendDoodleFuel(50);
                 Knockback();
@@ -223,27 +223,24 @@ public class EraserBossAI : MonoBehaviour
     }
 
     private void Knockback() {
-        Rigidbody2D playerRigidbody = KingScribble.GetComponent<Rigidbody2D>();
-
-        if (playerRigidbody != null && !isKSKnockbacked) {
+        if (KSrb != null && !isKSHit) {
             Debug.Log("KNOCKING BACK");
             Vector2 knockbackDirection = new Vector2(-1f, 1f);
-            playerRigidbody.AddForce(knockbackDirection * 20.0f, ForceMode2D.Impulse); // Use Impulse or VelocityChange
-            isKSKnockbacked = true;
-            StartCoroutine(StunPlayer(2.0f, playerRigidbody));
-            
+            KSrb.AddForce(knockbackDirection * 20.0f, ForceMode2D.Impulse); // Use Impulse or VelocityChange
+            isKSHit = true;
+            StartCoroutine(StunPlayer(2.0f));
         }
         else { Debug.Log("RIGIDBODY NOT FOUND"); }
     }
 
-    private IEnumerator StunPlayer(float duration, Rigidbody2D playerRigidbody)
+    private IEnumerator StunPlayer(float duration)
     {
-        playerRigidbody.constraints = RigidbodyConstraints2D.FreezeAll; // freeze movement
+        KSrb.constraints = RigidbodyConstraints2D.FreezeAll; // freeze movement
         yield return new WaitForSeconds(duration);
-        playerRigidbody.constraints = RigidbodyConstraints2D.None; // unfreeze
+        KSrb.constraints = RigidbodyConstraints2D.None; // unfreeze
         Debug.Log("UNFREEZE");
         yield return new WaitForSeconds(5.0f);
         Debug.Log("KNOCKBACK ENABLED");
-        isKSKnockbacked = false;
+        isKSHit = false;
     }
 }
