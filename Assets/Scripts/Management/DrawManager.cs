@@ -14,7 +14,9 @@ public enum ToolType
 }
 public class DrawManager : MonoBehaviour
 {
-    [SerializeField] private Line linePrefab;
+    [SerializeField] public Line linePrefab;
+    [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased
+    [SerializeField] private GameObject PencilLinesFolder;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
@@ -99,7 +101,7 @@ public class DrawManager : MonoBehaviour
                     if (PlayerVars.instance.penFuelLeft() > 0) BeginDraw(mousePos);
                     break;
                 case ToolType.Eraser:
-                    if (PlayerVars.instance.eraserFuelLeft() > 0) Erase(mousePos);
+                    if (PlayerVars.instance.eraserFuelLeft() > 0) EraserFunctions.Erase(mousePos + new Vector2(0.5f,-0.5f), eraserRadius, true);
                     break;
             }
         }
@@ -157,18 +159,19 @@ public class DrawManager : MonoBehaviour
         if (hit.collider != null) {
             return;
         }
-        currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
+
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
-            currentLine.is_pen = false;
-            currentLine.SetThickness(pencilThickness);
-            currentLine.collisionsActive = true;
-            currentLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
-            currentLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
-			currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+            if(PencilLinesFolder != null) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity, PencilLinesFolder.transform); // Create a new line with the first point at the mouse's current position
+            }
+            else {
+                currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity);
+            }
+            SetPencilParams(currentLine);
         }
-
         else if (PlayerVars.instance.cur_tool == ToolType.Pen) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
             currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
@@ -191,7 +194,7 @@ public class DrawManager : MonoBehaviour
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
             if (PlayerVars.instance.eraserFuelLeft() > 0)
-                Erase(mouse_pos);
+                EraserFunctions.Erase(mouse_pos + new Vector2(0.5f,-0.5f), eraserRadius, true);
             else EndDraw();
 			return;
 		}
@@ -250,104 +253,7 @@ public class DrawManager : MonoBehaviour
         currentLine = null;
     }
 
-    private void Erase(Vector2 mouse_pos) {
 
-        RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, mouse_pos + new Vector2(0.5f,-0.5f), LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
-
-        foreach (RaycastHit2D hit in hit2D) {
-            // Collider index corresponds to the index in the Line Renderer Array
-            CircleCollider2D c = (CircleCollider2D) hit.collider;
-            // CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines"));
-            if (c != null) {
-                LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
-
-                if(lineRenderer != null) {
-                    List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
-                    int c_index = collidersList.IndexOf(c); // the collider's index in the list
-                    int numPoints = lineRenderer.positionCount; // position count starts at 1 while c_index starts at 0
-
-                    List<Vector3> pointsList = new List<Vector3>(); // Line renderer positions
-                    Vector3[] tempArray = new Vector3[numPoints];
-                    lineRenderer.GetPositions(tempArray); // Get the positions into the array
-                    pointsList.AddRange(tempArray); // Convert tempArray to a list
-
-                    if(c_index == -1) {
-                        // ignore the collider because it is no longer a part of the Line object :))
-                    }
-                    else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
-                        //Debug.Log("destroying Line!");
-                        PlayerVars.instance.AddDoodleFuel(numPoints);
-                        PlayerVars.instance.SpendEraserFuel(numPoints);
-                        Destroy(c.gameObject);
-                        return;
-                    }
-                    else if(c_index == numPoints - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
-                        //Debug.Log("edge detected!");
-                        removePoint(c_index, c, pointsList, collidersList);
-                    }
-                    else if(c_index == 1) {
-                       //Debug.Log("2nd to start detected!");
-                        removePoint(1, c, pointsList, collidersList);
-                        removePoint(0, collidersList[0], pointsList, collidersList);
-                    }
-                    else if(c_index == numPoints - 2) { // we are at the 2nd to last point, delete the last two point only
-                        //Debug.Log("2nd to edge detected!");
-                        removePoint(c_index + 1, collidersList[c_index+1], pointsList, collidersList); // Destroy (c+1) first
-                        removePoint(c_index, c, pointsList, collidersList);
-                    }
-                    else { // Create a new Line to fill with the remainder of the points
-                        //Debug.Log("Creating new line of size " + (numPoints - c_index+1));
-                        Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
-                        Line newLine = Instantiate(linePrefab, transformPosition, Quaternion.identity);
-                        newLine.is_pen = false;
-                        newLine.SetThickness(pencilThickness);
-                        newLine.collisionsActive = true;
-                        newLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
-                        newLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
-                        newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
-                        
-                        // Fill the new line and delete from the current line
-                        int currPos = c_index+1; // When we delete a point, we actually dont move in the List
-                        for(int i = currPos; i < numPoints; i++) {
-                            newLine.SetPosition(pointsList[currPos] + transformPosition, true); // Copy point into a newLine
-                            removePoint(currPos, collidersList[currPos], pointsList, collidersList, false);
-                        }
-                                      
-                        //Debug.Log("Deleting current point");
-                        removePoint(c_index, c, pointsList, collidersList); // Delete the current collider
-
-                        // sometimes there are stray colliders with no lines, could be that lines of size 1 cannot render the points
-                        // There is a bug where empty line clones are being left behind, only occurs on newly generated lines i think
-                    }
-
-                    // Update the current Line Renderer
-                    lineRenderer.positionCount = pointsList.Count;
-                    lineRenderer.SetPositions(pointsList.ToArray());
-
-                    // Extra check for good measure
-                    if (pointsList.Count <= 1)
-                    {
-                        PlayerVars.instance.AddDoodleFuel(pointsList.Count);
-                        PlayerVars.instance.SpendEraserFuel(pointsList.Count);
-                        Destroy(c.gameObject);
-                    }
-                }
-            }
-       }
-    }
-
-    private void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel = true) {
-        pl.RemoveAt(index); // Remove point from the list
-        //Debug.Log("destroying: " + index);
-        cl.RemoveAt(index); // Remove collider from the list
-        Destroy(c); // Destroy collider
-        if (addFuel)
-        {
-            PlayerVars.instance.AddDoodleFuel(1); // Add fuel
-            PlayerVars.instance.SpendEraserFuel(1); // Spend eraser
-        }
-        return;
-    }
 
     public void SetCursor(ToolType tool)
     {
@@ -368,6 +274,15 @@ public class DrawManager : MonoBehaviour
                 break;
         }
         Cursor.SetCursor(texture, Vector2.zero, CursorMode.ForceSoftware);
+    }
+
+    public void SetPencilParams(Line line) {
+        line.is_pen = false;
+        line.SetThickness(pencilThickness);
+        line.collisionsActive = true;
+        line.GetComponent<LineRenderer>().startColor = pencilColor_start;
+        line.GetComponent<LineRenderer>().endColor = pencilColor_end;
+        line.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
     }
 }
 
