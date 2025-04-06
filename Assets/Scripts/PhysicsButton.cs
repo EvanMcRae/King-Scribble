@@ -12,11 +12,25 @@ public class PhysicsButton : MonoBehaviour
     public UnityEvent on_press;
     public UnityEvent on_first_press;
     public UnityEvent on_release;
+    public float maxHeight;
+
     // Start is called before the first frame update
     void Start()
     {
         Physics2D.IgnoreCollision(_base.GetComponent<Collider2D>(), _top.GetComponent<Collider2D>());
         _top.GetComponent<Rigidbody2D>().mass = req_weight;
+        maxHeight = _top.localPosition.y;
+    }
+
+    void Update()
+    {
+        // Force button max height
+        if (_top.localPosition.y > maxHeight)
+        {
+            Vector3 newPos = _top.localPosition;
+            newPos.y = maxHeight;
+            _top.localPosition = newPos;
+        }
     }
 
     // Trigger - button has an extra Collider2D at the very bottom of the base. If the top part of the button enters this collider, the button is fully pressed.

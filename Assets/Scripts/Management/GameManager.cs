@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostUnwipe += () => { resetting = false; };
         yield return new WaitForSecondsRealtime(1f);
+        PlayerVars.instance.Dismount();
+        PlayerController.instance.KillTweens();
         ResetAction.Invoke();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
