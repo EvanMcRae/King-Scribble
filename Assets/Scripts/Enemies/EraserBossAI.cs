@@ -51,7 +51,7 @@ public class EraserBossAI : MonoBehaviour
 
     void Start() {
         KingScribble = PlayerVars.instance.gameObject;
-        KSCollider = KingScribble.transform.Find("MainBody/Collider").GetComponent<CircleCollider2D>(); // very iffy code
+        KSCollider = KingScribble.transform.Find("MainBody").GetComponent<PolygonCollider2D>(); // very iffy code
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         bounds1 = transform.Find("Bounds1").gameObject;
         bounds2 = transform.Find("Bounds2").gameObject;
