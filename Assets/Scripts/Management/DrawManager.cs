@@ -49,6 +49,9 @@ public class DrawManager : MonoBehaviour
 
     public static DrawManager instance;
 
+    private Vector3 lastEraserPos;
+    private bool beganDraw = false;
+
     private void Awake()
     {
         instance = this;
@@ -90,7 +93,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null) && GameManager.canMove)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove)
         {
             switch (PlayerVars.instance.cur_tool)
             {
@@ -101,17 +104,20 @@ public class DrawManager : MonoBehaviour
                     if (PlayerVars.instance.penFuelLeft() > 0) BeginDraw(mousePos);
                     break;
                 case ToolType.Eraser:
-                    if (PlayerVars.instance.eraserFuelLeft() > 0) EraserFunctions.Erase(mousePos + new Vector2(0.5f,-0.5f), eraserRadius, true);
+                    if (PlayerVars.instance.eraserFuelLeft() > 0) BeginDraw(mousePos);
                     break;
             }
+            beganDraw = true;
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null && GameManager.canMove)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove)
             Draw(mousePos);
+
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0) || (currentLine != null && !GameManager.canMove))
+        if (Input.GetMouseButtonUp(0) || (beganDraw && !GameManager.canMove))
         {
+            beganDraw = false;
             EndDraw();
             if (PlayerVars.instance.cur_tool == ToolType.Eraser)
             {
@@ -151,12 +157,22 @@ public class DrawManager : MonoBehaviour
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
     }
+
     private void BeginDraw(Vector2 mouse_pos)
-    {	
+    {
+        if (PlayerVars.instance.cur_tool == ToolType.Eraser)
+        {
+            mouse_pos += new Vector2(0.5f, -0.5f);
+            lastEraserPos = mouse_pos;
+            EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+            return;
+        }
+
         // Don't draw if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
         int layerMask = (1 << 3) | (1 << 6) | (1 << 7);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
-        if (hit.collider != null) {
+        if (hit.collider != null)
+        {
             return;
         }
 
@@ -181,6 +197,21 @@ public class DrawManager : MonoBehaviour
 
     }
 
+    private IEnumerator EraseMarch(Vector2 mouse_pos)
+    {
+        Vector2 marchPos = lastEraserPos;
+        int ct = 0, interval = 3;
+        do
+        {
+            marchPos = Vector2.MoveTowards(marchPos, mouse_pos, RESOLUTION);
+            EraserFunctions.Erase(marchPos, eraserRadius, true);
+            ct++;
+            if (ct % interval == 0) yield return new WaitForEndOfFrame();
+        } while (Vector2.Distance(marchPos, mouse_pos) > RESOLUTION);
+        EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+        lastEraserPos = mouse_pos;
+    }
+
     private void Draw(Vector2 mouse_pos)
     {
         // Stop drawing if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
@@ -193,8 +224,21 @@ public class DrawManager : MonoBehaviour
         }
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
+            mouse_pos += new Vector2(0.5f, -0.5f);
             if (PlayerVars.instance.eraserFuelLeft() > 0)
-                EraserFunctions.Erase(mouse_pos + new Vector2(0.5f,-0.5f), eraserRadius, true);
+            {
+                // March along line from previous to current eraser pos if it's too far away
+                if (Vector2.Distance(mouse_pos, lastEraserPos) > RESOLUTION)
+                {
+                    StartCoroutine(EraseMarch(mouse_pos));
+                }
+                else
+                {
+                    EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+                    lastEraserPos = mouse_pos;
+                }
+            }
+                
             else EndDraw();
 			return;
 		}
