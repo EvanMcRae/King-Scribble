@@ -39,21 +39,23 @@ public class GameManager : MonoBehaviour
     {
         cam.gameObject.SetActive(true);
     }
+
     public void DeactivateCamera(CinemachineVirtualCamera cam)
     {
         cam.gameObject.SetActive(false);
     }
+    
     public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
     {
-        StartCoroutine(cameraSwitch(cam1,cam2, time));
+        StartCoroutine(CameraSwitch(cam1,cam2, time));
     }
 
-    IEnumerator cameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    IEnumerator CameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
     {
         canMove = false;
         // cam1.gameObject.SetActive(false);
         cam2.gameObject.SetActive(true);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(time);
         cam2.gameObject.SetActive(false);
         // cam1.gameObject.SetActive(true);
         canMove = true;

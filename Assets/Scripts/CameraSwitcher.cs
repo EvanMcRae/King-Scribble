@@ -9,7 +9,7 @@ public class CameraSwitcher : MonoBehaviour
     public bool setActive; // 0 to deactivate specified camera, 1 to activate
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             if (!setActive) GameManager.instance.DeactivateCamera(cam);
             else GameManager.instance.SetCamera(cam);

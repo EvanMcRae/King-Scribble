@@ -8,11 +8,11 @@ public class Collectible : MonoBehaviour
     // Called on collision with the player, generic "pickup" function
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" && !beenCollected)
+        if (other.CompareTag("Player") && !beenCollected)
         {
             beenCollected = true;
             OnPickup(other);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
     // Function for specific behaviors in each different collectible type

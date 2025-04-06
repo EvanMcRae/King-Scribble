@@ -6,6 +6,6 @@ public class ObjBoundary : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "TempObj") Destroy(other.gameObject);
+        if (other.CompareTag("TempObj") || other.CompareTag("Pen")) Destroy(other.gameObject);
     }
 }

@@ -38,10 +38,9 @@ public class PhysicsButton : MonoBehaviour
     // Trigger on "full press" - when the top of the button is at its lowest possible point (or within a small window)
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Button" && !pressed)
+        if (other.CompareTag("Button") && !pressed)
         {
             pressed = true;
-            // Debug.Log("Pressed");
             on_press.Invoke();
             if (!been_pressed)
             {
@@ -54,10 +53,9 @@ public class PhysicsButton : MonoBehaviour
     // Trigger on "release" - when weight is removed from the button such that it is no longer fully compressed
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.tag == "Button" && pressed)
+        if (other.CompareTag("Button") && pressed)
         {
             pressed = false;
-            // Debug.Log("Released");
             on_release.Invoke();
         } 
     }

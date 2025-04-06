@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Events;
 public class Moving_Platform : MonoBehaviour
 {
     public float moveSpeed = 1f;
@@ -20,7 +21,8 @@ public class Moving_Platform : MonoBehaviour
     private bool returning = false;
     public CinemachineVirtualCamera tempView; // The secondary virtual camera positioned to briefly show the entirety of the affected area (optional)
     public float viewTime = 2.5f; // The time the camera will linger on the secondary position before returning to the player (optional)
-    // Start is called before the first frame update
+    public UnityEvent onFinishMove;
+    public UnityEvent onFinishReturn;
 
     [SerializeField] private Rigidbody2D rigidBody;
     public Dictionary<Transform, Transform> passengerRoots = new();
@@ -42,6 +44,7 @@ public class Moving_Platform : MonoBehaviour
             dest.y += moveDist;
         moving = true;
     }
+
     public void ReturnToStart()
     {
         moving = false;
@@ -52,10 +55,12 @@ public class Moving_Platform : MonoBehaviour
             dest.y -= moveDist;
         returning = true;   
     }
+
     public void PanCamera() // Optional - pans the camera temporarily to better show all platforms affected by the player's current action
     {
         GameManager.instance.SwitchCameras(PlayerController.instance.virtualCamera, tempView, viewTime);
     }
+
     public void OnCollisionStay2D(Collision2D other)
     {
         if (other.collider.gameObject.layer == 8 || other.collider.gameObject.layer == 3) // Ground = layer 3   Lines = layer 8
@@ -97,6 +102,7 @@ public class Moving_Platform : MonoBehaviour
             }
         }
     }
+
     public void OnCollisionExit2D(Collision2D other)
     {
         if (other.collider.gameObject.layer == 8 || other.collider.gameObject.layer == 3) // Ground = layer 3   Lines = layer 8
@@ -107,27 +113,32 @@ public class Moving_Platform : MonoBehaviour
             ret_stopped = false;
         }
     }
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         if ((!(moving && move_stopped)) && (!(returning && ret_stopped)))
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
+        if (rigidBody.position == dest && moving)
+            onFinishMove.Invoke();
+        else if (rigidBody.position == dest && returning)
+            onFinishReturn.Invoke();
     }
     
     void OnTriggerStay2D(Collider2D other)
     {
-        if (moving)
+        if (moving && (other.CompareTag("Player") || other.CompareTag("TempObj") || other.CompareTag("Pen")))
             Mount(other.gameObject);
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        Dismount(other.gameObject);
+        if (other.CompareTag("Player") || other.CompareTag("TempObj") || other.CompareTag("Pen"))
+            Dismount(other.gameObject);
     }
 
     public void Mount(GameObject passenger)
     {
-        if (passenger.transform.root != null && passenger.transform.root != transform.parent)
+        if (passenger.transform.root != null && passenger.transform.root != transform.parent && !passenger.transform.root.CompareTag("MovPlat"))
         {
             passengerRoots.TryAdd(passenger.transform, passenger.transform.root);
             passenger.transform.root.SetParent(transform.parent, true);
@@ -139,7 +150,7 @@ public class Moving_Platform : MonoBehaviour
         if (gameObject.activeInHierarchy && passengerRoots.ContainsKey(passenger.transform))
         {
             passengerRoots[passenger.transform].SetParent(null, true);
-            if (passenger.CompareTag("Player"))
+            if (passenger.CompareTag("Player") && passengerRoots[passenger.transform].gameObject.CompareTag("Player"))
                 DontDestroyOnLoad(passengerRoots[passenger.transform]);
             passengerRoots.Remove(passenger.transform);
         }

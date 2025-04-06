@@ -23,7 +23,7 @@ public class Line : MonoBehaviour
         Vector2 [] v2 = new Vector2[v3.Length];
         for(int i = 0; i <  v3.Length; i++){
             Vector3 tempV3 = v3[i];
-            v2[i] = new Vector2(tempV3.x, tempV3.y);
+            v2[i] = (Vector2)tempV3;
         }
         return v2;
     }
@@ -103,25 +103,31 @@ public class Line : MonoBehaviour
         // Then check for minimum distance between points with local space-transformed position
         return Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position)) > DrawManager.RESOLUTION;
     }
+
     public int GetPointsCount()
     {
         return lineRenderer.positionCount;
     }
+
     public Vector2 GetFirstPoint()
     {
         return lineRenderer.GetPosition(0);
     }
+
     public Vector2 GetLastPoint()
     {
         return lineRenderer.GetPosition(GetPointsCount() - 1);
     }
+
     public bool CheckClosedLoop()
     {
         return GetPointsCount() >= MIN_POINTS && Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE;
     }
+
     public void AddPhysics()
     {
         gameObject.layer = 7; // Pen line layer
+        gameObject.tag = "Pen";
         lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
@@ -154,6 +160,7 @@ public class Line : MonoBehaviour
         foreach (CircleCollider2D c in colliders)
             c.enabled = true;
     }
+    
     // TODO Could be used in the future for other tools
     public void SetThickness(float newThickness)
     {
