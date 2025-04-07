@@ -5,14 +5,22 @@ using Cinemachine;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public CinemachineVirtualCamera cam;
-    public bool setActive; // 0 to deactivate specified camera, 1 to activate
+    public CinemachineVirtualCamera prev_cam;
+    public CinemachineVirtualCamera next_cam;
+    public GameObject p_cam_bounds_l;
+    public GameObject p_cam_bounds_r;
+    public GameObject n_cam_bounds_l;
+    public GameObject n_cam_bounds_r;
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            if (!setActive) GameManager.instance.DeactivateCamera(cam);
-            else GameManager.instance.SetCamera(cam);
+            if (prev_cam) GameManager.instance.DeactivateCamera(prev_cam);
+            if (p_cam_bounds_l) p_cam_bounds_l.SetActive(false);
+            if (p_cam_bounds_r) p_cam_bounds_r.SetActive(false);
+            if (next_cam) GameManager.instance.SetCamera(next_cam);
+            if (n_cam_bounds_l) n_cam_bounds_l.SetActive(true);
+            if (n_cam_bounds_r) n_cam_bounds_r.SetActive(true);
         }
     }
 }
