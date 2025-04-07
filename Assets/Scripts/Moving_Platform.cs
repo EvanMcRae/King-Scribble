@@ -23,7 +23,11 @@ public class Moving_Platform : MonoBehaviour
     public float viewTime = 2.5f; // The time the camera will linger on the secondary position before returning to the player (optional)
     public UnityEvent onFinishMove;
     public UnityEvent onFinishReturn;
-
+    public GameObject gear_c;
+    public GameObject gear_l;
+    public GameObject gear_r;
+    public float gearSpeed;
+    public bool isWall = false;
     [SerializeField] private Rigidbody2D rigidBody;
     public Dictionary<Transform, Transform> passengerRoots = new();
 
@@ -32,6 +36,7 @@ public class Moving_Platform : MonoBehaviour
         start = transform.position;
         dest = transform.position;
         curSpeed = moveSpeed;
+        if (moveDist < 0) gearSpeed *= -1f; // If moving left, rotate the opposite direction on move/return
     }
 
     public void MoveToDest()
@@ -117,7 +122,21 @@ public class Moving_Platform : MonoBehaviour
     void FixedUpdate()
     {
         if ((!(moving && move_stopped)) && (!(returning && ret_stopped)))
+        {
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
+        }
+        if (moving && !move_stopped && !isWall && rigidBody.position != dest) 
+        {
+            gear_c.transform.rotation *= Quaternion.AngleAxis(-1f * gearSpeed * Time.deltaTime, Vector3.forward);
+            gear_l.transform.rotation *= Quaternion.AngleAxis(-1f * gearSpeed * Time.deltaTime, Vector3.forward);
+            gear_r.transform.rotation *= Quaternion.AngleAxis(-1f * gearSpeed * Time.deltaTime, Vector3.forward);
+        }
+        if (returning && !ret_stopped && !isWall && rigidBody.position != dest) 
+        {
+            gear_c.transform.rotation *= Quaternion.AngleAxis(gearSpeed * Time.deltaTime, Vector3.forward);
+            gear_l.transform.rotation *= Quaternion.AngleAxis(gearSpeed * Time.deltaTime, Vector3.forward);
+            gear_r.transform.rotation *= Quaternion.AngleAxis(gearSpeed * Time.deltaTime, Vector3.forward);
+        }
         if (rigidBody.position == dest && moving)
             onFinishMove.Invoke();
         else if (rigidBody.position == dest && returning)

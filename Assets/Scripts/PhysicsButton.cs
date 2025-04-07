@@ -13,6 +13,9 @@ public class PhysicsButton : MonoBehaviour
     public UnityEvent on_first_press;
     public UnityEvent on_release;
     public float maxHeight;
+    public int b_color;
+    const int NUM_SPRITES = 6;
+    public Sprite[] sprites = new Sprite[NUM_SPRITES];
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +23,7 @@ public class PhysicsButton : MonoBehaviour
         Physics2D.IgnoreCollision(_base.GetComponent<Collider2D>(), _top.GetComponent<Collider2D>());
         _top.GetComponent<Rigidbody2D>().mass = req_weight;
         maxHeight = _top.localPosition.y;
+        _top.GetComponent<SpriteRenderer>().sprite = sprites[b_color];
     }
 
     void Update()

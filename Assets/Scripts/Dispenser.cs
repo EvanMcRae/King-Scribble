@@ -16,6 +16,8 @@ public class Dispenser : MonoBehaviour
     public Direction m_direction;
     private Vector3 offset;
     private Vector2 force;
+    const int ITEM_SPRITES = 8;
+    public Sprite[] itemSprites = new Sprite[ITEM_SPRITES];
     void Start()
     {
 
@@ -49,8 +51,9 @@ public class Dispenser : MonoBehaviour
         {
             if (lastInstances[i] == null)
             {
-                Debug.Log(force);
+                int randSprite = Random.Range(0, ITEM_SPRITES);
                 lastInstances[i] = Instantiate(item, transform.position + offset, Quaternion.identity);
+                lastInstances[i].GetComponent<SpriteRenderer>().sprite = itemSprites[randSprite];
                 lastInstances[i].GetComponent<Rigidbody2D>().AddForce(force);
                 break;
             }
@@ -68,7 +71,9 @@ public class Dispenser : MonoBehaviour
                 {
                     if (lastInstances[i] == null)
                     {
+                        int randSprite = Random.Range(0, ITEM_SPRITES);
                         lastInstances[i] = Instantiate(item, transform.position + offset, Quaternion.identity);
+                        lastInstances[i].GetComponent<SpriteRenderer>().sprite = itemSprites[randSprite];
                         lastInstances[i].GetComponent<Rigidbody2D>().AddForce(force);
                         timeSinceLast = 0f;
                         break;
