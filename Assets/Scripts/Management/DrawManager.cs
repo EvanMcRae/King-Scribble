@@ -95,6 +95,7 @@ public class DrawManager : MonoBehaviour
         // If the mouse has just been pressed, start drawing
         if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove)
         {
+            beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
             {
                 case ToolType.Pencil:
@@ -106,8 +107,10 @@ public class DrawManager : MonoBehaviour
                 case ToolType.Eraser:
                     if (PlayerVars.instance.eraserFuelLeft() > 0) BeginDraw(mousePos);
                     break;
+                case ToolType.None:
+                    beganDraw = false;
+                    break;
             }
-            beganDraw = true;
         }
         
         // If the mouse is continuously held, continue to draw
