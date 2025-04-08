@@ -9,9 +9,9 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider, musicSlider, soundSlider;
-    [SerializeField] private TextMeshProUGUI qualityValue, musicValue, soundValue;
-    [SerializeField] private Toggle fullScreenToggle, vSyncToggle, muteToggle;
+    [SerializeField] private Slider qualitySlider, musicSlider, soundSlider, masterSlider;
+    [SerializeField] private TextMeshProUGUI qualityValue, musicValue, soundValue, masterValue;
+    [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
 
     void Awake()
     {
@@ -29,7 +29,7 @@ public class SettingsManager : MonoBehaviour
         UpdateQuality(false);
         UpdateMusic(false);
         UpdateSound(false);
-        UpdateMute(false);
+        UpdateMaster(false);
     }
 
     public static void SaveSettings()
@@ -72,6 +72,16 @@ public class SettingsManager : MonoBehaviour
         soundValue.text = (int)soundSlider.value + "";
     }
 
+    public void UpdateMaster(bool user)
+    {
+        if (user)
+            currentSettings.masterVolume = masterSlider.value;
+        else
+            masterSlider.value = currentSettings.masterVolume;
+
+        masterValue.text = (int)masterSlider.value + "";
+    }
+
     public void UpdateFullScreen(bool user)
     {
         if (user)
@@ -112,17 +122,5 @@ public class SettingsManager : MonoBehaviour
             QualitySettings.vSyncCount = 1;
         else
             QualitySettings.vSyncCount = 0;
-    }
-
-    public void UpdateMute(bool user)
-    {
-        if (user)
-        {
-            currentSettings.audioMute = muteToggle.isOn;
-        }
-        else
-        {
-            muteToggle.isOn = currentSettings.audioMute;
-        }
     }
 }

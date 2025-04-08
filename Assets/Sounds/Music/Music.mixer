@@ -1,18 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!244 &-5169549304254154948
+--- !u!243 &-5279847323309794671
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Music
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 84d1b375371a443cfa5ea430e4eedd46
+  m_Children: []
+  m_Volume: b7fba3feb3822451783e349eb44ed37d
+  m_Pitch: 2347c9ab020e3415b8058db2427cd738
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -3081214605040023227}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &-3081214605040023227
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_EffectID: 32ff59c31dd7eaf47a96a520c2e07201
-  m_EffectName: Lowpass Simple
-  m_MixLevel: a9b6f9df83756df408c4ebe488b2b568
-  m_Parameters:
-  - m_ParameterName: Cutoff freq
-    m_GUID: c0db395f0c41ae04e9fda291483566eb
+  m_EffectID: 2967836895d164f679b86d5980475c16
+  m_EffectName: Attenuation
+  m_MixLevel: d3f22e4dc0e9e40fe9c79de6fcd76eee
+  m_Parameters: []
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
@@ -35,12 +52,13 @@ AudioMixerController:
   - guid: 697d0dece19480d41a1b793a4ea29d72
     name: Pitch
   - guid: 2d6db869675ea4e449dbcd857e872306
+    name: MasterVolume
+  - guid: b7fba3feb3822451783e349eb44ed37d
     name: Volume
-  - guid: c0db395f0c41ae04e9fda291483566eb
-    name: LowPass
   m_AudioMixerGroupViews:
   - guids:
     - 31eb2fab1cb781f4bb59b5ce58ec6129
+    - 84d1b375371a443cfa5ea430e4eedd46
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -53,13 +71,13 @@ AudioMixerGroupController:
   m_Name: Master
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 31eb2fab1cb781f4bb59b5ce58ec6129
-  m_Children: []
+  m_Children:
+  - {fileID: -5279847323309794671}
   m_Volume: 2d6db869675ea4e449dbcd857e872306
   m_Pitch: 697d0dece19480d41a1b793a4ea29d72
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 24400004}
-  - {fileID: -5169549304254154948}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -89,7 +107,8 @@ AudioMixerSnapshotController:
   m_SnapshotID: 152aa9b0ae371ea4a8be09bcbe17e26f
   m_FloatValues:
     27869256791f56845a8d72f9c24f5aa6: 10
-    2d6db869675ea4e449dbcd857e872306: -6
+    2d6db869675ea4e449dbcd857e872306: 0
+    b7fba3feb3822451783e349eb44ed37d: -6
     c0db395f0c41ae04e9fda291483566eb: 22000
   m_TransitionOverrides:
     c0db395f0c41ae04e9fda291483566eb: 2

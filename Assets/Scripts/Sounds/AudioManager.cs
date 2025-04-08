@@ -6,15 +6,15 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    public AudioMixer musicMixer, sfxMixer, globalSfxMixer;
-    public AudioMixerGroup musicMixerGroup;
+    public AudioMixer musicMixer, sfxMixer;
+    public AudioMixerGroup masterGroup;
     public MusicClip currentSong = null;
     public GameArea currentArea;
 
     private int activePlayer = 0;
     public AudioSource[] BGM1, BGM2;
     private readonly IEnumerator[] fader = new IEnumerator[2];
-    public float musicVolume = 1.0f, sfxVolume = 10.0f, targetSFXVolume= -80.0f, actualSFXVolume = -80.0f;
+    public float musicVolume = 1.0f, sfxVolume = 10.0f, masterVolume = 10f, targetSFXVolume= -80.0f, actualSFXVolume = -80.0f;
 
     //Note: If the volumeChangesPerSecond value is higher than the fps, the duration of the fading will be extended!
     private readonly int volumeChangesPerSecond = 15;
@@ -35,8 +35,6 @@ public class AudioManager : MonoBehaviour
     {
         CURRENT, MENU, LEVEL
     }
-
-    public bool audioMute = false;
 
     /// <summary>
     /// Set up the AudioSources
@@ -67,7 +65,7 @@ public class AudioManager : MonoBehaviour
             s.loop = true;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = musicMixerGroup;
+            s.outputAudioMixerGroup = masterGroup;
         }
 
         foreach (AudioSource s in BGM2)
@@ -75,7 +73,7 @@ public class AudioManager : MonoBehaviour
             s.loop = true;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = musicMixerGroup;
+            s.outputAudioMixerGroup = masterGroup;
         }
 
         // Singleton pattern
@@ -86,14 +84,13 @@ public class AudioManager : MonoBehaviour
         {
             musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20; 
             sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
+            masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.paused) return;
-
         if (instance == null)
         {
             instance = this;
@@ -143,19 +140,12 @@ public class AudioManager : MonoBehaviour
 
         musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20;
         sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
+        masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
 
-        // Toggle muting (press M)
-        audioMute = SettingsManager.currentSettings.audioMute;
-        //if (Input.GetKeyDown(KeyCode.M))
-        //{
-        //    audioMute = !audioMute;
-        //}
-        //SettingsManager.currentSettings.audioMute = audioMute;
-
-        //Debug.Log(audioMute);
-
-        sfxMixer.SetFloat("Volume", audioMute ? -80f : sfxVolume);
-        musicMixer.SetFloat("Volume", audioMute ? -80f : musicVolume);
+        sfxMixer.SetFloat("Volume", sfxVolume);
+        musicMixer.SetFloat("Volume", musicVolume);
+        sfxMixer.SetFloat("MasterVolume", masterVolume);
+        musicMixer.SetFloat("MasterVolume", masterVolume);
     }
 
     public void ChangeBGM(string musicPath, float duration = 1f)

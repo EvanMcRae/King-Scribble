@@ -12,5 +12,5 @@ public class Settings
     public float xRes = 1f, yRes = 1f;
     public float musicVolume = 50f;
     public float sfxVolume = 50f;
-    public bool audioMute = false;
+    public float masterVolume = 100f;
 }
