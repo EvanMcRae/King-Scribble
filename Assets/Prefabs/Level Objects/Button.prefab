@@ -274,6 +274,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ed6183da7af2aab45b09a76fe8f18019, type: 3}
   - {fileID: 21300000, guid: 7cf1d89416aee2a47a86d5c984835a95, type: 3}
   - {fileID: 21300000, guid: 03d49aa0865615b4ba69565dc84c0ffc, type: 3}
+  soundPlayer: {fileID: 3385541167332679919}
 --- !u!61 &3176018100405734386
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -539,6 +540,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
   m_PrefabInstance: {fileID: 2501509381621989113}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3385541167332679919 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 886362805277679126, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 2501509381621989113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7736148384591318090
 PrefabInstance:
   m_ObjectHideFlags: 0

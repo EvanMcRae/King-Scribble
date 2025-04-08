@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastPosition;
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
+    public bool softFall = true;
 
     // Start is called before the first frame update
     void Start()
@@ -202,7 +203,10 @@ public class PlayerController : MonoBehaviour
                 isFalling = false;
                 if (fallTime > 0.2f)
                 {
-                    soundPlayer.PlaySound("Player.Land");
+                    if (softFall)
+                        softFall = false;
+                    else
+                        soundPlayer.PlaySound("Player.Land");
                 }
                 fallTime = 0.0f;
             }
@@ -224,7 +228,12 @@ public class PlayerController : MonoBehaviour
                 jumpTime = 0f;
                 releasedJumpSinceJump = false;
                 if (timeSinceJumpPressed > 2 * Time.fixedDeltaTime)
-                    soundPlayer.PlaySound("Player.Land");
+                {
+                    if (softFall)
+                        softFall = false;
+                    else
+                        soundPlayer.PlaySound("Player.Land");
+                }
             }
         }
 

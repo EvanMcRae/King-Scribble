@@ -109,11 +109,6 @@ public class AudioManager : MonoBehaviour
             musicVolume = SettingsManager.currentSettings.musicVolume;
             sfxVolume = SettingsManager.currentSettings.sfxVolume;
         }
-        else
-        {
-            Debug.Log("what the fuck guys");
-        }
-        
     }
 
     // Update is called once per frame
@@ -170,7 +165,6 @@ public class AudioManager : MonoBehaviour
         {
             AudioMute = !AudioMute;
         }
-        SettingsManager.currentSettings.audioMute = AudioMute;
 
         // Volume controls (hold down + or -)
         musicMixer.SetFloat("Volume", musicVolume);
@@ -187,23 +181,27 @@ public class AudioManager : MonoBehaviour
             if (musicVolume > -80f)
                 musicVolume -= 0.1f;
         }
-        SettingsManager.currentSettings.musicVolume = musicVolume;
-        SettingsManager.currentSettings.sfxVolume = sfxVolume;
 
-        targetSFXVolume = SettingsManager.currentSettings.sfxVolume;
+        if (SettingsManager.currentSettings != null)
+        {
+            SettingsManager.currentSettings.audioMute = AudioMute;
+            SettingsManager.currentSettings.musicVolume = musicVolume;
+            SettingsManager.currentSettings.sfxVolume = sfxVolume;
+            targetSFXVolume = SettingsManager.currentSettings.sfxVolume;
 
-        // TODO in case we want fade between scene changes, add this sorta thing
-        //if (ChangeScene.changingScene)
-        //{
-        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, -80, 0.1f);
-        //}
-        //else
-        //{
-        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, targetSFXVolume, 0.1f);
-        //}
-        actualSFXVolume = targetSFXVolume; // TODO TEMP
+            // TODO in case we want fade between scene changes, add this sorta thing
+            //if (ChangeScene.changingScene)
+            //{
+            //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, -80, 0.1f);
+            //}
+            //else
+            //{
+            //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, targetSFXVolume, 0.1f);
+            //}
+            actualSFXVolume = targetSFXVolume; // TODO TEMP
 
-        sfxMixer.SetFloat("Volume", actualSFXVolume);
+            sfxMixer.SetFloat("Volume", actualSFXVolume);
+        }
     }
 
     public void ChangeBGM(string musicPath, float duration = 1f)
@@ -475,13 +473,13 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip FindSound(SoundNode current, List<string> path)
     {
-        if (current is SoundPlayable)
+        if (current is SoundPlayable playable)
         {
-            return ((SoundPlayable)current).GetClip();
+            return playable.GetClip();
         }
-        else if (current is SoundCategory)
+        else if (current is SoundCategory category)
         {
-            foreach (SoundNode node in ((SoundCategory)current).children)
+            foreach (SoundNode node in category.children)
             {
                 if (path.Count > 0 && node.name.ToLower() == path[0].ToLower())
                 {
@@ -506,17 +504,16 @@ public class AudioManager : MonoBehaviour
 
     public MusicClip FindMusic(SoundNode current, List<string> path)
     {
-        if (current is MusicClip)
+        if (current is MusicClip clip)
         {
-            return ((MusicClip)current);
+            return clip;
         }
-        else if (current is MusicCategory)
+        else if (current is MusicCategory category)
         {
-            foreach (SoundNode node in ((MusicCategory)current).children)
+            foreach (SoundNode node in category.children)
             {
                 if (path.Count > 0 && node.name.ToLower() == path[0].ToLower())
                 {
-                    // Debug.Log("Found " + path[0]);
                     current = node;
                     path.RemoveAt(0);
                     return FindMusic(node, path);

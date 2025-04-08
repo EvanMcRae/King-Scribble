@@ -120,6 +120,7 @@ public class PlayerVars : MonoBehaviour
             cur_tool = ToolType.None;
 
         GetComponent<PlayerController>().facingRight = true;
+        GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;

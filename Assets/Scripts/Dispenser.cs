@@ -18,6 +18,9 @@ public class Dispenser : MonoBehaviour
     private Vector2 force;
     const int ITEM_SPRITES = 8;
     public Sprite[] itemSprites = new Sprite[ITEM_SPRITES];
+    public SoundPlayer soundPlayer;
+    public SoundClip dispense;
+
     void Start()
     {
 
@@ -55,6 +58,8 @@ public class Dispenser : MonoBehaviour
                 lastInstances[i] = Instantiate(item, transform.position + offset, Quaternion.identity);
                 lastInstances[i].GetComponent<SpriteRenderer>().sprite = itemSprites[randSprite];
                 lastInstances[i].GetComponent<Rigidbody2D>().AddForce(force);
+                if (soundPlayer != null && dispense != null)
+                    soundPlayer.PlaySound(dispense);
                 break;
             }
         }
@@ -76,6 +81,8 @@ public class Dispenser : MonoBehaviour
                         lastInstances[i].GetComponent<SpriteRenderer>().sprite = itemSprites[randSprite];
                         lastInstances[i].GetComponent<Rigidbody2D>().AddForce(force);
                         timeSinceLast = 0f;
+                        if (soundPlayer != null && dispense != null)
+                            soundPlayer.PlaySound(dispense);
                         break;
                     }
                 }

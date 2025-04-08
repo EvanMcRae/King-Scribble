@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6650783957152757138}
   - component: {fileID: 8569425836616384433}
   - component: {fileID: 8558633810318738229}
+  - component: {fileID: 3825945853887999802}
   m_Layer: 9
   m_Name: Bal
   m_TagString: TempObj
@@ -149,6 +150,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &3825945853887999802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4295097984598871435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1dc46712e7c43b9bf3f39d7b413337, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundPlayer: {fileID: 153029158168041802}
+  landingSound: {fileID: 11400000, guid: 7d824da12367b4d9584e23a2a1b474e5, type: 2}
 --- !u!1001 &1032262692315055964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -206,6 +221,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+--- !u!114 &153029158168041802 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 886362805277679126, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 1032262692315055964}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &436019707229395039 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}

@@ -16,6 +16,7 @@ public class PhysicsButton : MonoBehaviour
     public int b_color;
     const int NUM_SPRITES = 6;
     public Sprite[] sprites = new Sprite[NUM_SPRITES];
+    public SoundPlayer soundPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +47,7 @@ public class PhysicsButton : MonoBehaviour
         {
             pressed = true;
             on_press.Invoke();
+            soundPlayer.PlaySound("Button.Press");
             if (!been_pressed)
             {
                 been_pressed = true;
@@ -61,6 +63,7 @@ public class PhysicsButton : MonoBehaviour
         {
             pressed = false;
             on_release.Invoke();
+            soundPlayer.PlaySound("Button.Release");
         } 
     }
 }
