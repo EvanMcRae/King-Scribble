@@ -49,8 +49,14 @@ public class DrawManager : MonoBehaviour
 
     public static DrawManager instance;
 
-    private Vector3 lastEraserPos;
+    private Vector2 lastMousePos;
     private bool beganDraw = false;
+
+    [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private List<SoundClip> drawSounds = new();
+    private Coroutine currentSoundPause, currentSoundUnpause;
+    private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
+    private bool soundPaused = false;
 
     private void Awake()
     {
@@ -94,7 +100,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead)
         {
             beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
@@ -115,11 +121,11 @@ public class DrawManager : MonoBehaviour
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead)
             Draw(mousePos);
 
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0) || (beganDraw && !GameManager.canMove))
+        if (Input.GetMouseButtonUp(0) || (beganDraw && !GameManager.canMove) || PlayerVars.instance.isDead)
         {
             beganDraw = false;
             EndDraw();
@@ -169,8 +175,9 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.cur_tool == ToolType.Eraser)
         {
             mouse_pos += new Vector2(0.5f, -0.5f);
-            lastEraserPos = mouse_pos;
+            lastMousePos = mouse_pos;
             EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+            soundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
             return;
         }
 
@@ -201,12 +208,12 @@ public class DrawManager : MonoBehaviour
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
         }
-
+        soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }
 
     private IEnumerator EraseMarch(Vector2 mouse_pos)
     {
-        Vector2 marchPos = lastEraserPos;
+        Vector2 marchPos = lastMousePos;
         int ct = 0, interval = 3;
         do
         {
@@ -216,7 +223,7 @@ public class DrawManager : MonoBehaviour
             if (ct % interval == 0) yield return new WaitForEndOfFrame();
         } while (Vector2.Distance(marchPos, mouse_pos) > RESOLUTION);
         EraserFunctions.Erase(mouse_pos, eraserRadius, true);
-        lastEraserPos = mouse_pos;
+        lastMousePos = mouse_pos;
     }
 
     private void Draw(Vector2 mouse_pos)
@@ -232,24 +239,25 @@ public class DrawManager : MonoBehaviour
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
             mouse_pos += new Vector2(0.5f, -0.5f);
+            SoundPauseCheck(mouse_pos);
             if (PlayerVars.instance.eraserFuelLeft() > 0)
             {
                 // March along line from previous to current eraser pos if it's too far away
-                if (Vector2.Distance(mouse_pos, lastEraserPos) > RESOLUTION)
+                if (Vector2.Distance(mouse_pos, lastMousePos) > RESOLUTION)
                 {
                     StartCoroutine(EraseMarch(mouse_pos));
                 }
                 else
                 {
                     EraserFunctions.Erase(mouse_pos, eraserRadius, true);
-                    lastEraserPos = mouse_pos;
+                    lastMousePos = mouse_pos;
                 }
             }
                 
             else EndDraw();
 			return;
 		}
-		
+
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
 
@@ -265,12 +273,19 @@ public class DrawManager : MonoBehaviour
 
         else if (!currentLine.canDraw && currentLine.hasDrawn) // If the line was stopped by attempting to draw over an unavailable area, continue when available
             BeginDraw(mouse_pos);
+
+        SoundPauseCheck(mouse_pos);
+        lastMousePos = mouse_pos;
     }
 
     private void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
         beganDraw = false;
+        if (currentSoundPause != null)
+            AudioManager.instance.StopCoroutine(currentSoundPause);
+        soundPlayer.EndSound(drawSounds[(int)PlayerVars.instance.cur_tool]);
+       
         if (currentLine != null)
         {
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
@@ -304,7 +319,28 @@ public class DrawManager : MonoBehaviour
         currentLine = null;
     }
 
-
+    private void SoundPauseCheck(Vector2 mouse_pos)
+    {
+        if (Vector2.Distance(lastMousePos, mouse_pos) < 0.01f)
+        {
+            if (currentSoundUnpause != null)
+                AudioManager.instance.StopCoroutine(currentSoundUnpause);
+            soundPauseCounter += Time.deltaTime;
+            if (soundPauseCounter >= soundPauseThreshold && !soundPaused)
+            {
+                currentSoundPause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 0f, () => { }));
+                soundPaused = true;
+            }
+        }
+        else if (soundPaused)
+        {
+            if (currentSoundPause != null)
+                AudioManager.instance.StopCoroutine(currentSoundPause);
+            soundPauseCounter = 0;
+            soundPaused = false;
+            currentSoundUnpause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 1f, () => { }));
+        }
+    }
 
     public void SetCursor(ToolType tool)
     {

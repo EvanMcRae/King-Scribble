@@ -63,7 +63,8 @@ public class GameManager : MonoBehaviour
 
     public void Reset()
     {
-        StartCoroutine(ResetLevel());
+        if (!resetting)
+            StartCoroutine(ResetLevel());
     }
 
     IEnumerator ResetLevel()

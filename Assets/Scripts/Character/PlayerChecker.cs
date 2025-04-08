@@ -9,7 +9,7 @@ public class PlayerChecker : MonoBehaviour
     public static PlayerChecker instance;
     // Use this for initialization
     void Awake()
-    {   
+    {
         var cams = transform.parent.GetComponentsInChildren<CinemachineVirtualCamera>();
         instance = this;
         if (PlayerVars.instance == null)

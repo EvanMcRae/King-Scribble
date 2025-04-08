@@ -58,7 +58,7 @@ public class MainMenuManager : MonoBehaviour
         ScreenWipe.PostWipe -= EnterGame;
         firstopen = false;
         playing = false;
-        SceneManager.LoadScene("Level1_1"); //TODO change this whenever
+        SceneManager.LoadScene("IntroAnimatic"); //TODO change this to saved scene, IntroAnimatic is default
     }
 
     public void Instructions()

@@ -9,13 +9,14 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider;
-    [SerializeField] private TextMeshProUGUI qualityValue;
-    [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
+    [SerializeField] private Slider qualitySlider, musicSlider, soundSlider;
+    [SerializeField] private TextMeshProUGUI qualityValue, musicValue, soundValue;
+    [SerializeField] private Toggle fullScreenToggle, vSyncToggle, muteToggle;
 
     void Awake()
     {
         LoadSettings();
+        gameObject.SetActive(false);
     }
 
     public void LoadSettings()
@@ -26,6 +27,9 @@ public class SettingsManager : MonoBehaviour
         UpdateFullScreen(false);
         UpdateVSync(false);
         UpdateQuality(false);
+        UpdateMusic(false);
+        UpdateSound(false);
+        UpdateMute(false);
     }
 
     public static void SaveSettings()
@@ -48,6 +52,26 @@ public class SettingsManager : MonoBehaviour
         qualityValue.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
     }
 
+    public void UpdateMusic(bool user)
+    {
+        if (user)
+            currentSettings.musicVolume = musicSlider.value;
+        else
+            musicSlider.value = currentSettings.musicVolume;
+
+        musicValue.text = (int)musicSlider.value + "";
+    }
+
+    public void UpdateSound(bool user)
+    {
+        if (user)
+            currentSettings.sfxVolume = soundSlider.value;
+        else
+            soundSlider.value = currentSettings.sfxVolume;
+
+        soundValue.text = (int)soundSlider.value + "";
+    }
+
     public void UpdateFullScreen(bool user)
     {
         if (user)
@@ -55,7 +79,10 @@ public class SettingsManager : MonoBehaviour
             currentSettings.fullScreen = fullScreenToggle.isOn;
         }
         else
+        {
             fullScreenToggle.isOn = currentSettings.fullScreen;
+        }
+            
 
         if (currentSettings.fullScreen)
         {
@@ -85,5 +112,17 @@ public class SettingsManager : MonoBehaviour
             QualitySettings.vSyncCount = 1;
         else
             QualitySettings.vSyncCount = 0;
+    }
+
+    public void UpdateMute(bool user)
+    {
+        if (user)
+        {
+            currentSettings.audioMute = muteToggle.isOn;
+        }
+        else
+        {
+            muteToggle.isOn = currentSettings.audioMute;
+        }
     }
 }
