@@ -25,6 +25,9 @@ public class PlayerVars : MonoBehaviour
     public EraseEvent eraseEvent;
     public Action releaseEraser;
     public bool isDead = false;
+    private Vector3 spawn_pos;
+    public void SetSpawnPos(Vector3 spawnPos) {spawn_pos = spawnPos;}
+    public Vector3 GetSpawnPos() {return spawn_pos;}
     public int getDoodleFuel() {return curDoodleFuel;}
     public float doodleFuelLeft() {return (float) curDoodleFuel / maxDoodleFuel;}
     public int getPenFuel() {return curPenFuel;}
@@ -72,6 +75,7 @@ public class PlayerVars : MonoBehaviour
         if (curEraserFuel < 0) curEraserFuel = 0;
         eraseEvent(eraserFuelLeft());
     }
+
     public void ReplenishEraser()
     {
         curEraserFuel = maxEraserFuel;
@@ -85,10 +89,17 @@ public class PlayerVars : MonoBehaviour
         doodleEvent(doodleFuelLeft());
     }
 
+    public void MaxDoodleFuel() {
+        curDoodleFuel = maxDoodleFuel;
+        PlayerController.instance.ResizePlayer(doodleFuelLeft());
+        doodleEvent(doodleFuelLeft());
+    }
+
     private void Awake()
     {
         instance = this;
         DontDestroyOnLoad(this);
+        spawn_pos = PlayerChecker.instance.transform.position;
     }
 
     void Start()

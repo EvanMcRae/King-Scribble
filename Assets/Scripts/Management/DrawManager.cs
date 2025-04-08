@@ -79,6 +79,7 @@ public class DrawManager : MonoBehaviour
             currentLine = null;
             return;
         }
+
         // If the drawing cooldown is active, decrement it and don't do anything
         if (drawCooldown > 0) { 
             drawCooldown -= Time.deltaTime;
@@ -139,6 +140,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
+
         // [2] key pressed - switch to pen
         if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
         {
@@ -149,6 +151,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
+
         // [3] key pressed - switch to eraser
         if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
         { 
@@ -171,8 +174,8 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Don't draw if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7);
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
@@ -218,8 +221,8 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, or the "pen lines" layer (3, 6, and 7 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7);
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null) {
             EndDraw();
