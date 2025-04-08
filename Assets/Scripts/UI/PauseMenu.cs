@@ -50,7 +50,8 @@ public class PauseMenu : MonoBehaviour
         }
         pauseScreen.SetActive(true);
 
-        DrawManager.instance.SetCursor(ToolType.None);
+        if (DrawManager.instance != null)
+            DrawManager.instance.SetCursor(ToolType.None);
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
@@ -64,7 +65,8 @@ public class PauseMenu : MonoBehaviour
         }
         pauseScreen.SetActive(false);
 
-        DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+        if (DrawManager.instance != null)
+            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {
             MenuButton prevButton = previousButton.GetComponent<MenuButton>();
@@ -99,8 +101,11 @@ public class PauseMenu : MonoBehaviour
     public void GoToMainMenu()
     {
         GameManager.resetting = false;
-        PlayerController.instance.KillTweens();
-        Destroy(PlayerVars.instance.gameObject);
+        if (PlayerController.instance != null)
+        {
+            PlayerController.instance.KillTweens();
+            Destroy(PlayerVars.instance.gameObject);
+        }
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");
