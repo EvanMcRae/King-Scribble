@@ -345,7 +345,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="targetVolume">Target volume, the player is faded to</param>
     /// <param name="finishedCallback">Called when finshed</param>
     /// <returns></returns>
-    IEnumerator FadeAudioSource(AudioSource player, float duration, float targetVolume, System.Action finishedCallback)
+    public IEnumerator FadeAudioSource(AudioSource player, float duration, float targetVolume, System.Action finishedCallback)
     {
         // Calculate the steps
         int Steps = (int)(volumeChangesPerSecond * duration);
