@@ -16,6 +16,7 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         LoadSettings();
+        gameObject.SetActive(false);
     }
 
     public void LoadSettings()
@@ -55,7 +56,10 @@ public class SettingsManager : MonoBehaviour
             currentSettings.fullScreen = fullScreenToggle.isOn;
         }
         else
+        {
             fullScreenToggle.isOn = currentSettings.fullScreen;
+        }
+            
 
         if (currentSettings.fullScreen)
         {

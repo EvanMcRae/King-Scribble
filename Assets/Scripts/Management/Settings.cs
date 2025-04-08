@@ -10,4 +10,7 @@ public class Settings
     public bool fullScreen = true;
     public bool vSync = false;
     public float xRes = 1f, yRes = 1f;
+    public float musicVolume = -10f;
+    public float sfxVolume = -6f;
+    public bool audioMute = false;
 }

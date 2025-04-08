@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783d8f720fc1cb44d9426eab631c9ddc, type: 3}
+  m_Name: Button
+  m_EditorClassIdentifier: 
+  children:
+  - {fileID: 11400000, guid: c1c384b2d53dd4b28b59f33a3c38c048, type: 2}
+  - {fileID: 11400000, guid: f7284fe1aa4164226b28a852c077f957, type: 2}

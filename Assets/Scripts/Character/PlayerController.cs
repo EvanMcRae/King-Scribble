@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private float realVelocity;
     private Vector3 lastPosition;
     [SerializeField] private Transform checkPos;
+    [SerializeField] private SoundPlayer soundPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -199,6 +200,10 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && fallTime > 0.1f)
             {
                 isFalling = false;
+                if (fallTime > 0.2f)
+                {
+                    soundPlayer.PlaySound("Player.Land");
+                }
                 fallTime = 0.0f;
             }
         }
@@ -218,6 +223,8 @@ public class PlayerController : MonoBehaviour
                 isJumping = false;
                 jumpTime = 0f;
                 releasedJumpSinceJump = false;
+                if (timeSinceJumpPressed > 2 * Time.fixedDeltaTime)
+                    soundPlayer.PlaySound("Player.Land");
             }
         }
 
@@ -260,6 +267,7 @@ public class PlayerController : MonoBehaviour
         if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
         {
             anim.SetTrigger("justJumped");
+            soundPlayer.PlaySound("Player.Jump");
             // TODO disabled, would reject jumps if on too steep of a slope
             // if (isOnSlope && slopeDownAngle > maxSlopeAngle) return;
 
