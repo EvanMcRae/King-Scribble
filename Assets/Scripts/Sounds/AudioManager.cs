@@ -36,29 +36,7 @@ public class AudioManager : MonoBehaviour
         CURRENT, MENU, LEVEL
     }
 
-    /// <summary>
-    /// Mutes all AudioSources, but does not stop them!
-    /// </summary>
-    public bool AudioMute
-    {
-        set
-        {
-            foreach (AudioSource s in BGM1)
-            {
-                s.mute = value;
-            }
-            foreach (AudioSource s in BGM2)
-            {
-                s.mute = value;
-            }
-        }
-        get
-        {
-            if (firstSet)
-                return BGM1[activePlayer].mute;
-            return BGM2[activePlayer].mute;
-        }
-    }
+    public bool audioMute = false;
 
     /// <summary>
     /// Set up the AudioSources
@@ -163,45 +141,30 @@ public class AudioManager : MonoBehaviour
         // Toggle muting (press M)
         if (Input.GetKeyDown(KeyCode.M))
         {
-            AudioMute = !AudioMute;
+            audioMute = !audioMute;
         }
 
-        // Volume controls (hold down + or -)
-        musicMixer.SetFloat("Volume", musicVolume);
-        musicMixer.GetFloat("Volume", out musicVolume);
+        if (SettingsManager.currentSettings == null)
+            return;
 
-        if (Input.GetKey("="))
-        {
-            if (musicVolume < 0f)
-                musicVolume += 0.1f;
-        }
+        SettingsManager.currentSettings.audioMute = audioMute;
+        SettingsManager.currentSettings.musicVolume = musicVolume;
+        SettingsManager.currentSettings.sfxVolume = sfxVolume;
+        targetSFXVolume = SettingsManager.currentSettings.sfxVolume;
 
-        if (Input.GetKey("-"))
-        {
-            if (musicVolume > -80f)
-                musicVolume -= 0.1f;
-        }
+        // TODO in case we want fade between scene changes, add this sorta thing
+        //if (ChangeScene.changingScene)
+        //{
+        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, -80, 0.1f);
+        //}
+        //else
+        //{
+        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, targetSFXVolume, 0.1f);
+        //}
+        actualSFXVolume = targetSFXVolume; // TODO TEMP
 
-        if (SettingsManager.currentSettings != null)
-        {
-            SettingsManager.currentSettings.audioMute = AudioMute;
-            SettingsManager.currentSettings.musicVolume = musicVolume;
-            SettingsManager.currentSettings.sfxVolume = sfxVolume;
-            targetSFXVolume = SettingsManager.currentSettings.sfxVolume;
-
-            // TODO in case we want fade between scene changes, add this sorta thing
-            //if (ChangeScene.changingScene)
-            //{
-            //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, -80, 0.1f);
-            //}
-            //else
-            //{
-            //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, targetSFXVolume, 0.1f);
-            //}
-            actualSFXVolume = targetSFXVolume; // TODO TEMP
-
-            sfxMixer.SetFloat("Volume", actualSFXVolume);
-        }
+        sfxMixer.SetFloat("Volume", audioMute ? -80f : actualSFXVolume);
+        musicMixer.SetFloat("Volume", audioMute ? -80f : musicVolume);
     }
 
     public void ChangeBGM(string musicPath, float duration = 1f)
