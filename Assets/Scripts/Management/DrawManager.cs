@@ -289,7 +289,6 @@ public class DrawManager : MonoBehaviour
             AudioManager.instance.StopCoroutine(currentSoundPause);
         if (currentSoundUnpause != null)
             AudioManager.instance.StopCoroutine(currentSoundUnpause);
-        Debug.Log("end sound");
         soundPlayer.EndAllSounds();
 
         if (currentLine != null)
