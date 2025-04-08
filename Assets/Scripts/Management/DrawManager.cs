@@ -80,8 +80,9 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Can't draw if you're dead
+        // Can't draw if you're dead/paused
         if (PlayerVars.instance.isDead) {
+            EndDraw();
             currentLine = null;
             return;
         }
@@ -93,14 +94,14 @@ public class DrawManager : MonoBehaviour
         }
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (PlayerController.instance.OverlapsPosition(mousePos))
+        if (isDrawing && PlayerController.instance.OverlapsPosition(mousePos))
         {
             EndDraw();
             currentLine = null;
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
         {
             beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
@@ -121,11 +122,11 @@ public class DrawManager : MonoBehaviour
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
             Draw(mousePos);
 
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0) || (beganDraw && !GameManager.canMove) || PlayerVars.instance.isDead)
+        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused))
         {
             beganDraw = false;
             EndDraw();
@@ -134,7 +135,8 @@ public class DrawManager : MonoBehaviour
                 PlayerVars.instance.releaseEraser?.Invoke();
             }
         }
-            
+
+        if (GameManager.paused) return;
 
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
@@ -208,6 +210,7 @@ public class DrawManager : MonoBehaviour
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
         }
+        Debug.Log("play sound");
         soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }
 
@@ -284,8 +287,11 @@ public class DrawManager : MonoBehaviour
         beganDraw = false;
         if (currentSoundPause != null)
             AudioManager.instance.StopCoroutine(currentSoundPause);
-        soundPlayer.EndSound(drawSounds[(int)PlayerVars.instance.cur_tool]);
-       
+        if (currentSoundUnpause != null)
+            AudioManager.instance.StopCoroutine(currentSoundUnpause);
+        Debug.Log("end sound");
+        soundPlayer.EndAllSounds();
+
         if (currentLine != null)
         {
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small

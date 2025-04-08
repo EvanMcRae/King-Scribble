@@ -192,6 +192,16 @@ public class SoundPlayer : MonoBehaviour
         }
     }
 
+    public void EndAllSounds()
+    {
+        foreach (AudioSource source in sources)
+        {
+            source.time = 0;
+            source.Stop();
+            source.clip = null;
+        }
+    }
+
     public void CleanSounds()
     {
         foreach (AudioSource source in sources)
