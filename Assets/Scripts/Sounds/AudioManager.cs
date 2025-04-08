@@ -84,8 +84,8 @@ public class AudioManager : MonoBehaviour
 
         if (SettingsManager.currentSettings != null)
         {
-            musicVolume = SettingsManager.currentSettings.musicVolume;
-            sfxVolume = SettingsManager.currentSettings.sfxVolume;
+            musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20; 
+            sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
         }
     }
 
@@ -138,32 +138,21 @@ public class AudioManager : MonoBehaviour
             }
         }
 
+        if (SettingsManager.currentSettings == null)
+            return;
+
+        musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20;
+        sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
+
         // Toggle muting (press M)
+        audioMute = SettingsManager.currentSettings.audioMute;
         if (Input.GetKeyDown(KeyCode.M))
         {
             audioMute = !audioMute;
         }
-
-        if (SettingsManager.currentSettings == null)
-            return;
-
         SettingsManager.currentSettings.audioMute = audioMute;
-        SettingsManager.currentSettings.musicVolume = musicVolume;
-        SettingsManager.currentSettings.sfxVolume = sfxVolume;
-        targetSFXVolume = SettingsManager.currentSettings.sfxVolume;
 
-        // TODO in case we want fade between scene changes, add this sorta thing
-        //if (ChangeScene.changingScene)
-        //{
-        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, -80, 0.1f);
-        //}
-        //else
-        //{
-        //    actualSFXVolume = Mathf.Lerp(actualSFXVolume, targetSFXVolume, 0.1f);
-        //}
-        actualSFXVolume = targetSFXVolume; // TODO TEMP
-
-        sfxMixer.SetFloat("Volume", audioMute ? -80f : actualSFXVolume);
+        sfxMixer.SetFloat("Volume", audioMute ? -80f : sfxVolume);
         musicMixer.SetFloat("Volume", audioMute ? -80f : musicVolume);
     }
 
