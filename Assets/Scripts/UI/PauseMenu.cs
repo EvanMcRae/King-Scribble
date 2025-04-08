@@ -44,7 +44,10 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.paused = true;
         Time.timeScale = 0;
-        // Stop all sounds
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            _.Pause();
+        }
         pauseScreen.SetActive(true);
 
         DrawManager.instance.SetCursor(ToolType.None);
@@ -55,7 +58,10 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.paused = false;
         Time.timeScale = 1;
-        // Resume all sounds
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            _.UnPause();
+        }
         pauseScreen.SetActive(false);
 
         DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
