@@ -146,11 +146,13 @@ public class AudioManager : MonoBehaviour
 
         // Toggle muting (press M)
         audioMute = SettingsManager.currentSettings.audioMute;
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            audioMute = !audioMute;
-        }
-        SettingsManager.currentSettings.audioMute = audioMute;
+        //if (Input.GetKeyDown(KeyCode.M))
+        //{
+        //    audioMute = !audioMute;
+        //}
+        //SettingsManager.currentSettings.audioMute = audioMute;
+
+        //Debug.Log(audioMute);
 
         sfxMixer.SetFloat("Volume", audioMute ? -80f : sfxVolume);
         musicMixer.SetFloat("Volume", audioMute ? -80f : musicVolume);

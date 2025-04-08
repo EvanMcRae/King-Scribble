@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8569425836616384433}
   - component: {fileID: 8558633810318738229}
   - component: {fileID: 5975881098743212329}
+  - component: {fileID: 2977003923965488266}
   m_Layer: 9
   m_Name: Bal
   m_TagString: TempObj
@@ -171,6 +172,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0f876466f804b1a4695178b44aefc1e9, type: 3}
   - {fileID: 21300000, guid: 3cdd682e584eacb42b36690aeaf99556, type: 3}
   - {fileID: 21300000, guid: f00855c1bc2fdeb439e138bcf296716b, type: 3}
+--- !u!114 &2977003923965488266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4295097984598871435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc1dc46712e7c43b9bf3f39d7b413337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
