@@ -73,6 +73,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (instance == null)
+            instance = this;
+
         if (GameManager.paused)
         {
             // Check for releasing jump during pause
