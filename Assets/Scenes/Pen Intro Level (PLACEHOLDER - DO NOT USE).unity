@@ -3201,11 +3201,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1571592134785211756, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2379351565319493598, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4120254056316621761, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_ColliderMask.m_Bits
@@ -3213,11 +3213,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4125169683561322019, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4744438952360250458, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_SortingOrder
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5189142990169495840, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
@@ -3561,7 +3561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.42
+      value: 6.61
       objectReference: {fileID: 0}
     - target: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_LocalPosition.z
