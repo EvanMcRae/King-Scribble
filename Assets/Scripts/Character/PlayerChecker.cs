@@ -6,12 +6,14 @@ public class PlayerChecker : MonoBehaviour
 {
     public GameObject playerPrefab;
     public CinemachineVirtualCamera cam;
+    public static PlayerChecker instance;
+    public static bool firstSpawned = false;
 
     // Use this for initialization
     void Awake()
-    {   
+    {
         var cams = transform.parent.GetComponentsInChildren<CinemachineVirtualCamera>();
-    
+        instance = this;
         if (PlayerVars.instance == null)
         {
             // Disable all secondary cameras in scene
@@ -22,6 +24,25 @@ public class PlayerChecker : MonoBehaviour
             // Re-enable the main camera
             cam.gameObject.SetActive(true);
             GameObject player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
+            PlayerVars vars = player.GetComponent<PlayerVars>();
+
+            // Load save data
+            if (GameSaver.loading && !GameSaver.currData.emptySave)
+            {
+                GameSaver.currData.player.SetValues(player);
+                if (GameSaver.currData.quitWhileClearing)
+                {
+                    vars.SetSpawnPos(transform.position);
+                }
+                player.transform.position = vars.GetSpawnPos();
+                GameSaver.loading = false;
+            }
+            else
+            {
+                vars.SetSpawnPos(transform.position);
+            }
+
+            firstSpawned = true;
             cam.Follow = player.transform;
             player.GetComponent<PlayerController>().virtualCamera = cam;
             player.GetComponent<PlayerController>().levelZoom = cam.m_Lens.OrthographicSize;
@@ -33,7 +54,12 @@ public class PlayerChecker : MonoBehaviour
             {
                 cam.gameObject.SetActive(false);
             }
-            PlayerVars.instance.Reset(transform.position);
+            if (!firstSpawned)
+            {
+                PlayerVars.instance.SetSpawnPos(transform.position);
+                firstSpawned = true;
+            }
+            PlayerVars.instance.Reset(PlayerVars.instance.GetSpawnPos());
             PlayerController.instance.virtualCamera = cam;
             // Re-enable the main camera
             cam.gameObject.SetActive(true);

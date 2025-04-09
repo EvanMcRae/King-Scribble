@@ -9,14 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 6032a4b0795292d42ada088169966279
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/Scenes/Level2.unity
-    guid: 16da797ca97cf384aa700c1c5da6ad27
-  - enabled: 1
-    path: Assets/Scenes/Level1/Level1_3.unity
-    guid: 5ead71eab68385848bb2650d8b5f398b
+    path: Assets/Scenes/IntroAnimatic.unity
+    guid: 71830f82121ef4a15a72cb307360ccd0
   - enabled: 1
     path: Assets/Scenes/Level1/Level1_1.unity
     guid: f519bdee7ea744e7e978f892e2fba5cc
@@ -24,10 +18,22 @@ EditorBuildSettings:
     path: Assets/Scenes/Level1/Level1_2.unity
     guid: df45598629c08498da77888b296518b2
   - enabled: 1
+    path: Assets/Scenes/Level1/Level1_3.unity
+    guid: 5ead71eab68385848bb2650d8b5f398b
+  - enabled: 1
+    path: Assets/Scenes/Button-Intro-Level.unity
+    guid: 6bc8ff9ae0c5b76419e97ad93bf77dd7
+  - enabled: 1
+    path: Assets/Scenes/More-Buttons-And-Platforms.unity
+    guid: 542e7abde6b5b6941a7977dfc4a18e34
+  - enabled: 1
     path: Assets/Scenes/Level1/Sandbox.unity
     guid: e4e0237a416c440c782cae945cd4cc24
   - enabled: 1
-    path: Assets/Scenes/Test.unity
-    guid: 6bc8ff9ae0c5b76419e97ad93bf77dd7
+    path: Assets/Scenes/Level1.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Level2.unity
+    guid: 16da797ca97cf384aa700c1c5da6ad27
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 1d005a2a034baff4faaa35ae6f4aad70, type: 2}

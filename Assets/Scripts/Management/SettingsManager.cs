@@ -9,13 +9,14 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider;
-    [SerializeField] private TextMeshProUGUI qualityValue;
+    [SerializeField] private Slider qualitySlider, musicSlider, soundSlider, masterSlider;
+    [SerializeField] private TextMeshProUGUI qualityValue, musicValue, soundValue, masterValue;
     [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
 
     void Awake()
     {
         LoadSettings();
+        gameObject.SetActive(false);
     }
 
     public void LoadSettings()
@@ -26,6 +27,9 @@ public class SettingsManager : MonoBehaviour
         UpdateFullScreen(false);
         UpdateVSync(false);
         UpdateQuality(false);
+        UpdateMusic(false);
+        UpdateSound(false);
+        UpdateMaster(false);
     }
 
     public static void SaveSettings()
@@ -48,6 +52,36 @@ public class SettingsManager : MonoBehaviour
         qualityValue.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
     }
 
+    public void UpdateMusic(bool user)
+    {
+        if (user)
+            currentSettings.musicVolume = musicSlider.value;
+        else
+            musicSlider.value = currentSettings.musicVolume;
+
+        musicValue.text = (int)musicSlider.value + "";
+    }
+
+    public void UpdateSound(bool user)
+    {
+        if (user)
+            currentSettings.sfxVolume = soundSlider.value;
+        else
+            soundSlider.value = currentSettings.sfxVolume;
+
+        soundValue.text = (int)soundSlider.value + "";
+    }
+
+    public void UpdateMaster(bool user)
+    {
+        if (user)
+            currentSettings.masterVolume = masterSlider.value;
+        else
+            masterSlider.value = currentSettings.masterVolume;
+
+        masterValue.text = (int)masterSlider.value + "";
+    }
+
     public void UpdateFullScreen(bool user)
     {
         if (user)
@@ -55,7 +89,10 @@ public class SettingsManager : MonoBehaviour
             currentSettings.fullScreen = fullScreenToggle.isOn;
         }
         else
+        {
             fullScreenToggle.isOn = currentSettings.fullScreen;
+        }
+            
 
         if (currentSettings.fullScreen)
         {
