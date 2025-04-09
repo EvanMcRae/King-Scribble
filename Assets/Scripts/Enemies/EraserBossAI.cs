@@ -55,7 +55,7 @@ public class EraserBossAI : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         bounds1 = transform.Find("Bounds1").gameObject;
         bounds2 = transform.Find("Bounds2").gameObject;
-        disable = true;
+        disable = false;
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
 
         foreach (CapsuleCollider2D col in GetComponents<CapsuleCollider2D>())
@@ -97,7 +97,7 @@ public class EraserBossAI : MonoBehaviour
                 // get the line renderer position CLOSEST to boss.transform.position
                 // MoveTo the first point of the LineRenderer and loop thru all the remaining positions to delete
                 if(!isErasingLine) {
-                    EraseLineSequence();
+                    StartCoroutine(EraseLineSequence(baseSpeed));
                 }
                 break;
 
@@ -154,15 +154,13 @@ public class EraserBossAI : MonoBehaviour
         }
         
         if (other == KSCollider) { // Deplete health from KS
-            KingScribble.transform.position += new Vector3(-10f, 0f, 0f);
+            KingScribble.transform.position += new Vector3(-2f, 0f, 0f);
 
-            /* WORK IN PROGRESS
             if(!isKSHit) {
-                physicalCollider.enabled = false;
+                // physicalCollider.enabled = false;
                 PlayerVars.instance.SpendDoodleFuel(50);
-                Knockback();
+                // Knockback();
             }
-            */
         }
         // Destroy pen obj is mass is big enough
         if (other.gameObject.layer == LayerMask.NameToLayer("Lines")) {
@@ -171,19 +169,24 @@ public class EraserBossAI : MonoBehaviour
     }
 
     void SearchForPosition() {
-        // If line renderer present, goes for the biggest one
+        // If line renderer present, goes for the biggest one OR closest one?
         LineRenderer closestLine = null;
         bool closestLineFound = false;
         float KSDistance = Vector3.Distance(this.transform.position, KingScribble.transform.position);
-        
-        foreach (Transform childTransform in PencilLinesFolder.transform)
+        float closestDistance = KSDistance;
+
+        foreach (Transform childTransform in PencilLinesFolder.transform) // for each pencil line
         {
             LineRenderer tempLine = childTransform.GetComponent<LineRenderer>();
             if(tempLine.positionCount != 0) {
-                float lineDistance = Vector3.Distance(this.transform.position, tempLine.GetPosition(0));
-                if(lineDistance < KSDistance) {
-                    closestLine = tempLine;
-                    closestLineFound = true;
+                // for each point in the pencil line
+                for(int i = 0; i < tempLine.positionCount; i++) {
+                    float pointDistance = Vector3.Distance(this.transform.position, tempLine.GetPosition(i));
+                    if(pointDistance < closestDistance) {
+                        closestDistance = pointDistance;
+                        closestLine = tempLine;
+                        closestLineFound = true;
+                    }
                 }
             }
         }
@@ -216,10 +219,36 @@ public class EraserBossAI : MonoBehaviour
         }
     }
 
-    void EraseLineSequence() {
-        //isErasingLine = true;
+    IEnumerator EraseLineSequence(float speed) {
+        isErasingLine = true;
         state = State.Cooldown;
+        Debug.Log("hi");
+        
+        float step; // Calculate the maxDistanceDelta based on the distance
+        LineRenderer tempLine = target.GetComponent<LineRenderer>();
+        int numPoints = tempLine.positionCount;
+        Vector3 targetPosition = target.position;
 
+        if(tempLine.positionCount != 0) {
+            Vector3[] tempArray = new Vector3[numPoints];
+            Vector3 point;
+            tempLine.GetPositions(tempArray); // Get the positions into the array
+
+            for(int i = 0; i < numPoints; i++) { // for each point in the pencil line move
+                point = tempArray[i] + targetPosition;
+
+                while (Vector3.Distance(transform.position, point) > 0.01f) {
+                    step = speed * Time.deltaTime;
+                    transform.position = Vector3.MoveTowards(transform.position, point, step);
+                    yield return null; // wait for next frame
+                }
+
+                EraserFunctions.Erase(bounds1.transform.position, eraserRadius, false, PencilLinesFolder);
+                EraserFunctions.Erase(bounds2.transform.position, eraserRadius, false, PencilLinesFolder);
+            }
+        }
+        isErasingLine = false;
+        
     }
 
     private void Knockback() {
