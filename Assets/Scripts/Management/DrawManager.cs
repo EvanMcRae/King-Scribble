@@ -133,10 +133,12 @@ public class DrawManager : MonoBehaviour
         {
             beganDraw = false;
             EndDraw();
-            if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-            {
-                PlayerVars.instance.releaseEraser?.Invoke();
-            }
+        }
+
+        // Eraser meter cooldown reset
+        if (Input.GetMouseButtonUp(0) && PlayerVars.instance.cur_tool == ToolType.Eraser)
+        {
+            PlayerVars.instance.releaseEraser?.Invoke();
         }
 
         if (GameManager.paused) return;
