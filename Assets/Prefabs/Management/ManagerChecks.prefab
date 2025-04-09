@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7063382920539804015}
   - component: {fileID: 7063382920539804014}
+  - component: {fileID: 8182301963735822740}
   m_Layer: 6
-  m_Name: AMCheck
+  m_Name: ManagerChecks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,3 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioManager: {fileID: 1692982821856884710, guid: ce2c77f9fedb71a468e71addf093b0c9, type: 3}
+--- !u!114 &8182301963735822740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7063382920539804017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c1a6a981fc1547ad855c99eeb2a6926, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameSaver: {fileID: 4733609094683534596, guid: 1db2fc551a55c43f2a90aefa5371db73, type: 3}

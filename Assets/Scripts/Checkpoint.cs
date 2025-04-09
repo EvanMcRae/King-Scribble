@@ -9,7 +9,7 @@ public class Checkpoint : MonoBehaviour
     private bool has_triggered = false;
     public SoundPlayer soundPlayer;
 
-    private void Awake()
+    private void Start()
     {
         if (PlayerVars.instance.GetSpawnPos() == transform.position)
         {
@@ -31,6 +31,8 @@ public class Checkpoint : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = with_flag;
         PlayerVars.instance.MaxDoodleFuel();
         PlayerVars.instance.SetSpawnPos(transform.position);
+        PlayerVars.instance.SaveInventory();
+        GameSaver.instance.SaveGame();
         has_triggered = true;
     }
 }

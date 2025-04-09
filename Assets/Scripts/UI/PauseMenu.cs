@@ -94,6 +94,7 @@ public class PauseMenu : MonoBehaviour
     {
         Unpause();
         GameManager.resetting = true;
+        GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += GoToMainMenu;
     }

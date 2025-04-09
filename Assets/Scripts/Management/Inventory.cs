@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Inventory
 {
-    private List<ToolType> toolUnlocks;
+    public List<ToolType> toolUnlocks;
     public Inventory() // By default, the player starts with no tools
     {
         toolUnlocks = new List<ToolType>();

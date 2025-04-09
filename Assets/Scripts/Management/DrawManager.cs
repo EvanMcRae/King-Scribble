@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Referenced: https://www.youtube.com/watch?v=SmAwege_im8
+[Serializable]
 public enum ToolType
 {
     None,
@@ -12,6 +13,8 @@ public enum ToolType
     Pen,
     Eraser
 }
+
+// Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public class DrawManager : MonoBehaviour
 {
     [SerializeField] public Line linePrefab;
@@ -210,7 +213,6 @@ public class DrawManager : MonoBehaviour
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
         }
-        Debug.Log("play sound");
         soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }
 

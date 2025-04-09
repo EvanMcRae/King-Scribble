@@ -7,7 +7,7 @@ public class PlayerVars : MonoBehaviour
 {
     public static PlayerVars instance;
 
-    public Inventory inventory, lastSavedInventory;
+    public Inventory inventory = null, lastSavedInventory = null;
     [SerializeField] private int maxDoodleFuel = 750;
     [SerializeField] private int maxPenFuel = 1000;
     [SerializeField] private int maxEraserFuel = 500;
@@ -104,8 +104,11 @@ public class PlayerVars : MonoBehaviour
 
     void Start()
     {
-        inventory = new Inventory(); // Initialize a tool inventory containing nothing by default
-        lastSavedInventory = new Inventory();
+        if (inventory == null)
+        {
+            inventory = new Inventory(); // Initialize a tool inventory containing nothing by default
+            lastSavedInventory = new Inventory();
+        }
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
         tempPenFuel = maxPenFuel;
