@@ -121,6 +121,7 @@ public class MainMenuManager : MonoBehaviour
         }
         ScreenWipe.PostUnwipe -= Quit;
         quitting = true;
+        AudioManager.instance.FadeOutCurrent();
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += ExitGame;
     }

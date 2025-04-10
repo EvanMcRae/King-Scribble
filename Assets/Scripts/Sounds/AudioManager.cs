@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     public AudioMixer musicMixer, sfxMixer;
-    public AudioMixerGroup masterGroup;
+    public AudioMixerGroup musicMixerGroup;
     public MusicClip currentSong = null;
     public GameArea currentArea;
 
@@ -62,18 +62,18 @@ public class AudioManager : MonoBehaviour
         // Set default values
         foreach (AudioSource s in BGM1)
         {
-            s.loop = true;
+            s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = masterGroup;
+            s.outputAudioMixerGroup = musicMixerGroup;
         }
 
         foreach (AudioSource s in BGM2)
         {
-            s.loop = true;
+            s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = masterGroup;
+            s.outputAudioMixerGroup = musicMixerGroup;
         }
 
         // Singleton pattern
