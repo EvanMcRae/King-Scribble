@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 using Cinemachine;
 
@@ -8,6 +9,7 @@ public class PlayerChecker : MonoBehaviour
     public CinemachineVirtualCamera cam;
     public static PlayerChecker instance;
     public static bool firstSpawned = false;
+    public Inventory defaultInventory = new();
 
     // Use this for initialization
     void Awake()
@@ -40,6 +42,7 @@ public class PlayerChecker : MonoBehaviour
             else
             {
                 vars.SetSpawnPos(transform.position);
+                vars.inventory.copy(defaultInventory);
             }
 
             firstSpawned = true;

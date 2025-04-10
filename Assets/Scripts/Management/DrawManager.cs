@@ -66,6 +66,7 @@ public class DrawManager : MonoBehaviour
         instance = this;
 
         SetCursor(PlayerVars.instance.cur_tool);
+        LoadSubmeter(PlayerVars.instance.cur_tool);
 
         fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetTexture("_MainTex", fillTexture.texture);

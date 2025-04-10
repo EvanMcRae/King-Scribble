@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     public AudioMixer musicMixer, sfxMixer;
-    public AudioMixerGroup masterGroup;
+    public AudioMixerGroup musicMixerGroup;
     public MusicClip currentSong = null;
     public GameArea currentArea;
 
@@ -62,18 +62,18 @@ public class AudioManager : MonoBehaviour
         // Set default values
         foreach (AudioSource s in BGM1)
         {
-            s.loop = true;
+            s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = masterGroup;
+            s.outputAudioMixerGroup = musicMixerGroup;
         }
 
         foreach (AudioSource s in BGM2)
         {
-            s.loop = true;
+            s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
-            s.outputAudioMixerGroup = masterGroup;
+            s.outputAudioMixerGroup = musicMixerGroup;
         }
 
         // Singleton pattern
@@ -139,6 +139,7 @@ public class AudioManager : MonoBehaviour
             return;
 
         musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20;
+        if (GameManager.paused) musicVolume -= 2f;
         sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
         masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
 
@@ -468,5 +469,15 @@ public class AudioManager : MonoBehaviour
         }
         Debug.LogError("Invalid music path provided!");
         return null;
+    }
+
+    public bool OwnsSource(AudioSource source)
+    {
+        return source == BGM1[0] || source == BGM1[1] || source == BGM2[0] || source == BGM2[1];
+    }
+
+    public void PauseEffect(bool active)
+    {
+        musicMixer.SetFloat("LowPass", active ? 1815.00f : 22000.00f);
     }
 }

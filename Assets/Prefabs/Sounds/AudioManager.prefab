@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1692982821856884712}
   - component: {fileID: 1692982821856884713}
+  - component: {fileID: 1387019576038870081}
   m_Layer: 6
   m_Name: AudioManager
   m_TagString: Untagged
@@ -46,19 +47,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicMixer: {fileID: 24100000, guid: 0a55a7605b1e0414293560dbe5625874, type: 2}
   sfxMixer: {fileID: 24100000, guid: 2fb86d5d0a3982d48942d16bb0d88023, type: 2}
-  globalSfxMixer: {fileID: 24100000, guid: d099b1f07c45790479a42fa2e20e38d2, type: 2}
-  musicMixerGroup: {fileID: 24300002, guid: 0a55a7605b1e0414293560dbe5625874, type: 2}
+  musicMixerGroup: {fileID: -5279847323309794671, guid: 0a55a7605b1e0414293560dbe5625874, type: 2}
   currentSong: {fileID: 0}
   currentArea: 0
   BGM1: []
   BGM2: []
   musicVolume: 1
   sfxVolume: 10
+  masterVolume: 10
   targetSFXVolume: -80
   actualSFXVolume: -80
   fadeDuration: 1
   paused: 0
-  normal: {fileID: 24500006, guid: 0a55a7605b1e0414293560dbe5625874, type: 2}
-  hurt: {fileID: -780703057569719066, guid: 0a55a7605b1e0414293560dbe5625874, type: 2}
   soundDatabase: {fileID: 11400000, guid: bdb81098d5ffa82479ae3ee20c1313cf, type: 2}
   musicDatabase: {fileID: 11400000, guid: a9246313b2edd7c4fb07feb07a77ace8, type: 2}
+--- !u!114 &1387019576038870081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1692982821856884710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2625dd5de6172439ab6cc98292415b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newTrack: {fileID: 11400000, guid: 9cdf2294007ea406a8c1257d560c0672, type: 2}
+  newArea: 0
+  delay: 0
