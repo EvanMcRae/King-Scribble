@@ -9,14 +9,20 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider, musicSlider, soundSlider, masterSlider;
-    [SerializeField] private TextMeshProUGUI qualityValue, musicValue, soundValue, masterValue;
+    [SerializeField] private Slider musicSlider, soundSlider, masterSlider;
+    [SerializeField] private TextMeshProUGUI musicValue, soundValue, masterValue;
     [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
+    [SerializeField] private Image musicSliderFill, soundSliderFill, masterSliderFill;
 
     void Awake()
     {
         LoadSettings();
         gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        SaveSettings();
     }
 
     public void LoadSettings()
@@ -26,7 +32,6 @@ public class SettingsManager : MonoBehaviour
         currentSettings ??= new Settings();
         UpdateFullScreen(false);
         UpdateVSync(false);
-        UpdateQuality(false);
         UpdateMusic(false);
         UpdateSound(false);
         UpdateMaster(false);
@@ -41,17 +46,6 @@ public class SettingsManager : MonoBehaviour
         Debug.Log("Saved settings to: " + path);
     }
 
-    public void UpdateQuality(bool user)
-    {
-        if (user)
-            currentSettings.quality = (int)qualitySlider.value;
-        else
-            qualitySlider.value = currentSettings.quality;
-
-        QualitySettings.SetQualityLevel(currentSettings.quality);
-        qualityValue.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
-    }
-
     public void UpdateMusic(bool user)
     {
         if (user)
@@ -59,6 +53,7 @@ public class SettingsManager : MonoBehaviour
         else
             musicSlider.value = currentSettings.musicVolume;
 
+        musicSliderFill.fillAmount = musicSlider.value / 100;
         musicValue.text = (int)musicSlider.value + "";
     }
 
@@ -69,6 +64,7 @@ public class SettingsManager : MonoBehaviour
         else
             soundSlider.value = currentSettings.sfxVolume;
 
+        soundSliderFill.fillAmount = soundSlider.value / 100;
         soundValue.text = (int)soundSlider.value + "";
     }
 
@@ -79,6 +75,7 @@ public class SettingsManager : MonoBehaviour
         else
             masterSlider.value = currentSettings.masterVolume;
 
+        masterSliderFill.fillAmount = masterSlider.value / 100;
         masterValue.text = (int)masterSlider.value + "";
     }
 
