@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6508815763183056595}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: SlopeCheck
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8952302316410279620}
   - component: {fileID: 5570765136377950596}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: WallJumpCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2568333704230369688}
   - component: {fileID: 5108078074794873328}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: MainBody
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4208287348502897301}
   - component: {fileID: 2175459678399007660}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 2464158369090801206}
   - component: {fileID: 4775241524976066854}
   - component: {fileID: 7087994594828487266}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1062685383184153115}
   - component: {fileID: 3419832881364647439}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: LandCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 5492666523076774730}
   - component: {fileID: 6102460984002339536}
   - component: {fileID: 3286303847372983743}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -663,7 +663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2106051775409183644, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

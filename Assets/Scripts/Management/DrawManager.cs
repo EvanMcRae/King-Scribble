@@ -189,8 +189,8 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, or the "player" layer (3, 6, 7, 9, and 10 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
