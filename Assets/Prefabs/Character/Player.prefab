@@ -127,7 +127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2568333704230369688}
   - component: {fileID: 5108078074794873328}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MainBody
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -396,6 +396,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 0}
   checkPos: {fileID: 6508815763183056595}
   soundPlayer: {fileID: 1057405114991915963}
+  softFall: 1
 --- !u!114 &7087994594828487266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,6 +409,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b583c914e2e7542bdc8fd4579900f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory:
+    toolUnlocks: 
+  lastSavedInventory:
+    toolUnlocks: 
   maxDoodleFuel: 750
   maxPenFuel: 1000
   maxEraserFuel: 500
