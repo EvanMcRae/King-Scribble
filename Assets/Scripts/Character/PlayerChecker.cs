@@ -43,6 +43,7 @@ public class PlayerChecker : MonoBehaviour
             {
                 vars.SetSpawnPos(transform.position);
                 vars.inventory.copy(defaultInventory);
+                vars.SaveInventory();
             }
 
             firstSpawned = true;
