@@ -23,12 +23,12 @@ public class ScreenWipe : MonoBehaviour
 
     public void PlayWipeOutSound()
     {
-        //soundPlayer.PlaySound("Level.WipeOut");
+        soundPlayer.PlaySound("Level.WipeOut");
     }
 
     public void WipeIn()
     {
-        //soundPlayer.PlaySound("Level.WipeIn");
+        soundPlayer.PlaySound("Level.WipeIn");
         over = false;
         ScreenBlocker.raycastTarget = true;
         GetComponent<Animator>().SetTrigger("WipeIn");
