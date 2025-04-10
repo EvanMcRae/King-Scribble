@@ -143,10 +143,10 @@ public class AudioManager : MonoBehaviour
         sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
         masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
 
-        sfxMixer.SetFloat("Volume", sfxVolume);
-        musicMixer.SetFloat("Volume", musicVolume);
-        sfxMixer.SetFloat("MasterVolume", masterVolume);
-        musicMixer.SetFloat("MasterVolume", masterVolume);
+        sfxMixer.SetFloat("Volume", sfxVolume + masterVolume);
+        musicMixer.SetFloat("Volume", musicVolume + masterVolume);
+        //sfxMixer.SetFloat("MasterVolume", masterVolume);
+        //musicMixer.SetFloat("MasterVolume", masterVolume);
     }
 
     public void ChangeBGM(string musicPath, float duration = 1f)
