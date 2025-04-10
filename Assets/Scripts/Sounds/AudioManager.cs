@@ -139,6 +139,7 @@ public class AudioManager : MonoBehaviour
             return;
 
         musicVolume = Mathf.Log10(SettingsManager.currentSettings.musicVolume / 100f + 0.00001f) * 20;
+        if (GameManager.paused) musicVolume -= 2f;
         sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
         masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
 
@@ -468,5 +469,15 @@ public class AudioManager : MonoBehaviour
         }
         Debug.LogError("Invalid music path provided!");
         return null;
+    }
+
+    public bool OwnsSource(AudioSource source)
+    {
+        return source == BGM1[0] || source == BGM1[1] || source == BGM2[0] || source == BGM2[1];
+    }
+
+    public void PauseEffect(bool active)
+    {
+        musicMixer.SetFloat("LowPass", active ? 1815.00f : 22000.00f);
     }
 }

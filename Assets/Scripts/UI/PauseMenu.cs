@@ -46,9 +46,11 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {
-            _.Pause();
+            if (!AudioManager.instance.OwnsSource(_))
+                _.Pause();
         }
         pauseScreen.SetActive(true);
+        AudioManager.instance.PauseEffect(true);
 
         if (DrawManager.instance != null)
             DrawManager.instance.SetCursor(ToolType.None);
@@ -61,8 +63,10 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {
-            _.UnPause();
+            if (!AudioManager.instance.OwnsSource(_))
+                _.UnPause();
         }
+        AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
         if (DrawManager.instance != null)
