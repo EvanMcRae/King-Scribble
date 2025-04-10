@@ -13,11 +13,12 @@ public class EraserBossAI : MonoBehaviour
         Moving,
         ChargePrep,
         Charging, // for lines
+        ChargeCooldown,
         Dizzied,
         Damaged,
         SlamPrep, // hovering above KS before slam
         Slamming, // for KS on ground
-        Cooldown // used for Slam Cooldown and Charge Cooldown
+        SlamCooldown // used for Slam Cooldown and Charge Cooldown
     }
     [SerializeField] private bool disable = false;
     [SerializeField] private GameObject PencilLinesFolder; // Where pencil lines are stored in hierarchy
@@ -36,8 +37,9 @@ public class EraserBossAI : MonoBehaviour
     private GameObject bounds2;
     private Collider2D KSCollider;
     private float timer = 0.0f; // used for cooldowns
-    private float searchTime = 5.0f; // variables ending in "Time" relate to the timer
+    private float searchTime = 3.0f; // variables ending in "Time" relate to the timer
     private float slamCooldownTime = 4.0f;
+    private float chargeCooldownTime = 2.0f;
     private float slamPrepTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
     private float KSStunTime = 2.0f;
@@ -78,7 +80,7 @@ public class EraserBossAI : MonoBehaviour
     {   
         myText.text = state.ToString();
 
-        if(disable) { return;}
+        if(disable) return;
         timer += Time.deltaTime;
         
         switch (state) {
@@ -107,6 +109,19 @@ public class EraserBossAI : MonoBehaviour
                 if(!isErasingLine) {
                     StartCoroutine(EraseLineSequence(baseSpeed));
                 }
+                state = State.ChargeCooldown;
+                break;
+
+            case State.ChargeCooldown:
+                if(timer >= chargeCooldownTime) {
+                    Color color;
+                    if(ColorUtility.TryParseHtmlString("#FFB8EF", out color))
+                    {
+                        spriteRenderer.color = color;
+                    }
+                    timer = 0;
+                    state = State.Searching;
+                }
                 break;
 
             case State.SlamPrep:
@@ -130,7 +145,7 @@ public class EraserBossAI : MonoBehaviour
                 EraserFunctions.Erase(bounds2.transform.position, eraserRadius, false, PencilLinesFolder);
                 break;
 
-            case State.Cooldown:
+            case State.SlamCooldown:
                 if(timer >= 1.0f) {
                     Hover(transform.position + new Vector3(0f,1f,0f), cooldownSpeed);
                 }
@@ -178,7 +193,7 @@ public class EraserBossAI : MonoBehaviour
             spriteRenderer.color = Color.yellow;
             isTweening = false;
             isSlamHit = true;
-            state = State.Cooldown;
+            state = State.SlamCooldown;
         }
         
         
@@ -242,8 +257,6 @@ public class EraserBossAI : MonoBehaviour
 
     IEnumerator EraseLineSequence(float speed) {
         isErasingLine = true;
-        state = State.Cooldown;
-        
         float step; // Calculate the maxDistanceDelta based on the distance
         LineRenderer tempLine = target.GetComponent<LineRenderer>();
         int numPoints = tempLine.positionCount;
@@ -268,6 +281,8 @@ public class EraserBossAI : MonoBehaviour
             }
         }
         isErasingLine = false;
+        timer = 0;
+        spriteRenderer.color = Color.yellow;
         
     }
 
