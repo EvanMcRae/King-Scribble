@@ -138,6 +138,8 @@ public class PlayerVars : MonoBehaviour
         transform.position = spawnpoint;
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
+        tempPenFuel = maxPenFuel;
+        curEraserFuel = maxEraserFuel;
         isDead = false;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
     }
