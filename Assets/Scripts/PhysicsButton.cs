@@ -17,7 +17,7 @@ public class PhysicsButton : MonoBehaviour
     const int NUM_SPRITES = 6;
     public Sprite[] sprites = new Sprite[NUM_SPRITES];
     public SoundPlayer soundPlayer;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +27,12 @@ public class PhysicsButton : MonoBehaviour
         _top.GetComponent<SpriteRenderer>().sprite = sprites[b_color];
     }
 
+    [ContextMenu("Update Color")]
+    void SetColor()
+    {
+        _top.GetComponent<SpriteRenderer>().sprite = sprites[b_color];
+    }
+    
     void Update()
     {
         // Force button max height
