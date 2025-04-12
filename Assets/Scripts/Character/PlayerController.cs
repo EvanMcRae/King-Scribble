@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 slopeNormalPerp;
     private bool isOnSlope, canWalkOnSlope;
     public PhysicsMaterial2D slippery, friction;
-    private float moveX;
+    private float moveX, moveY;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
     public float levelZoom;
     private bool isSprintMoving = false;
@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SoundPlayer soundPlayer;
     public bool softFall = true;
     public bool frictionOverride = false;
+    private float cheatSpeed = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -106,6 +107,7 @@ public class PlayerController : MonoBehaviour
         if (vars.isDead || !GameManager.canMove) return;
 
         moveX = Input.GetAxisRaw("Horizontal");
+        moveY = Input.GetAxisRaw("Vertical");
         anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
 
         Jump();
@@ -140,6 +142,20 @@ public class PlayerController : MonoBehaviour
             }
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
+        }
+
+        // TODO: TEMPORARY CHEAT MODE KEYBIND
+        if (Input.GetKeyDown(KeyCode.Backslash))
+        {
+            PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
+            Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
+            rb.isKinematic = PlayerVars.instance.cheatMode;
+            mainBody.GetComponent<PolygonCollider2D>().enabled = !PlayerVars.instance.cheatMode;
+        }
+        if (PlayerVars.instance.cheatMode)
+        {
+            cheatSpeed += Input.mouseScrollDelta.y;
+            if (cheatSpeed < 0) cheatSpeed = 0;
         }
     }
 
@@ -177,17 +193,25 @@ public class PlayerController : MonoBehaviour
         }
 
         // apply velocity, dampening between current and target
-        if (moveX == 0.0 && rb.velocity.x != 0.0f)
+        if (!PlayerVars.instance.cheatMode)
         {
-            if (canWalkOnSlope || !isOnSlope)
+            if (moveX == 0.0 && rb.velocity.x != 0.0f)
             {
-                mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+                if (canWalkOnSlope || !isOnSlope)
+                {
+                    mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+                }
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
             }
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
+            else
+            {
+                if (!frictionOverride) mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
+            }
         }
         else
         {
-            if (!frictionOverride) mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+            targetVelocity.Set(vars.isDead ? 0 : moveX * (calculatedSpeed + cheatSpeed), moveY * (calculatedSpeed + cheatSpeed), 0.0f);
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
 

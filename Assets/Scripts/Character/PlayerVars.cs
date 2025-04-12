@@ -26,6 +26,8 @@ public class PlayerVars : MonoBehaviour
     public Action releaseEraser;
     public bool isDead = false;
     private Vector3 spawn_pos;
+    public bool cheatMode = false;
+
     public void SetSpawnPos(Vector3 spawnPos) {spawn_pos = spawnPos;}
     public Vector3 GetSpawnPos() {return spawn_pos;}
     public int getDoodleFuel() {return curDoodleFuel;}
@@ -38,6 +40,7 @@ public class PlayerVars : MonoBehaviour
 
     public void SpendDoodleFuel(int amount) // Called every time doodle fuel (pencil) is consumed
     {
+        if (cheatMode) return;
         curDoodleFuel -= amount;
         if (curDoodleFuel < 0) curDoodleFuel = 0;
         PlayerController.instance.ResizePlayer(doodleFuelLeft());
@@ -52,6 +55,7 @@ public class PlayerVars : MonoBehaviour
 
     public void SpendPenFuel(int amount) // Called every time pen fuel (pen - obviously) is consumed
     {
+        if (cheatMode) return;
         curPenFuel -= amount;
         if (curPenFuel < 0) curPenFuel = 0;
         tempPenFuel = curPenFuel;
@@ -59,18 +63,21 @@ public class PlayerVars : MonoBehaviour
     }
     public void SpendTempPenFuel(int amount) // Called while pen is drawing to monitor maximum draw amount
     {
+        if (cheatMode) return;
         tempPenFuel -= amount;
         if (tempPenFuel < 0) tempPenFuel = 0;
         penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
     public void ResetTempPenFuel() // Called if the pen fails to draw a physics object
     {
+        if (cheatMode) return;
         tempPenFuel = curPenFuel;
         penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
 
     public void SpendEraserFuel(int amount) // Called every time eraser fuel is consumed
     {
+        if (cheatMode) return;
         curEraserFuel -= amount;
         if (curEraserFuel < 0) curEraserFuel = 0;
         eraseEvent(eraserFuelLeft());
@@ -83,6 +90,7 @@ public class PlayerVars : MonoBehaviour
     }
 
     public void AddDoodleFuel(int amount) {
+        if (cheatMode) return;
         curDoodleFuel += amount;
         if (curDoodleFuel > maxDoodleFuel) curDoodleFuel = maxDoodleFuel; // shouldn't happen but just in case
         PlayerController.instance.ResizePlayer(doodleFuelLeft());
