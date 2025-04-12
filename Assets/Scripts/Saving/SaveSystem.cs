@@ -26,6 +26,12 @@ public class SaveSystem : MonoBehaviour
         return data;
     }
 
+    public void DeleteSave()
+    {
+        File.Delete(Path.Combine(Application.persistentDataPath, fileName));
+        Debug.Log("Successfully deleted save");
+    }
+
     private static bool WriteToFile(string content)
     {
         var fullPath = Path.Combine(Application.persistentDataPath, fileName);

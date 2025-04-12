@@ -120,4 +120,10 @@ public class SettingsManager : MonoBehaviour
         else
             QualitySettings.vSyncCount = 0;
     }
+
+    // TODO: Temp implementation
+    public void DeleteSave()
+    {
+        GameSaver.instance.saveSystem.DeleteSave();
+    }
 }
