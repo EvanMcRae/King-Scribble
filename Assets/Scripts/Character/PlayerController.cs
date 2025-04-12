@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
     public bool softFall = true;
+    public bool frictionOverride = false;
 
     // Start is called before the first frame update
     void Start()
@@ -186,7 +187,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+            if (!frictionOverride) mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
 
@@ -368,18 +369,21 @@ public class PlayerController : MonoBehaviour
 
     void SlopeCheckHorizontal(Vector2 checkPos)
     {
-        RaycastHit2D slopeHitFront = Physics2D.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround);
-        RaycastHit2D slopeHitBack = Physics2D.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround);
+        bool slopeHitFront = Physics.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround, QueryTriggerInteraction.Ignore);
+        bool slopeHitBack = Physics.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround, QueryTriggerInteraction.Ignore);
 
-        if (slopeHitFront)
+        RaycastHit2D slopeHitFrontHit = Physics2D.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround);
+        RaycastHit2D slopeHitBackHit = Physics2D.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround);
+
+        if (slopeHitFront && slopeHitFrontHit)
         {
             isOnSlope = true;
-            slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
+            slopeSideAngle = Vector2.Angle(slopeHitFrontHit.normal, Vector2.up);
         }
-        else if (slopeHitBack)
+        else if (slopeHitBack && slopeHitBackHit)
         {
             isOnSlope = true;
-            slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
+            slopeSideAngle = Vector2.Angle(slopeHitBackHit.normal, Vector2.up);
         }
         else
         {
@@ -421,5 +425,14 @@ public class PlayerController : MonoBehaviour
     public bool OverlapsPosition(Vector2 position)
     {
         return mainBody.GetComponent<PolygonCollider2D>().OverlapPoint(position);
+    }
+
+    public void SetFriction(bool active)
+    {
+        frictionOverride = active;
+        if (active)
+        {
+            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+        }
     }
 }

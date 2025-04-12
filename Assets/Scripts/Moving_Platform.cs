@@ -30,6 +30,7 @@ public class Moving_Platform : MonoBehaviour
     public bool isWall = false;
     [SerializeField] private Rigidbody2D rigidBody;
     public Dictionary<Transform, Transform> passengerRoots = new();
+    public Dictionary<Transform, PhysicsMaterial2D> physicsMats = new();
 
     void Start()
     {
@@ -121,7 +122,7 @@ public class Moving_Platform : MonoBehaviour
 
     void FixedUpdate()
     {
-        if ((!(moving && move_stopped)) && (!(returning && ret_stopped)))
+        if ((moving && !move_stopped) || (returning && !ret_stopped))
         {
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
         }
@@ -138,14 +139,20 @@ public class Moving_Platform : MonoBehaviour
             gear_r.transform.rotation *= Quaternion.AngleAxis(gearSpeed * Time.deltaTime, Vector3.forward);
         }
         if (rigidBody.position == dest && moving)
+        {
             onFinishMove.Invoke();
+            moving = false;
+        }
         else if (rigidBody.position == dest && returning)
+        {
             onFinishReturn.Invoke();
+            returning = false;
+        }
     }
     
     void OnTriggerStay2D(Collider2D other)
     {
-        if (moving && (other.CompareTag("Player") || other.CompareTag("TempObj") || other.CompareTag("Pen")))
+        if ((moving || returning) && (other.CompareTag("Player") || other.CompareTag("TempObj") || other.CompareTag("Pen")))
             Mount(other.gameObject);
     }
 
@@ -160,6 +167,27 @@ public class Moving_Platform : MonoBehaviour
         if (passenger.transform.root != null && passenger.transform.root != transform.parent && !passenger.transform.root.CompareTag("MovPlat"))
         {
             passengerRoots.TryAdd(passenger.transform, passenger.transform.root);
+
+            // Try to apply friction to mounted passengers (excluding players) so they stay on better
+            if (passenger.transform.root.GetComponentInChildren<Rigidbody2D>() != null)
+            {
+                PhysicsMaterial2D mat = passenger.transform.root.GetComponentInChildren<Rigidbody2D>().sharedMaterial;
+                physicsMats.TryAdd(passenger.transform, mat);
+
+                if (!passenger.transform.CompareTag("Player"))
+                {
+                    passenger.transform.root.GetComponentInChildren<Rigidbody2D>().sharedMaterial = new PhysicsMaterial2D()
+                    {
+                        bounciness = mat != null ? mat.bounciness : 0f,
+                        friction = 1f
+                    };
+                }
+                else
+                {
+                    PlayerController.instance.SetFriction(true);
+                }
+            }
+            
             passenger.transform.root.SetParent(transform.parent, true);
         }
     }
@@ -168,10 +196,15 @@ public class Moving_Platform : MonoBehaviour
     {
         if (gameObject.activeInHierarchy && passengerRoots.ContainsKey(passenger.transform))
         {
+            passengerRoots[passenger.transform].GetComponentInChildren<Rigidbody2D>().sharedMaterial = physicsMats[passenger.transform];
             passengerRoots[passenger.transform].SetParent(null, true);
             if (passenger.CompareTag("Player") && passengerRoots[passenger.transform].gameObject.CompareTag("Player"))
+            {
                 DontDestroyOnLoad(passengerRoots[passenger.transform]);
+                PlayerController.instance.SetFriction(false);
+            }
             passengerRoots.Remove(passenger.transform);
+            physicsMats.Remove(passenger.transform);
         }
     }
 }
