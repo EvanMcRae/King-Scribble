@@ -397,6 +397,7 @@ MonoBehaviour:
   checkPos: {fileID: 6508815763183056595}
   soundPlayer: {fileID: 1057405114991915963}
   softFall: 1
+  frictionOverride: 0
 --- !u!114 &7087994594828487266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +419,7 @@ MonoBehaviour:
   maxEraserFuel: 500
   cur_tool: 0
   isDead: 0
+  cheatMode: 0
 --- !u!1 &6572444059410629193
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,7 +432,7 @@ GameObject:
   - component: {fileID: 3419832881364647439}
   m_Layer: 10
   m_Name: LandCheck
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

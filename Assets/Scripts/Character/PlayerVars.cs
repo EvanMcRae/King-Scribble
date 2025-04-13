@@ -160,6 +160,7 @@ public class PlayerVars : MonoBehaviour
         curEraserFuel = maxEraserFuel;
         isDead = false;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
+        GetComponent<PlayerController>().SetFriction(false);
     }
 
     public void Dismount()
