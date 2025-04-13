@@ -97,6 +97,13 @@ public class PlayerVars : MonoBehaviour
         doodleEvent(doodleFuelLeft());
     }
 
+    public void AddPenFuel(int amount) {
+        if (cheatMode) return;
+        curPenFuel += amount;
+        if (curPenFuel > maxPenFuel) curPenFuel = maxPenFuel;
+        penEvent(penFuelLeft());
+    }
+    
     public void MaxDoodleFuel() {
         curDoodleFuel = maxDoodleFuel;
         PlayerController.instance.ResizePlayer(doodleFuelLeft());

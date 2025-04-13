@@ -197,7 +197,15 @@ public class DrawManager : MonoBehaviour
             beganDraw = false;
             return;
         }
-
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            beganDraw = false;
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            return;
+        }
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
             if(PencilLinesFolder != null) {
@@ -242,6 +250,15 @@ public class DrawManager : MonoBehaviour
         if (hit.collider != null) {
             EndDraw();
             drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            EndDraw();
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
             return;
         }
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
