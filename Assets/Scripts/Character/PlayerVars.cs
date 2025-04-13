@@ -100,8 +100,11 @@ public class PlayerVars : MonoBehaviour
     public void AddPenFuel(int amount) {
         if (cheatMode) return;
         curPenFuel += amount;
+        tempPenFuel += amount;
         if (curPenFuel > maxPenFuel) curPenFuel = maxPenFuel;
+        if (tempPenFuel > maxPenFuel) tempPenFuel = maxPenFuel;
         penEvent(penFuelLeft());
+        penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
     
     public void MaxDoodleFuel() {
