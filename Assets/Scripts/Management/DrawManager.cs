@@ -283,6 +283,8 @@ public class DrawManager : MonoBehaviour
 			return;
 		}
 
+        if (currentLine == null) return; // Why would this even be needed
+
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
 
