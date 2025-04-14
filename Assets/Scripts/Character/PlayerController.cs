@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private bool canJump = true;
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
+    public const int SIZE_STAGES = 4;
 
     // Start is called before the first frame update
     void Start()
@@ -468,7 +469,7 @@ public class PlayerController : MonoBehaviour
     
     public void ResizePlayer(float fuel_left)
     {
-        mainBody.transform.localScale = Vector3.one * fuel_left;
+        mainBody.transform.localScale = Vector3.one * Mathf.Ceil(fuel_left * SIZE_STAGES)/SIZE_STAGES;
     }
 
     public bool OverlapsPosition(Vector2 position)
