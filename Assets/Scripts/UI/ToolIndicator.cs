@@ -14,12 +14,7 @@ public class ToolIndicator : MonoBehaviour
     void Start()
     {
         instance = this;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UpdateMenu(PlayerVars.instance.cur_tool);
     }
 
     // TODO: This is really poorly coded, sorry, interim solutions :,)

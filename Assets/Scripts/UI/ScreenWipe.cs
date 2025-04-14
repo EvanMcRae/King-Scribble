@@ -12,6 +12,7 @@ public class ScreenWipe : MonoBehaviour
     public static Action PostUnwipe;
     public static bool over = false;
     [SerializeField] private Image ScreenBlocker;
+    [SerializeField] private SoundPlayer soundPlayer;
     public static ScreenWipe instance;
 
     public void Awake()
@@ -20,10 +21,16 @@ public class ScreenWipe : MonoBehaviour
         instance = this;
     }
 
+    public void PlayWipeOutSound()
+    {
+        soundPlayer.PlaySound("Level.WipeOut");
+    }
+
     public void WipeIn()
     {
+        soundPlayer.PlaySound("Level.WipeIn");
         over = false;
-        ScreenBlocker.raycastTarget = true;
+        ScreenBlocker.gameObject.SetActive(true);
         GetComponent<Animator>().SetTrigger("WipeIn");
     }
 
@@ -39,13 +46,8 @@ public class ScreenWipe : MonoBehaviour
 
     public void ScreenRevealed()
     {
-        PostUnwipe?.Invoke();
-        Invoke("PostCooldown", 0.1f);
-    }
-
-    public void PostCooldown()
-    {
         over = true;
-        ScreenBlocker.raycastTarget = false;
+        PostUnwipe?.Invoke();
+        ScreenBlocker.gameObject.SetActive(false);
     }
 }

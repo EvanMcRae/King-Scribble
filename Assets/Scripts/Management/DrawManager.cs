@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Referenced: https://www.youtube.com/watch?v=SmAwege_im8
+[Serializable]
 public enum ToolType
 {
     None,
@@ -12,9 +13,13 @@ public enum ToolType
     Pen,
     Eraser
 }
+
+// Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public class DrawManager : MonoBehaviour
 {
-    [SerializeField] private Line linePrefab;
+    [SerializeField] public Line linePrefab;
+    [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased
+    [SerializeField] private GameObject PencilLinesFolder;
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
@@ -47,11 +52,21 @@ public class DrawManager : MonoBehaviour
 
     public static DrawManager instance;
 
+    private Vector2 lastMousePos;
+    private bool beganDraw = false;
+
+    [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private List<SoundClip> drawSounds = new();
+    private Coroutine currentSoundPause, currentSoundUnpause;
+    private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
+    private bool soundPaused = false;
+
     private void Awake()
     {
         instance = this;
 
         SetCursor(PlayerVars.instance.cur_tool);
+        LoadSubmeter(PlayerVars.instance.cur_tool);
 
         fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
@@ -69,11 +84,13 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Can't draw if you're dead
+        // Can't draw if you're dead/paused
         if (PlayerVars.instance.isDead) {
+            EndDraw();
             currentLine = null;
             return;
         }
+
         // If the drawing cooldown is active, decrement it and don't do anything
         if (drawCooldown > 0) { 
             drawCooldown -= Time.deltaTime;
@@ -81,15 +98,16 @@ public class DrawManager : MonoBehaviour
         }
 
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (PlayerController.instance.OverlapsPosition(mousePos))
+        if (isDrawing && PlayerController.instance.OverlapsPosition(mousePos))
         {
             EndDraw();
             currentLine = null;
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && currentLine == null))
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
         {
+            beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
             {
                 case ToolType.Pencil:
@@ -99,24 +117,32 @@ public class DrawManager : MonoBehaviour
                     if (PlayerVars.instance.penFuelLeft() > 0) BeginDraw(mousePos);
                     break;
                 case ToolType.Eraser:
-                    if (PlayerVars.instance.eraserFuelLeft() > 0) Erase(mousePos);
+                    if (PlayerVars.instance.eraserFuelLeft() > 0) BeginDraw(mousePos);
+                    break;
+                case ToolType.None:
+                    beganDraw = false;
                     break;
             }
         }
         
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && currentLine != null)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
             Draw(mousePos);
+
         // If the mouse has been released, stop drawing
-        if (Input.GetMouseButtonUp(0))
+        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused))
         {
+            beganDraw = false;
             EndDraw();
-            if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-            {
-                PlayerVars.instance.releaseEraser?.Invoke();
-            }
         }
-            
+
+        // Eraser meter cooldown reset
+        if (Input.GetMouseButtonUp(0) && PlayerVars.instance.cur_tool == ToolType.Eraser)
+        {
+            PlayerVars.instance.releaseEraser?.Invoke();
+        }
+
+        if (GameManager.paused) return;
 
         // [1] key pressed - switch to pencil
         if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
@@ -128,6 +154,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
+
         // [2] key pressed - switch to pen
         if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
         {
@@ -138,6 +165,7 @@ public class DrawManager : MonoBehaviour
             Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
+
         // [3] key pressed - switch to eraser
         if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
         { 
@@ -149,39 +177,114 @@ public class DrawManager : MonoBehaviour
             ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
         }
     }
+
     private void BeginDraw(Vector2 mouse_pos)
-    {	
-        currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
-		isDrawing = true; // the user is drawing
-        if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
-            currentLine.is_pen = false;
-            currentLine.SetThickness(pencilThickness);
-            currentLine.collisionsActive = true;
-            currentLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
-            currentLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
-			currentLine.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+    {
+        if (PlayerVars.instance.cur_tool == ToolType.Eraser)
+        {
+            mouse_pos += new Vector2(0.5f, -0.5f);
+            lastMousePos = mouse_pos;
+            EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+            soundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
+            return;
         }
 
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, or the "player" layer (3, 6, 7, 9, and 10 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            beganDraw = false;
+            return;
+        }
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            beganDraw = false;
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            return;
+        }
+		isDrawing = true; // the user is drawing
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
+            if(PencilLinesFolder != null) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity, PencilLinesFolder.transform); // Create a new line with the first point at the mouse's current position
+            }
+            else {
+                currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity);
+            }
+            SetPencilParams(currentLine);
+        }
         else if (PlayerVars.instance.cur_tool == ToolType.Pen) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
             currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
         }
+        soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
+    }
 
+    private IEnumerator EraseMarch(Vector2 mouse_pos)
+    {
+        Vector2 marchPos = lastMousePos;
+        int ct = 0, interval = 3;
+        do
+        {
+            marchPos = Vector2.MoveTowards(marchPos, mouse_pos, RESOLUTION);
+            EraserFunctions.Erase(marchPos, eraserRadius, true);
+            ct++;
+            if (ct % interval == 0) yield return new WaitForEndOfFrame();
+        } while (Vector2.Distance(marchPos, mouse_pos) > RESOLUTION);
+        EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+        lastMousePos = mouse_pos;
     }
 
     private void Draw(Vector2 mouse_pos)
     {
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null) {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            EndDraw();
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            return;
+        }
 		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
 		{
+            mouse_pos += new Vector2(0.5f, -0.5f);
+            SoundPauseCheck(mouse_pos);
             if (PlayerVars.instance.eraserFuelLeft() > 0)
-                Erase(mouse_pos);
+            {
+                // March along line from previous to current eraser pos if it's too far away
+                if (Vector2.Distance(mouse_pos, lastMousePos) > RESOLUTION)
+                {
+                    StartCoroutine(EraseMarch(mouse_pos));
+                }
+                else
+                {
+                    EraserFunctions.Erase(mouse_pos, eraserRadius, true);
+                    lastMousePos = mouse_pos;
+                }
+            }
+                
             else EndDraw();
 			return;
 		}
-		
+
+        if (currentLine == null) return; // Why would this even be needed
+
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
 
@@ -197,11 +300,20 @@ public class DrawManager : MonoBehaviour
 
         else if (!currentLine.canDraw && currentLine.hasDrawn) // If the line was stopped by attempting to draw over an unavailable area, continue when available
             BeginDraw(mouse_pos);
+
+        SoundPauseCheck(mouse_pos);
+        lastMousePos = mouse_pos;
     }
 
     private void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
+        beganDraw = false;
+        if (currentSoundPause != null)
+            AudioManager.instance.StopCoroutine(currentSoundPause);
+        if (currentSoundUnpause != null)
+            AudioManager.instance.StopCoroutine(currentSoundUnpause);
+        soundPlayer.EndAllSounds();
 
         if (currentLine != null)
         {
@@ -212,10 +324,15 @@ public class DrawManager : MonoBehaviour
             {
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
                 {
+                    if (!currentLine.AddPolyCollider()) // Add a polygon collider to the line using its lineRenderer points
+                    { // AddPolyCollider() returns false if a collision was found inside the object, and the line is destroyed
+                        currentLine = null;
+                        PlayerVars.instance.ResetTempPenFuel();
+                        return;
+                    }
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line 
-                    currentLine.AddPolyCollider(); // Add a polygon collider to the line using its lineRenderer points
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
@@ -231,103 +348,27 @@ public class DrawManager : MonoBehaviour
         currentLine = null;
     }
 
-    private void Erase(Vector2 mouse_pos) {
-
-        RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, mouse_pos + new Vector2(0.5f,-0.5f), LayerMask.GetMask("Lines")); // Raycast is in Utils.cs
-
-        foreach (RaycastHit2D hit in hit2D) {
-            // Collider index corresponds to the index in the Line Renderer Array
-            CircleCollider2D c = (CircleCollider2D) hit.collider;
-            // CircleCollider2D c = Utils.Raycast(Camera.main, mouse_pos, LayerMask.GetMask("Lines"));
-            if (c != null) {
-                LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
-
-                if(lineRenderer != null) {
-                    List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
-                    int c_index = collidersList.IndexOf(c); // the collider's index in the list
-                    int numPoints = lineRenderer.positionCount; // position count starts at 1 while c_index starts at 0
-
-                    List<Vector3> pointsList = new List<Vector3>(); // Line renderer positions
-                    Vector3[] tempArray = new Vector3[numPoints];
-                    lineRenderer.GetPositions(tempArray); // Get the positions into the array
-                    pointsList.AddRange(tempArray); // Convert tempArray to a list
-
-                    if(c_index == -1) {
-                        // ignore the collider because it is no longer a part of the Line object :))
-                    }
-                    else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
-                        //Debug.Log("destroying Line!");
-                        PlayerVars.instance.AddDoodleFuel(numPoints);
-                        PlayerVars.instance.SpendEraserFuel(numPoints);
-                        Destroy(c.gameObject);
-                        return;
-                    }
-                    else if(c_index == numPoints - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
-                        //Debug.Log("edge detected!");
-                        removePoint(c_index, c, pointsList, collidersList);
-                    }
-                    else if(c_index == 1) {
-                       //Debug.Log("2nd to start detected!");
-                        removePoint(1, c, pointsList, collidersList);
-                        removePoint(0, collidersList[0], pointsList, collidersList);
-                    }
-                    else if(c_index == numPoints - 2) { // we are at the 2nd to last point, delete the last two point only
-                        //Debug.Log("2nd to edge detected!");
-                        removePoint(c_index + 1, collidersList[c_index+1], pointsList, collidersList); // Destroy (c+1) first
-                        removePoint(c_index, c, pointsList, collidersList);
-                    }
-                    else { // Create a new Line to fill with the remainder of the points
-                        //Debug.Log("Creating new line of size " + (numPoints - c_index+1));
-                        Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
-                        Line newLine = Instantiate(linePrefab, transformPosition, Quaternion.identity);
-                        newLine.is_pen = false;
-                        newLine.SetThickness(pencilThickness);
-                        newLine.collisionsActive = true;
-                        newLine.GetComponent<LineRenderer>().startColor = pencilColor_start;
-                        newLine.GetComponent<LineRenderer>().endColor = pencilColor_end;
-                        newLine.gameObject.layer = 1<<3; // Setting to layer "Lines"
-                        
-                        // Fill the new line and delete from the current line
-                        int currPos = c_index+1; // When we delete a point, we actually dont move in the List
-                        for(int i = currPos; i < numPoints; i++) {
-                            newLine.SetPosition(pointsList[currPos] + transformPosition, true); // Copy point into a newLine
-                            removePoint(currPos, collidersList[currPos], pointsList, collidersList, false);
-                        }
-                                      
-                        //Debug.Log("Deleting current point");
-                        removePoint(c_index, c, pointsList, collidersList); // Delete the current collider
-
-                        // sometimes there are stray colliders with no lines, could be that lines of size 1 cannot render the points
-                        // There is a bug where empty line clones are being left behind, only occurs on newly generated lines i think
-                    }
-
-                    // Update the current Line Renderer
-                    lineRenderer.positionCount = pointsList.Count;
-                    lineRenderer.SetPositions(pointsList.ToArray());
-
-                    // Extra check for good measure
-                    if (pointsList.Count <= 1)
-                    {
-                        PlayerVars.instance.AddDoodleFuel(pointsList.Count);
-                        PlayerVars.instance.SpendEraserFuel(pointsList.Count);
-                        Destroy(c.gameObject);
-                    }
-                }
-            }
-       }
-    }
-
-    private void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel = true) {
-        pl.RemoveAt(index); // Remove point from the list
-        //Debug.Log("destroying: " + index);
-        cl.RemoveAt(index); // Remove collider from the list
-        Destroy(c); // Destroy collider
-        if (addFuel)
+    private void SoundPauseCheck(Vector2 mouse_pos)
+    {
+        if (Vector2.Distance(lastMousePos, mouse_pos) < 0.01f)
         {
-            PlayerVars.instance.AddDoodleFuel(1); // Add fuel
-            PlayerVars.instance.SpendEraserFuel(1); // Spend eraser
+            if (currentSoundUnpause != null)
+                AudioManager.instance.StopCoroutine(currentSoundUnpause);
+            soundPauseCounter += Time.deltaTime;
+            if (soundPauseCounter >= soundPauseThreshold && !soundPaused)
+            {
+                currentSoundPause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 0f, () => { }));
+                soundPaused = true;
+            }
         }
-        return;
+        else if (soundPaused)
+        {
+            if (currentSoundPause != null)
+                AudioManager.instance.StopCoroutine(currentSoundPause);
+            soundPauseCounter = 0;
+            soundPaused = false;
+            currentSoundUnpause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 1f, () => { }));
+        }
     }
 
     public void SetCursor(ToolType tool)
@@ -349,6 +390,15 @@ public class DrawManager : MonoBehaviour
                 break;
         }
         Cursor.SetCursor(texture, Vector2.zero, CursorMode.ForceSoftware);
+    }
+
+    public void SetPencilParams(Line line) {
+        line.is_pen = false;
+        line.SetThickness(pencilThickness);
+        line.collisionsActive = true;
+        line.GetComponent<LineRenderer>().startColor = pencilColor_start;
+        line.GetComponent<LineRenderer>().endColor = pencilColor_end;
+        line.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
     }
 }
 

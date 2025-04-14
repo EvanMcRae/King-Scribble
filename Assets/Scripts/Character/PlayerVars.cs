@@ -7,7 +7,7 @@ public class PlayerVars : MonoBehaviour
 {
     public static PlayerVars instance;
 
-    public Inventory inventory, lastSavedInventory;
+    public Inventory inventory = null, lastSavedInventory = null;
     [SerializeField] private int maxDoodleFuel = 750;
     [SerializeField] private int maxPenFuel = 1000;
     [SerializeField] private int maxEraserFuel = 500;
@@ -25,6 +25,11 @@ public class PlayerVars : MonoBehaviour
     public EraseEvent eraseEvent;
     public Action releaseEraser;
     public bool isDead = false;
+    private Vector3 spawn_pos;
+    public bool cheatMode = false;
+
+    public void SetSpawnPos(Vector3 spawnPos) {spawn_pos = spawnPos;}
+    public Vector3 GetSpawnPos() {return spawn_pos;}
     public int getDoodleFuel() {return curDoodleFuel;}
     public float doodleFuelLeft() {return (float) curDoodleFuel / maxDoodleFuel;}
     public int getPenFuel() {return curPenFuel;}
@@ -35,6 +40,7 @@ public class PlayerVars : MonoBehaviour
 
     public void SpendDoodleFuel(int amount) // Called every time doodle fuel (pencil) is consumed
     {
+        if (cheatMode) return;
         curDoodleFuel -= amount;
         if (curDoodleFuel < 0) curDoodleFuel = 0;
         PlayerController.instance.ResizePlayer(doodleFuelLeft());
@@ -49,6 +55,7 @@ public class PlayerVars : MonoBehaviour
 
     public void SpendPenFuel(int amount) // Called every time pen fuel (pen - obviously) is consumed
     {
+        if (cheatMode) return;
         curPenFuel -= amount;
         if (curPenFuel < 0) curPenFuel = 0;
         tempPenFuel = curPenFuel;
@@ -56,22 +63,26 @@ public class PlayerVars : MonoBehaviour
     }
     public void SpendTempPenFuel(int amount) // Called while pen is drawing to monitor maximum draw amount
     {
+        if (cheatMode) return;
         tempPenFuel -= amount;
         if (tempPenFuel < 0) tempPenFuel = 0;
         penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
     public void ResetTempPenFuel() // Called if the pen fails to draw a physics object
     {
+        if (cheatMode) return;
         tempPenFuel = curPenFuel;
         penMonitorEvent((float)tempPenFuel / maxPenFuel);
     }
 
     public void SpendEraserFuel(int amount) // Called every time eraser fuel is consumed
     {
+        if (cheatMode) return;
         curEraserFuel -= amount;
         if (curEraserFuel < 0) curEraserFuel = 0;
         eraseEvent(eraserFuelLeft());
     }
+
     public void ReplenishEraser()
     {
         curEraserFuel = maxEraserFuel;
@@ -79,8 +90,25 @@ public class PlayerVars : MonoBehaviour
     }
 
     public void AddDoodleFuel(int amount) {
+        if (cheatMode) return;
         curDoodleFuel += amount;
         if (curDoodleFuel > maxDoodleFuel) curDoodleFuel = maxDoodleFuel; // shouldn't happen but just in case
+        PlayerController.instance.ResizePlayer(doodleFuelLeft());
+        doodleEvent(doodleFuelLeft());
+    }
+
+    public void AddPenFuel(int amount) {
+        if (cheatMode) return;
+        curPenFuel += amount;
+        tempPenFuel += amount;
+        if (curPenFuel > maxPenFuel) curPenFuel = maxPenFuel;
+        if (tempPenFuel > maxPenFuel) tempPenFuel = maxPenFuel;
+        penEvent(penFuelLeft());
+        penMonitorEvent((float)tempPenFuel / maxPenFuel);
+    }
+    
+    public void MaxDoodleFuel() {
+        curDoodleFuel = maxDoodleFuel;
         PlayerController.instance.ResizePlayer(doodleFuelLeft());
         doodleEvent(doodleFuelLeft());
     }
@@ -89,12 +117,16 @@ public class PlayerVars : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
+        spawn_pos = PlayerChecker.instance.transform.position;
     }
 
     void Start()
     {
-        inventory = new Inventory(); // Initialize a tool inventory containing nothing by default
-        lastSavedInventory = new Inventory();
+        if (inventory == null)
+        {
+            inventory = new Inventory(); // Initialize a tool inventory containing nothing by default
+            lastSavedInventory = new Inventory();
+        }
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
         tempPenFuel = maxPenFuel;
@@ -119,11 +151,21 @@ public class PlayerVars : MonoBehaviour
         if (!inventory.hasTool(cur_tool))
             cur_tool = ToolType.None;
 
-        GetComponent<PlayerController>().facingRight = false;
+        GetComponent<PlayerController>().facingRight = true;
+        GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
         curDoodleFuel = maxDoodleFuel;
         curPenFuel = maxPenFuel;
+        tempPenFuel = maxPenFuel;
+        curEraserFuel = maxEraserFuel;
         isDead = false;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
+        GetComponent<PlayerController>().SetFriction(false);
+    }
+
+    public void Dismount()
+    {
+        transform.SetParent(null);
+        DontDestroyOnLoad(gameObject);
     }
 }

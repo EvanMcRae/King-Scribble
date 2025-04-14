@@ -18,12 +18,13 @@ public class Line : MonoBehaviour
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
     public bool hasOverlapped = false;
+    public bool deleted = false;
 
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
         for(int i = 0; i <  v3.Length; i++){
             Vector3 tempV3 = v3[i];
-            v2[i] = new Vector2(tempV3.x, tempV3.y);
+            v2[i] = (Vector2)tempV3;
         }
         return v2;
     }
@@ -37,7 +38,7 @@ public class Line : MonoBehaviour
         lineRenderer.widthMultiplier = thickness;
     }
 
-    public void SetPosition(Vector2 position, bool forced = false)
+    public void SetPosition(Vector2 position, bool forced = false, bool addFuel = true)
     {
         if (!forced && !CanAppend(position)) return;
 
@@ -48,22 +49,22 @@ public class Line : MonoBehaviour
             colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
-        if (lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
+        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
                 marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
-                AppendPos(marchPos);
+                AppendPos(marchPos, addFuel);
             } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
         }
 
-        AppendPos(position);
+        AppendPos(position, addFuel);
 
         hasDrawn = true;
     }
 
-    private void AppendPos(Vector2 position)
+    private void AppendPos(Vector2 position, bool addFuel = true)
     {
         // Add circle collider component for this point if using pencil
         if (!is_pen) {
@@ -80,10 +81,11 @@ public class Line : MonoBehaviour
             CheckOverlap();
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
-        if (lineRenderer.positionCount > 1)
+        if (lineRenderer.positionCount > 1 && addFuel)
         {
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(1);
-            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(1);
+            int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost);
+            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost);
         }
     }
 
@@ -103,24 +105,31 @@ public class Line : MonoBehaviour
         // Then check for minimum distance between points with local space-transformed position
         return Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position)) > DrawManager.RESOLUTION;
     }
+
     public int GetPointsCount()
     {
         return lineRenderer.positionCount;
     }
+
     public Vector2 GetFirstPoint()
     {
         return lineRenderer.GetPosition(0);
     }
+
     public Vector2 GetLastPoint()
     {
         return lineRenderer.GetPosition(GetPointsCount() - 1);
     }
+
     public bool CheckClosedLoop()
     {
         return GetPointsCount() >= MIN_POINTS && Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE;
     }
+
     public void AddPhysics()
     {
+        gameObject.layer = 7; // Pen line layer
+        gameObject.tag = "Pen";
         lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
@@ -153,6 +162,7 @@ public class Line : MonoBehaviour
         foreach (CircleCollider2D c in colliders)
             c.enabled = true;
     }
+    
     // TODO Could be used in the future for other tools
     public void SetThickness(float newThickness)
     {
@@ -175,7 +185,7 @@ public class Line : MonoBehaviour
         lineRenderer.endColor = color;
     }
     // Create a polygon collider from the line renderer's points
-    public void AddPolyCollider()
+    public bool AddPolyCollider() // Return false if a collision overlap is found, true otherwise
     {
         // Get the list of points in the lineRenderer and convert to Vector2
         Vector3[] points3 = new Vector3[GetPointsCount()];
@@ -184,6 +194,14 @@ public class Line : MonoBehaviour
         // Create a polygon collider and set its path to the Vector2 list of points
         PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
         polyCollider.SetPath(0, points2);
+        List<Collider2D> results = new();
+        ContactFilter2D def = new();
+        if (polyCollider.OverlapCollider(def, results) != 0)
+        {
+            Destroy(gameObject);
+            return false;
+        }
+        return true;    
     }
     // Add a mesh from the polygon collider (if it has been created)
     public void AddMesh(Material mat, MaterialPropertyBlock matBlock)

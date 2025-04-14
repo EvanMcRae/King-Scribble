@@ -9,13 +9,20 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider;
-    [SerializeField] private TextMeshProUGUI qualityValue;
+    [SerializeField] private Slider musicSlider, soundSlider, masterSlider;
+    [SerializeField] private TextMeshProUGUI musicValue, soundValue, masterValue;
     [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
+    [SerializeField] private Image musicSliderFill, soundSliderFill, masterSliderFill;
 
     void Awake()
     {
         LoadSettings();
+        gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        SaveSettings();
     }
 
     public void LoadSettings()
@@ -25,7 +32,9 @@ public class SettingsManager : MonoBehaviour
         currentSettings ??= new Settings();
         UpdateFullScreen(false);
         UpdateVSync(false);
-        UpdateQuality(false);
+        UpdateMusic(false);
+        UpdateSound(false);
+        UpdateMaster(false);
     }
 
     public static void SaveSettings()
@@ -37,15 +46,37 @@ public class SettingsManager : MonoBehaviour
         Debug.Log("Saved settings to: " + path);
     }
 
-    public void UpdateQuality(bool user)
+    public void UpdateMusic(bool user)
     {
         if (user)
-            currentSettings.quality = (int)qualitySlider.value;
+            currentSettings.musicVolume = musicSlider.value;
         else
-            qualitySlider.value = currentSettings.quality;
+            musicSlider.value = currentSettings.musicVolume;
 
-        QualitySettings.SetQualityLevel(currentSettings.quality);
-        qualityValue.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        musicSliderFill.fillAmount = musicSlider.value / 100;
+        musicValue.text = (int)musicSlider.value + "";
+    }
+
+    public void UpdateSound(bool user)
+    {
+        if (user)
+            currentSettings.sfxVolume = soundSlider.value;
+        else
+            soundSlider.value = currentSettings.sfxVolume;
+
+        soundSliderFill.fillAmount = soundSlider.value / 100;
+        soundValue.text = (int)soundSlider.value + "";
+    }
+
+    public void UpdateMaster(bool user)
+    {
+        if (user)
+            currentSettings.masterVolume = masterSlider.value;
+        else
+            masterSlider.value = currentSettings.masterVolume;
+
+        masterSliderFill.fillAmount = masterSlider.value / 100;
+        masterValue.text = (int)masterSlider.value + "";
     }
 
     public void UpdateFullScreen(bool user)
@@ -55,7 +86,10 @@ public class SettingsManager : MonoBehaviour
             currentSettings.fullScreen = fullScreenToggle.isOn;
         }
         else
+        {
             fullScreenToggle.isOn = currentSettings.fullScreen;
+        }
+            
 
         if (currentSettings.fullScreen)
         {
@@ -85,5 +119,11 @@ public class SettingsManager : MonoBehaviour
             QualitySettings.vSyncCount = 1;
         else
             QualitySettings.vSyncCount = 0;
+    }
+
+    // TODO: Temp implementation
+    public void DeleteSave()
+    {
+        GameSaver.instance.saveSystem.DeleteSave();
     }
 }

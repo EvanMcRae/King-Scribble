@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static bool resetting = false, paused = false, canMove = true;
     public static GameManager instance;
     public Transform spawnpoint;
-    public const float VOID_DEATH = -100;
+    public const float VOID_DEATH = -50;
     public Texture2D defaultCursor, previousCursor;
     public static Action ResetAction;
 
@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        // Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame
@@ -34,26 +35,37 @@ public class GameManager : MonoBehaviour
             Reset();
         }
     }
-
-    public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    
+    public void SetCamera(CinemachineVirtualCamera cam)
     {
-        StartCoroutine(cameraSwitch(cam1,cam2, time));
+        cam.gameObject.SetActive(true);
     }
 
-    IEnumerator cameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    public void DeactivateCamera(CinemachineVirtualCamera cam)
+    {
+        cam.gameObject.SetActive(false);
+    }
+    
+    public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    {
+        StartCoroutine(CameraSwitch(cam1,cam2, time));
+    }
+
+    IEnumerator CameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
     {
         canMove = false;
-        cam1.gameObject.SetActive(false);
+        // cam1.gameObject.SetActive(false);
         cam2.gameObject.SetActive(true);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(time);
         cam2.gameObject.SetActive(false);
-        cam1.gameObject.SetActive(true);
+        // cam1.gameObject.SetActive(true);
         canMove = true;
     }
 
     public void Reset()
     {
-        StartCoroutine(ResetLevel());
+        if (!resetting)
+            StartCoroutine(ResetLevel());
     }
 
     IEnumerator ResetLevel()
@@ -62,9 +74,12 @@ public class GameManager : MonoBehaviour
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostUnwipe += () => { resetting = false; };
         yield return new WaitForSecondsRealtime(1f);
+        PlayerVars.instance.Dismount();
+        PlayerController.instance.KillTweens();
         ResetAction.Invoke();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
+        canMove = true;
     }
 }

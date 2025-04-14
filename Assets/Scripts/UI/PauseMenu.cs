@@ -44,10 +44,16 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.paused = true;
         Time.timeScale = 0;
-        // Stop all sounds
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            if (!AudioManager.instance.OwnsSource(_))
+                _.Pause();
+        }
         pauseScreen.SetActive(true);
+        AudioManager.instance.PauseEffect(true);
 
-        DrawManager.instance.SetCursor(ToolType.None);
+        if (DrawManager.instance != null)
+            DrawManager.instance.SetCursor(ToolType.None);
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
@@ -55,10 +61,16 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.paused = false;
         Time.timeScale = 1;
-        // Resume all sounds
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            if (!AudioManager.instance.OwnsSource(_))
+                _.UnPause();
+        }
+        AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
-        DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+        if (DrawManager.instance != null)
+            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {
             MenuButton prevButton = previousButton.GetComponent<MenuButton>();
@@ -86,6 +98,7 @@ public class PauseMenu : MonoBehaviour
     {
         Unpause();
         GameManager.resetting = true;
+        GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += GoToMainMenu;
     }
@@ -93,8 +106,11 @@ public class PauseMenu : MonoBehaviour
     public void GoToMainMenu()
     {
         GameManager.resetting = false;
-        PlayerController.instance.KillTweens();
-        Destroy(PlayerVars.instance.gameObject);
+        if (PlayerController.instance != null)
+        {
+            PlayerController.instance.KillTweens();
+            Destroy(PlayerVars.instance.gameObject);
+        }
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");

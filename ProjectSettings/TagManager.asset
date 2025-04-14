@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Button
+  - TempObj
+  - MovPlat
+  - Pen
   layers:
   - Default
   - TransparentFX
@@ -13,11 +16,11 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - NoDraw
+  - PenLines
   - Lines
-  - 
-  - 
+  - Objects
+  - Player
   - 
   - 
   - 
@@ -51,4 +54,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 4128561837
+    locked: 0
+  - name: Enemy
+    uniqueID: 1823589961
     locked: 0
