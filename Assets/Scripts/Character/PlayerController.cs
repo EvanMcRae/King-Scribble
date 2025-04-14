@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
     public bool softFall = true;
-    private bool canJump = true;
+    private bool canJump = true, isStuck = false;
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
 
@@ -371,14 +371,16 @@ public class PlayerController : MonoBehaviour
             bool onground = false;
             foreach (ContactPoint2D point in contactPoint2Ds)
             {
-                Debug.DrawLine(point.point, transform.position, Color.red);
-                if (point.point.y < transform.position.y - 0.2f * transform.localScale.x)
+                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.15f * transform.localScale.x), Color.red);
+                if (point.point.y < transform.position.y - 0.15f * transform.localScale.x)
                 {
                     onground = true;
                 }
             }
+            isStuck = false;
             if (!onground && !isOnSlope)
             {
+                isStuck = true;
                 moveX *= 0.5f;
             }
         }
