@@ -56,8 +56,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 lastPosition;
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
-    public bool softFall = true;
-    private bool canJump = true, isStuck = false;
+    public bool softFall = true, isStuck = false;
+    private bool canJump = true;
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
 
