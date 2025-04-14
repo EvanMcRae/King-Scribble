@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool holdingJump;
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck;
+    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck, wallCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
     public bool softFall = true;
+    private bool canJump = true;
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
 
@@ -177,13 +178,13 @@ public class PlayerController : MonoBehaviour
         // calculate speed
         calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f);
 
-        // calculate target velocity
-        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
-
         // check for ground/roof
         GroundCheck();
         // TODO disabled for now, feels bad
-        // RoofCheck(); 
+        // RoofCheck();
+
+        // calculate target velocity
+        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
 
         // sloped movement
         SlopeCheck();
@@ -298,7 +299,7 @@ public class PlayerController : MonoBehaviour
         float coyoteTimeThreshold = 0.1f;
         bool coyoteTime = lastOnLand < 0.2f && transform.position.y < lastLandHeight - coyoteTimeThreshold;
 
-        if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
+        if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping && canJump)
         {
             anim.SetTrigger("justJumped");
             soundPlayer.PlaySound("Player.Jump");
@@ -359,7 +360,30 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isLanding", false);
             anim.ResetTrigger("justJumped");
             lastLandHeight = transform.position.y;
+            canJump = true;
         }
+
+        // Attempting to fix getting stuck against slopes
+        if (mainBody.GetComponent<PolygonCollider2D>().IsTouchingLayers(whatIsGround))
+        {
+            List<ContactPoint2D> contactPoint2Ds = new();
+            mainBody.GetComponent<PolygonCollider2D>().GetContacts(contactPoint2Ds);
+            bool onground = false;
+            foreach (ContactPoint2D point in contactPoint2Ds)
+            {
+                Debug.DrawLine(point.point, transform.position, Color.red);
+                if (point.point.y < transform.position.y - 0.2f * transform.localScale.x)
+                {
+                    onground = true;
+                }
+            }
+            if (!onground && !isOnSlope)
+            {
+                Debug.Log("not on ground bro");
+                moveX *= 0.5f;
+            }
+        }
+
         else if (rb.velocity.y < 0)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
