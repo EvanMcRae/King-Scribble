@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,8 +22,7 @@ public class Line : MonoBehaviour
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
         for(int i = 0; i <  v3.Length; i++){
-            Vector3 tempV3 = v3[i];
-            v2[i] = (Vector2)tempV3;
+            v2[i] = v3[i];
         }
         return v2;
     }
