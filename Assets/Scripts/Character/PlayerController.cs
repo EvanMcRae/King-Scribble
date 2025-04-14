@@ -379,7 +379,6 @@ public class PlayerController : MonoBehaviour
             }
             if (!onground && !isOnSlope)
             {
-                Debug.Log("not on ground bro");
                 moveX *= 0.5f;
             }
         }
