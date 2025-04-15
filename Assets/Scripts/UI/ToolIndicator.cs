@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ToolIndicator : MonoBehaviour
 {
-    public Image PencilIcon, PenIcon, EraserIcon;
-    public Sprite PencilUnused, PencilUsed, PenUnused, PenUsed, EraserUnused, EraserUsed;
+    public Image PencilIcon, PenIcon, EraserIcon, PCIcon;
+    public Sprite PencilUnused, PencilUsed, PenUnused, PenUsed, EraserUnused, EraserUsed, PC2, PC3;
 
     public static ToolIndicator instance;
 
@@ -30,5 +28,8 @@ public class ToolIndicator : MonoBehaviour
         PencilIcon.gameObject.SetActive(PlayerVars.instance.inventory.hasTool(ToolType.Pencil));
         PenIcon.gameObject.SetActive(PlayerVars.instance.inventory.hasTool(ToolType.Pen));
         EraserIcon.gameObject.SetActive(PlayerVars.instance.inventory.hasTool(ToolType.Eraser));
+        
+        if(PlayerVars.instance.inventory.hasTool(ToolType.Pen)) { PCIcon.sprite = PC2; }
+        if(PlayerVars.instance.inventory.hasTool(ToolType.Eraser)) { PCIcon.sprite = PC3; }
     }
 }
