@@ -60,6 +60,7 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
+            PlayerChecker.firstSpawned = false;
             SceneManager.LoadScene("IntroAnimatic");
         }
         
