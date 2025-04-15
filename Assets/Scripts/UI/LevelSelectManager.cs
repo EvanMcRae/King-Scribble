@@ -20,7 +20,7 @@ public class LevelSelectManager : MonoBehaviour
     public List<string> levelDescriptions = new();
     public List<Transform> buttonTransforms = new();
 
-    public string sceneName = "";
+    public string sceneName = "Level1";
     public TextMeshProUGUI levelName, levelDescription;
 
     public Sprite activeButton;
@@ -36,10 +36,10 @@ public class LevelSelectManager : MonoBehaviour
         Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
 
         // Try to unlock all other buttons
-        buttons[0].GetComponent<LevelSelectButton>().SetButtonActive(true);
-        for (int i = 1; i < buttons.Count; i++)
+        for (int i = 0; i < buttons.Count; i++)
         {
             int ind = GameSaver.currData.unlockedScenes.IndexOf(sceneNames[i]);
+            
             if (ind != -1)
             {
                 buttons[ind].GetComponent<LevelSelectButton>().SetButtonActive(true);
@@ -50,38 +50,7 @@ public class LevelSelectManager : MonoBehaviour
         sceneName = GameSaver.currData.scene;
         int index = sceneNames.IndexOf(sceneName);
         if (index == -1) index = 0;
-        
-        EventSystem.current.SetSelectedGameObject(buttons[index]);
-    }
-
-    public void PlayGame()
-    {
-        if (playing) return;
-        if (!ScreenWipe.over)
-        {
-            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
-            return;
-        }
-        ScreenWipe.PostUnwipe -= PlayGame;
-        SettingsManager.SaveSettings();
-        playing = true;
-        ScreenWipe.instance.WipeIn();
-        ScreenWipe.PostWipe += EnterGame;
-    }
-
-    void EnterGame()
-    {
-        ScreenWipe.PostWipe -= EnterGame;
-        playing = false;
-        if (SaveSystem.instance.SaveFileExists())
-        {
-            GameSaver.instance.LoadGame();
-        }
-        else
-        {
-            PlayerChecker.firstSpawned = false;
-            SceneManager.LoadScene("IntroAnimatic");
-        }
+        SelectLevel(index, true);
     }
 
     public void EnterLevel()
@@ -100,7 +69,19 @@ public class LevelSelectManager : MonoBehaviour
         {
             playing = false;
             PlayerChecker.firstSpawned = false;
-            SceneManager.LoadScene(sceneName);
+            player.transform.DOKill();
+
+            if (GameSaver.currData.scene != sceneName)
+            {
+                // TODO this is a hack to wipe old checkpoint data!!!
+                // We should instead keep per-level checkpoint information so you 
+                // get sent to the correct spot even if you visit an earlier level.
+                // Can't do this yet because URCAD and probably no one will run into this
+                GameSaver.currData.quitWhileClearing = true;
+                GameSaver.currData.scene = sceneName;
+            }
+
+            GameSaver.instance.LoadGame();
             Utils.SetExclusiveAction(ref ScreenWipe.PostWipe, null);
         };
     }
@@ -121,17 +102,20 @@ public class LevelSelectManager : MonoBehaviour
         }
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
+        player.transform.DOKill();
         SceneHelper.LoadScene("MainMenu");
         ScreenWipe.PostWipe -= GoToMainMenu;
     }
 
-    public void SelectLevel(int level)
+    public void SelectLevel(int level, bool snap)
     {
         sceneName = sceneNames[level];
         levelName.text = levelNames[level];
         levelDescription.text = "\n" + levelDescriptions[level];
 
-        // TODO temp, want this to follow the line if possible
-        player.transform.DOMove(buttonTransforms[level].position, 0.5f);
+        if (!snap)
+            player.transform.DOMove(buttonTransforms[level].position, 0.5f); // TODO temp, want this to follow the line if possible
+        else
+            player.transform.position = buttonTransforms[level].position;
     }
 }

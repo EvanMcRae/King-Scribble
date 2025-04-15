@@ -22,6 +22,23 @@ public class GameSaver : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
+        Refresh();
+    }
+
+    public void WipeSave()
+    {
+        saveSystem.DeleteSave();
+        currData = SaveData.EmptySave();
+    }
+
+    public void Refresh()
+    {
+        string dataToLoad = saveSystem.LoadData();
+        if (!string.IsNullOrEmpty(dataToLoad))
+        {
+            SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
+            currData = data;
+        }
     }
 
     public void Clear()

@@ -106,6 +106,7 @@ public class PauseMenu : MonoBehaviour
     public void GoToMainMenu()
     {
         GameManager.resetting = false;
+        GameManager.canMove = true;
         if (PlayerController.instance != null)
         {
             PlayerController.instance.KillTweens();

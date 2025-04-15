@@ -13,6 +13,6 @@ public class LevelSelectButton : MonoBehaviour
     public void SetButtonActive(bool active)
     {
         GetComponent<Image>().sprite = active ? selected : normal;
-        //GetComponent<Button>().interactable = active;
+        GetComponent<Button>().interactable = active;
     }
 }
