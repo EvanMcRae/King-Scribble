@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class LevelSelectButton : MonoBehaviour
+public class LevelSelectButton : MonoBehaviour, ISelectHandler
 {
     [SerializeField] private Sprite normal, selected;
+    [SerializeField] private Button button;
+    [SerializeField] private Image image;
 
     private void Awake()
     {
@@ -12,7 +15,12 @@ public class LevelSelectButton : MonoBehaviour
 
     public void SetButtonActive(bool active)
     {
-        GetComponent<Image>().sprite = active ? selected : normal;
-        GetComponent<Button>().interactable = active;
+        image.sprite = active ? selected : normal;
+        button.interactable = active;
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        button.onClick?.Invoke();
     }
 }

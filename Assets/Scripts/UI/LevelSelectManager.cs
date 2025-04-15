@@ -50,6 +50,7 @@ public class LevelSelectManager : MonoBehaviour
         sceneName = GameSaver.currData.scene;
         int index = sceneNames.IndexOf(sceneName);
         if (index == -1) index = 0;
+        EventSystem.current.SetSelectedGameObject(buttons[index]);
         SelectLevel(index, true);
     }
 
