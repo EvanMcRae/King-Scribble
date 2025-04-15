@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -87,7 +88,7 @@ public class GameSaver : MonoBehaviour
         public bool emptySave = false, quitWhileClearing = false;
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
-        // TODO add unlocked levels to this
+        public List<string> unlockedScenes = new();
 
         public void SetPlayer(PlayerVars playerObj)
         {
