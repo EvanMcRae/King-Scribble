@@ -73,7 +73,7 @@ public class Moving_Platform : MonoBehaviour
         {
             // X-value positive = collision from RIGHT      X-value negative = collision from LEFT
             // Y-value positive = collision from TOP        Y-value negative = collision from BOTTOM
-            col_dir = (other.collider.gameObject.transform.position - transform.position).normalized;
+            col_dir = (other.collider.gameObject.transform.position + (Vector3)other.collider.offset - transform.position).normalized;
             // dir = Right -> we only care about X-value
             if (dir == direction.Right)
             {
