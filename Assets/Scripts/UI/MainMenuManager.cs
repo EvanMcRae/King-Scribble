@@ -69,7 +69,6 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-
     public void EnterLevel(string Level)
     {
         if (playing) return;
