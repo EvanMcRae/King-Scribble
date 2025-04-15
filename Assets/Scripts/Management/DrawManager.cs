@@ -242,25 +242,9 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
-        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
-        if (hit.collider != null) {
-            EndDraw();
-            drawCooldown = DRAW_CD;
-            return;
-        }
-        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
-        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
-        if (hit.collider != null)
+        // Handle eraser first so it's exempt from overlap checks
+        if (PlayerVars.instance.cur_tool == ToolType.Eraser)
         {
-            EndDraw();
-            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
-                PlayerVars.instance.AddPenFuel(10);
-            return;
-        }
-		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-		{
             mouse_pos += new Vector2(0.5f, -0.5f);
             SoundPauseCheck(mouse_pos);
             if (PlayerVars.instance.eraserFuelLeft() > 0)
@@ -276,10 +260,30 @@ public class DrawManager : MonoBehaviour
                     lastMousePos = mouse_pos;
                 }
             }
-                
+
             else EndDraw();
-			return;
-		}
+            return;
+        }
+
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null) {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            EndDraw();
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            else
+                drawCooldown = DRAW_CD;
+            return;
+        }
 
         if (currentLine == null) return; // Why would this even be needed
 

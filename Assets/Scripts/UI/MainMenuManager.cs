@@ -65,6 +65,29 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+
+    public void EnterLevel(string Level)
+    {
+        if (playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= PlayGame;
+        SettingsManager.SaveSettings();
+        playing = true;
+        ScreenWipe.instance.WipeIn();
+        ScreenWipe.PostWipe += () =>
+        {
+            firstopen = false;
+            playing = false;
+            PlayerChecker.firstSpawned = false;
+            SceneManager.LoadScene(Level);
+            Utils.SetExclusiveAction(ref ScreenWipe.PostWipe, null);
+        };
+    }
+
     public void Instructions()
     {
         if (!ScreenWipe.over && !playing && !quitting)
