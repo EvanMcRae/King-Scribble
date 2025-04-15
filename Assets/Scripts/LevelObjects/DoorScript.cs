@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorScript : ChangeScene // Inherit from ChangeScene as a more specific scene-changing object
 {
@@ -25,6 +26,11 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
     public override void OnTriggerEnter2D(Collider2D other) // Only change scene on interaction if no locks are remaining
     {
         if ((other.tag == "Player") && (numLocks == 0) && (!changingScene)) {
+            if (!GameSaver.currData.unlockedScenes.Contains(scene))
+            {
+                GameSaver.currData.unlockedScenes.Add(scene);
+                GameSaver.instance.SaveGame();
+            }
             if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
             StartCoroutine(LoadNextScene());
         }

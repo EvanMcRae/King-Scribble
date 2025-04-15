@@ -117,6 +117,6 @@ public class SettingsManager : MonoBehaviour
     // TODO: Temp implementation
     public void DeleteSave()
     {
-        GameSaver.instance.saveSystem.DeleteSave();
+        GameSaver.instance.WipeSave();
     }
 }

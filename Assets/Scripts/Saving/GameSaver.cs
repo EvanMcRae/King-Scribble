@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -21,6 +22,28 @@ public class GameSaver : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
+        Refresh();
+    }
+
+    public void WipeSave()
+    {
+        saveSystem.DeleteSave();
+        currData = SaveData.EmptySave();
+    }
+
+    public void Refresh()
+    {
+        string dataToLoad = saveSystem.LoadData();
+        if (!string.IsNullOrEmpty(dataToLoad))
+        {
+            SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
+            if (!data.unlockedScenes.Contains(data.scene))
+            {
+                data.scene = "IntroAnimatic";
+                ForceSave();
+            }
+            currData = data;
+        }
     }
 
     public void Clear()
@@ -30,6 +53,12 @@ public class GameSaver : MonoBehaviour
             Destroy(PlayerVars.instance.gameObject);
             PlayerVars.instance = null;
         }
+    }
+
+    public void ForceSave()
+    {
+        var dataToSave = JsonUtility.ToJson(currData, true);
+        saveSystem.SaveData(dataToSave);
     }
 
     public void SaveGame()
@@ -87,7 +116,7 @@ public class GameSaver : MonoBehaviour
         public bool emptySave = false, quitWhileClearing = false;
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
-        // TODO add unlocked levels to this
+        public List<string> unlockedScenes = new();
 
         public void SetPlayer(PlayerVars playerObj)
         {

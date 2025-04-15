@@ -56,15 +56,14 @@ public class MainMenuManager : MonoBehaviour
         playing = false;
         if (SaveSystem.instance.SaveFileExists())
         {
-            GameSaver.instance.LoadGame();
+            SceneManager.LoadScene("LevelSelect");
         }
         else
         {
-            PlayerChecker.firstSpawned = false;
             SceneManager.LoadScene("IntroAnimatic");
         }
+        
     }
-
 
     public void EnterLevel(string Level)
     {
