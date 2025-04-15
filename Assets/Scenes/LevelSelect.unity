@@ -580,7 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.992872, b: 0.78039217, a: 0.8666667}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8666667}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5290,6 +5290,7 @@ MonoBehaviour:
   activeButton: {fileID: 0}
   defaultCursor: {fileID: 2800000, guid: 08148291e79704fe5ba4dc368c8a78d7, type: 3}
   player: {fileID: 240235718}
+  goingToMenu: 0
 --- !u!4 &1765164885
 Transform:
   m_ObjectHideFlags: 0
