@@ -156,7 +156,10 @@ public class PlayerController : MonoBehaviour
         }
         if (PlayerVars.instance.cheatMode)
         {
-            cheatSpeed += Input.mouseScrollDelta.y;
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                cheatSpeed += Input.mouseScrollDelta.x;
+            else
+                cheatSpeed += Input.mouseScrollDelta.y;
             if (cheatSpeed < 0) cheatSpeed = 0;
         }
     }

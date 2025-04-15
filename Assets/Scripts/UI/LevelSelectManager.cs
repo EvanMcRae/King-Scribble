@@ -47,6 +47,7 @@ public class LevelSelectManager : MonoBehaviour
         }
 
         // Try to select the right scene's button
+        GameSaver.instance.Refresh();
         sceneName = GameSaver.currData.scene;
         int index = sceneNames.IndexOf(sceneName);
         if (index == -1) index = 0;
