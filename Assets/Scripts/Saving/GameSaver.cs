@@ -37,6 +37,11 @@ public class GameSaver : MonoBehaviour
         if (!string.IsNullOrEmpty(dataToLoad))
         {
             SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
+            if (!data.unlockedScenes.Contains(data.scene))
+            {
+                data.scene = "IntroAnimatic";
+                ForceSave();
+            }
             currData = data;
         }
     }

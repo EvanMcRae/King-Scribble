@@ -21,6 +21,7 @@ public class LevelSelectButton : MonoBehaviour, ISelectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        button.onClick?.Invoke();
+        if (button.interactable)
+            button.onClick?.Invoke();
     }
 }
