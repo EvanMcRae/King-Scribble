@@ -27,6 +27,7 @@ public class LevelSelectManager : MonoBehaviour
     public Texture2D defaultCursor;
     public GameObject player;
     public static LevelSelectManager instance;
+    public bool goingToMenu = false;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +40,6 @@ public class LevelSelectManager : MonoBehaviour
         for (int i = 0; i < buttons.Count; i++)
         {
             int ind = GameSaver.currData.unlockedScenes.IndexOf(sceneNames[i]);
-            
             if (ind != -1)
             {
                 buttons[ind].GetComponent<LevelSelectButton>().SetButtonActive(true);
@@ -51,6 +51,14 @@ public class LevelSelectManager : MonoBehaviour
         int index = sceneNames.IndexOf(sceneName);
         if (index == -1) index = 0;
         SelectLevel(index, true);
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !goingToMenu && ScreenWipe.over && !playing)
+        {
+            MainMenu();
+        }
     }
 
     public void EnterLevel()
@@ -89,6 +97,8 @@ public class LevelSelectManager : MonoBehaviour
 
     public void MainMenu()
     {
+        if (goingToMenu) return;
+        goingToMenu = true;
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += GoToMainMenu;
     }
