@@ -50,6 +50,12 @@ public class GameSaver : MonoBehaviour
         }
     }
 
+    public void ForceSave()
+    {
+        var dataToSave = JsonUtility.ToJson(currData, true);
+        saveSystem.SaveData(dataToSave);
+    }
+
     public void SaveGame()
     {
         if (!loading && PlayerVars.instance != null)

@@ -26,7 +26,11 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
     public override void OnTriggerEnter2D(Collider2D other) // Only change scene on interaction if no locks are remaining
     {
         if ((other.tag == "Player") && (numLocks == 0) && (!changingScene)) {
-            GameSaver.currData.unlockedScenes.Add(scene);
+            if (!GameSaver.currData.unlockedScenes.Contains(scene))
+            {
+                GameSaver.currData.unlockedScenes.Add(scene);
+                GameSaver.instance.SaveGame();
+            }
             if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
             StartCoroutine(LoadNextScene());
         }

@@ -79,6 +79,7 @@ public class LevelSelectManager : MonoBehaviour
                 // Can't do this yet because URCAD and probably no one will run into this
                 GameSaver.currData.quitWhileClearing = true;
                 GameSaver.currData.scene = sceneName;
+                GameSaver.instance.ForceSave();
             }
 
             GameSaver.instance.LoadGame();
@@ -105,6 +106,11 @@ public class LevelSelectManager : MonoBehaviour
         player.transform.DOKill();
         SceneHelper.LoadScene("MainMenu");
         ScreenWipe.PostWipe -= GoToMainMenu;
+    }
+
+    public void SelectLevel(int level)
+    {
+        SelectLevel(level, false);
     }
 
     public void SelectLevel(int level, bool snap)
