@@ -57,7 +57,7 @@ public class SaveSystem : MonoBehaviour
             content = File.ReadAllText(fullPath);
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //Debug.LogError("Error when loading the file " + e.Message);
             content = "";
