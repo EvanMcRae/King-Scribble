@@ -375,8 +375,8 @@ public class PlayerController : MonoBehaviour
             bool onground = false;
             foreach (ContactPoint2D point in contactPoint2Ds)
             {
-                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.15f * transform.localScale.x), Color.red);
-                if (point.point.y < transform.position.y - 0.15f * transform.localScale.x)
+                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.125f * transform.localScale.y), Color.red);
+                if (point.point.y < transform.position.y - 0.125f * transform.localScale.y)
                 {
                     onground = true;
                 }
