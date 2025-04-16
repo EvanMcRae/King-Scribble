@@ -59,7 +59,7 @@ public class SaveSystem : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Error when loading the file " + e.Message);
+            //Debug.LogError("Error when loading the file " + e.Message);
             content = "";
         }
         return false;

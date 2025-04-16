@@ -10,7 +10,7 @@ public class FPSMonitor : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _bestfpsText;
     [SerializeField] private TextMeshProUGUI _lowestfpsText;
     [SerializeField] private GameObject menuGroup;
-    private float updateInterval = 1.0f;
+    public float updateInterval = 1.0f;
     private int _bestFps;
     private int _lowestFps;
     private bool active = false;

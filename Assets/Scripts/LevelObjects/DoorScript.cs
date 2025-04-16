@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class DoorScript : ChangeScene // Inherit from ChangeScene as a more specific scene-changing object
@@ -26,13 +27,43 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
     public override void OnTriggerEnter2D(Collider2D other) // Only change scene on interaction if no locks are remaining
     {
         if ((other.tag == "Player") && (numLocks == 0) && (!changingScene)) {
-            if (!GameSaver.currData.unlockedScenes.Contains(scene))
+            if (scene == "MainMenu")
             {
-                GameSaver.currData.unlockedScenes.Add(scene);
-                GameSaver.instance.SaveGame();
+                GameSaver.instance.WipeSave();
+                ScreenWipe.instance.WipeIn();
+                GameManager.resetting = true;
+                changingScene = true;
+                ScreenWipe.PostWipe += GoToMainMenu;
             }
-            if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
-            StartCoroutine(LoadNextScene());
+            else
+            {
+                if (!GameSaver.currData.unlockedScenes.Contains(scene))
+                {
+                    GameSaver.currData.unlockedScenes.Add(scene);
+                    GameSaver.instance.SaveGame();
+                }
+
+                if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
+                StartCoroutine(LoadNextScene());
+            }
+            
         }
+    }
+
+    // TODO super temp implementation for end of demo
+    public void GoToMainMenu()
+    {
+        GameManager.resetting = false;
+        changingScene = false;
+        GameManager.canMove = true;
+        if (PlayerController.instance != null)
+        {
+            PlayerController.instance.KillTweens();
+            Destroy(PlayerVars.instance.gameObject);
+        }
+        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        Destroy(eventSystem?.gameObject);
+        SceneHelper.LoadScene("MainMenu");
+        ScreenWipe.PostWipe -= GoToMainMenu;
     }
 }
