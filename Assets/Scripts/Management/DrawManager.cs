@@ -140,38 +140,42 @@ public class DrawManager : MonoBehaviour
 
         if (GameManager.paused) return;
 
-        // Tool switching
-        if (Input.GetKeyDown("1"))
-        {
-            SwitchTool(0);
-        }
-        if (Input.GetKeyDown("2"))
-        {
-            SwitchTool(1);
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            SwitchTool(2);
-        }
-
-        // Tool scrolling
-        float scrollDelta = 0;
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            scrollDelta = Input.mouseScrollDelta.x;
-        else
-            scrollDelta = Input.mouseScrollDelta.y;
-
-        int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
+        // Tool selection
         int count = PlayerVars.instance.inventory.toolUnlocks.Count;
-        if (scrollDelta >= 0.1f)
+        if (count > 0)
         {
-            index = (index - 1 + count) % count;
-            SwitchTool(index);
-        }
-        else if (scrollDelta <= -0.1f)
-        {
-            index = (index + 1 + count) % count;
-            SwitchTool(index);
+            // Tool switching
+            if (Input.GetKeyDown("1"))
+            {
+                SwitchTool(0);
+            }
+            if (Input.GetKeyDown("2"))
+            {
+                SwitchTool(1);
+            }
+            if (Input.GetKeyDown("3"))
+            {
+                SwitchTool(2);
+            }
+
+            // Tool scrolling
+            float scrollDelta;
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                scrollDelta = Input.mouseScrollDelta.x;
+            else
+                scrollDelta = Input.mouseScrollDelta.y;
+
+            int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
+            if (scrollDelta >= 0.1f)
+            {
+                index = (index - 1 + count) % count;
+                SwitchTool(index);
+            }
+            else if (scrollDelta <= -0.1f)
+            {
+                index = (index + 1 + count) % count;
+                SwitchTool(index);
+            }
         }
     }
 

@@ -218,6 +218,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 5822156443712500876, guid: b6505642186acb743af7036cb5b81b46, type: 3}
   cam: {fileID: 6201593291800123279}
+  defaultInventory:
+    toolUnlocks: 
+  defaultTool: 1
 --- !u!1 &4648267746133774761
 GameObject:
   m_ObjectHideFlags: 0

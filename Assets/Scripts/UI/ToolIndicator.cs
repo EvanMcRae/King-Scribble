@@ -47,11 +47,15 @@ public class ToolIndicator : MonoBehaviour
             }
 
             // Set slot sprite
-            Debug.Log(tool + " " + currTool);
             Slots[i].sprite = currTool == tool ? used : unused;
             Slots[i].gameObject.SetActive(true);
         }
 
         PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory.toolUnlocks.Count];
+    }
+
+    public void SelectTool(int index)
+    {
+        DrawManager.instance.SwitchTool(index);
     }
 }

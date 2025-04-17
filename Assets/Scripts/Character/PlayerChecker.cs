@@ -8,6 +8,7 @@ public class PlayerChecker : MonoBehaviour
     public static PlayerChecker instance;
     public static bool firstSpawned = false;
     public Inventory defaultInventory = new();
+    public ToolType defaultTool = ToolType.None;
 
     // Use this for initialization
     void Awake()
@@ -41,6 +42,7 @@ public class PlayerChecker : MonoBehaviour
             {
                 vars.SetSpawnPos(transform.position);
                 vars.inventory.copy(defaultInventory);
+                vars.cur_tool = defaultTool;
                 vars.SaveInventory();
             }
 

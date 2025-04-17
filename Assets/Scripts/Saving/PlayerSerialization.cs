@@ -22,7 +22,7 @@ public class PlayerSerialization
         player.inventory.copy(inventory);
         player.SetSpawnPos(spawnpoint.GetValue());
         if (player.inventory.hasTool(currentTool))
-            player.cur_tool = currentTool;
+            DrawManager.instance.SwitchTool(currentTool);
     }
 }
 
