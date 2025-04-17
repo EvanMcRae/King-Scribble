@@ -44,8 +44,6 @@ public class DrawManager : MonoBehaviour
     public Color fillColor; // The color to fill pen objects with (temporary)
     private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
 
-    private float scrollThreshold;
-
     [SerializeField] private List<GameObject> submeters;
 
     public static DrawManager instance;
@@ -58,6 +56,9 @@ public class DrawManager : MonoBehaviour
     private Coroutine currentSoundPause, currentSoundUnpause;
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
+
+    private float scrollDelta;
+    private const float scrollThreshold = 3f;
 
     private void Awake()
     {
@@ -154,6 +155,27 @@ public class DrawManager : MonoBehaviour
         if (Input.GetKeyDown("3"))
         {
             SwitchTool(2);
+        }
+
+        // Tool scrolling
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            scrollDelta += Input.mouseScrollDelta.x;
+        else
+            scrollDelta += Input.mouseScrollDelta.y;
+
+        int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
+        int count = PlayerVars.instance.inventory.toolUnlocks.Count;
+        if (scrollDelta >= scrollThreshold)
+        {
+            index = (index - 1 + count) % count;
+            SwitchTool(index);
+            scrollDelta = 0;
+        }
+        else if (scrollDelta <= -scrollThreshold)
+        {
+            index = (index + 1 + count) % count;
+            SwitchTool(index);
+            scrollDelta = 0;
         }
     }
 
@@ -389,7 +411,6 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
         {
             ToolType newTool = PlayerVars.instance.inventory.toolUnlocks[index];
-            Debug.Log(index + " " + newTool);
             SwitchTool(newTool);
         }
     }
