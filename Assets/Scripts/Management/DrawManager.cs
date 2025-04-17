@@ -142,37 +142,18 @@ public class DrawManager : MonoBehaviour
 
         if (GameManager.paused) return;
 
-        // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
+        // Tool switching
+        if (Input.GetKeyDown("1"))
         {
-            LoadSubmeter(ToolType.Pencil);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Pencil;
-            Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
+            SwitchTool(0);
         }
-
-        // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
+        if (Input.GetKeyDown("2"))
         {
-            LoadSubmeter(ToolType.Pen);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Pen;
-            Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
+            SwitchTool(1);
         }
-
-        // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
-        { 
-            LoadSubmeter(ToolType.Eraser);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Eraser;
-            Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
+        if (Input.GetKeyDown("3"))
+        {
+            SwitchTool(2);
         }
     }
 
@@ -401,6 +382,29 @@ public class DrawManager : MonoBehaviour
         line.GetComponent<LineRenderer>().startColor = pencilColor_start;
         line.GetComponent<LineRenderer>().endColor = pencilColor_end;
         line.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+    }
+
+    public void SwitchTool(int index)
+    {
+        if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
+        {
+            ToolType newTool = PlayerVars.instance.inventory.toolUnlocks[index];
+            Debug.Log(index + " " + newTool);
+            SwitchTool(newTool);
+        }
+    }
+
+    public void SwitchTool(ToolType newTool)
+    {
+        if (PlayerVars.instance.cur_tool != newTool)
+        {
+            LoadSubmeter(newTool);
+            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+                EndDraw();
+            SetCursor(newTool);
+            ToolIndicator.instance.UpdateMenu(newTool);
+            PlayerVars.instance.cur_tool = newTool;
+        }
     }
 }
 
