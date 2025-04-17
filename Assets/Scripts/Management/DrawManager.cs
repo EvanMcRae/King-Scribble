@@ -57,9 +57,6 @@ public class DrawManager : MonoBehaviour
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
 
-    private float scrollDelta;
-    private const float scrollThreshold = 3f;
-
     private void Awake()
     {
         instance = this;
@@ -158,24 +155,23 @@ public class DrawManager : MonoBehaviour
         }
 
         // Tool scrolling
+        float scrollDelta = 0;
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            scrollDelta += Input.mouseScrollDelta.x;
+            scrollDelta = Input.mouseScrollDelta.x;
         else
-            scrollDelta += Input.mouseScrollDelta.y;
+            scrollDelta = Input.mouseScrollDelta.y;
 
         int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
         int count = PlayerVars.instance.inventory.toolUnlocks.Count;
-        if (scrollDelta >= scrollThreshold)
+        if (scrollDelta >= 0.1f)
         {
             index = (index - 1 + count) % count;
             SwitchTool(index);
-            scrollDelta = 0;
         }
-        else if (scrollDelta <= -scrollThreshold)
+        else if (scrollDelta <= -0.1f)
         {
             index = (index + 1 + count) % count;
             SwitchTool(index);
-            scrollDelta = 0;
         }
     }
 
