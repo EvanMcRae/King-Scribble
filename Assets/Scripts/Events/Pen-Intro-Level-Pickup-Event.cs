@@ -26,7 +26,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 1;
         yield return new WaitForSeconds(1);
         inkFlow_L.transform.DOLocalMoveY(-110, 0.5f);
-        inkFlow_R.transform.DOLocalMoveY(-110, 0.5f);
+        inkFlow_R.transform.DOLocalMoveY(-118, 0.5f);
         yield return new WaitForSeconds(3);
         cam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);
