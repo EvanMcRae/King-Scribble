@@ -67,7 +67,7 @@ public class PauseMenu : MonoBehaviour
         AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
-        if (DrawManager.instance != null)
+        if (DrawManager.instance != null && !ToolIndicatorCursorHandler.inside)
             DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {
@@ -103,7 +103,6 @@ public class PauseMenu : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        GameManager.resetting = false;
         GameManager.canMove = true;
         if (PlayerController.instance != null)
         {
@@ -113,6 +112,7 @@ public class PauseMenu : MonoBehaviour
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");
+        GameManager.resetting = false;
         ScreenWipe.PostWipe -= GoToMainMenu;
     }
 }

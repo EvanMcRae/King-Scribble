@@ -60,16 +60,22 @@ public class DrawManager : MonoBehaviour
     {
         instance = this;
 
-        SetCursor(PlayerVars.instance.cur_tool);
+        if (!ToolIndicatorCursorHandler.inside)
+        {
+            SetCursor(PlayerVars.instance.cur_tool);
+        }
         LoadSubmeter(PlayerVars.instance.cur_tool);
     }
 
     void LoadSubmeter(ToolType tool)
     {
-        // TODO fancier animation here or something, for now this will have to do :(
-        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = false;
-        activeSubmeter = tool;
-        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = true;
+        if (submeters[(int)activeSubmeter] != null)
+        {
+            // TODO fancier animation here or something, for now this will have to do :(
+            submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = false;
+            activeSubmeter = tool;
+            submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = true;
+        }
     }
     
     // Update is called once per frame
@@ -382,6 +388,7 @@ public class DrawManager : MonoBehaviour
 
     public void SetCursor(ToolType tool)
     {
+        Debug.Log("who called me");
         Texture2D texture;
         switch (tool)
         {
@@ -427,7 +434,9 @@ public class DrawManager : MonoBehaviour
             if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
                 EndDraw();
             if (!ToolIndicatorCursorHandler.inside)
+            {
                 SetCursor(newTool);
+            }
             ToolIndicator.instance.UpdateMenu(newTool);
             PlayerVars.instance.cur_tool = newTool;
         }

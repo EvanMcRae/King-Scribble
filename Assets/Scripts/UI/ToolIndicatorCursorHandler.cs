@@ -15,8 +15,10 @@ public class ToolIndicatorCursorHandler : MonoBehaviour, IPointerEnterHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!GameManager.paused)
+        if (!GameManager.paused && !GameManager.resetting)
+        {
             DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
-            inside = false;
+        }
+        inside = false;
     }
 }

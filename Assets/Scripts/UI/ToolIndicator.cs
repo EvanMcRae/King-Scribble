@@ -21,7 +21,8 @@ public class ToolIndicator : MonoBehaviour
     {
         foreach (Image slot in Slots)
         {
-            slot.gameObject.SetActive(false);
+            if (slot != null && slot.gameObject.activeInHierarchy)
+                slot.gameObject.SetActive(false);
         }
 
         for (int i = 0; i < PlayerVars.instance.inventory.toolUnlocks.Count; i++)
@@ -47,8 +48,11 @@ public class ToolIndicator : MonoBehaviour
             }
 
             // Set slot sprite
-            Slots[i].sprite = currTool == tool ? used : unused;
-            Slots[i].gameObject.SetActive(true);
+            if (Slots[i] != null)
+            {
+                Slots[i].sprite = currTool == tool ? used : unused;
+                Slots[i].gameObject.SetActive(true);
+            }
         }
 
         PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory.toolUnlocks.Count];

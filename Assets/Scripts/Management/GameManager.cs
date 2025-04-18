@@ -23,9 +23,9 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!paused && Input.GetButtonDown("Reset"))
+        if (!paused && Input.GetButtonDown("Reset") && ScreenWipe.over && !resetting && !ChangeScene.changingScene)
         {
-            if (!resetting && !ChangeScene.changingScene) Reset();
+            Reset();
         }
 
         if (PlayerVars.instance.transform.position.y < VOID_DEATH && !resetting)
@@ -70,7 +70,6 @@ public class GameManager : MonoBehaviour
     {
         resetting = true;
         ScreenWipe.instance.WipeIn();
-        ScreenWipe.PostUnwipe += () => { resetting = false; };
         yield return new WaitForSecondsRealtime(1f);
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();
@@ -79,5 +78,6 @@ public class GameManager : MonoBehaviour
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
         canMove = true;
+        resetting = false;
     }
 }
