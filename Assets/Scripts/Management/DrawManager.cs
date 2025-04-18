@@ -40,9 +40,8 @@ public class DrawManager : MonoBehaviour
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
 
     public Material fillMat; // The material to fill pen objects with (temporary)
-    public Sprite fillTexture; // The texture to fill pen objects with (temporary)
+    public List<Sprite> fillTextures = new(); // The textures to fill pen objects with (temporary)
     public Color fillColor; // The color to fill pen objects with (temporary)
-    private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
 
     [SerializeField] private List<GameObject> submeters;
 
@@ -63,10 +62,6 @@ public class DrawManager : MonoBehaviour
 
         SetCursor(PlayerVars.instance.cur_tool);
         LoadSubmeter(PlayerVars.instance.cur_tool);
-
-        fillMatBlock = new MaterialPropertyBlock();
-        fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
-        fillMatBlock.SetColor("_Color", fillColor);
     }
 
     void LoadSubmeter(ToolType tool)
@@ -339,7 +334,14 @@ public class DrawManager : MonoBehaviour
                     }
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
-                    currentLine.SetColor(penColor_fin); // Set the color of the line 
+                    currentLine.SetColor(penColor_fin); // Set the color of the line
+                    int fillTexture = Mathf.FloorToInt(Mathf.Min(Line.MAX_WEIGHT, currentLine.area) / Line.MAX_WEIGHT * (fillTextures.Count - 1));
+                    Debug.Log(fillTexture);
+
+                    MaterialPropertyBlock fillMatBlock = new MaterialPropertyBlock();
+                    fillMatBlock.SetColor("_Color", fillColor);
+                    fillMatBlock.SetTexture("_MainTex", fillTextures[fillTexture].texture);
+
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }

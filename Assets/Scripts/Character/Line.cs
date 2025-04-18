@@ -8,6 +8,7 @@ public class Line : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
     public const float MASS_COEFF = 2f;
+    public const float MAX_WEIGHT = 40f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.3f; // Maximum distance between the first and last point of a line to be considered a closed loop
@@ -17,6 +18,7 @@ public class Line : MonoBehaviour
     public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
+    public float area = 0;
     public SpriteRenderer startPoint;
 
     Vector2[] ConvertArray(Vector3[] v3){
@@ -137,7 +139,7 @@ public class Line : MonoBehaviour
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
         // Note: This is ugly. I know this is ugly. It works. (from https://stackoverflow.com/questions/2034540/calculating-area-of-irregular-polygon-in-c-sharp)
-        var area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
+        area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
         rigidBody.mass = area * MASS_COEFF;
     }
 
