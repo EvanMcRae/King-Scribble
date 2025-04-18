@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using UnityEngine.Rendering.Universal;
+
 public class GameManager : MonoBehaviour
 {
     public static bool resetting = false, paused = false, canMove = true;
@@ -76,6 +78,11 @@ public class GameManager : MonoBehaviour
         ResetAction.Invoke();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
+        Light2D[] Lights = FindObjectsOfType<Light2D>();
+        foreach (Light2D light in Lights)
+        {
+            Destroy(light?.gameObject);
+        }
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
         canMove = true;
         resetting = false;
