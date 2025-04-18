@@ -8,7 +8,7 @@ public class Line : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
     public const float MASS_COEFF = 2f;
-    public const float MAX_WEIGHT = 40f;
+    public const float MAX_WEIGHT = 100f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.3f; // Maximum distance between the first and last point of a line to be considered a closed loop
