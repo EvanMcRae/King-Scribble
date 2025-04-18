@@ -224,6 +224,8 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = false;
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
+            currentLine.startPoint.enabled = true;
+            currentLine.startPoint.color = penColor_start;
         }
         soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }

@@ -5,19 +5,19 @@ using UnityEngine;
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public class Line : MonoBehaviour
 {
-    [SerializeField] private GameObject linePoint;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
     public const float MASS_COEFF = 2f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
-    public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
+    public const float LOOP_ALLOWANCE = 0.3f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
+    public SpriteRenderer startPoint;
 
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
@@ -226,6 +226,8 @@ public class Line : MonoBehaviour
         }
         polyMesh.uv = uvs;
         polyFilter.mesh = polyMesh;
+
+        startPoint.enabled = false;
     }
 }
 
