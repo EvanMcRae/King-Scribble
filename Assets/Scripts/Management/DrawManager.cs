@@ -388,7 +388,6 @@ public class DrawManager : MonoBehaviour
 
     public void SetCursor(ToolType tool)
     {
-        Debug.Log("who called me");
         Texture2D texture;
         switch (tool)
         {
