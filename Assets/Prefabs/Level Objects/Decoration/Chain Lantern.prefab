@@ -173,7 +173,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!1 &1715022444153977668
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +347,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!1 &1760965834442664874
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,7 +513,7 @@ HingeJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.01, y: -0.43}
-  m_ConnectedAnchor: {x: 0, y: 1.2720003}
+  m_ConnectedAnchor: {x: 0, y: 1.3160005}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -521,7 +521,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!1 &2318695030784673174
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +696,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!233 &2026765909262374466
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -774,7 +774,7 @@ MonoBehaviour:
   m_Intensity: 2
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000871992cda1a0aa3cadda14f649c6b16c
+  m_ApplyToSortingLayers: 871992cda1a0aa3c
   m_LightCookieSprite: {fileID: 21300000, guid: dd74de99124ab8e4b9852ef7cce5d383, type: 3}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -832,7 +832,7 @@ Transform:
   m_GameObject: {fileID: 4987860412639774648}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.01, y: -4.782, z: 0}
+  m_LocalPosition: {x: 0.01, y: -4.826, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1136,7 +1136,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!1 &7880857852824164093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1310,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
 --- !u!1 &7930593395574392310
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,9 +1448,9 @@ DistanceJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.006072998, y: 1.3175216}
+  m_ConnectedAnchor: {x: 0, y: 1.31}
   m_AutoConfigureDistance: 1
-  m_Distance: 4.0325103
+  m_Distance: 3.5160146
   m_MaxDistanceOnly: 0
 --- !u!1 &8257315311126352494
 GameObject:
@@ -1625,4 +1625,4 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 359
+    m_UpperAngle: 45
