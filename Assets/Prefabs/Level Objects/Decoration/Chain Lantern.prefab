@@ -173,7 +173,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!1 &1715022444153977668
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +347,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!1 &1760965834442664874
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +521,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!1 &2318695030784673174
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +696,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!233 &2026765909262374466
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -903,7 +903,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 6
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -1136,7 +1136,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!1 &7880857852824164093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1310,7 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
 --- !u!1 &7930593395574392310
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,4 +1625,4 @@ HingeJoint2D:
   m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
-    m_UpperAngle: 45
+    m_UpperAngle: 359
