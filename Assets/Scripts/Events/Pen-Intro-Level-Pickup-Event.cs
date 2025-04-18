@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class PenIntroLevelPickupEvent : MonoBehaviour
 {
-    public CinemachineVirtualCamera cam;
+    public CinemachineVirtualCamera cam, followCam, sourceCam;
     public GameObject inkFlow_L;
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
@@ -32,6 +32,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         closeDoor.Invoke();
         startFlood.Invoke();
+        followCam.Follow = sourceCam.transform;
         GameManager.canMove = true;
     }
 }
