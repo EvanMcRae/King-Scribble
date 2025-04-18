@@ -106,7 +106,11 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
 
-        if (vars.isDead || !GameManager.canMove) return;
+        if (vars.isDead || !GameManager.canMove)
+        {
+            anim.SetBool("isMoving", false);
+            return;
+        }
 
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
