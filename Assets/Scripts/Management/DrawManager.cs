@@ -424,7 +424,8 @@ public class DrawManager : MonoBehaviour
             LoadSubmeter(newTool);
             if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
                 EndDraw();
-            SetCursor(newTool);
+            if (!ToolIndicatorCursorHandler.inside)
+                SetCursor(newTool);
             ToolIndicator.instance.UpdateMenu(newTool);
             PlayerVars.instance.cur_tool = newTool;
         }
