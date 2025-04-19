@@ -195,7 +195,11 @@ public class Line : MonoBehaviour
         PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
         polyCollider.SetPath(0, points2);
         List<Collider2D> results = new();
-        ContactFilter2D def = new();
+        ContactFilter2D def = new()
+        {
+            useLayerMask = true,
+            layerMask =~ LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
+        };
         if (polyCollider.OverlapCollider(def, results) != 0)
         {
             Destroy(gameObject);
