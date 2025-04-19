@@ -208,6 +208,22 @@ public class DrawManager : MonoBehaviour
                 PlayerVars.instance.AddPenFuel(10);
             return;
         }
+        // If drawing with the pencil, and we overlap the NoDraw-Pencil layer (12), don't draw
+        layerMask = 1 << 12;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil && hit.collider != null)
+        {
+            beganDraw = false;
+            return;
+        }
+        // If drawing with the pen, and we overlap the NoDraw-Pen layer (11), don't draw
+        layerMask = 1 << 11;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pen && hit.collider != null)
+        {
+            beganDraw = false;
+            return;
+        }
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
             if(PencilLinesFolder != null) {
@@ -290,7 +306,22 @@ public class DrawManager : MonoBehaviour
                 drawCooldown = DRAW_CD;
             return;
         }
-
+        layerMask = 1 << 12;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil && hit.collider != null)
+        {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = 1 << 11;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pen && hit.collider != null)
+        {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
         if (currentLine == null) return; // Why would this even be needed
 
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
