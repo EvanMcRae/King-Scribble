@@ -38,6 +38,7 @@ public class GameSaver : MonoBehaviour
         if (!string.IsNullOrEmpty(dataToLoad))
         {
             SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
+            currData = data;
             // Failsafe
             try
             {
@@ -45,10 +46,9 @@ public class GameSaver : MonoBehaviour
             }
             catch (Exception)
             {
-                data.scene = "IntroAnimatic";
+                currData.scene = "IntroAnimatic";
                 ForceSave();
             }
-            currData = data;
         }
     }
 
