@@ -70,6 +70,10 @@ public class LevelSelectManager : MonoBehaviour
             MainMenu();
         }
 
+    }
+
+    public void UpdateYPos()
+    {
         Vector3 pos = player.transform.position;
         pos.y = splineContainer.EvaluatePosition(GetTFromX(player.transform.position.x)).y;
         Vector3 vel = Vector3.zero;
@@ -144,7 +148,8 @@ public class LevelSelectManager : MonoBehaviour
 
         if (!snap)
         {
-            currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear);
+            currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear)
+                .OnUpdate(() => UpdateYPos());
         }
         else
             player.transform.position = buttonTransforms[level].position;
