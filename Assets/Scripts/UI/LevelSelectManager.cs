@@ -33,7 +33,7 @@ public class LevelSelectManager : MonoBehaviour
     public Tween currTween;
 
     [SerializeField] private SplineContainer splineContainer;
-    [SerializeField] private int sampleCount = 300;
+    [SerializeField] private int sampleCount = 50;
 
     // Start is called before the first frame update
     void Start()
@@ -72,12 +72,17 @@ public class LevelSelectManager : MonoBehaviour
 
     }
 
+    public void LateUpdate()
+    {
+        UpdateYPos();
+    }
+
     public void UpdateYPos()
     {
         Vector3 pos = player.transform.position;
         pos.y = splineContainer.EvaluatePosition(GetTFromX(player.transform.position.x)).y;
         Vector3 vel = Vector3.zero;
-        Vector3 smoothPos = Vector3.SmoothDamp(player.transform.position, pos, ref vel, 0.01f);
+        Vector3 smoothPos = Vector3.SmoothDamp(player.transform.position, pos, ref vel, 0.015f);
         pos.y = smoothPos.y;
         player.transform.position = pos;
     }
@@ -148,8 +153,7 @@ public class LevelSelectManager : MonoBehaviour
 
         if (!snap)
         {
-            currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear)
-                .OnUpdate(() => UpdateYPos());
+            currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear);
         }
         else
             player.transform.position = buttonTransforms[level].position;
