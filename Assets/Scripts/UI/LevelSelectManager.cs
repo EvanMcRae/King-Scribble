@@ -39,10 +39,9 @@ public class LevelSelectManager : MonoBehaviour
         // Try to unlock all other buttons
         for (int i = 0; i < buttons.Count; i++)
         {
-            int ind = GameSaver.currData.unlockedScenes.IndexOf(sceneNames[i]);
-            if (ind != -1)
+            if (GameSaver.GetScene(sceneNames[i]) != null)
             {
-                buttons[ind].GetComponent<LevelSelectButton>().SetButtonActive(true);
+                buttons[i].GetComponent<LevelSelectButton>().SetButtonActive(true);
             }
         }
 
@@ -85,11 +84,6 @@ public class LevelSelectManager : MonoBehaviour
 
             if (GameSaver.currData.scene != sceneName)
             {
-                // TODO this is a hack to wipe old checkpoint data!!!
-                // We should instead keep per-level checkpoint information so you 
-                // get sent to the correct spot even if you visit an earlier level.
-                // Can't do this yet because URCAD and probably no one will run into this
-                GameSaver.currData.quitWhileClearing = true;
                 GameSaver.currData.scene = sceneName;
                 GameSaver.instance.ForceSave();
             }

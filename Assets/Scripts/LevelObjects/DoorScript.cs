@@ -37,12 +37,7 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
             }
             else
             {
-                if (!GameSaver.currData.unlockedScenes.Contains(scene))
-                {
-                    GameSaver.currData.unlockedScenes.Add(scene);
-                    GameSaver.instance.SaveGame();
-                }
-
+                GameSaver.instance.SaveGame();
                 if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
                 StartCoroutine(LoadNextScene());
             }

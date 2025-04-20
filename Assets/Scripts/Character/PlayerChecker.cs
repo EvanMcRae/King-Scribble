@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cinemachine;
+using System.Linq;
 
 public class PlayerChecker : MonoBehaviour
 {
@@ -31,9 +32,14 @@ public class PlayerChecker : MonoBehaviour
             if (GameSaver.loading && !GameSaver.currData.emptySave)
             {
                 GameSaver.currData.player.SetValues(player);
+                
                 if (GameSaver.currData.quitWhileClearing)
                 {
                     vars.SetSpawnPos(transform.position);
+                }
+                else
+                {
+                    vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
                 }
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
