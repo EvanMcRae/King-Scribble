@@ -16,7 +16,7 @@ public class VideoEvent : MonoBehaviour
 
     void EndReached(VideoPlayer vp)
     {
-        GameSaver.currData.unlockedScenes.Add(scene);
+        GameSaver.currData.scenes.Add(new SceneSerialization(scene, Vector3.zero));
         SceneManager.LoadScene(scene);
     }
 }

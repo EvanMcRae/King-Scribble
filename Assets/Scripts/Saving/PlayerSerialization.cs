@@ -1,16 +1,15 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class PlayerSerialization
 {
-    public Vector3Serialization spawnpoint;
     public Inventory inventory;
     public ToolType currentTool;
 
     public PlayerSerialization(PlayerVars player)
     {
-        spawnpoint = new Vector3Serialization(player.GetSpawnPos());
         inventory = player.lastSavedInventory;
         currentTool = player.cur_tool;
     }
@@ -20,7 +19,6 @@ public class PlayerSerialization
         PlayerVars player = playerObj.GetComponent<PlayerVars>();
         player.lastSavedInventory.copy(inventory);
         player.inventory.copy(inventory);
-        player.SetSpawnPos(spawnpoint.GetValue());
         if (player.inventory.hasTool(currentTool))
             DrawManager.instance.SwitchTool(currentTool);
     }
@@ -41,5 +39,20 @@ public class Vector3Serialization
     public Vector3 GetValue()
     {
         return new Vector3(x, y, z);
+    }
+}
+
+[Serializable]
+public class SceneSerialization
+{
+    // TODO extend with other scene data
+    public string name;
+    public Vector3Serialization spawnpoint;
+    public List<string> unlockPoints;
+
+    public SceneSerialization(string sceneName, Vector3 spawnPos)
+    {
+        name = sceneName;
+        spawnpoint = new Vector3Serialization(spawnPos);
     }
 }

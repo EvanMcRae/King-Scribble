@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameSaver : MonoBehaviour
 {
@@ -37,7 +38,12 @@ public class GameSaver : MonoBehaviour
         if (!string.IsNullOrEmpty(dataToLoad))
         {
             SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
-            if (!data.unlockedScenes.Contains(data.scene))
+            // Failsafe
+            try
+            {
+                SceneSerialization s = data.scenes.First(s => s.name == data.scene);
+            }
+            catch (Exception)
             {
                 data.scene = "IntroAnimatic";
                 ForceSave();
@@ -79,7 +85,20 @@ public class GameSaver : MonoBehaviour
                 data.scene = SceneManager.GetActiveScene().name;
                 data.quitWhileClearing = false;
             }
-            
+
+            SceneSerialization s;
+            try
+            {
+                s = data.scenes.First(s => s.name == data.scene);
+                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            }
+            catch (Exception)
+            {
+                s = new SceneSerialization(data.scene, PlayerVars.instance.GetSpawnPos());
+                data.scenes.Add(s);
+                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            }
+
             var dataToSave = JsonUtility.ToJson(data, true);
             saveSystem.SaveData(dataToSave);
         }
@@ -116,7 +135,7 @@ public class GameSaver : MonoBehaviour
         public bool emptySave = false, quitWhileClearing = false;
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
-        public List<string> unlockedScenes = new();
+        public List<SceneSerialization> scenes;
 
         public void SetPlayer(PlayerVars playerObj)
         {
@@ -126,6 +145,7 @@ public class GameSaver : MonoBehaviour
         public static SaveData EmptySave()
         {
             SaveData returnData = new();
+            returnData.scenes = new List<SceneSerialization>();
             returnData.emptySave = true;
             return returnData;
         }
@@ -135,5 +155,18 @@ public class GameSaver : MonoBehaviour
     private void OnApplicationQuit()
     {
         SaveGame();
+    }
+
+    public static SceneSerialization GetScene(string scene)
+    {
+        try
+        {
+            SceneSerialization s = currData.scenes.First(s => s.name == scene);
+            return s;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }
