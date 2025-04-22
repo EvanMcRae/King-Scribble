@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Sprite off, hover, on;
     [SerializeField] private Button button;
     [SerializeField] private Image image;
+    private bool bouncing = false;
 
     private void Awake()
     {
@@ -28,12 +30,33 @@ public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHan
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (button.interactable)
-            image.sprite = hover;
+            StartBouncing();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (button.interactable)
-            image.sprite = on;
+            StopBouncing();
+    }
+
+    public void StartBouncing()
+    {
+        bouncing = true;
+        BounceUp();
+    }
+
+    public void StopBouncing()
+    {
+        bouncing = false;
+    }
+
+    void BounceUp()
+    {
+        transform.DOScale(1.2f, 0.35f).OnComplete(() => { BounceDown(); });
+    }
+
+    void BounceDown()
+    {
+        transform.DOScale(1f, 0.35f).OnComplete(() => { if (bouncing) BounceUp(); });
     }
 }
