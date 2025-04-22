@@ -17,11 +17,17 @@ public class PhysicsButton : MonoBehaviour
     const int NUM_SPRITES = 6;
     public Sprite[] sprites = new Sprite[NUM_SPRITES];
     public SoundPlayer soundPlayer;
+    public GameObject cur_ground; // OPTIONAL - current platform/ground object that the button is placed on
     
     // Start is called before the first frame update
     void Start()
     {
         Physics2D.IgnoreCollision(_base.GetComponent<Collider2D>(), _top.GetComponent<Collider2D>());
+        if (cur_ground) 
+        {
+            Physics2D.IgnoreCollision(_top.GetComponent<Collider2D>(), cur_ground.GetComponent<Collider2D>(), false);
+            Physics2D.IgnoreCollision(_base.GetComponent<Collider2D>(), cur_ground.GetComponent<Collider2D>());
+        }
         _top.GetComponent<Rigidbody2D>().mass = req_weight;
         maxHeight = _top.localPosition.y;
         _top.GetComponent<SpriteRenderer>().sprite = sprites[b_color];
