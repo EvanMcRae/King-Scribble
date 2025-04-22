@@ -14,6 +14,7 @@ public class GameSaver : MonoBehaviour
     public static PlayerSerialization player;
 
     public static SaveData currData = SaveData.EmptySave();
+    public static List<Sticker.StickerType> tempStickers = new();
 
     public static Action StartingSave;
     public static Action<SaveData> loadedNewData;
@@ -136,6 +137,7 @@ public class GameSaver : MonoBehaviour
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
         public List<SceneSerialization> scenes;
+        public List<Sticker.StickerType> stickers;
 
         public void SetPlayer(PlayerVars playerObj)
         {
@@ -145,7 +147,8 @@ public class GameSaver : MonoBehaviour
         public static SaveData EmptySave()
         {
             SaveData returnData = new();
-            returnData.scenes = new List<SceneSerialization>();
+            returnData.scenes = new();
+            returnData.stickers = new();
             returnData.emptySave = true;
             return returnData;
         }
@@ -168,5 +171,10 @@ public class GameSaver : MonoBehaviour
         {
             return null;
         }
+    }
+
+    public static void SaveStickers()
+    {
+        currData.stickers = new(tempStickers);
     }
 }

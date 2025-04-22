@@ -37,8 +37,9 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
             }
             else
             {
+                GameSaver.SaveStickers();
+                if (keepTools) PlayerVars.instance.SaveInventory();
                 GameSaver.instance.SaveGame();
-                if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
                 StartCoroutine(LoadNextScene());
             }
             

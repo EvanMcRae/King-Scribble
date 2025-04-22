@@ -32,6 +32,7 @@ public class Checkpoint : MonoBehaviour
         PlayerVars.instance.MaxDoodleFuel();
         PlayerVars.instance.SetSpawnPos(transform.position);
         PlayerVars.instance.SaveInventory();
+        GameSaver.SaveStickers();
         GameSaver.instance.SaveGame();
         has_triggered = true;
     }
