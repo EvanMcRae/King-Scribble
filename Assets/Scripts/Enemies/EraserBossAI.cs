@@ -41,10 +41,10 @@ public class EraserBossAI : MonoBehaviour
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
     private float KSStunTime = 2.0f;
     private bool isErasingLine = false; // booleans for states that are not independent enough for the state machine
-    private bool isTweening = false;
-    private bool isRotated = false;
-    private bool isKSHit = false;
-    private bool isSlamHit = false;
+    private bool isTweening = false; // whether EB is in a tweening state
+    private bool isRotated = false; // assists with EB's animations
+    private bool isKSHit = false; // true when KS has been hit in general
+    private bool isSlamHit = false; // true when KS has been hit by a slam
 
     private LineRenderer closestLine = null; // For searching
     private bool closestLineFound = false;
@@ -63,7 +63,7 @@ public class EraserBossAI : MonoBehaviour
         disable = false;
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
 
-        foreach (CapsuleCollider2D col in GetComponents<CapsuleCollider2D>()) // find EB's physics-based collider
+        foreach (CapsuleCollider2D col in GetComponents<CapsuleCollider2D>()) // find EB's trigger collider (used for collision detection)
         {
             if (!col.isTrigger)
             {
@@ -166,6 +166,13 @@ public class EraserBossAI : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {   
+        Debug.Log(other);
+        
+        if(state == State.Dizzied) {
+            // is vulnerable
+
+        }
+
         if(!isKSHit) {
             if (other == KSCollider) { // Deplete health from KS
                 Debug.Log("KS DETECTED");
