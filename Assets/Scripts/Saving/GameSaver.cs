@@ -136,6 +136,7 @@ public class GameSaver : MonoBehaviour
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
         public List<SceneSerialization> scenes;
+        public List<Sticker.StickerType> stickers;
 
         public void SetPlayer(PlayerVars playerObj)
         {
@@ -145,7 +146,8 @@ public class GameSaver : MonoBehaviour
         public static SaveData EmptySave()
         {
             SaveData returnData = new();
-            returnData.scenes = new List<SceneSerialization>();
+            returnData.scenes = new();
+            returnData.stickers = new();
             returnData.emptySave = true;
             return returnData;
         }
