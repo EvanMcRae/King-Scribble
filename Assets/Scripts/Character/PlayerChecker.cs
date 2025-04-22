@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
 using Cinemachine;
+using System.Linq;
 
 public class PlayerChecker : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class PlayerChecker : MonoBehaviour
     public static PlayerChecker instance;
     public static bool firstSpawned = false;
     public Inventory defaultInventory = new();
+    public ToolType defaultTool = ToolType.None;
 
     // Use this for initialization
     void Awake()
@@ -32,9 +32,14 @@ public class PlayerChecker : MonoBehaviour
             if (GameSaver.loading && !GameSaver.currData.emptySave)
             {
                 GameSaver.currData.player.SetValues(player);
+                
                 if (GameSaver.currData.quitWhileClearing)
                 {
                     vars.SetSpawnPos(transform.position);
+                }
+                else
+                {
+                    vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
                 }
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
@@ -43,6 +48,7 @@ public class PlayerChecker : MonoBehaviour
             {
                 vars.SetSpawnPos(transform.position);
                 vars.inventory.copy(defaultInventory);
+                vars.cur_tool = defaultTool;
                 vars.SaveInventory();
             }
 

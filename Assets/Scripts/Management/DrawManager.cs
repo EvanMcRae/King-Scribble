@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public enum ToolType
@@ -42,11 +40,8 @@ public class DrawManager : MonoBehaviour
     public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
 
     public Material fillMat; // The material to fill pen objects with (temporary)
-    public Sprite fillTexture; // The texture to fill pen objects with (temporary)
+    public List<Sprite> fillTextures = new(); // The textures to fill pen objects with (temporary)
     public Color fillColor; // The color to fill pen objects with (temporary)
-    private MaterialPropertyBlock fillMatBlock; // Material property overrides for pen fill (temporary)
-
-    private float scrollThreshold;
 
     [SerializeField] private List<GameObject> submeters;
 
@@ -65,20 +60,22 @@ public class DrawManager : MonoBehaviour
     {
         instance = this;
 
-        SetCursor(PlayerVars.instance.cur_tool);
+        if (!ToolIndicatorCursorHandler.inside)
+        {
+            SetCursor(PlayerVars.instance.cur_tool);
+        }
         LoadSubmeter(PlayerVars.instance.cur_tool);
-
-        fillMatBlock = new MaterialPropertyBlock();
-        fillMatBlock.SetTexture("_MainTex", fillTexture.texture);
-        fillMatBlock.SetColor("_Color", fillColor);
     }
 
     void LoadSubmeter(ToolType tool)
     {
-        // TODO fancier animation here or something, for now this will have to do :(
-        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = false;
-        activeSubmeter = tool;
-        submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = true;
+        if (submeters[(int)activeSubmeter] != null)
+        {
+            // TODO fancier animation here or something, for now this will have to do :(
+            submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = false;
+            activeSubmeter = tool;
+            submeters[(int)activeSubmeter].GetComponent<Canvas>().enabled = true;
+        }
     }
     
     // Update is called once per frame
@@ -144,37 +141,42 @@ public class DrawManager : MonoBehaviour
 
         if (GameManager.paused) return;
 
-        // [1] key pressed - switch to pencil
-        if (Input.GetKeyDown("1") && PlayerVars.instance.inventory.hasTool(ToolType.Pencil) && PlayerVars.instance.cur_tool != ToolType.Pencil)
+        // Tool selection
+        int count = PlayerVars.instance.inventory.toolUnlocks.Count;
+        if (count > 0)
         {
-            LoadSubmeter(ToolType.Pencil);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Pencil;
-            Cursor.SetCursor(pencilCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
-        }
+            // Tool switching
+            if (Input.GetKeyDown("1"))
+            {
+                SwitchTool(0);
+            }
+            if (Input.GetKeyDown("2"))
+            {
+                SwitchTool(1);
+            }
+            if (Input.GetKeyDown("3"))
+            {
+                SwitchTool(2);
+            }
 
-        // [2] key pressed - switch to pen
-        if (Input.GetKeyDown("2") && PlayerVars.instance.inventory.hasTool(ToolType.Pen) && PlayerVars.instance.cur_tool != ToolType.Pen)
-        {
-            LoadSubmeter(ToolType.Pen);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Pen;
-            Cursor.SetCursor(penCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
-        }
+            // Tool scrolling
+            float scrollDelta;
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                scrollDelta = Input.mouseScrollDelta.x;
+            else
+                scrollDelta = Input.mouseScrollDelta.y;
 
-        // [3] key pressed - switch to eraser
-        if (Input.GetKeyDown("3") && PlayerVars.instance.inventory.hasTool(ToolType.Eraser) && PlayerVars.instance.cur_tool != ToolType.Eraser)
-        { 
-            LoadSubmeter(ToolType.Eraser);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-				EndDraw();
-			PlayerVars.instance.cur_tool = ToolType.Eraser;
-            Cursor.SetCursor(eraserCursor, Vector2.zero, CursorMode.ForceSoftware);
-            ToolIndicator.instance.UpdateMenu(PlayerVars.instance.cur_tool);
+            int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
+            if (scrollDelta >= 0.1f)
+            {
+                index = (index - 1 + count) % count;
+                SwitchTool(index);
+            }
+            else if (scrollDelta <= -0.1f)
+            {
+                index = (index + 1 + count) % count;
+                SwitchTool(index);
+            }
         }
     }
 
@@ -197,7 +199,31 @@ public class DrawManager : MonoBehaviour
             beganDraw = false;
             return;
         }
-
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            beganDraw = false;
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            return;
+        }
+        // If drawing with the pencil, and we overlap the NoDraw-Pencil layer (12), don't draw
+        layerMask = 1 << 12;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil && hit.collider != null)
+        {
+            beganDraw = false;
+            return;
+        }
+        // If drawing with the pen, and we overlap the NoDraw-Pen layer (11), don't draw
+        layerMask = 1 << 11;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pen && hit.collider != null)
+        {
+            beganDraw = false;
+            return;
+        }
 		isDrawing = true; // the user is drawing
         if (PlayerVars.instance.cur_tool == ToolType.Pencil) {
             if(PencilLinesFolder != null) {
@@ -215,6 +241,8 @@ public class DrawManager : MonoBehaviour
             currentLine.collisionsActive = false;
             currentLine.GetComponent<LineRenderer>().startColor = penColor_start;
             currentLine.GetComponent<LineRenderer>().endColor = penColor_start;
+            currentLine.startPoint.enabled = true;
+            currentLine.startPoint.color = penColor_start;
         }
         soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }
@@ -236,16 +264,9 @@ public class DrawManager : MonoBehaviour
 
     private void Draw(Vector2 mouse_pos)
     {
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
-        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
-        if (hit.collider != null) {
-            EndDraw();
-            drawCooldown = DRAW_CD;
-            return;
-        }
-		if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-		{
+        // Handle eraser first so it's exempt from overlap checks
+        if (PlayerVars.instance.cur_tool == ToolType.Eraser)
+        {
             mouse_pos += new Vector2(0.5f, -0.5f);
             SoundPauseCheck(mouse_pos);
             if (PlayerVars.instance.eraserFuelLeft() > 0)
@@ -261,10 +282,47 @@ public class DrawManager : MonoBehaviour
                     lastMousePos = mouse_pos;
                 }
             }
-                
+
             else EndDraw();
-			return;
-		}
+            return;
+        }
+
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null) {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit.collider != null)
+        {
+            EndDraw();
+            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                PlayerVars.instance.AddPenFuel(10);
+            else
+                drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = 1 << 12;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pencil && hit.collider != null)
+        {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        layerMask = 1 << 11;
+        hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (PlayerVars.instance.cur_tool == ToolType.Pen && hit.collider != null)
+        {
+            EndDraw();
+            drawCooldown = DRAW_CD;
+            return;
+        }
+        if (currentLine == null) return; // Why would this even be needed
 
         if (currentLine.canDraw || !currentLine.hasDrawn) { // If the line can draw, create a new point at the mouse's current position
             currentLine.SetPosition(mouse_pos);
@@ -313,7 +371,14 @@ public class DrawManager : MonoBehaviour
                     }
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
-                    currentLine.SetColor(penColor_fin); // Set the color of the line 
+                    currentLine.SetColor(penColor_fin); // Set the color of the line
+
+                    // Create material for pen object polygon mesh (texture selected by object area)
+                    int fillTexture = Mathf.FloorToInt(Mathf.Min(Line.MAX_WEIGHT, currentLine.area) / Line.MAX_WEIGHT * (fillTextures.Count - 1));
+                    MaterialPropertyBlock fillMatBlock = new MaterialPropertyBlock();
+                    fillMatBlock.SetColor("_Color", fillColor);
+                    fillMatBlock.SetTexture("_MainTex", fillTextures[fillTexture].texture);
+
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
@@ -380,6 +445,31 @@ public class DrawManager : MonoBehaviour
         line.GetComponent<LineRenderer>().startColor = pencilColor_start;
         line.GetComponent<LineRenderer>().endColor = pencilColor_end;
         line.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
+    }
+
+    public void SwitchTool(int index)
+    {
+        if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
+        {
+            ToolType newTool = PlayerVars.instance.inventory.toolUnlocks[index];
+            SwitchTool(newTool);
+        }
+    }
+
+    public void SwitchTool(ToolType newTool)
+    {
+        if (PlayerVars.instance.cur_tool != newTool)
+        {
+            LoadSubmeter(newTool);
+            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+                EndDraw();
+            if (!ToolIndicatorCursorHandler.inside)
+            {
+                SetCursor(newTool);
+            }
+            ToolIndicator.instance.UpdateMenu(newTool);
+            PlayerVars.instance.cur_tool = newTool;
+        }
     }
 }
 

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +28,7 @@ public class ScreenWipe : MonoBehaviour
     {
         soundPlayer.PlaySound("Level.WipeIn");
         over = false;
-        ScreenBlocker.raycastTarget = true;
+        ScreenBlocker.gameObject.SetActive(true);
         GetComponent<Animator>().SetTrigger("WipeIn");
     }
 
@@ -48,6 +46,6 @@ public class ScreenWipe : MonoBehaviour
     {
         over = true;
         PostUnwipe?.Invoke();
-        ScreenBlocker.raycastTarget = false;
+        ScreenBlocker.gameObject.SetActive(false);
     }
 }

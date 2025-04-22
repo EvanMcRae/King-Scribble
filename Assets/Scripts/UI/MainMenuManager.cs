@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-using TMPro;
-using System.IO;
 
 //holds functions of the main menu and sub menus
 public class MainMenuManager : MonoBehaviour
@@ -60,13 +56,36 @@ public class MainMenuManager : MonoBehaviour
         playing = false;
         if (SaveSystem.instance.SaveFileExists())
         {
-            GameSaver.instance.LoadGame();
+            SceneManager.LoadScene("LevelSelect");
         }
         else
         {
             PlayerChecker.firstSpawned = false;
             SceneManager.LoadScene("IntroAnimatic");
         }
+        
+    }
+
+    public void EnterLevel(string Level)
+    {
+        if (playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= PlayGame;
+        SettingsManager.SaveSettings();
+        playing = true;
+        ScreenWipe.instance.WipeIn();
+        ScreenWipe.PostWipe += () =>
+        {
+            firstopen = false;
+            playing = false;
+            PlayerChecker.firstSpawned = false;
+            SceneManager.LoadScene(Level);
+            Utils.SetExclusiveAction(ref ScreenWipe.PostWipe, null);
+        };
     }
 
     public void Instructions()

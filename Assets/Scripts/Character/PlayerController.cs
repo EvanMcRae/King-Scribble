@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 slopeNormalPerp;
     private bool isOnSlope, canWalkOnSlope;
     public PhysicsMaterial2D slippery, friction;
-    private float moveX;
+    private float moveX, moveY;
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
     public float levelZoom;
     private bool isSprintMoving = false;
@@ -49,14 +49,18 @@ public class PlayerController : MonoBehaviour
     private bool holdingJump;
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck;
+    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck, wallCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
     private Vector3 lastPosition;
     [SerializeField] private Transform checkPos;
     [SerializeField] private SoundPlayer soundPlayer;
-    public bool softFall = true;
+    public bool softFall = true, isStuck = false;
+    private bool canJump = true;
+    public bool frictionOverride = false;
+    private float cheatSpeed = 0.0f;
+    public const int SIZE_STAGES = 4;
 
     // Start is called before the first frame update
     void Start()
@@ -102,9 +106,14 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
 
-        if (vars.isDead || !GameManager.canMove) return;
+        if (vars.isDead || !GameManager.canMove)
+        {
+            anim.SetBool("isMoving", false);
+            return;
+        }
 
         moveX = Input.GetAxisRaw("Horizontal");
+        moveY = Input.GetAxisRaw("Vertical");
         anim.SetBool("isMoving", moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f);
 
         Jump();
@@ -140,6 +149,23 @@ public class PlayerController : MonoBehaviour
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
         }
+
+        // TODO: TEMPORARY CHEAT MODE KEYBIND
+        if (Input.GetKeyDown(KeyCode.Backslash))
+        {
+            PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
+            Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
+            rb.isKinematic = PlayerVars.instance.cheatMode;
+            mainBody.GetComponent<PolygonCollider2D>().enabled = !PlayerVars.instance.cheatMode;
+        }
+        if (PlayerVars.instance.cheatMode)
+        {
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                cheatSpeed += Input.mouseScrollDelta.x;
+            else
+                cheatSpeed += Input.mouseScrollDelta.y;
+            if (cheatSpeed < 0) cheatSpeed = 0;
+        }
     }
 
     public void KillTweens()
@@ -160,13 +186,13 @@ public class PlayerController : MonoBehaviour
         // calculate speed
         calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f);
 
-        // calculate target velocity
-        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
-
         // check for ground/roof
         GroundCheck();
         // TODO disabled for now, feels bad
-        // RoofCheck(); 
+        // RoofCheck();
+
+        // calculate target velocity
+        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
 
         // sloped movement
         SlopeCheck();
@@ -176,17 +202,25 @@ public class PlayerController : MonoBehaviour
         }
 
         // apply velocity, dampening between current and target
-        if (moveX == 0.0 && rb.velocity.x != 0.0f)
+        if (!PlayerVars.instance.cheatMode)
         {
-            if (canWalkOnSlope || !isOnSlope)
+            if (moveX == 0.0 && rb.velocity.x != 0.0f)
             {
-                mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+                if (canWalkOnSlope || !isOnSlope)
+                {
+                    mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+                }
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
             }
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
+            else
+            {
+                if (!frictionOverride) mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
+            }
         }
         else
         {
-            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+            targetVelocity.Set(vars.isDead ? 0 : moveX * (calculatedSpeed + cheatSpeed), moveY * (calculatedSpeed + cheatSpeed), 0.0f);
             rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
         }
 
@@ -273,7 +307,7 @@ public class PlayerController : MonoBehaviour
         float coyoteTimeThreshold = 0.1f;
         bool coyoteTime = lastOnLand < 0.2f && transform.position.y < lastLandHeight - coyoteTimeThreshold;
 
-        if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping)
+        if (timeSinceJumpPressed < 0.2f && (isGrounded || coyoteTime) && !isRoofed && !isJumping && canJump)
         {
             anim.SetTrigger("justJumped");
             soundPlayer.PlaySound("Player.Jump");
@@ -334,7 +368,31 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isLanding", false);
             anim.ResetTrigger("justJumped");
             lastLandHeight = transform.position.y;
+            canJump = true;
         }
+
+        // Attempting to fix getting stuck against slopes
+        if (mainBody.GetComponent<PolygonCollider2D>().IsTouchingLayers(whatIsGround))
+        {
+            List<ContactPoint2D> contactPoint2Ds = new();
+            mainBody.GetComponent<PolygonCollider2D>().GetContacts(contactPoint2Ds);
+            bool onground = false;
+            foreach (ContactPoint2D point in contactPoint2Ds)
+            {
+                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.125f * transform.localScale.y), Color.red);
+                if (point.point.y < transform.position.y - 0.125f * transform.localScale.y)
+                {
+                    onground = true;
+                }
+            }
+            isStuck = false;
+            if (!onground && !isOnSlope)
+            {
+                isStuck = true;
+                moveX *= 0.5f;
+            }
+        }
+
         else if (rb.velocity.y < 0)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
@@ -368,18 +426,21 @@ public class PlayerController : MonoBehaviour
 
     void SlopeCheckHorizontal(Vector2 checkPos)
     {
-        RaycastHit2D slopeHitFront = Physics2D.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround);
-        RaycastHit2D slopeHitBack = Physics2D.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround);
+        bool slopeHitFront = Physics.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround, QueryTriggerInteraction.Ignore);
+        bool slopeHitBack = Physics.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround, QueryTriggerInteraction.Ignore);
 
-        if (slopeHitFront)
+        RaycastHit2D slopeHitFrontHit = Physics2D.Raycast(checkPos, transform.right, slopeCheckDistance, whatIsGround);
+        RaycastHit2D slopeHitBackHit = Physics2D.Raycast(checkPos, -transform.right, slopeCheckDistance, whatIsGround);
+
+        if (slopeHitFront && slopeHitFrontHit)
         {
             isOnSlope = true;
-            slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
+            slopeSideAngle = Vector2.Angle(slopeHitFrontHit.normal, Vector2.up);
         }
-        else if (slopeHitBack)
+        else if (slopeHitBack && slopeHitBackHit)
         {
             isOnSlope = true;
-            slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
+            slopeSideAngle = Vector2.Angle(slopeHitBackHit.normal, Vector2.up);
         }
         else
         {
@@ -415,11 +476,20 @@ public class PlayerController : MonoBehaviour
     
     public void ResizePlayer(float fuel_left)
     {
-        mainBody.transform.localScale = Vector3.one * fuel_left;
+        mainBody.transform.localScale = Vector3.one * Mathf.Ceil(fuel_left * SIZE_STAGES)/SIZE_STAGES;
     }
 
     public bool OverlapsPosition(Vector2 position)
     {
         return mainBody.GetComponent<PolygonCollider2D>().OverlapPoint(position);
+    }
+
+    public void SetFriction(bool active)
+    {
+        frictionOverride = active;
+        if (active)
+        {
+            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+        }
     }
 }

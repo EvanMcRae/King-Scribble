@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using UnityEngine.Rendering.Universal;
+
 public class GameManager : MonoBehaviour
 {
     public static bool resetting = false, paused = false, canMove = true;
@@ -19,14 +19,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        // Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!paused && Input.GetButtonDown("Reset"))
+        if (!paused && Input.GetButtonDown("Reset") && ScreenWipe.over && !resetting && !ChangeScene.changingScene)
         {
-            if (!resetting && !ChangeScene.changingScene) Reset();
+            Reset();
         }
 
         if (PlayerVars.instance.transform.position.y < VOID_DEATH && !resetting)
@@ -71,14 +72,19 @@ public class GameManager : MonoBehaviour
     {
         resetting = true;
         ScreenWipe.instance.WipeIn();
-        ScreenWipe.PostUnwipe += () => { resetting = false; };
         yield return new WaitForSecondsRealtime(1f);
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();
         ResetAction.Invoke();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
+        Light2D[] Lights = FindObjectsOfType<Light2D>();
+        foreach (Light2D light in Lights)
+        {
+            Destroy(light?.gameObject);
+        }
         SceneHelper.LoadScene(SceneManager.GetActiveScene().name);
         canMove = true;
+        resetting = false;
     }
 }

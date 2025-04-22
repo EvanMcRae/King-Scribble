@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,25 +5,26 @@ using UnityEngine;
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public class Line : MonoBehaviour
 {
-    [SerializeField] private GameObject linePoint;
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
     public const float MASS_COEFF = 2f;
+    public const float MAX_WEIGHT = 100f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
-    public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
+    public const float LOOP_ALLOWANCE = 0.3f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
+    public float area = 0;
+    public SpriteRenderer startPoint;
 
     Vector2[] ConvertArray(Vector3[] v3){
         Vector2 [] v2 = new Vector2[v3.Length];
         for(int i = 0; i <  v3.Length; i++){
-            Vector3 tempV3 = v3[i];
-            v2[i] = (Vector2)tempV3;
+            v2[i] = v3[i];
         }
         return v2;
     }
@@ -139,7 +139,7 @@ public class Line : MonoBehaviour
         Vector3[] points = new Vector3[GetPointsCount()]; 
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
         // Note: This is ugly. I know this is ugly. It works. (from https://stackoverflow.com/questions/2034540/calculating-area-of-irregular-polygon-in-c-sharp)
-        var area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
+        area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
         rigidBody.mass = area * MASS_COEFF;
     }
 
@@ -195,7 +195,11 @@ public class Line : MonoBehaviour
         PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
         polyCollider.SetPath(0, points2);
         List<Collider2D> results = new();
-        ContactFilter2D def = new();
+        ContactFilter2D def = new()
+        {
+            useLayerMask = true,
+            layerMask =~ LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
+        };
         if (polyCollider.OverlapCollider(def, results) != 0)
         {
             Destroy(gameObject);
@@ -228,6 +232,8 @@ public class Line : MonoBehaviour
         }
         polyMesh.uv = uvs;
         polyFilter.mesh = polyMesh;
+
+        startPoint.enabled = false;
     }
 }
 

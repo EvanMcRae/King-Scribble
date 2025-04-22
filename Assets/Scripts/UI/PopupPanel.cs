@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PopupPanel : MonoBehaviour
@@ -87,7 +83,10 @@ public class PopupPanel : MonoBehaviour
         PreviousButton = EventSystem.current.currentSelectedGameObject;
         EventSystem.current.SetSelectedGameObject(PrimaryButton);
         if (darkensScreen)
+        {
+            ScreenDarkener.gameObject.SetActive(true);
             ScreenDarkener.raycastTarget = true;
+        }
     }
 
     public void Close()
@@ -110,6 +109,7 @@ public class PopupPanel : MonoBehaviour
         if (anim.GetFloat("Speed") < 0)
         {
             gameObject.SetActive(false);
+            ScreenDarkener.gameObject.SetActive(false);
             anim.SetFloat("Speed", 0);
             open = false;
         }

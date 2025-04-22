@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal;
 
 public class ChangeScene : MonoBehaviour
 {
@@ -30,6 +29,11 @@ public class ChangeScene : MonoBehaviour
         PlayerController.instance.KillTweens();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
+        Light2D[] Lights = FindObjectsOfType<Light2D>();
+        foreach (Light2D light in Lights)
+        {
+            Destroy(light?.gameObject);
+        }
         changingScene = false;
         nextScene = "";
         SceneHelper.LoadScene(scene);

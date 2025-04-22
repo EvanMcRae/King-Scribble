@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameSaver : MonoBehaviour
 {
@@ -21,6 +23,33 @@ public class GameSaver : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(this);
+        Refresh();
+    }
+
+    public void WipeSave()
+    {
+        saveSystem.DeleteSave();
+        currData = SaveData.EmptySave();
+    }
+
+    public void Refresh()
+    {
+        string dataToLoad = saveSystem.LoadData();
+        if (!string.IsNullOrEmpty(dataToLoad))
+        {
+            SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
+            currData = data;
+            // Failsafe
+            try
+            {
+                SceneSerialization s = data.scenes.First(s => s.name == data.scene);
+            }
+            catch (Exception)
+            {
+                currData.scene = "IntroAnimatic";
+                ForceSave();
+            }
+        }
     }
 
     public void Clear()
@@ -30,6 +59,12 @@ public class GameSaver : MonoBehaviour
             Destroy(PlayerVars.instance.gameObject);
             PlayerVars.instance = null;
         }
+    }
+
+    public void ForceSave()
+    {
+        var dataToSave = JsonUtility.ToJson(currData, true);
+        saveSystem.SaveData(dataToSave);
     }
 
     public void SaveGame()
@@ -50,7 +85,20 @@ public class GameSaver : MonoBehaviour
                 data.scene = SceneManager.GetActiveScene().name;
                 data.quitWhileClearing = false;
             }
-            
+
+            SceneSerialization s;
+            try
+            {
+                s = data.scenes.First(s => s.name == data.scene);
+                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            }
+            catch (Exception)
+            {
+                s = new SceneSerialization(data.scene, PlayerVars.instance.GetSpawnPos());
+                data.scenes.Add(s);
+                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            }
+
             var dataToSave = JsonUtility.ToJson(data, true);
             saveSystem.SaveData(dataToSave);
         }
@@ -87,7 +135,7 @@ public class GameSaver : MonoBehaviour
         public bool emptySave = false, quitWhileClearing = false;
         public PlayerSerialization player;
         public string scene = "IntroAnimatic";
-        // TODO add unlocked levels to this
+        public List<SceneSerialization> scenes;
 
         public void SetPlayer(PlayerVars playerObj)
         {
@@ -97,6 +145,7 @@ public class GameSaver : MonoBehaviour
         public static SaveData EmptySave()
         {
             SaveData returnData = new();
+            returnData.scenes = new List<SceneSerialization>();
             returnData.emptySave = true;
             return returnData;
         }
@@ -106,5 +155,18 @@ public class GameSaver : MonoBehaviour
     private void OnApplicationQuit()
     {
         SaveGame();
+    }
+
+    public static SceneSerialization GetScene(string scene)
+    {
+        try
+        {
+            SceneSerialization s = currData.scenes.First(s => s.name == scene);
+            return s;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
     }
 }

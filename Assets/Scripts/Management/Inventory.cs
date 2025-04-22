@@ -17,7 +17,8 @@ public class Inventory
     }
     public void addTool(ToolType tool) // Adds a given tool to the player's tool inventory
     {
-        toolUnlocks.Add(tool);
+        if (!toolUnlocks.Contains(tool))
+            toolUnlocks.Add(tool);
     }
     public void copy(Inventory other)
     {

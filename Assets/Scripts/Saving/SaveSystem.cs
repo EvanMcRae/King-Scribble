@@ -26,6 +26,12 @@ public class SaveSystem : MonoBehaviour
         return data;
     }
 
+    public void DeleteSave()
+    {
+        File.Delete(Path.Combine(Application.persistentDataPath, fileName));
+        Debug.Log("Successfully deleted save");
+    }
+
     private static bool WriteToFile(string content)
     {
         var fullPath = Path.Combine(Application.persistentDataPath, fileName);
@@ -51,9 +57,9 @@ public class SaveSystem : MonoBehaviour
             content = File.ReadAllText(fullPath);
             return true;
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Debug.LogError("Error when loading the file " + e.Message);
+            //Debug.LogError("Error when loading the file " + e.Message);
             content = "";
         }
         return false;
