@@ -18,7 +18,7 @@ public class Sticker : Collectible
     public override void OnPickup(Collider2D player)
     {
         if (!deleted)
-            GameSaver.currData.stickers.Add(type);
+            GameSaver.tempStickers.Add(type);
     }
 
     public enum StickerType
