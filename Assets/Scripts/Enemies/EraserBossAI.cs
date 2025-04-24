@@ -9,6 +9,7 @@ public class EraserBossAI : MonoBehaviour
         Searching, // search for a position
         Moving,
         ChargePrep,
+        WindUp, // for animation
         Charging, // for lines
         ChargeCooldown,
         Dizzied,
@@ -38,9 +39,10 @@ public class EraserBossAI : MonoBehaviour
     private GameObject bounds2;
     private Collider2D KSCollider;
     private float timer = 0.0f; // used for cooldowns
-    private float searchTime = 3.0f; // variables ending in "Time" relate to the timer
-    private float slamCooldownTime = 2.0f;
-    private float chargeCooldownTime = 2.0f;
+    private float searchTime = 2.5f; // variables ending in "Time" relate to the timer
+    private float slamCooldownTime = 1.5f;
+    private float chargeCooldownTime = 1.5f;
+    private float chargePrepTime = 1.8f;
     private float slamPrepTime = 2.0f;
     private float dizzyTime = 3.0f;
     private float damageTime = 2.0f;
@@ -103,15 +105,49 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.ChargePrep:
-                anim.Play("EB_WindUp");
+                // Position self in line with the pos(0) and pos(1) if closer
+                Vector3 lineUp = new Vector3(0,0,0);
+                lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
+
+                // if(Vector3.Distance(transform.position, targetLine.GetPosition(0)) > Vector3.Distance(transform.position, targetLine.GetPosition(targetLine.positionCount - 1))) {
+                //     lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
+                // }
+                // else {
+                //     lineUp = (targetLine.GetPosition(targetLine.positionCount - 1) - targetLine.GetPosition(targetLine.positionCount - 2)).normalized;
+                // }
+
+                anim.Play("EB_Idle");
+                if(lineUp.x > 0) {
+                    spriteRenderer.flipX = true;
+                }
+                else {
+                    spriteRenderer.flipX = false;
+                }
                 
-                destination = targetLine.GetPosition(0) + targetLine.transform.position; // position 0 in line renderer
+                destination = targetLine.GetPosition(0) + targetLine.transform.position + (lineUp * 4); // position 0 in line renderer
+                // if(lineUp.x < 0) {
+                    
+                // }
+                // else {
+                //     destination = targetLine.GetPosition(0) + targetLine.transform.position - (lineUp * 4);
+                // }
+                
+                // when destination reached, start windup
                 Hover(destination, baseSpeed); // hover in the average direction of the line
-                if(timer >= slamPrepTime) {
+                if(Vector3.Distance(transform.position, destination) < 0.01) {
+                    timer = 0;
+                    state = State.WindUp;
+                }
+                break;
+
+            case State.WindUp:
+                anim.Play("EB_WindUp");
+                if(timer >= chargePrepTime) {
                     timer = 0;
                     state = State.Charging;
                 }
                 break;
+
             
             case State.Charging:
                 // use the closeset line and...
@@ -123,8 +159,11 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.ChargeCooldown:
-                anim.Play("EB_Idle");
+                anim.Play("EB_Stop");
                 if(timer >= chargeCooldownTime) {
+                    if(spriteRenderer.flipX == true) {
+                        spriteRenderer.flipX = false;
+                    }
                     timer = 0;
                     state = State.Searching;
                 }
@@ -195,23 +234,25 @@ public class EraserBossAI : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {   
         //Debug.Log(other);
-        if(other.CompareTag("Pen")) { // Get the RigidBody2D and compare its mass 
+        if(other.CompareTag("Pen") && !other.GetComponent<Line>().deleted) { // Get the RigidBody2D and compare its mass 
             GameObject penObj = other.gameObject;
             Rigidbody2D penRB = penObj.GetComponent<Rigidbody2D>();
             if(penRB.mass >= minDamageMass) { // Pen obj is big enough
                 if(state == State.Charging) {
+                    Debug.Log("DIZZIED");
+                    timer = 0;
                     state = State.Dizzied;
                     StopCoroutine(eraseLineSequence); // stop the erasing coroutine
                     isErasingLine = false;
-                    timer = 0;
-                    // play dizzy animation
                     Destroy(other.gameObject); // destroy pen object
+                    other.GetComponent<Line>().deleted = true;
                 }
                 else if(state == State.Dizzied) {
                     // play damaged animation
                     hitpoints--;
                     Debug.Log("HP at " + hitpoints);
                     Destroy(other.gameObject); // destroy pen object (should I?)
+                    other.GetComponent<Line>().deleted = true;
                     timer = 0;
                     if(hitpoints == 0) {
                         state = State.EndScene;
@@ -267,7 +308,7 @@ public class EraserBossAI : MonoBehaviour
             if(tempLine.positionCount > 1) {
                 // for each point in the pencil line find which is the closest
                 for(int i = 0; i < tempLine.positionCount; i++) {
-                    float pointDistance = Vector3.Distance(this.transform.position, tempLine.GetPosition(i));
+                    float pointDistance = Vector3.Distance(transform.position, tempLine.GetPosition(i));
                     if(pointDistance < closestDistance) {
                         closestDistance = pointDistance;
                         closestLine = tempLine;
