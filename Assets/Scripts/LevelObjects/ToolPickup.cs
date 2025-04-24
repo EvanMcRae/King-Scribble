@@ -11,6 +11,6 @@ public class ToolPickup : Collectible
         player.gameObject.transform.root.GetComponent<PlayerVars>().inventory.addTool(type);
         // TODO: pencil replenish pickup?
         //if (type == ToolType.Pencil) PlayerVars.instance.AddDoodleFuel(5000);
-        DrawManager.instance.SwitchTool(type);
+        DrawManager.instance.TrySwitchTool(type);
     }
 }

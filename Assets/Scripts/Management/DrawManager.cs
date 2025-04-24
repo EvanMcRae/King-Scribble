@@ -59,12 +59,7 @@ public class DrawManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        if (!ToolIndicatorCursorHandler.inside)
-        {
-            SetCursor(PlayerVars.instance.cur_tool);
-        }
-        LoadSubmeter(PlayerVars.instance.cur_tool);
+        SwitchTool(PlayerVars.instance.cur_tool);
     }
 
     void LoadSubmeter(ToolType tool)
@@ -452,24 +447,29 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
         {
             ToolType newTool = PlayerVars.instance.inventory.toolUnlocks[index];
+            TrySwitchTool(newTool);
+        }
+    }
+
+    public void TrySwitchTool(ToolType newTool)
+    {
+        if (PlayerVars.instance.cur_tool != newTool)
+        {
             SwitchTool(newTool);
         }
     }
 
     public void SwitchTool(ToolType newTool)
     {
-        if (PlayerVars.instance.cur_tool != newTool)
+        LoadSubmeter(newTool);
+        if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
+            EndDraw();
+        if (!ToolIndicatorCursorHandler.inside)
         {
-            LoadSubmeter(newTool);
-            if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
-                EndDraw();
-            if (!ToolIndicatorCursorHandler.inside)
-            {
-                SetCursor(newTool);
-            }
-            ToolIndicator.instance.UpdateMenu(newTool);
-            PlayerVars.instance.cur_tool = newTool;
+            SetCursor(newTool);
         }
+        ToolIndicator.instance.UpdateMenu(newTool);
+        PlayerVars.instance.cur_tool = newTool;
     }
 }
 
