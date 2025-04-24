@@ -492,4 +492,9 @@ public class PlayerController : MonoBehaviour
             mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
         }
     }
+
+    public void CollectItem()
+    {
+        soundPlayer.PlaySound("Player.Collect");
+    }
 }
