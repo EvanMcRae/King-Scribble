@@ -201,6 +201,9 @@ MonoBehaviour:
   gearSpeed: 30
   isWall: 0
   rigidBody: {fileID: 5189142990169495840}
+  soundPlayer: {fileID: 0}
+  wallSound: {fileID: 11400000, guid: e5de85e69bc9741a19ce6af6509bff31, type: 2}
+  platformSound: {fileID: 0}
 --- !u!61 &6842408900116821876
 BoxCollider2D:
   m_ObjectHideFlags: 0
