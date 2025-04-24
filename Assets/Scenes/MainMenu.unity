@@ -987,6 +987,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!114 &171150012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1294,6 +1295,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!222 &171944676
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2558,6 +2560,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!222 &528220464
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3085,6 +3088,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!114 &637663054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3581,6 +3585,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
+  soundOnPointerEnter: 1
 --- !u!114 &1031600392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4923,6 +4928,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!114 &1899791514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5198,7 +5204,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 47, y: -3}
-  m_SizeDelta: {x: 1628.002, y: 831.503}
+  m_SizeDelta: {x: 1436.6245, y: 733.7568}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2006259625
 MonoBehaviour:
@@ -5402,6 +5408,7 @@ MonoBehaviour:
   soundPlayer: {fileID: 590027104}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
+  soundOnPointerEnter: 1
 --- !u!114 &866220320626758403
 MonoBehaviour:
   m_ObjectHideFlags: 0
