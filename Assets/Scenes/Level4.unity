@@ -2216,7 +2216,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 430826073}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -5038,7 +5038,7 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   soundPlayer: {fileID: 760526363}
-  dispense: {fileID: 11400000, guid: 0481d228e56bc46cc9dcb95e034027f6, type: 2}
+  dispense: {fileID: 11400000, guid: f7beab6214ffd4c0a919424e904ff6b0, type: 2}
 --- !u!212 &748725392
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -7601,6 +7601,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1928466263}
     m_Modifications:
+    - target: {fileID: 6050792395046350892, guid: ed39959966f271243beba78ef44d2eec, type: 3}
+      propertyPath: m_Size.y
+      value: 6.617736
+      objectReference: {fileID: 0}
+    - target: {fileID: 6050792395046350892, guid: ed39959966f271243beba78ef44d2eec, type: 3}
+      propertyPath: m_Offset.y
+      value: -5.451281
+      objectReference: {fileID: 0}
     - target: {fileID: 6847884841082122322, guid: ed39959966f271243beba78ef44d2eec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 93.011604
@@ -8830,7 +8838,7 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   soundPlayer: {fileID: 2071788986}
-  dispense: {fileID: 11400000, guid: 0481d228e56bc46cc9dcb95e034027f6, type: 2}
+  dispense: {fileID: 11400000, guid: f7beab6214ffd4c0a919424e904ff6b0, type: 2}
 --- !u!212 &1218101721
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8939,7 +8947,7 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   soundPlayer: {fileID: 1453467427}
-  dispense: {fileID: 11400000, guid: 0481d228e56bc46cc9dcb95e034027f6, type: 2}
+  dispense: {fileID: 11400000, guid: f7beab6214ffd4c0a919424e904ff6b0, type: 2}
 --- !u!212 &1257650859
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -9064,7 +9072,7 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   soundPlayer: {fileID: 1176317371}
-  dispense: {fileID: 11400000, guid: 0481d228e56bc46cc9dcb95e034027f6, type: 2}
+  dispense: {fileID: 11400000, guid: f7beab6214ffd4c0a919424e904ff6b0, type: 2}
 --- !u!212 &1267282308
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11816,7 +11824,7 @@ MonoBehaviour:
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   - {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   soundPlayer: {fileID: 1411609186}
-  dispense: {fileID: 11400000, guid: 0481d228e56bc46cc9dcb95e034027f6, type: 2}
+  dispense: {fileID: 11400000, guid: f7beab6214ffd4c0a919424e904ff6b0, type: 2}
 --- !u!212 &1728184585
 SpriteRenderer:
   m_ObjectHideFlags: 0
