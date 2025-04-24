@@ -497,4 +497,9 @@ public class PlayerController : MonoBehaviour
     {
         soundPlayer.PlaySound("Player.Collect");
     }
+
+    public void DeathSound()
+    {
+        soundPlayer.PlaySound("Player.Die");
+    }
 }

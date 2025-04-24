@@ -43,7 +43,6 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
                 GameSaver.instance.SaveGame();
                 StartCoroutine(LoadNextScene());
             }
-            
         }
     }
 

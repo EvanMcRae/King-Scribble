@@ -46,6 +46,7 @@ public class PlayerVars : MonoBehaviour
         PlayerController.instance.ResizePlayer(doodleFuelLeft());
         if (curDoodleFuel == 0 && !isDead) {
             isDead = true;
+            PlayerController.instance.DeathSound();
             doodleEvent(doodleFuelLeft());
             GameManager.instance.Reset();
         }
