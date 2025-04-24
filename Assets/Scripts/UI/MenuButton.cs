@@ -11,6 +11,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private Image image;
     public int popupID = 0;
     public bool deselectsOnPointerLeave = false;
+    [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private SoundClip select, press;
+    public bool soundOnPointerEnter = true;
+    private bool noSound = false;
 
     public void OnDeselect(BaseEventData eventData)
     {
@@ -34,7 +38,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         if (popupID == PopupPanel.numPopups)
+        {
+            if (!soundOnPointerEnter)
+                noSound = true;
             EventSystem.current.SetSelectedGameObject(gameObject);
+            noSound = false;
+        }
     }
 
     public void OnPointerMove(PointerEventData eventData)
@@ -57,5 +66,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (selected != null)
             image.sprite = selected;
+        if (!noSound && ((MainMenu && MainMenuManager.firstopen) || !MainMenu))
+            soundPlayer.PlaySound(select);
+    }
+
+    public void OnClick()
+    {
+        soundPlayer.PlaySound(press);
     }
 }

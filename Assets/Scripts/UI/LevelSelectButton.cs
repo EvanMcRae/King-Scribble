@@ -9,6 +9,7 @@ public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHan
     [SerializeField] private Button button;
     [SerializeField] private Image image;
     private bool bouncing = false;
+    [SerializeField] private SoundPlayer soundPlayer;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHan
     public void StartBouncing()
     {
         bouncing = true;
+        soundPlayer.PlaySound("UI.Select");
         BounceUp();
     }
 

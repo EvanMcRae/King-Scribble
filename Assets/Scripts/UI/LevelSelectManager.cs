@@ -29,11 +29,14 @@ public class LevelSelectManager : MonoBehaviour
     public GameObject player;
     public static LevelSelectManager instance;
     public bool goingToMenu = false;
+    public bool firstOpen = false;
     public int currLevel;
     public Tween currTween;
 
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private int sampleCount = 50;
+
+    [SerializeField] private SoundPlayer soundPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -61,6 +64,8 @@ public class LevelSelectManager : MonoBehaviour
         buttons[0].GetComponent<LevelSelectButton>().SetButtonActive(true);
         EventSystem.current.SetSelectedGameObject(buttons[index]);
         SelectLevel(index, true);
+
+        firstOpen = true;
     }
 
     public void Update()
@@ -154,6 +159,8 @@ public class LevelSelectManager : MonoBehaviour
         if (!snap)
         {
             currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear);
+            if (firstOpen)
+                soundPlayer.PlaySound("UI.Press");
         }
         else
             player.transform.position = buttonTransforms[level].position;
