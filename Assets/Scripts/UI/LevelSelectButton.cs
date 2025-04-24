@@ -3,13 +3,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHandler, IPointerExitHandler
+public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHandler, IPointerExitHandler, IDeselectHandler
 {
     [SerializeField] private Sprite off, hover, on;
     [SerializeField] private Button button;
     [SerializeField] private Image image;
     private bool bouncing = false;
     [SerializeField] private SoundPlayer soundPlayer;
+    public bool playedSound = false;
 
     private void Awake()
     {
@@ -60,5 +61,10 @@ public class LevelSelectButton : MonoBehaviour, ISelectHandler, IPointerEnterHan
     void BounceDown()
     {
         transform.DOScale(1f, 0.35f).OnComplete(() => { if (bouncing) BounceUp(); });
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        playedSound = false;
     }
 }

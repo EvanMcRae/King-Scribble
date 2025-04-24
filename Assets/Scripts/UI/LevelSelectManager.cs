@@ -151,7 +151,6 @@ public class LevelSelectManager : MonoBehaviour
 
     public void SelectLevel(int level, bool snap)
     {
-        
         sceneName = sceneNames[level];
         levelName.text = levelNames[level];
         levelDescription.text = "\n" + levelDescriptions[level];
@@ -159,8 +158,11 @@ public class LevelSelectManager : MonoBehaviour
         if (!snap)
         {
             currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear);
-            if (firstOpen)
+            if (firstOpen && !buttons[level].GetComponent<LevelSelectButton>().playedSound)
+            {
                 soundPlayer.PlaySound("UI.Press");
+                buttons[level].GetComponent<LevelSelectButton>().playedSound = true;
+            }
         }
         else
             player.transform.position = buttonTransforms[level].position;
