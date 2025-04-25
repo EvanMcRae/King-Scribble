@@ -56,6 +56,10 @@ public class DrawManager : MonoBehaviour
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
 
+    [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab
+    private GameObject trail; // To hold the instantiated prefab
+    private bool cutting = false;
+
     private void Awake()
     {
         instance = this;
@@ -97,7 +101,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !cutting)
         {
             beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
@@ -116,7 +120,28 @@ public class DrawManager : MonoBehaviour
                     break;
             }
         }
-        
+        // If the right mouse button is pressed and the current tool is the pen, cut and instantiate the trail at the mouse cursor's position
+        if (Input.GetMouseButtonDown(1) && !beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && PlayerVars.instance.cur_tool == ToolType.Pen)
+        {
+            cutting = true;
+            trail = Instantiate(cuttingTrail, mousePos, Quaternion.identity);
+            PenCut(mousePos);
+        }
+        // If the right mouse button is held and began cutting, cut until released
+        if (Input.GetMouseButton(1) && cutting && !GameManager.paused)
+        {
+            PenCut(mousePos);
+            trail.transform.position = mousePos;
+        }
+
+        // If the right mouse button is released, stop cutting
+        if (Input.GetMouseButtonUp(1) && cutting && !GameManager.paused)
+        {
+            cutting = false;
+            Destroy(trail);
+            Debug.Log("Stopped Cutting");
+        }
+
         // If the mouse is continuously held, continue to draw
         if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
             Draw(mousePos);
@@ -461,6 +486,9 @@ public class DrawManager : MonoBehaviour
 
     public void SwitchTool(ToolType newTool)
     {
+        // If currently cutting with the pen, stop and destroy the trail
+        cutting = false;
+        if (trail) Destroy(trail);
         LoadSubmeter(newTool);
         if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
             EndDraw();
@@ -470,6 +498,16 @@ public class DrawManager : MonoBehaviour
         }
         ToolIndicator.instance.UpdateMenu(newTool);
         PlayerVars.instance.cur_tool = newTool;
+    }
+
+    private void PenCut(Vector2 mouse_pos)
+    {
+        int layerMask = 1 << 13;
+        RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+        if (hit == true)
+        {
+            hit.collider.gameObject.GetComponent<Breakable>().Break();
+        }
     }
 }
 

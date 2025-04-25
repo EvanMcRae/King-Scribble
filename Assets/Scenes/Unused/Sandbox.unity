@@ -8451,7 +8451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8257315311126352494, guid: 53098e7938e4c504782d99032421d04d, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -8928,6 +8928,10 @@ PrefabInstance:
       propertyPath: penMeter
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: cuttingTrail
+      value: 
+      objectReference: {fileID: 1465479247098009191, guid: b900bed1df7535d4c8444484ff2982f1, type: 3}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: scribbleMeter
       value: 
