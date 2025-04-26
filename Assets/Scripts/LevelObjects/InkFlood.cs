@@ -85,7 +85,7 @@ public class InkFlood : MonoBehaviour
         if (!GameManager.resetting && collision.gameObject.CompareTag("Player") && collision.gameObject.name != "LandCheck") // != LandCheck to prevent early deaths due to the land check object mistakenly colliding with the ink
         {
             PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 10f;
-            if (transform.position.y - collision.transform.position.y > killThreshold)
+            if (transform.position.y - collision.transform.position.y > killThreshold && !PlayerVars.instance.cheatMode)
             {
                 GetComponent<BuoyancyEffector2D>().density = 0.1f;
                 GameManager.instance.Reset();
