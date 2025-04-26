@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject SettingsPanel;
 
     private GameObject previousButton;
+    public static bool unpausedWithSpace = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,8 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        unpausedWithSpace = false;
+
         if (Input.GetButtonDown("Pause") && PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)
         {
             if (!GameManager.paused) Pause();
@@ -58,6 +61,7 @@ public class PauseMenu : MonoBehaviour
     public void Unpause()
     {
         GameManager.paused = false;
+        if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
         Time.timeScale = 1;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {

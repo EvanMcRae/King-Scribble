@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.canMove)
         {
             moveX = 0;
+            moveY = 0;
             JumpCutCheck();
             if (isSprintMoving)
             {
@@ -290,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !PauseMenu.unpausedWithSpace)
         {
             if (isGrounded && isJumping)
             {
@@ -302,6 +303,7 @@ public class PlayerController : MonoBehaviour
 
             holdingJump = true;
         }
+        PauseMenu.unpausedWithSpace = false;
 
         // incorporates coyote time and input buffering
         float coyoteTimeThreshold = 0.1f;
