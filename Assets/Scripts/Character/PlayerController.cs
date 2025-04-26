@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.canMove)
         {
             moveX = 0;
+            moveY = 0;
             JumpCutCheck();
             if (isSprintMoving)
             {
