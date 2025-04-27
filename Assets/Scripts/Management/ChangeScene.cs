@@ -30,14 +30,13 @@ public class ChangeScene : MonoBehaviour
         // TODO: A lot of how this is happening is really bad and MUST be changed in the future!! This is for demo sake only.
         soundPlayer.PlaySound("Player.Portal");
         PlayerVars.instance.transform.DOMove(transform.position, 1f);
-        PlayerVars.instance.GetComponent<Rigidbody2D>().isKinematic = true; // This conflicts with cheat mode
+        PlayerVars.instance.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
         PlayerVars.instance.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         Vector3 ogScale = PlayerVars.instance.transform.localScale; // Bandaid fix for scale not resetting otherwise
         PlayerVars.instance.transform.DOScale(Vector3.zero, 1f);
         yield return new WaitForSeconds(1f);
         ScreenWipe.instance.WipeIn();
         yield return new WaitForSeconds(1f);
-        PlayerVars.instance.GetComponent<Rigidbody2D>().isKinematic = false;
         PlayerVars.instance.transform.localScale = ogScale;
 
         PlayerVars.instance.Dismount();
@@ -52,5 +51,6 @@ public class ChangeScene : MonoBehaviour
         changingScene = false;
         nextScene = "";
         SceneHelper.LoadScene(scene);
+        PlayerVars.instance.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }

@@ -128,12 +128,12 @@ public class PlayerController : MonoBehaviour
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
-            if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && virtualCamera != null)
+            if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && !ChangeScene.changingScene && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
-            else if ((moveX == 0 || Mathf.Abs(realVelocity) < 0.01f) && isSprintMoving && virtualCamera != null)
+            else if ((moveX == 0 || Mathf.Abs(realVelocity) < 0.01f || ChangeScene.changingScene) && isSprintMoving && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
