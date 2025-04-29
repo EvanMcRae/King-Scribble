@@ -44,7 +44,7 @@ public class LevelSelectManager : MonoBehaviour
         //Time.timeScale = 0.02f;
         instance = this;
 
-        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
 
         // Try to unlock all other buttons
         for (int i = 0; i < buttons.Count; i++)

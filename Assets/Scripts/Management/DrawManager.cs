@@ -455,7 +455,7 @@ public class DrawManager : MonoBehaviour
                 texture = defaultCursor;
                 break;
         }
-        Cursor.SetCursor(texture, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.SetCursor(texture, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetPencilParams(Line line) {
