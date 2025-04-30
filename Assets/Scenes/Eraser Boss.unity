@@ -307,7 +307,7 @@ SpriteRenderer:
   m_SortingLayerID: -846063225
   m_SortingLayer: 1
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 6cae9f19d7ab5d848b089e267b98ba9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4be3b55e436c64f8fa642702312fe224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6911,6 +6911,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1db2fc551a55c43f2a90aefa5371db73, type: 3}
+--- !u!1 &1521457922 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2257417964739641019, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 1546155772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1528778761
 GameObject:
   m_ObjectHideFlags: 0
@@ -7345,19 +7350,19 @@ PrefabInstance:
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1521457922}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1521457922}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.data[2]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1818152654}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.data[3]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2084134872}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -9423,6 +9428,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1818152654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1949114005328243308, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 1546155772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1872619982
 GameObject:
   m_ObjectHideFlags: 0
@@ -83150,7 +83160,7 @@ SpriteRenderer:
   m_SortingLayerID: -846063225
   m_SortingLayer: 1
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 6cae9f19d7ab5d848b089e267b98ba9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4be3b55e436c64f8fa642702312fe224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83234,7 +83244,7 @@ SpriteRenderer:
   m_SortingLayerID: -846063225
   m_SortingLayer: 1
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 6cae9f19d7ab5d848b089e267b98ba9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4be3b55e436c64f8fa642702312fe224, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83245,6 +83255,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2084134872 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1277504791786969905, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 1546155772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!61 &287697837152897572
 BoxCollider2D:
   m_ObjectHideFlags: 0
