@@ -860,6 +860,7 @@ GameObject:
   - component: {fileID: 1447258293882119200}
   - component: {fileID: 5996885006735556624}
   - component: {fileID: 784385266045837170}
+  - component: {fileID: 6616714882197568063}
   m_Layer: 5
   m_Name: PauseButton
   m_TagString: Untagged
@@ -1032,6 +1033,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6616714882197568063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180560203414871256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6e600672ddf4692a8568517dbaa1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normal: {fileID: 21300000, guid: a5e5a22e7d20a4ba980386382d2ba88b, type: 3}
+  selected: {fileID: 21300000, guid: 3452b1119bd2b48879b8048a44ea09b9, type: 3}
+  MainMenu: 0
+  image: {fileID: 7497462611220127606}
+  popupID: 0
+  deselectsOnPointerLeave: 1
+  soundPlayer: {fileID: 3676944512613541486}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!1 &2279155421474456010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,7 +1094,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 521, y: -112}
+  m_AnchoredPosition: {x: 521, y: -111}
   m_SizeDelta: {x: 2163.241, y: 1145.6902}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &841681656935939055
@@ -1866,7 +1889,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -803, y: -356}
+  m_AnchoredPosition: {x: -803, y: -355}
   m_SizeDelta: {x: 1313.0527, y: 212.1569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3332886144416126040
@@ -2321,7 +2344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -803, y: -174}
+  m_AnchoredPosition: {x: -803, y: -173}
   m_SizeDelta: {x: 1313.0527, y: 212.1569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8537841714936786189
@@ -3241,7 +3264,7 @@ MonoBehaviour:
   pauseScreen: {fileID: 2575240238112675973}
   resumeButton: {fileID: 7265711736376713282}
   SettingsPanel: {fileID: 8906324131914539686}
-  pauseButton: {fileID: 2180560203414871256}
+  pauseButton: {fileID: 7497462611220127606}
 --- !u!1 &5617682111562858463
 GameObject:
   m_ObjectHideFlags: 0
@@ -3707,7 +3730,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -803, y: 177}
+  m_AnchoredPosition: {x: -803, y: 178}
   m_SizeDelta: {x: 1313.0527, y: 212.1569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2746592076368523905
@@ -4156,7 +4179,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -803, y: 0}
+  m_AnchoredPosition: {x: -803, y: 1}
   m_SizeDelta: {x: 1313.0527, y: 212.1569}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2474253688758771156

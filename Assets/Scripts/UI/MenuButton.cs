@@ -66,7 +66,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (selected != null)
             image.sprite = selected;
-        if (!noSound && ((MainMenu && MainMenuManager.firstopen) || !MainMenu))
+        if (!noSound && ((MainMenu && MainMenuManager.firstopen) || !MainMenu) && select != null)
             soundPlayer.PlaySound(select);
     }
 
