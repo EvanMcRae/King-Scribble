@@ -6,6 +6,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject resumeButton;
     [SerializeField] private GameObject SettingsPanel;
+    [SerializeField] private GameObject pauseButton;
 
     private GameObject previousButton;
     public static bool unpausedWithSpace = false;
@@ -44,6 +45,7 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         GameManager.paused = true;
+        pauseButton.SetActive(false);
         Time.timeScale = 0;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {
@@ -61,6 +63,7 @@ public class PauseMenu : MonoBehaviour
     public void Unpause()
     {
         GameManager.paused = false;
+        pauseButton.SetActive(true);
         if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
         Time.timeScale = 1;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
@@ -85,6 +88,7 @@ public class PauseMenu : MonoBehaviour
     public void ResetLevel()
     {
         Unpause();
+        pauseButton.SetActive(false);
         GameManager.instance.Reset();
     }
 
@@ -99,6 +103,7 @@ public class PauseMenu : MonoBehaviour
     public void MainMenu()
     {
         Unpause();
+        pauseButton.SetActive(false);
         GameManager.resetting = true;
         GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();

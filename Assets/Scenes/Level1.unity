@@ -3862,6 +3862,13 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 320920297542587220, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_text
+      value: 'select tool - 1 2 3<space=0.2em> / <space=0.2em>scroll wheel
+
+        slice
+        - right click'
+      objectReference: {fileID: 0}
     - target: {fileID: 909481752378173358, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3992,50 +3999,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4640975014570479838, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: screenDarkener
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penMeter
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: scribbleMeter
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.b
-      value: 0.8490566
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.g
-      value: 0.39894974
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.r
-      value: 0.3155927
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[1]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[2]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[3]
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
