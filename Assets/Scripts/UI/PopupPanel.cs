@@ -16,6 +16,7 @@ public class PopupPanel : MonoBehaviour
     private GameObject currentSelection;
     [SerializeField] private Image ScreenDarkener;
     [SerializeField] private bool darkensScreen = true, selectsPrevious = true;
+    public static bool closedThisFrame = false;
 
     private void Awake()
     {
@@ -101,7 +102,11 @@ public class PopupPanel : MonoBehaviour
         if (numPopups < 0) numPopups = 0;
         visible = false;
         if (selectsPrevious)
+        {
+            closedThisFrame = true;
             EventSystem.current.SetSelectedGameObject(PreviousButton);
+            closedThisFrame = false;
+        }
     }
 
     public void Disable()

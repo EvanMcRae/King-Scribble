@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
 
     private GameObject previousButton;
     public static bool unpausedWithSpace = false;
+    public static bool firstopen = false;
 
     // Start is called before the first frame update
     void Start()
@@ -59,10 +60,12 @@ public class PauseMenu : MonoBehaviour
         if (DrawManager.instance != null)
             DrawManager.instance.SetCursor(ToolType.None);
         EventSystem.current.SetSelectedGameObject(resumeButton);
+        firstopen = true;
     }
 
     public void Unpause()
     {
+        firstopen = false;
         GameManager.paused = false;
         pauseButton.enabled = true;
         if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;

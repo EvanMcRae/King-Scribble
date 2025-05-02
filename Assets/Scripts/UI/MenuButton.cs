@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler, IDeselectHandler, ISelectHandler
 {
     [SerializeField] private Sprite normal, selected;
-    [SerializeField] private bool MainMenu;
+
+    [SerializeField] private bool mainMenu;
+    [SerializeField] private bool pauseMenu;
     [SerializeField] private Image image;
     public int popupID = 0;
     public bool deselectsOnPointerLeave = false;
@@ -64,9 +66,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnSelect(BaseEventData eventData)
     {
+        Debug.Log(gameObject.name + " " + pauseMenu + " " + PauseMenu.firstopen);
         if (selected != null)
             image.sprite = selected;
-        if (!noSound && ((MainMenu && MainMenuManager.firstopen) || !MainMenu) && select != null)
+        if (!noSound && ((mainMenu && MainMenuManager.firstopen) || !mainMenu) && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu) && !PopupPanel.closedThisFrame)
             soundPlayer.PlaySound(select);
     }
 
