@@ -28,9 +28,13 @@ public class Moving_Platform : MonoBehaviour
     public GameObject gear_r;
     public float gearSpeed;
     public bool isWall = false;
+    private static int wallSounds = 0, platformSounds = 0;
+    private bool soundPlaying = false;
     [SerializeField] private Rigidbody2D rigidBody;
     public Dictionary<Transform, Transform> passengerRoots = new();
     public Dictionary<Transform, PhysicsMaterial2D> physicsMats = new();
+    [SerializeField] private SoundPlayer soundPlayer;
+    public bool playsSound = true;
 
     void Start()
     {
@@ -125,6 +129,39 @@ public class Moving_Platform : MonoBehaviour
         if ((moving && !move_stopped) || (returning && !ret_stopped))
         {
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
+            if (!soundPlaying && playsSound)
+            {
+                if (isWall)
+                {
+                    if (wallSounds == 0)
+                        soundPlayer.PlaySound("Platform.Wall", 1, true);
+                    wallSounds++;
+                }
+                else
+                {
+                    if (platformSounds == 0)
+                        soundPlayer.PlaySound("Platform.Move", 1, true);
+                    platformSounds++;
+                }
+                soundPlaying = true;
+            }
+        }
+        else if (soundPlaying && playsSound)
+        {
+            if (isWall)
+            {
+                wallSounds--;
+                if (wallSounds == 0)
+                    soundPlayer.EndSound("Platform.Wall");
+            }
+            else
+            {
+                platformSounds--;
+                if (platformSounds == 0)
+                    soundPlayer.EndSound("Platform.Move");
+            }
+
+            soundPlaying = false;
         }
         if (moving && !move_stopped && !isWall && rigidBody.position != dest) 
         {

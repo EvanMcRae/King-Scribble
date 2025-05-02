@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1017815201
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 8e6e31a6f9b3b2c4a8eed0ef5781f611, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -201,6 +201,8 @@ MonoBehaviour:
   gearSpeed: 30
   isWall: 0
   rigidBody: {fileID: 5189142990169495840}
+  soundPlayer: {fileID: 0}
+  playsSound: 1
 --- !u!61 &6842408900116821876
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -363,7 +365,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1017815201
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 8e6e31a6f9b3b2c4a8eed0ef5781f611, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

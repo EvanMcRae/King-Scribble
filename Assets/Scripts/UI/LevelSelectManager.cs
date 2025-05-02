@@ -8,6 +8,7 @@ using UnityEditor;
 using TMPro;
 using System.IO;
 using DG.Tweening;
+using UnityEngine.Splines;
 
 //holds functions of the main menu and sub menus
 public class LevelSelectManager : MonoBehaviour
@@ -28,13 +29,22 @@ public class LevelSelectManager : MonoBehaviour
     public GameObject player;
     public static LevelSelectManager instance;
     public bool goingToMenu = false;
+    public bool firstOpen = false;
+    public int currLevel;
+    public Tween currTween;
+
+    [SerializeField] private SplineContainer splineContainer;
+    [SerializeField] private int sampleCount = 50;
+
+    [SerializeField] private SoundPlayer soundPlayer;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Time.timeScale = 0.02f;
         instance = this;
 
-        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
 
         // Try to unlock all other buttons
         for (int i = 0; i < buttons.Count; i++)
@@ -54,6 +64,8 @@ public class LevelSelectManager : MonoBehaviour
         buttons[0].GetComponent<LevelSelectButton>().SetButtonActive(true);
         EventSystem.current.SetSelectedGameObject(buttons[index]);
         SelectLevel(index, true);
+
+        firstOpen = true;
     }
 
     public void Update()
@@ -62,6 +74,22 @@ public class LevelSelectManager : MonoBehaviour
         {
             MainMenu();
         }
+
+    }
+
+    public void LateUpdate()
+    {
+        UpdateYPos();
+    }
+
+    public void UpdateYPos()
+    {
+        Vector3 pos = player.transform.position;
+        pos.y = splineContainer.EvaluatePosition(GetTFromX(player.transform.position.x)).y;
+        Vector3 vel = Vector3.zero;
+        Vector3 smoothPos = Vector3.SmoothDamp(player.transform.position, pos, ref vel, 0.015f);
+        pos.y = smoothPos.y;
+        player.transform.position = pos;
     }
 
     public void EnterLevel()
@@ -128,8 +156,37 @@ public class LevelSelectManager : MonoBehaviour
         levelDescription.text = "\n" + levelDescriptions[level];
 
         if (!snap)
-            player.transform.DOMove(buttonTransforms[level].position, 0.5f); // TODO temp, want this to follow the line if possible
+        {
+            currTween = player.transform.DOMoveX(buttonTransforms[level].position.x, Mathf.Abs(GetTFromX(player.transform.position.x) - GetTFromX(buttonTransforms[level].position.x)) * 1.5f).SetEase(Ease.Linear);
+            if (firstOpen && !buttons[level].GetComponent<LevelSelectButton>().playedSound)
+            {
+                soundPlayer.PlaySound("UI.Press");
+                buttons[level].GetComponent<LevelSelectButton>().playedSound = true;
+            }
+        }
         else
             player.transform.position = buttonTransforms[level].position;
+
+        currLevel = level;
+    }
+
+    float GetTFromX(float targetX)
+    {
+        float bestT = 0;
+        float minDistance = float.MaxValue;
+        for (int i = 0; i <= sampleCount; i++)
+        {
+            float t = (float)i / sampleCount;
+            Vector3 point = splineContainer.EvaluatePosition(t);
+            float distance = Mathf.Abs(point.x - targetX);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                bestT = t;
+            }
+        }
+
+        return bestT;
     }
 }

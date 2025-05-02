@@ -884,6 +884,7 @@ RectTransform:
   - {fileID: 1219736146294446198}
   - {fileID: 3338168973478734702}
   - {fileID: 3613481570729882088}
+  - {fileID: 3969227243837630331}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1532,6 +1533,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6416928499272368327}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6416928499272368327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1550,6 +1563,10 @@ MonoBehaviour:
   image: {fileID: 4148097779996191970}
   popupID: 0
   deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 3676944512613541486}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!223 &996984358367342227
 Canvas:
   m_ObjectHideFlags: 0
@@ -1971,6 +1988,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3537721438530452911}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3537721438530452911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1989,6 +2018,10 @@ MonoBehaviour:
   image: {fileID: 716578308547726614}
   popupID: 0
   deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 3676944512613541486}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!223 &2844421262736370896
 Canvas:
   m_ObjectHideFlags: 0
@@ -3068,6 +3101,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2001481140878401836}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2001481140878401836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3086,6 +3131,10 @@ MonoBehaviour:
   image: {fileID: 7041543187903682268}
   popupID: 0
   deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 3676944512613541486}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!223 &430196123204763698
 Canvas:
   m_ObjectHideFlags: 0
@@ -3158,10 +3207,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3314570591962952473}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -75}
-  m_SizeDelta: {x: 400, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1336211753023391825
 CanvasRenderer:
@@ -3296,9 +3345,9 @@ RectTransform:
   - {fileID: 2580673258892211891}
   m_Father: {fileID: 3613481570729882088}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 40, y: -400}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -425, y: -175}
   m_SizeDelta: {x: 400, y: 147.3}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &3378028328720212819
@@ -3501,6 +3550,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6467498650905857809}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6467498650905857809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3519,6 +3580,10 @@ MonoBehaviour:
   image: {fileID: 8626139726176977064}
   popupID: 0
   deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 3676944512613541486}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
+  soundOnPointerEnter: 1
 --- !u!223 &5352143585922221664
 Canvas:
   m_ObjectHideFlags: 0
@@ -4220,8 +4285,8 @@ MonoBehaviour:
   PCIcon: {fileID: 1123697513878536530}
   PencilUnused: {fileID: 21300000, guid: 191b3e1ef82da4c19afd0f55c7874910, type: 3}
   PencilUsed: {fileID: 21300000, guid: 361733c6d015a455ea8f5eac457e83bf, type: 3}
-  PenUnused: {fileID: 21300000, guid: 3937c45604669447294b2eb83ecc03c8, type: 3}
-  PenUsed: {fileID: 21300000, guid: 29696bd26af7f4c4ebc7655a44f18e79, type: 3}
+  PenUnused: {fileID: 21300000, guid: a797a134345f748b38b1862f4b31ffd8, type: 3}
+  PenUsed: {fileID: 21300000, guid: fbf9b155089674113afbf218f6281c4d, type: 3}
   EraserUnused: {fileID: 21300000, guid: bbcc4ee168cf54168af73f33cc2d4845, type: 3}
   EraserUsed: {fileID: 21300000, guid: 40ea9cdd995844eceb5de6d20db3a35f, type: 3}
   PencilCaseSprites:
@@ -4752,4 +4817,77 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2473681040653148434, guid: 145890db8ea77af42994f7661ea4dc5d, type: 3}
   m_PrefabInstance: {fileID: 3199141631689280816}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4560985114835105912
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 998409445567399408}
+    m_Modifications:
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106051775409183644, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_Name
+      value: SoundPlayer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+--- !u!114 &3676944512613541486 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 886362805277679126, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 4560985114835105912}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &3969227243837630331 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 4560985114835105912}
   m_PrefabAsset: {fileID: 0}

@@ -16,7 +16,7 @@ public class MainMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
 
         EventSystem.current.SetSelectedGameObject(PlayButton.gameObject);
         firstopen = true;

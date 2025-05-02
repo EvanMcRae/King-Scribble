@@ -12,8 +12,14 @@ public class SpawnableObject : MonoBehaviour
     {
         if (!hasLanded && collision.gameObject.layer != LayerMask.GetMask("NoDraw"))
         {
-            soundPlayer.PlaySound(landingSound);
-            hasLanded = true;
+            if (collision.contactCount > 0)
+            {
+                // Only play landing sound upon landing on the bottom face
+                if (collision.GetContact(0).point.y < transform.position.y)
+                    soundPlayer.PlaySound(landingSound);
+
+                hasLanded = true;
+            }
         }
     }
 }

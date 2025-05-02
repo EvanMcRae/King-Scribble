@@ -20,6 +20,7 @@ public class InkFlood : MonoBehaviour
     public bool floodWait = false;
     public float waitTime = 0f;
     private bool waiting = false;
+    public float killThreshold = 0.5f;
 
     public void SetDest(int dest_index) {curDest = dest_index;}
     public void NextDest() {if (destinations.Length > curDest - 1) curDest++;}
@@ -79,12 +80,25 @@ public class InkFlood : MonoBehaviour
         if (transform.position == destinations[curDest].position) flooding = false;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player") && collision.gameObject.name != "LandCheck") // != LandCheck to prevent early deaths due to the land check object mistakenly colliding with the ink
+        if (!GameManager.resetting && collision.gameObject.CompareTag("Player") && collision.gameObject.name != "LandCheck") // != LandCheck to prevent early deaths due to the land check object mistakenly colliding with the ink
         {
-            GetComponent<BuoyancyEffector2D>().density = 0.1f;
-            GameManager.instance.Reset();
+            PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 10f;
+            if (transform.position.y - collision.transform.position.y > killThreshold && !PlayerVars.instance.cheatMode)
+            {
+                GetComponent<BuoyancyEffector2D>().density = 0.1f;
+                GameManager.instance.Reset();
+                PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
+            }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
         }
     }
 }

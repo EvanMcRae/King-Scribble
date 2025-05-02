@@ -11,7 +11,7 @@ public class Line : MonoBehaviour
     public const float MAX_WEIGHT = 100f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
     public bool canDraw = true, hasDrawn = false;
-    public const float LOOP_ALLOWANCE = 0.3f; // Maximum distance between the first and last point of a line to be considered a closed loop
+    public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
@@ -36,6 +36,7 @@ public class Line : MonoBehaviour
             rigidBody.isKinematic = true;
 
         lineRenderer.widthMultiplier = thickness;
+        startPoint.transform.localScale += 2 * thickness * Vector3.one;
     }
 
     public void SetPosition(Vector2 position, bool forced = false, bool addFuel = true)
@@ -123,7 +124,7 @@ public class Line : MonoBehaviour
 
     public bool CheckClosedLoop()
     {
-        return GetPointsCount() >= MIN_POINTS && Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= LOOP_ALLOWANCE;
+        return GetPointsCount() >= MIN_POINTS && Vector2.Distance(GetFirstPoint(), GetLastPoint()) <= (LOOP_ALLOWANCE + thickness);
     }
 
     public void AddPhysics()
@@ -232,7 +233,6 @@ public class Line : MonoBehaviour
         }
         polyMesh.uv = uvs;
         polyFilter.mesh = polyMesh;
-
         startPoint.enabled = false;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Events;
 
 public class CameraSwitcher : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class CameraSwitcher : MonoBehaviour
     public GameObject p_cam_bounds_r;
     public GameObject n_cam_bounds_l;
     public GameObject n_cam_bounds_r;
+    private bool hasEntered = false;
+    public UnityEvent onEnter;
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -21,6 +24,12 @@ public class CameraSwitcher : MonoBehaviour
             if (next_cam) GameManager.instance.SetCamera(next_cam);
             if (n_cam_bounds_l) n_cam_bounds_l.SetActive(true);
             if (n_cam_bounds_r) n_cam_bounds_r.SetActive(true);
+
+            if (!hasEntered)
+            {
+                hasEntered = true;
+                onEnter.Invoke();
+            }
         }
     }
 }

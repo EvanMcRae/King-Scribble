@@ -8,9 +8,11 @@ public class ToolPickup : Collectible
     public override void OnPickup(Collider2D player)
     {
         // Add the tool to the player's inventory 
-        player.gameObject.transform.root.GetComponent<PlayerVars>().inventory.addTool(type);
+        PlayerVars.instance.inventory.addTool(type);
+        PlayerController.instance.CollectItem();
+        //PlayerController.instance.
         // TODO: pencil replenish pickup?
         //if (type == ToolType.Pencil) PlayerVars.instance.AddDoodleFuel(5000);
-        DrawManager.instance.SwitchTool(type);
+        DrawManager.instance.TrySwitchTool(type);
     }
 }

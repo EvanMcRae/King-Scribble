@@ -20,7 +20,7 @@ public class PlayerSerialization
         player.lastSavedInventory.copy(inventory);
         player.inventory.copy(inventory);
         if (player.inventory.hasTool(currentTool))
-            DrawManager.instance.SwitchTool(currentTool);
+            player.cur_tool = currentTool;
     }
 }
 

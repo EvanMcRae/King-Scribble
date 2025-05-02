@@ -11,7 +11,7 @@ public class ToolIndicator : MonoBehaviour
     public static ToolIndicator instance;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
         UpdateMenu(PlayerVars.instance.cur_tool);

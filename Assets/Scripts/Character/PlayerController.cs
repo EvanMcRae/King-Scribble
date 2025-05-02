@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.canMove)
         {
             moveX = 0;
+            moveY = 0;
             JumpCutCheck();
             if (isSprintMoving)
             {
@@ -127,12 +128,12 @@ public class PlayerController : MonoBehaviour
         {
             isSprinting = true;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
-            if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && virtualCamera != null)
+            if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && !ChangeScene.changingScene && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
-            else if ((moveX == 0 || Mathf.Abs(realVelocity) < 0.01f) && isSprintMoving && virtualCamera != null)
+            else if ((moveX == 0 || Mathf.Abs(realVelocity) < 0.01f || ChangeScene.changingScene) && isSprintMoving && virtualCamera != null)
             {
                 DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
@@ -290,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && !PauseMenu.unpausedWithSpace)
         {
             if (isGrounded && isJumping)
             {
@@ -302,6 +303,7 @@ public class PlayerController : MonoBehaviour
 
             holdingJump = true;
         }
+        PauseMenu.unpausedWithSpace = false;
 
         // incorporates coyote time and input buffering
         float coyoteTimeThreshold = 0.1f;
@@ -491,5 +493,15 @@ public class PlayerController : MonoBehaviour
         {
             mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
         }
+    }
+
+    public void CollectItem()
+    {
+        soundPlayer.PlaySound("Player.Collect");
+    }
+
+    public void DeathSound()
+    {
+        soundPlayer.PlaySound("Player.Die");
     }
 }

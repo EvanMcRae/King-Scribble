@@ -22,6 +22,7 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
         numLocks --;
         if (numLocks < 0) numLocks = 0;
         sprite = sprites[numLocks];
+        if (numLocks == 0) GetComponent<Animator>().enabled = true;
         GetComponent<SpriteRenderer>().sprite = sprite;
     }
     public override void OnTriggerEnter2D(Collider2D other) // Only change scene on interaction if no locks are remaining
@@ -37,11 +38,13 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
             }
             else
             {
+                GameSaver.SaveStickers();
+                if (keepTools) PlayerVars.instance.SaveInventory();
+                // TODO This is terrible code but it will do
+                PlayerVars.instance.SetSpawnPos(FindFirstObjectByType<PlayerChecker>().transform.position);
                 GameSaver.instance.SaveGame();
-                if (keepTools) PlayerVars.instance.lastSavedInventory.copy(PlayerVars.instance.inventory);
                 StartCoroutine(LoadNextScene());
             }
-            
         }
     }
 
