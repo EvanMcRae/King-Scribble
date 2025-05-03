@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     public float voidDeath = -50;
     public Texture2D defaultCursor, previousCursor;
     public static Action ResetAction;
+    public ResetPrompt resetPrompt;
+    public float resetTime;
+    public const float maxResetTime = 2f;
 
     // Start is called before the first frame update
     void Start()
@@ -25,9 +28,38 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!paused && Input.GetButtonDown("Reset") && ScreenWipe.over && !resetting && !ChangeScene.changingScene)
+        // Held down reset control
+        if (!paused && ScreenWipe.over && !resetting && !ChangeScene.changingScene)
         {
-            Reset();
+            if (Input.GetButtonDown("Reset"))
+            {
+                resetPrompt.SetVisibility(true);
+                resetTime = 0;
+            }
+
+            if (Input.GetButton("Reset"))
+            {
+                resetPrompt.SetVisibility(true);
+                if (resetTime >= maxResetTime)
+                {
+                    Reset();
+                }
+                else
+                {
+                    resetPrompt.SetFill(resetTime / maxResetTime);
+                    resetTime += Time.deltaTime;
+                }
+            }
+
+            if (Input.GetButtonUp("Reset"))
+            {
+                ClearResetPrompt();
+            }
+        }
+
+        if (paused)
+        {
+            ClearResetPrompt();
         }
 
         if (PlayerVars.instance.transform.position.y < voidDeath && !resetting)
@@ -35,7 +67,14 @@ public class GameManager : MonoBehaviour
             Reset();
         }
     }
-    
+
+    void ClearResetPrompt()
+    {
+        resetPrompt.SetVisibility(false);
+        resetTime = 0;
+        resetPrompt.SetFill(resetTime);
+    }
+
     public void SetCamera(CinemachineVirtualCamera cam)
     {
         cam.gameObject.SetActive(true);
@@ -71,6 +110,7 @@ public class GameManager : MonoBehaviour
     IEnumerator ResetLevel()
     {
         resetting = true;
+        ClearResetPrompt();
         ScreenWipe.instance.WipeIn();
         yield return new WaitForSecondsRealtime(1f);
         PlayerVars.instance.Dismount();
