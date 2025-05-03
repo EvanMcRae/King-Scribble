@@ -66,7 +66,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnSelect(BaseEventData eventData)
     {
-        Debug.Log(gameObject.name + " " + pauseMenu + " " + PauseMenu.firstopen);
         if (selected != null)
             image.sprite = selected;
         if (!noSound && ((mainMenu && MainMenuManager.firstopen) || !mainMenu) && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu) && !PopupPanel.closedThisFrame)
