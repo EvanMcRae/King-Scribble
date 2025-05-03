@@ -28,6 +28,8 @@ public class AudioManager : MonoBehaviour
     public SoundCategory soundDatabase;
     public MusicCategory musicDatabase;
 
+    private int currentTime = 0;
+
     /// <summary>
     /// List of all different game areas that may have different sets of music
     /// </summary>
@@ -86,6 +88,8 @@ public class AudioManager : MonoBehaviour
             sfxVolume = Mathf.Log10(SettingsManager.currentSettings.sfxVolume / 100f + 0.00001f) * 20;
             masterVolume = Mathf.Log10(SettingsManager.currentSettings.masterVolume / 100f + 0.00001f) * 20;
         }
+
+        AudioSettings.OnAudioConfigurationChanged += OnAudioConfigurationChanged;
     }
 
     // Update is called once per frame
@@ -121,6 +125,7 @@ public class AudioManager : MonoBehaviour
                 BGM1[activePlayer].time = 0;
                 BGM1[activePlayer].Play();
             }
+            currentTime = BGM1[activePlayer].timeSamples;
         }
         else
         {
@@ -133,6 +138,7 @@ public class AudioManager : MonoBehaviour
                 BGM2[activePlayer].time = 0;
                 BGM2[activePlayer].Play();
             }
+            currentTime = BGM2[activePlayer].timeSamples;
         }
 
         if (SettingsManager.currentSettings == null)
@@ -479,5 +485,21 @@ public class AudioManager : MonoBehaviour
     public void PauseEffect(bool active)
     {
         musicMixer.SetFloat("LowPass", active ? 1815.00f : 22000.00f);
+    }
+
+    private void OnAudioConfigurationChanged(bool deviceWasChanged)
+    {
+        if (firstSet)
+        {
+            BGM1[activePlayer].timeSamples = currentTime;
+            if (!paused)
+                BGM2[activePlayer].Play();
+        }
+        else
+        {
+            BGM2[activePlayer].timeSamples = currentTime;
+            if (!paused)
+                BGM2[activePlayer].Play();
+        }
     }
 }
