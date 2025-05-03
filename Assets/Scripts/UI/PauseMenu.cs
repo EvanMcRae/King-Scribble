@@ -29,6 +29,8 @@ public class PauseMenu : MonoBehaviour
     {
         unpausedWithSpace = false;
 
+        if (GameManager.paused) firstopen = true;
+
         if (Input.GetButtonDown("Pause") && PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)
         {
             if (!GameManager.paused) Pause();
@@ -38,7 +40,11 @@ public class PauseMenu : MonoBehaviour
         if (GameManager.paused)
         {
             if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                MenuButton.globalNoSound = true;
                 EventSystem.current.SetSelectedGameObject(previousButton);
+                MenuButton.globalNoSound = false;
+            }
             else
                 previousButton = EventSystem.current.currentSelectedGameObject;
         }
@@ -60,7 +66,6 @@ public class PauseMenu : MonoBehaviour
         if (DrawManager.instance != null)
             DrawManager.instance.SetCursor(ToolType.None);
         EventSystem.current.SetSelectedGameObject(resumeButton);
-        firstopen = true;
     }
 
     public void Unpause()

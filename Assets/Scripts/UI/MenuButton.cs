@@ -17,6 +17,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private SoundClip select, press;
     public bool soundOnPointerEnter = true;
     private bool noSound = false;
+    public static bool globalNoSound = false;
 
     public void OnDeselect(BaseEventData eventData)
     {
@@ -68,8 +69,16 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (selected != null)
             image.sprite = selected;
-        if (!noSound && ((mainMenu && MainMenuManager.firstopen) || !mainMenu) && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu) && !PopupPanel.closedThisFrame)
+
+        // The many conditions for not playing the select sound :,)
+        if (!noSound && !globalNoSound && !PopupPanel.closedThisFrame
+            && ((mainMenu && MainMenuManager.firstopen) || !mainMenu)
+            && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu)
+            && ((image != null && image.enabled) || image == null))
+        {
+            Debug.Log(gameObject.name);
             soundPlayer.PlaySound(select);
+        }
     }
 
     public void OnClick()

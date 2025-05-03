@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 6900894487817429364}
   - component: {fileID: 3551689609501811217}
   - component: {fileID: 1847859595105113288}
+  - component: {fileID: 9021432723644572527}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -676,7 +677,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -713,6 +715,82 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 9021432723644572527}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3551689609501811217}
+          m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 9021432723644572527}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9021432723644572527}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: EnableNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &9021432723644572527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828941387838951967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5525755e3903049bcabe668a3a8c3e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nav:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  navOn: 1
 --- !u!1 &1953556113276207206
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,7 +1129,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -1637,7 +1716,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -1942,7 +2022,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -3759,7 +3840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -4242,6 +4324,7 @@ GameObject:
   - component: {fileID: 5058466336318032130}
   - component: {fileID: 5818751241527039183}
   - component: {fileID: 8933109397187748614}
+  - component: {fileID: 8543252305186689169}
   m_Layer: 5
   m_Name: SoundSlider
   m_TagString: Untagged
@@ -4349,7 +4432,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -4386,6 +4470,82 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8543252305186689169}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5818751241527039183}
+          m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8543252305186689169}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8543252305186689169}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: EnableNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &8543252305186689169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7926005105556312786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5525755e3903049bcabe668a3a8c3e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nav:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  navOn: 1
 --- !u!1 &7956486466719993983
 GameObject:
   m_ObjectHideFlags: 0
@@ -4642,7 +4802,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -4662,6 +4823,7 @@ GameObject:
   - component: {fileID: 5553441911666234776}
   - component: {fileID: 6402894320874984846}
   - component: {fileID: 6120915075115621919}
+  - component: {fileID: 121921822081383663}
   m_Layer: 5
   m_Name: MasterSlider
   m_TagString: Untagged
@@ -4709,8 +4871,8 @@ MonoBehaviour:
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 5058466336318032130}
     m_SelectOnDown: {fileID: 6900894487817429364}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnLeft: {fileID: 5047842727953903837}
+    m_SelectOnRight: {fileID: 5047842727953903837}
   m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -4769,7 +4931,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -4806,6 +4969,82 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 121921822081383663}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6402894320874984846}
+          m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+          m_MethodName: OnClick
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 121921822081383663}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: ToggleNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 121921822081383663}
+          m_TargetAssemblyTypeName: SliderNavHandler, Assembly-CSharp
+          m_MethodName: EnableNav
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &121921822081383663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8150786400812210549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5525755e3903049bcabe668a3a8c3e72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nav:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  navOn: 1
 --- !u!1 &8159917672818995939
 GameObject:
   m_ObjectHideFlags: 0
