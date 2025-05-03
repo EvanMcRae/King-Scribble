@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: 3551689609501811217}
   - component: {fileID: 1847859595105113288}
   - component: {fileID: 9021432723644572527}
+  - component: {fileID: 7105485345525952350}
   m_Layer: 5
   m_Name: MusicSlider
   m_TagString: Untagged
@@ -791,6 +792,19 @@ MonoBehaviour:
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   navOn: 1
+--- !u!114 &7105485345525952350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828941387838951967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf6c802e3fea4c76b610ae522eccde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpperButton: {fileID: 6942006481905326571}
 --- !u!1 &1953556113276207206
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,7 +1073,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 7112514461812532999}
-    m_SelectOnDown: {fileID: 4436506436914266064}
+    m_SelectOnDown: {fileID: 5047842727953903837}
     m_SelectOnLeft: {fileID: 5058466336318032130}
     m_SelectOnRight: {fileID: 5058466336318032130}
   m_Transition: 2
@@ -1909,6 +1923,7 @@ GameObject:
   - component: {fileID: 6626095973884901273}
   - component: {fileID: 7112514461812532999}
   - component: {fileID: 1333901619512827443}
+  - component: {fileID: 6819831242999075187}
   m_Layer: 5
   m_Name: FullscreenToggle
   m_TagString: Untagged
@@ -2031,6 +2046,19 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 0
+--- !u!114 &6819831242999075187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4533987958940846368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf6c802e3fea4c76b610ae522eccde9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpperButton: {fileID: 6942006481905326571}
 --- !u!1 &4566827679081446609
 GameObject:
   m_ObjectHideFlags: 0
