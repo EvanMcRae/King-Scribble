@@ -7,6 +7,7 @@ public class Line : MonoBehaviour
 {
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
+    [SerializeField] private ParticleSystem penObjDestroy;
     public const float MASS_COEFF = 2f;
     public const float MAX_WEIGHT = 100f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
@@ -179,12 +180,14 @@ public class Line : MonoBehaviour
             }
         }
     }
+
     // Set the color of the line
     public void SetColor(Color color)
     {
         lineRenderer.startColor = color;
         lineRenderer.endColor = color;
     }
+
     // Create a polygon collider from the line renderer's points
     public bool AddPolyCollider() // Return false if a collision overlap is found, true otherwise
     {
@@ -208,6 +211,7 @@ public class Line : MonoBehaviour
         }
         return true;    
     }
+
     // Add a mesh from the polygon collider (if it has been created)
     public void AddMesh(Material mat, MaterialPropertyBlock matBlock)
     {
@@ -234,6 +238,24 @@ public class Line : MonoBehaviour
         polyMesh.uv = uvs;
         polyFilter.mesh = polyMesh;
         startPoint.enabled = false;
+    }
+
+    void OnDestroy()
+    {
+        // Create the pen object destruction particle effect
+        if (gameObject.scene.isLoaded) { // Only call if the destruction is not a result of a scene change/exit
+            if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>()) return; // Only run on pen objects
+            ParticleSystem part = Instantiate(penObjDestroy, gameObject.GetComponent<PolygonCollider2D>().bounds.center, Quaternion.identity);
+            // Set the mesh of the particle system to the mesh of the pen object
+            var shape = part.shape;
+            shape.mesh = gameObject.GetComponentInChildren<MeshFilter>().mesh;
+            // Set the number of particles based on the object's area
+            var burst = part.emission.GetBurst(0);
+            burst.count = 20 * area;
+            part.emission.SetBurst(0, burst);
+            // Play the effect (and then destroy)
+            part.Play();
+        }
     }
 }
 
