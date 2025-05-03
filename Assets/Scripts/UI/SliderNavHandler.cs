@@ -31,6 +31,7 @@ public class SliderNavHandler : MonoBehaviour
 
     public void EnableNav()
     {
+        navOn = true;
         GetComponent<Slider>().navigation = nav;
     }
 }

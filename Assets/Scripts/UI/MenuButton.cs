@@ -53,7 +53,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (eventData.hovered.Contains(gameObject) && EventSystem.current.currentSelectedGameObject != gameObject && popupID == PopupPanel.numPopups)
         {
+            if (!soundOnPointerEnter)
+                noSound = true;
             EventSystem.current.SetSelectedGameObject(gameObject);
+            noSound = false;
         }
     }
 
@@ -76,7 +79,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu)
             && ((image != null && image.enabled) || image == null))
         {
-            Debug.Log(gameObject.name);
             soundPlayer.PlaySound(select);
         }
     }

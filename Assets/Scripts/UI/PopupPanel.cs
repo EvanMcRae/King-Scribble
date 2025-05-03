@@ -17,6 +17,7 @@ public class PopupPanel : MonoBehaviour
     [SerializeField] private Image ScreenDarkener;
     [SerializeField] private bool darkensScreen = true, selectsPrevious = true;
     public static bool closedThisFrame = false;
+    [SerializeField] private Image blocker;
 
     private void Awake()
     {
@@ -78,13 +79,17 @@ public class PopupPanel : MonoBehaviour
         open = true;
         mouseNeverMoved = 2;
         numPopups++;
+        if (blocker != null)
+            blocker.enabled = true;
         foreach (MenuButton c in GetComponentsInChildren<MenuButton>())
         {
             c.popupID = numPopups;
         }
         visible = true;
         PreviousButton = EventSystem.current.currentSelectedGameObject;
+        MenuButton.globalNoSound = true;
         EventSystem.current.SetSelectedGameObject(PrimaryButton);
+        MenuButton.globalNoSound = false;
         if (darkensScreen)
         {
             ScreenDarkener.gameObject.SetActive(true);
@@ -127,6 +132,11 @@ public class PopupPanel : MonoBehaviour
         if (anim.GetFloat("Speed") < 0)
         {
             anim.SetFloat("Speed", -2);
+        }
+        else if (anim.GetFloat("Speed") > 0)
+        {
+            if (blocker != null)
+                blocker.enabled = false;
         }
     }
 
