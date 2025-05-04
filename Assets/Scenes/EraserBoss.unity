@@ -587,7 +587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 477536082}
   - component: {fileID: 477536083}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bounds2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -917,7 +917,7 @@ GameObject:
   - component: {fileID: 665427903}
   - component: {fileID: 665427904}
   - component: {fileID: 665427905}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EraserBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -932,11 +932,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 665427899}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -949,8 +949,8 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!4 &665427902
 Transform:
   m_ObjectHideFlags: 0
@@ -960,8 +960,8 @@ Transform:
   m_GameObject: {fileID: 665427899}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 32.9911, y: 10.0255, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 32.9911, y: 10.0255, z: 2}
+  m_LocalScale: {x: 1.5264481, y: 1.5264481, z: 1.5264481}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1885298431}
@@ -984,11 +984,7 @@ MonoBehaviour:
   disable: 1
   PencilLinesFolder: {fileID: 2132652788}
   anim: {fileID: 1885298433}
-  baseSpeed: 30
-  eraserRadius: 1
-  knockbackForce: 10
   myText: {fileID: 475377428}
-  KingScribble: {fileID: 0}
 --- !u!70 &665427904
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1039,7 +1035,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -1209,7 +1205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1174062084}
   - component: {fileID: 1174062085}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bounds1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1686,7 +1682,7 @@ GameObject:
   - component: {fileID: 1885298431}
   - component: {fileID: 1885298432}
   - component: {fileID: 1885298433}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: EB_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2173,7 +2169,6 @@ SceneRoots:
   - {fileID: 927284067}
   - {fileID: 6652482066997626212}
   - {fileID: 102009182}
-  - {fileID: 665427902}
   - {fileID: 1678589826}
   - {fileID: 1392688495}
   - {fileID: 85825505}
@@ -2183,3 +2178,4 @@ SceneRoots:
   - {fileID: 857341452}
   - {fileID: 381466550}
   - {fileID: 1462935543}
+  - {fileID: 665427902}
