@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // calculate speed
-        calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f);
+        calculatedSpeed = speed * Mathf.Min(jumpSpeedMultiplier * sprintSpeedMultiplier, 2.0f) * Time.fixedDeltaTime;
 
         // check for ground/roof
         GroundCheck();
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
         SlopeCheck();
         if (isOnSlope && isGrounded && !isJumping && canWalkOnSlope)
         {
-            targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * speed * -slopeNormalPerp.y, 0.0f);
+            targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * calculatedSpeed * -slopeNormalPerp.y, 0.0f);
         }
 
         // apply velocity, dampening between current and target

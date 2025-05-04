@@ -7,7 +7,9 @@ using UnityEngine.EventSystems;
 public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler, IDeselectHandler, ISelectHandler
 {
     [SerializeField] private Sprite normal, selected;
-    [SerializeField] private bool MainMenu;
+
+    [SerializeField] private bool mainMenu;
+    [SerializeField] private bool pauseMenu;
     [SerializeField] private Image image;
     public int popupID = 0;
     public bool deselectsOnPointerLeave = false;
@@ -15,6 +17,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private SoundClip select, press;
     public bool soundOnPointerEnter = true;
     private bool noSound = false;
+    public static bool globalNoSound = false;
 
     public void OnDeselect(BaseEventData eventData)
     {
@@ -50,7 +53,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (eventData.hovered.Contains(gameObject) && EventSystem.current.currentSelectedGameObject != gameObject && popupID == PopupPanel.numPopups)
         {
+            if (!soundOnPointerEnter)
+                noSound = true;
             EventSystem.current.SetSelectedGameObject(gameObject);
+            noSound = false;
         }
     }
 
@@ -66,8 +72,15 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (selected != null)
             image.sprite = selected;
-        if (!noSound && ((MainMenu && MainMenuManager.firstopen) || !MainMenu))
+
+        // The many conditions for not playing the select sound :,)
+        if (!noSound && !globalNoSound && !PopupPanel.closedThisFrame
+            && ((mainMenu && MainMenuManager.firstopen) || !mainMenu)
+            && ((pauseMenu && PauseMenu.firstopen) || !pauseMenu)
+            && ((image != null && image.enabled) || image == null))
+        {
             soundPlayer.PlaySound(select);
+        }
     }
 
     public void OnClick()

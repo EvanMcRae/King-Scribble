@@ -45,8 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnpoint: {fileID: 8136064663288634364}
+  voidDeath: -50
   defaultCursor: {fileID: 0}
   previousCursor: {fileID: 0}
+  resetPrompt: {fileID: 9180427176756453978}
+  resetTime: 0
 --- !u!1 &2129543429095961876
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,6 +680,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 298621836182011744, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 1979085023703826907}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9180427176756453978 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7210389135851299713, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 1979085023703826907}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 060cc76af9c80478995261bcdc8437a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6822971296309520621
 PrefabInstance:
   m_ObjectHideFlags: 0

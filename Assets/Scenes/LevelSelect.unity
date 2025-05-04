@@ -6443,7 +6443,7 @@ MonoBehaviour:
   - Level5
   - Level6
   - Level7
-  - EraserBoss
+  - Eraser Boss
   levelNames:
   - Level 1
   - Level 2
@@ -6452,7 +6452,7 @@ MonoBehaviour:
   - Level 5
   - Level 6
   - Level 7
-  - Boss Level
+  - Level 8
   levelDescriptions:
   - Pencil Tip Path
   - Shrinky Dinky Doo
@@ -6928,7 +6928,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: cc42b98d263634163bcd7761f064f92a, type: 3}
   selected: {fileID: 21300000, guid: 3d52e4eba98f04d71a01db60c6bdacbe, type: 3}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 1910529321}
   popupID: 0
   deselectsOnPointerLeave: 1
@@ -7436,7 +7437,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 872709dbcdcae4c4abf7d04694a3e8b0, type: 3}
   selected: {fileID: 21300000, guid: 6aa818b0849304f91bb40fa5db872b5c, type: 3}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 2000119673}
   popupID: 0
   deselectsOnPointerLeave: 1

@@ -980,7 +980,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 204b18c4cc3064ab38dca98454977fa0, type: 3}
   selected: {fileID: 21300000, guid: 74a26d1cfa1c44831a03238f00edd407, type: 3}
-  MainMenu: 1
+  mainMenu: 1
+  pauseMenu: 0
   image: {fileID: 171150013}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -1288,7 +1289,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 204b18c4cc3064ab38dca98454977fa0, type: 3}
   selected: {fileID: 21300000, guid: 74a26d1cfa1c44831a03238f00edd407, type: 3}
-  MainMenu: 1
+  mainMenu: 1
+  pauseMenu: 0
   image: {fileID: 171944671}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -2059,8 +2061,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -163, y: -20.931}
-  m_SizeDelta: {x: -649.277, y: -41.862}
+  m_AnchoredPosition: {x: -152.08923, y: -20.931}
+  m_SizeDelta: {x: -671.0985, y: -41.862}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &483846621
 MonoBehaviour:
@@ -2095,7 +2097,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: HOW-TO
+  m_Text: STICKERS
 --- !u!222 &483846622
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2553,7 +2555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 204b18c4cc3064ab38dca98454977fa0, type: 3}
   selected: {fileID: 21300000, guid: 74a26d1cfa1c44831a03238f00edd407, type: 3}
-  MainMenu: 1
+  mainMenu: 1
+  pauseMenu: 0
   image: {fileID: 528220460}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -3001,7 +3004,7 @@ GameObject:
   - component: {fileID: 637663052}
   - component: {fileID: 637663051}
   m_Layer: 5
-  m_Name: InstructionsButton
+  m_Name: StickersButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3081,7 +3084,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 204b18c4cc3064ab38dca98454977fa0, type: 3}
   selected: {fileID: 21300000, guid: 74a26d1cfa1c44831a03238f00edd407, type: 3}
-  MainMenu: 1
+  mainMenu: 1
+  pauseMenu: 0
   image: {fileID: 637663055}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -3578,7 +3582,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -4921,7 +4926,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 21300000, guid: 204b18c4cc3064ab38dca98454977fa0, type: 3}
   selected: {fileID: 21300000, guid: 74a26d1cfa1c44831a03238f00edd407, type: 3}
-  MainMenu: 1
+  mainMenu: 1
+  pauseMenu: 0
   image: {fileID: 1899791514}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -5401,7 +5407,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normal: {fileID: 0}
   selected: {fileID: 0}
-  MainMenu: 0
+  mainMenu: 0
+  pauseMenu: 0
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
@@ -5647,7 +5654,7 @@ GameObject:
   - component: {fileID: 8186683536127981187}
   - component: {fileID: 4773873833322061355}
   m_Layer: 5
-  m_Name: InstructionsPanel
+  m_Name: StickersPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
