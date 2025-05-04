@@ -2,6 +2,7 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Splines;
 
 public class EraserBossAI : MonoBehaviour
 {    
@@ -23,15 +24,16 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private bool disable = false;
     [SerializeField] private GameObject PencilLinesFolder; // Where pencil lines are stored in hierarchy
     [SerializeField] private Animator anim;
-    public float baseSpeed = 30f; // Movement speed
+    private float baseSpeed = 30f; // Movement speed
+    private float chargeSpeed = 50f;
     private float cooldownSpeed = 10f; // slower speed for cooldown to mimic tiredness
-    public float eraserRadius = 1f; // Space that will be erased
-    public float knockbackForce = 10f; // upon KS hitting EB
-    private float tweenTime = .33f; // the amount of time for the slam and charge tween to complete
+    private float eraserRadius = 1f; // Space that will be erased
+    private float slamForce = 10000f; // assits with the slam "tween"
+    private float knockbackForce = 10f; // upon KS hitting EB
     private float rotateTweenTime = 0.5f;
-    public TextMeshProUGUI myText;
+    [SerializeField] private TextMeshProUGUI myText;
     private State state;
-    public GameObject KingScribble;
+    private GameObject KingScribble;
     private LineRenderer targetLine; // a LineRenderer in PencilLinesFolder
     private Vector3 destination; // position for where to move
     private SpriteRenderer spriteRenderer; // for animation
@@ -39,19 +41,20 @@ public class EraserBossAI : MonoBehaviour
     private GameObject bounds2;
     private Collider2D KSCollider;
     private float timer = 0.0f; // used for cooldowns
-    private float searchTime = 2.5f; // variables ending in "Time" relate to the timer
-    private float slamCooldownTime = 1.5f;
-    private float chargeCooldownTime = 1.5f;
-    private float chargePrepTime = 1.8f;
+    private float searchTime = 2.0f; // variables ending in "Time" relate to the timer
+    private float slamCooldownTime = 1.0f;
+    private float chargeCooldownTime = 1.0f;
+    private float chargePrepTime = .66f;
     private float slamPrepTime = 2.0f;
     private float dizzyTime = 3.0f;
     private float damageTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
-    private float KSStunTime = 2.0f;
+    private float KSStunTime = 2.0f; // time KS is stunned
     private float minDamageMass = 5.0f; // 10 works good
     private bool isErasingLine = false; // booleans for states that are not independent enough for the state machine
     private bool isTweening = false; // whether EB is in a tweening state
     private bool isRotated = false; // assists with EB's animations
+    private bool isInvulnerable = false; // whether EB is invulnerable (force field)
     private bool isKSHit = false; // true when KS has been hit in general
     private bool isSlamHit = false; // true when KS has been hit by a slam
 
@@ -62,6 +65,7 @@ public class EraserBossAI : MonoBehaviour
     
     private Rigidbody2D KSrb; // King Scribble's Rigidbody
     private CapsuleCollider2D physicalCollider; // EB's collider with physics
+    private Rigidbody2D EBrb; // EB's Rigidbody2D
     private int hitpoints = 3;
 
     Coroutine eraseLineSequence;
@@ -69,6 +73,7 @@ public class EraserBossAI : MonoBehaviour
     void Start() {
         KingScribble = PlayerVars.instance.gameObject; // Initialize KS, his RigidBody2D, and MainBody trigger collider
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
+        EBrb = GetComponent<Rigidbody2D>(); 
         KSCollider = KingScribble.transform.Find("MainBody").GetComponent<PolygonCollider2D>(); // very iffy code
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
@@ -93,6 +98,7 @@ public class EraserBossAI : MonoBehaviour
 
         if(disable) return;
         timer += Time.deltaTime;
+        Erase();
         
         switch (state) {
             default:
@@ -106,15 +112,11 @@ public class EraserBossAI : MonoBehaviour
 
             case State.ChargePrep:
                 // Position self in line with the pos(0) and pos(1) if closer
-                Vector3 lineUp = new Vector3(0,0,0);
-                lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
-
-                // if(Vector3.Distance(transform.position, targetLine.GetPosition(0)) > Vector3.Distance(transform.position, targetLine.GetPosition(targetLine.positionCount - 1))) {
-                //     lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
-                // }
-                // else {
-                //     lineUp = (targetLine.GetPosition(targetLine.positionCount - 1) - targetLine.GetPosition(targetLine.positionCount - 2)).normalized;
-                // }
+                
+                if(targetLine == null) {
+                    state = State.Searching;
+                }
+                Vector3 lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
 
                 anim.Play("EB_Idle");
                 if(lineUp.x > 0) {
@@ -122,19 +124,13 @@ public class EraserBossAI : MonoBehaviour
                 }
                 else {
                     spriteRenderer.flipX = false;
-                }
-                
+                }  
                 destination = targetLine.GetPosition(0) + targetLine.transform.position + (lineUp * 4); // position 0 in line renderer
-                // if(lineUp.x < 0) {
-                    
-                // }
-                // else {
-                //     destination = targetLine.GetPosition(0) + targetLine.transform.position - (lineUp * 4);
-                // }
                 
                 // when destination reached, start windup
                 Hover(destination, baseSpeed); // hover in the average direction of the line
                 if(Vector3.Distance(transform.position, destination) < 0.01) {
+                    Debug.Log("Starting Windup");
                     timer = 0;
                     state = State.WindUp;
                 }
@@ -154,7 +150,7 @@ public class EraserBossAI : MonoBehaviour
                 // determine whether the first or last point of the line is closer and align himself with MoveTo
                 anim.Play("EB_Dash");
                 if(!isErasingLine) {
-                    eraseLineSequence = StartCoroutine(EraseLineSequence(baseSpeed)); // start coroutine
+                    eraseLineSequence = StartCoroutine(EraseLineSequence(chargeSpeed)); // start coroutine
                 }
                 break;
 
@@ -189,19 +185,18 @@ public class EraserBossAI : MonoBehaviour
                     slamTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
                     isRotated = true;
                 }
-                Hover(new Vector3(KSpos.x, 15.0f), baseSpeed); // hover above KS
+                Hover(new Vector3(KSpos.x, KSpos.y + 15.0f), baseSpeed); // hover above KS
                 if(timer >= slamPrepTime) {
                     timer = 0;
-                    destination = new Vector3(KSpos.x, 1.0f, KSpos.z); // floor MUST be at 0!
+                    destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor
                     state = State.Slamming;
                 }
                 break;
 
             case State.Slamming:
                 anim.Play("EB_Slamming");
-                Slam(destination, tweenTime);
-                EraserFunctions.Erase(bounds1.transform.position, eraserRadius, false, PencilLinesFolder);
-                EraserFunctions.Erase(bounds2.transform.position, eraserRadius, false, PencilLinesFolder);
+                Slam();
+                Erase();
                 break;
             
             case State.SlamImpact:
@@ -272,7 +267,7 @@ public class EraserBossAI : MonoBehaviour
         if(!isKSHit) {
             if (other == KSCollider) { // Deplete health from KS
                 // Debug.Log("KS DETECTED");
-                physicalCollider.enabled = false;
+                //physicalCollider.enabled = false;
                 PlayerVars.instance.SpendDoodleFuel(50);
                 Vector3 distance = transform.position - KingScribble.transform.position;
                 // Debug.Log("distance: " + distance);
@@ -287,30 +282,45 @@ public class EraserBossAI : MonoBehaviour
 
         // Stop at the ground when slamming, not at pencil lines
         // NOT IN USE -> SlamTweenComplete()
-        // if (other.CompareTag("Ground") && other.gameObject.layer != LayerMask.NameToLayer("Lines") && state == State.Slamming) {
-        //     Debug.Log("GROUND DETECTED");
-        //     slamTween.Kill();
-        //     timer = 0;
-        //     isTweening = false;
-        //     isSlamHit = true;
-        //     state = State.SlamImpact;
-        // }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground") && state == State.Slamming) {
+            Debug.Log("GROUND DETECTED, pos is: " + transform.position);
+            //slamTween.Kill();
+            timer = 0;
+            isTweening = false;
+            isSlamHit = true;
+            state = State.SlamImpact;
+        }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && state == State.Slamming) {
+            Debug.Log("GROUND DETECTED, pos is: " + transform.position);
+            //slamTween.Kill();
+            timer = 0;
+            isTweening = false;
+            isSlamHit = true;
+            state = State.SlamImpact;
+        }
     }
 
     void SearchForPosition() {
         // If line renderer present, goes for the biggest one OR closest one?
         float closestDistance = 100f;
-        if(closestLineFound) {closestDistance = Vector3.Distance(this.transform.position, closestLine.transform.position);}
+        if(closestLineFound) {closestDistance = Vector3.Distance(transform.position, closestLine.transform.position);}
 
         foreach (Transform childTransform in PencilLinesFolder.transform) // for each pencil line
         {
             LineRenderer tempLine = childTransform.GetComponent<LineRenderer>();
             if(tempLine.positionCount > 1) {
-                // for each point in the pencil line find which is the closest
+                // for each first and last point in the pencil line find which is the closest to EB
                 for(int i = 0; i < tempLine.positionCount; i++) {
-                    float pointDistance = Vector3.Distance(transform.position, tempLine.GetPosition(i));
-                    if(pointDistance < closestDistance) {
-                        closestDistance = pointDistance;
+                    float pointDistanceFirst = Vector3.Distance(transform.position, tempLine.GetPosition(i)); // first point in line
+                    float pointDistanceLast = Vector3.Distance(transform.position, tempLine.GetPosition(tempLine.positionCount - 1)); // last point in line
+                    if(pointDistanceFirst < closestDistance) {
+                        closestDistance = pointDistanceFirst;
+                        closestLine = tempLine;
+                        closestLineFound = true;
+                    }
+                    if(pointDistanceLast < closestDistance) {
+                        closestDistance = pointDistanceLast;
                         closestLine = tempLine;
                         closestLineFound = true;
                     }
@@ -334,15 +344,23 @@ public class EraserBossAI : MonoBehaviour
 
     void Hover(Vector3 destination, float speed) {
         float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
-        transform.position =  Vector3.MoveTowards(transform.position, destination, step);
+        EBrb.MovePosition(Vector2.MoveTowards(transform.position, destination, step));
     }
 
-    void Slam(Vector3 destination, float speed) {
+    void Slam() {
         if (!isTweening) {    
-            slamTween = transform.DOMove(destination, speed).SetEase(Ease.InCubic).OnComplete(()=>{slamTweenComplete();});
-            slamTween.Play();
+            //slamTween = transform.DOMove(destination, speed).SetEase(Ease.InCubic).OnComplete(()=>{slamTweenComplete();});
+            //slamTween.Play();
+            Debug.Log("APPLYING SLAM FORCE");
+            EBrb.AddForce(new Vector2(0f, -1f * slamForce), ForceMode2D.Impulse);
             isTweening = true;
         }
+    }
+
+    // Takes into account EB's two colliders
+    void Erase() {
+        EraserFunctions.Erase(bounds1.transform.position, eraserRadius, true, PencilLinesFolder);
+        EraserFunctions.Erase(bounds2.transform.position, eraserRadius, true, PencilLinesFolder);
     }
 
     IEnumerator EraseLineSequence(float speed) {
@@ -358,21 +376,25 @@ public class EraserBossAI : MonoBehaviour
 
             for(int i = 0; i < numPoints; i++) { // for each point in the pencil line move
                 point = tempArray[i] + targetPosition;
+                int counter = i;
 
                 while (Vector3.Distance(transform.position, point) > 0.01f) {
-                    step = speed * Time.deltaTime;
-                    transform.position = Vector3.MoveTowards(transform.position, point, step);
-                    yield return null; // wait for next frame
+                    step = speed * Time.fixedDeltaTime;
+                    //transform.position = Vector2.MoveTowards(transform.position, point, step);
+                    EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
+                    // if(counter%3 == 0) {
+                    //     yield return null; // wait for next frame
+                    // }
+                    
                 }
 
-                EraserFunctions.Erase(bounds1.transform.position, eraserRadius, false, PencilLinesFolder);
-                EraserFunctions.Erase(bounds2.transform.position, eraserRadius, false, PencilLinesFolder);
+                Erase();
             }
+            yield return null;
         }
         isErasingLine = false;
         timer = 0;
-        state = State.ChargeCooldown;
-        
+        state = State.ChargeCooldown; 
     }
 
     private void slamTweenComplete() {
@@ -417,7 +439,7 @@ public class EraserBossAI : MonoBehaviour
         isSlamHit = false;
     }
 
-    private IEnumerator Pause(float duration) {
+    private IEnumerator Pause(float duration) { // General pause function
         yield return new WaitForSeconds(duration);
     }
 
