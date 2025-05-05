@@ -9,8 +9,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (DrawManager.instance != null)
-            DrawManager.instance.SetCursor(ToolType.None);
+        DrawManager.instance.SetCursor(ToolType.None);
         inside = true;
     }
 
@@ -18,7 +17,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     {
         if (!GameManager.paused && !GameManager.resetting)
         {
-            if (DrawManager.instance != null)
+            if (PlayerVars.instance != null)
                 DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         }
         inside = false;
