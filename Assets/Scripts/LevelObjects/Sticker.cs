@@ -31,7 +31,6 @@ public class Sticker : Collectible
         BASKETBALL,
         STAR,
         RIBBON,
-        LLL,
         BANANA
     }
 }
