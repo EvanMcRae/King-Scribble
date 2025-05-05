@@ -83,7 +83,7 @@ public class PauseMenu : MonoBehaviour
         AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
-        if (DrawManager.instance != null && !ToolIndicatorCursorHandler.inside)
+        if (DrawManager.instance != null && !HUDButtonCursorHandler.inside && PlayerVars.instance != null)
             DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {

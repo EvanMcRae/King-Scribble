@@ -63,7 +63,10 @@ public class DrawManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        SwitchTool(PlayerVars.instance.cur_tool);
+        if (PlayerVars.instance != null)
+            SwitchTool(PlayerVars.instance.cur_tool);
+        else
+            SetCursor(ToolType.None);
     }
 
     void LoadSubmeter(ToolType tool)
@@ -80,6 +83,8 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PlayerVars.instance == null) return;
+
         // Can't draw if you're dead/paused
         if (PlayerVars.instance.isDead) {
             EndDraw();
@@ -492,7 +497,7 @@ public class DrawManager : MonoBehaviour
         LoadSubmeter(newTool);
         if (isDrawing) // checking for if something has interrupted the drawing process while the mouse button is being held down
             EndDraw();
-        if (!ToolIndicatorCursorHandler.inside)
+        if (!HUDButtonCursorHandler.inside)
         {
             SetCursor(newTool);
         }
