@@ -106,7 +106,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !cutting)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !cutting && !HUDButtonCursorHandler.inside)
         {
             beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
@@ -148,7 +148,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !HUDButtonCursorHandler.inside)
             Draw(mousePos);
 
         // If the mouse has been released, stop drawing

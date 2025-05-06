@@ -1082,6 +1082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesWhileDrawing: 0
 --- !u!1 &2180560203414871256
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,7 +1188,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -1282,6 +1283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesWhileDrawing: 1
 --- !u!114 &6616714882197568063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1666,6 +1668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesWhileDrawing: 0
 --- !u!1 &2575240238112675973
 GameObject:
   m_ObjectHideFlags: 0
@@ -2459,6 +2462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesWhileDrawing: 0
 --- !u!1 &3295240966647773953
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,6 +2920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f76d930c4f0864e7aa5aa02735ce63eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disablesWhileDrawing: 0
 --- !u!1 &3945965351240306676
 GameObject:
   m_ObjectHideFlags: 0
