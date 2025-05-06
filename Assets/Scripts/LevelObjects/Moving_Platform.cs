@@ -35,7 +35,6 @@ public class Moving_Platform : MonoBehaviour
     public Dictionary<Transform, PhysicsMaterial2D> physicsMats = new();
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private SoundClip sound;
-    public bool playsSound = true;
 
     private void Awake()
     {
@@ -48,7 +47,7 @@ public class Moving_Platform : MonoBehaviour
         dest = transform.position;
         curSpeed = moveSpeed;
         if (moveDist < 0) gearSpeed *= -1f; // If moving left, rotate the opposite direction on move/return
-        if (!soundPool.ContainsKey(sound))
+        if (sound != null && !soundPool.ContainsKey(sound))
         {
             soundPool.TryAdd(sound, 0);
         }
@@ -139,7 +138,7 @@ public class Moving_Platform : MonoBehaviour
         if ((moving && !move_stopped) || (returning && !ret_stopped))
         {
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
-            if (!soundPlaying && playsSound)
+            if (!soundPlaying && sound != null)
             {
                 if (soundPool[sound] == 0)
                     soundPlayer.PlaySound(sound, 1, true);
@@ -147,7 +146,7 @@ public class Moving_Platform : MonoBehaviour
                 soundPlaying = true;
             }
         }
-        else if (soundPlaying && playsSound)
+        else if (soundPlaying && sound != null)
         {
             soundPool[sound]--;
             if (soundPool[sound] == 0)
