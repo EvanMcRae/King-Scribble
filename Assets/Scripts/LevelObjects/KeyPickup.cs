@@ -7,6 +7,7 @@ public class KeyPickup : Collectible
     [SerializeField] private GameObject door;
     public override void OnPickup(Collider2D player)
     {
+        PlayerController.instance.CollectKey();
         door.GetComponent<DoorScript>().removeLock();
     }
 }

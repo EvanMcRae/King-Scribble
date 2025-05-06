@@ -1607,6 +1607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b44c8cff58943cd8c24196768326cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blendTime: 2
 --- !u!1 &538676226
 GameObject:
   m_ObjectHideFlags: 0
@@ -5042,7 +5043,7 @@ MonoBehaviour:
   pickup:
     m_PersistentCalls:
       m_Calls: []
-  type: 3
+  type: 0
 --- !u!58 &1467692431
 CircleCollider2D:
   m_ObjectHideFlags: 0

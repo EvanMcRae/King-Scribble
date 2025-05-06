@@ -665,12 +665,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 954521125}
-  - {fileID: 465293908}
-  - {fileID: 1064952932}
   - {fileID: 655366130}
-  - {fileID: 336788325}
+  - {fileID: 1064952932}
   - {fileID: 410112995}
+  - {fileID: 465293908}
+  - {fileID: 954521125}
+  - {fileID: 336788325}
   m_Father: {fileID: 4517005936437317917}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5952,12 +5952,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stickers:
-  - {fileID: 954521126}
-  - {fileID: 465293909}
-  - {fileID: 1064952933}
   - {fileID: 655366131}
-  - {fileID: 336788326}
+  - {fileID: 1064952933}
   - {fileID: 410112996}
+  - {fileID: 465293909}
+  - {fileID: 954521126}
+  - {fileID: 336788326}
 --- !u!222 &8400333133230008665
 CanvasRenderer:
   m_ObjectHideFlags: 0

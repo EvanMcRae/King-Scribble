@@ -495,9 +495,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void CollectItem()
+    public void CollectTool()
     {
         soundPlayer.PlaySound("Player.Collect");
+    }
+
+    public void CollectSticker()
+    {
+        // TODO temp
+        soundPlayer.PlaySound("Level.Checkpoint");
+    }
+
+    public void CollectKey()
+    {
+        // TODO add key collect sound
     }
 
     public void DeathSound()

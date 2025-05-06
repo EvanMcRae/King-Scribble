@@ -931,7 +931,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  type: 2
+  type: 1
 --- !u!58 &281171179
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1807,6 +1807,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b44c8cff58943cd8c24196768326cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blendTime: 2
 --- !u!1 &540742872
 GameObject:
   m_ObjectHideFlags: 0
@@ -5296,8 +5297,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8846766452625618430, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: playsSound
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8846766452625618430, guid: 9af24dc5030554a74862897381f042cb, type: 3}
+      propertyPath: soundPlayer
+      value: 
+      objectReference: {fileID: 6652482066997626213}
     - target: {fileID: 8846766452625618430, guid: 9af24dc5030554a74862897381f042cb, type: 3}
       propertyPath: onFinishMove.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -5959,6 +5964,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1238789395}
   m_SourcePrefab: {fileID: 100100000, guid: d543b05aee12690479007aa93e26909d, type: 3}
+--- !u!114 &6652482066997626213 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5979916608624588539, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

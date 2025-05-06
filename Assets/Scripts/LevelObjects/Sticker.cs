@@ -20,17 +20,17 @@ public class Sticker : Collectible
         if (!deleted)
         {
             GameSaver.tempStickers.Add(type);
-            PlayerController.instance.CollectItem();
+            PlayerController.instance.CollectSticker();
         }
     }
 
     public enum StickerType
     {
-        DINO,
-        APPLE,
-        BASKETBALL,
         STAR,
-        RIBBON,
-        BANANA
+        BASKETBALL,
+        BANANA,
+        APPLE,
+        DINO,
+        RIBBON
     }
 }

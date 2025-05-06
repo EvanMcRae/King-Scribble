@@ -9,7 +9,7 @@ public class ToolPickup : Collectible
     {
         // Add the tool to the player's inventory 
         PlayerVars.instance.inventory.addTool(type);
-        PlayerController.instance.CollectItem();
+        PlayerController.instance.CollectTool();
         //PlayerController.instance.
         // TODO: pencil replenish pickup?
         //if (type == ToolType.Pencil) PlayerVars.instance.AddDoodleFuel(5000);

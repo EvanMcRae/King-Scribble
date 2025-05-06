@@ -28,13 +28,19 @@ public class Moving_Platform : MonoBehaviour
     public GameObject gear_r;
     public float gearSpeed;
     public bool isWall = false;
-    private static int wallSounds = 0, platformSounds = 0;
+    public static Dictionary<SoundClip, int> soundPool = new();
     private bool soundPlaying = false;
     [SerializeField] private Rigidbody2D rigidBody;
     public Dictionary<Transform, Transform> passengerRoots = new();
     public Dictionary<Transform, PhysicsMaterial2D> physicsMats = new();
     [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private SoundClip sound;
     public bool playsSound = true;
+
+    private void Awake()
+    {
+        soundPool = new();
+    }
 
     void Start()
     {
@@ -42,6 +48,10 @@ public class Moving_Platform : MonoBehaviour
         dest = transform.position;
         curSpeed = moveSpeed;
         if (moveDist < 0) gearSpeed *= -1f; // If moving left, rotate the opposite direction on move/return
+        if (!soundPool.ContainsKey(sound))
+        {
+            soundPool.TryAdd(sound, 0);
+        }
     }
 
     public void MoveToDest()
@@ -131,36 +141,17 @@ public class Moving_Platform : MonoBehaviour
             rigidBody.MovePosition(Vector2.MoveTowards(rigidBody.position, dest, curSpeed*Time.fixedDeltaTime));
             if (!soundPlaying && playsSound)
             {
-                if (isWall)
-                {
-                    if (wallSounds == 0)
-                        soundPlayer.PlaySound("Platform.Wall", 1, true);
-                    wallSounds++;
-                }
-                else
-                {
-                    if (platformSounds == 0)
-                        soundPlayer.PlaySound("Platform.Move", 1, true);
-                    platformSounds++;
-                }
+                if (soundPool[sound] == 0)
+                    soundPlayer.PlaySound(sound, 1, true);
+                soundPool[sound]++;
                 soundPlaying = true;
             }
         }
         else if (soundPlaying && playsSound)
         {
-            if (isWall)
-            {
-                wallSounds--;
-                if (wallSounds == 0)
-                    soundPlayer.EndSound("Platform.Wall");
-            }
-            else
-            {
-                platformSounds--;
-                if (platformSounds == 0)
-                    soundPlayer.EndSound("Platform.Move");
-            }
-
+            soundPool[sound]--;
+            if (soundPool[sound] == 0)
+                soundPlayer.EndSound(sound);
             soundPlaying = false;
         }
         if (moving && !move_stopped && !isWall && rigidBody.position != dest) 
@@ -203,6 +194,9 @@ public class Moving_Platform : MonoBehaviour
     {
         if (passenger.transform.root != null && passenger.transform.root != transform.parent && !passenger.transform.root.CompareTag("MovPlat"))
         {
+            // Exclude players in cheat mode
+            if (passenger.transform.CompareTag("Player") && PlayerVars.instance.cheatMode) return;
+
             passengerRoots.TryAdd(passenger.transform, passenger.transform.root);
 
             // Try to apply friction to mounted passengers (excluding players) so they stay on better
