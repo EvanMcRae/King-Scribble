@@ -6051,7 +6051,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 119.6, y: 8.11, z: -10}
+  m_LocalPosition: {x: 131.6, y: 8.11, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24887,50 +24887,6 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penMeter
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: scribbleMeter
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.b
-      value: 0.8490566
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.g
-      value: 0.39894974
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: penColor_inProgress.r
-      value: 0.3155927
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[1]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[2]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: submeters.Array.data[3]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -25038,10 +24994,6 @@ PrefabInstance:
         Button Ball Bash
 
 '
-      objectReference: {fileID: 0}
-    - target: {fileID: 7734209822801272920, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: m_Name
-      value: ManagerChecks
       objectReference: {fileID: 0}
     - target: {fileID: 8136064663288634364, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalPosition.x

@@ -52,6 +52,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (!(PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)) return;
         GameManager.paused = true;
         pauseButton.enabled = false;
         Time.timeScale = 0;

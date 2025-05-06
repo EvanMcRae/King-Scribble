@@ -63,7 +63,7 @@ public class DrawManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        if (PlayerVars.instance != null)
+        if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside)
             SwitchTool(PlayerVars.instance.cur_tool);
         else
             SetCursor(ToolType.None);
@@ -369,7 +369,7 @@ public class DrawManager : MonoBehaviour
         lastMousePos = mouse_pos;
     }
 
-    private void EndDraw()
+    public void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
         beganDraw = false;
