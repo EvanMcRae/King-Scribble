@@ -18,6 +18,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public bool soundOnPointerEnter = true;
     private bool noSound = false;
     public static bool globalNoSound = false;
+    private bool hovered = false;
 
     public void OnDeselect(BaseEventData eventData)
     {
@@ -42,6 +43,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         if (popupID == PopupPanel.numPopups)
         {
+            hovered = true;
+            HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
+            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance.isDrawing)
+                return;
             if (!soundOnPointerEnter)
                 noSound = true;
             EventSystem.current.SetSelectedGameObject(gameObject);
@@ -49,10 +54,29 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
+    public void Update()
+    {
+        HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
+        if (handler != null && handler.disablesWhileDrawing && !DrawManager.instance.isDrawing)
+        {
+            if (hovered && popupID == PopupPanel.numPopups)
+            {
+                
+                if (!soundOnPointerEnter)
+                    noSound = true;
+                EventSystem.current.SetSelectedGameObject(gameObject);
+                noSound = false;
+            }
+        }
+    }
+
     public void OnPointerMove(PointerEventData eventData)
     {
         if (eventData.hovered.Contains(gameObject) && EventSystem.current.currentSelectedGameObject != gameObject && popupID == PopupPanel.numPopups)
         {
+            HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
+            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance.isDrawing)
+                return;
             if (!soundOnPointerEnter)
                 noSound = true;
             EventSystem.current.SetSelectedGameObject(gameObject);
@@ -66,6 +90,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
+
+        hovered = false;
     }
 
     public void OnSelect(BaseEventData eventData)
