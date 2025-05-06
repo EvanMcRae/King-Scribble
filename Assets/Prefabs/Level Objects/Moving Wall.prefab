@@ -164,7 +164,8 @@ MonoBehaviour:
   isWall: 0
   rigidBody: {fileID: 7365072554166237698}
   soundPlayer: {fileID: 5562200611440212452}
-  moveSound: {fileID: 11400000, guid: e5de85e69bc9741a19ce6af6509bff31, type: 2}
+  sound: {fileID: 11400000, guid: e5de85e69bc9741a19ce6af6509bff31, type: 2}
+  playsSound: 1
 --- !u!50 &7365072554166237698
 Rigidbody2D:
   serializedVersion: 4

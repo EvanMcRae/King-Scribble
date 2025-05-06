@@ -52,6 +52,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (!(PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)) return;
         GameManager.paused = true;
         pauseButton.enabled = false;
         Time.timeScale = 0;
@@ -83,7 +84,7 @@ public class PauseMenu : MonoBehaviour
         AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
-        if (DrawManager.instance != null && !ToolIndicatorCursorHandler.inside)
+        if (DrawManager.instance != null && !HUDButtonCursorHandler.inside && PlayerVars.instance != null)
             DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {

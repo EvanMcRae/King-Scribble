@@ -306,11 +306,13 @@ public class AudioManager : MonoBehaviour
         // Fade now
         for (int i = 1; i < Steps; i++)
         {
-            player.volume += StepSize;
+            if (player != null)
+                player.volume += StepSize;
             yield return new WaitForSeconds(StepTime);
         }
         // Make sure the targetVolume is set
-        player.volume = targetVolume;
+        if (player != null)
+            player.volume = targetVolume;
 
         // Callback
         finishedCallback?.Invoke();

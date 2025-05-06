@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ToolIndicatorCursorHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public static bool inside = false;
 
@@ -17,7 +17,8 @@ public class ToolIndicatorCursorHandler : MonoBehaviour, IPointerEnterHandler, I
     {
         if (!GameManager.paused && !GameManager.resetting)
         {
-            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+            if (PlayerVars.instance != null)
+                DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         }
         inside = false;
     }

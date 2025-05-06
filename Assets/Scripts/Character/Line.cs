@@ -14,6 +14,7 @@ public class Line : MonoBehaviour
     public bool canDraw = true, hasDrawn = false;
     public const float LOOP_ALLOWANCE = 0.2f; // Maximum distance between the first and last point of a line to be considered a closed loop
     public const int MIN_POINTS = 8; // Minimum points on a line for it to be considered a closed loop
+    public const float MAX_DISTANCE = 50f;
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
     public bool is_pen = false;
@@ -105,7 +106,9 @@ public class Line : MonoBehaviour
         if (lineRenderer.positionCount == 0) return true;
 
         // Then check for minimum distance between points with local space-transformed position
-        return Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position)) > DrawManager.RESOLUTION;
+        float distance = Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position));
+        if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw();
+        return distance > DrawManager.RESOLUTION && distance < MAX_DISTANCE;
     }
 
     public int GetPointsCount()
