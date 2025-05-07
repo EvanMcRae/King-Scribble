@@ -15,7 +15,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     {
         if (!GameManager.paused && !GameManager.resetting && hovering)
         {
-            if (!DrawManager.instance.isDrawing && disablesWhileDrawing && !inside)
+            if (!DrawManager.instance.IsUsingTool() && disablesWhileDrawing && !inside)
             {
                 if (disableOrigin == null)
                     GetComponent<Button>().interactable = true;
@@ -31,7 +31,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (disablesWhileDrawing && DrawManager.instance.isDrawing)
+        if (disablesWhileDrawing && DrawManager.instance.IsUsingTool())
         {
             if (disableOrigin == null)
                 GetComponent<Button>().interactable = false;
@@ -54,7 +54,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
         {
             if (PlayerVars.instance != null)
                 DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
-            if (disablesWhileDrawing && DrawManager.instance.isDrawing)
+            if (disablesWhileDrawing && DrawManager.instance.IsUsingTool())
             {
                 if (disableOrigin == null)
                     GetComponent<Button>().interactable = true;

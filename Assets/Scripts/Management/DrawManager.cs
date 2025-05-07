@@ -58,7 +58,7 @@ public class DrawManager : MonoBehaviour
 
     [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab
     private GameObject trail; // To hold the instantiated prefab
-    private bool cutting = false;
+    public bool cutting = false;
 
     private void Awake()
     {
@@ -67,6 +67,11 @@ public class DrawManager : MonoBehaviour
             SwitchTool(PlayerVars.instance.cur_tool);
         else
             SetCursor(ToolType.None);
+    }
+
+    public bool IsUsingTool()
+    {
+        return isDrawing || isErasing || cutting;
     }
 
     void LoadSubmeter(ToolType tool)
@@ -210,6 +215,7 @@ public class DrawManager : MonoBehaviour
         {
             mouse_pos += new Vector2(0.5f, -0.5f);
             lastMousePos = mouse_pos;
+            isErasing = true;
             EraserFunctions.Erase(mouse_pos, eraserRadius, true);
             soundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
             return;
@@ -371,6 +377,7 @@ public class DrawManager : MonoBehaviour
     public void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
+        isErasing = false;
         beganDraw = false;
         if (currentSoundPause != null)
             AudioManager.instance.StopCoroutine(currentSoundPause);
