@@ -4546,7 +4546,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -17759,7 +17759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6201593291800123279, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Lens.OrthographicSize
-      value: 15
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6391028859284896578, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -17832,6 +17832,10 @@ PrefabInstance:
     - target: {fileID: 7623383880111782473, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7673098356251539842, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -44.503906
       objectReference: {fileID: 0}
     - target: {fileID: 8136064663288634364, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17865,10 +17869,22 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 230.2998
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -121.72998
+      objectReference: {fileID: 0}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultTool
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 5822156443712500876, guid: 7564453bbed8f4e929362f8af1791c19, type: 3}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 3

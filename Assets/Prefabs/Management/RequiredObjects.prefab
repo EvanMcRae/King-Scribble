@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c1d1828c76a646bd91a9b6f8450a64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 5822156443712500876, guid: b6505642186acb743af7036cb5b81b46, type: 3}
+  playerPrefab: {fileID: 5822156443712500876, guid: 7564453bbed8f4e929362f8af1791c19, type: 3}
   cam: {fileID: 6201593291800123279}
   defaultInventory:
     toolUnlocks: 
@@ -465,6 +465,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2d88dac28d6fc46d1a1676320236c78e, type: 2}
   - {fileID: 11400000, guid: 12116ba87a9e343be8f52aa01643972c, type: 2}
   cuttingTrail: {fileID: 1465479247098009191, guid: b900bed1df7535d4c8444484ff2982f1, type: 3}
+  cutting: 0
 --- !u!1001 &671955042030203177
 PrefabInstance:
   m_ObjectHideFlags: 0

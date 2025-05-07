@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool holdingJump;
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D groundCheck, roofCheck, landCheck, wallCheck;
+    [SerializeField] private PolygonCollider2D bodyCollider, groundCheck, roofCheck, landCheck, wallCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
@@ -61,6 +61,9 @@ public class PlayerController : MonoBehaviour
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
     public const int SIZE_STAGES = 4;
+    [SerializeField] private List<PolygonCollider2D> sizeColliders = new();
+    [SerializeField] private List<PolygonCollider2D> groundCheckers = new();
+    public bool oldPlayer = true;
 
     // Start is called before the first frame update
     void Start()
@@ -157,7 +160,7 @@ public class PlayerController : MonoBehaviour
             PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
             Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
             rb.isKinematic = PlayerVars.instance.cheatMode;
-            mainBody.GetComponent<PolygonCollider2D>().enabled = !PlayerVars.instance.cheatMode;
+            bodyCollider.enabled = !PlayerVars.instance.cheatMode;
         }
         if (PlayerVars.instance.cheatMode)
         {
@@ -209,13 +212,13 @@ public class PlayerController : MonoBehaviour
             {
                 if (canWalkOnSlope || !isOnSlope)
                 {
-                    mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+                    bodyCollider.sharedMaterial = friction;
                 }
                 rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
             }
             else
             {
-                if (!frictionOverride) mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = slippery;
+                if (!frictionOverride) bodyCollider.sharedMaterial = slippery;
                 rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
             }
         }
@@ -374,10 +377,10 @@ public class PlayerController : MonoBehaviour
         }
 
         // Attempting to fix getting stuck against slopes
-        if (mainBody.GetComponent<PolygonCollider2D>().IsTouchingLayers(whatIsGround))
+        if (bodyCollider.IsTouchingLayers(whatIsGround))
         {
             List<ContactPoint2D> contactPoint2Ds = new();
-            mainBody.GetComponent<PolygonCollider2D>().GetContacts(contactPoint2Ds);
+            bodyCollider.GetContacts(contactPoint2Ds);
             bool onground = false;
             foreach (ContactPoint2D point in contactPoint2Ds)
             {
@@ -478,12 +481,24 @@ public class PlayerController : MonoBehaviour
     
     public void ResizePlayer(float fuel_left)
     {
-        mainBody.transform.localScale = Vector3.one * Mathf.Ceil(fuel_left * SIZE_STAGES)/SIZE_STAGES;
+        fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
+        if (oldPlayer)
+            mainBody.transform.localScale = Vector3.one * fuel_left;
+        else
+        {
+            anim.SetFloat("size", fuel_left);
+
+            // TODO this is not the final death animation I imagine...
+            mainBody.transform.localScale = fuel_left == 0 ? Vector3.zero : Vector3.one;
+
+            bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
+            groundCheck.points = groundCheckers[(int)(fuel_left * SIZE_STAGES)].points;
+        }
     }
 
     public bool OverlapsPosition(Vector2 position)
     {
-        return mainBody.GetComponent<PolygonCollider2D>().OverlapPoint(position);
+        return bodyCollider.OverlapPoint(position);
     }
 
     public void SetFriction(bool active)
@@ -491,7 +506,7 @@ public class PlayerController : MonoBehaviour
         frictionOverride = active;
         if (active)
         {
-            mainBody.GetComponent<PolygonCollider2D>().sharedMaterial = friction;
+            bodyCollider.sharedMaterial = friction;
         }
     }
 

@@ -466,6 +466,7 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 904
+  bodyCollider: {fileID: 5108078074794873328}
   groundCheck: {fileID: 2175459678399007660}
   roofCheck: {fileID: 0}
   landCheck: {fileID: 3419832881364647439}
@@ -478,6 +479,13 @@ MonoBehaviour:
   softFall: 1
   isStuck: 0
   frictionOverride: 0
+  sizeColliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  oldPlayer: 1
 --- !u!114 &7087994594828487266
 MonoBehaviour:
   m_ObjectHideFlags: 0
