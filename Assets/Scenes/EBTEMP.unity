@@ -3021,12 +3021,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10f1c3a178ef24dae8c02d0078d2fdc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disable: 1
+  disable: 0
   PencilLinesFolder: {fileID: 1044835375}
   PenLinesFolder: {fileID: 2131398971}
   anim: {fileID: 167534452}
   platform: {fileID: 1197847001}
   myText: {fileID: 1932981670}
+  InkEvents: {fileID: 0}
 --- !u!50 &196569753
 Rigidbody2D:
   serializedVersion: 4
@@ -13893,7 +13894,6 @@ MonoBehaviour:
   l_inkfall: {fileID: 790334229}
   r_inkfall: {fileID: 2092374306}
   button: {fileID: 1810280221}
-  isButtonActive: 0
 --- !u!4 &1114107047
 Transform:
   m_ObjectHideFlags: 0
@@ -16780,7 +16780,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1415374307
 Transform:
   m_ObjectHideFlags: 0
@@ -16838,7 +16838,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 5
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.16862746, g: 1, b: 1, a: 0.29803923}
+  m_Color: {r: 0.4392157, g: 0.18039216, b: 0.64705884, a: 0.45490196}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -17907,6 +17907,10 @@ PrefabInstance:
       propertyPath: cuttingTrail
       value: 
       objectReference: {fileID: 1465479247098009191, guid: b900bed1df7535d4c8444484ff2982f1, type: 3}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: PenLinesFolder
+      value: 
+      objectReference: {fileID: 2131398971}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: PencilLinesFolder
       value: 
@@ -21915,6 +21919,14 @@ PrefabInstance:
       propertyPath: on_release.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2194871180486772950, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2511217191844205740, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3172549540408935919, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.7515
@@ -21963,9 +21975,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4579342135882081637, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6001434979272687398, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Name
       value: Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001434979272687398, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Distance
@@ -21974,6 +21994,10 @@ PrefabInstance:
     - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_AutoConfigureDistance
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7592079765204473368, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
