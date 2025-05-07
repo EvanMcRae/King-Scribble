@@ -30,20 +30,26 @@ public class EraserBossAI : MonoBehaviour
         SlamCooldown, // used for Slam Cooldown and Charge Cooldown
         EndScene
     }
+    // serialized vars
     [SerializeField] private bool disable = false;
     [SerializeField] private GameObject PencilLinesFolder; // Where pencil lines are stored in hierarchy
     [SerializeField] private GameObject PenLinesFolder; // Where pen objs are stored in hierarchy
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject platform;
+    [SerializeField] private TextMeshProUGUI myText;
+    [SerializeField] private GameObject InkEvents;
+    // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
     private float cooldownSpeed = 10f; // slower speed for cooldown to mimic tiredness
     private float eraserRadius = 1f; // Space that will be erased
     private float slamForce = 5000f; // assits with the slam "tween"
     private float knockbackForce = 20f; // upon KS hitting EB
-    private float roarForce = 100f;
-    private float rotateTweenTime = 0.5f;
-    [SerializeField] private TextMeshProUGUI myText;
+    private float minDamageMass = 5.0f; // 10 works good
+    private float roarForce = 200f;
+    private int hitpoints = 3;
+    private float totalPenMass = 0;
+    // common objects
     private State state;
     private GameObject KingScribble;
     private LineRenderer targetLine; // a LineRenderer in PencilLinesFolder
@@ -52,7 +58,13 @@ public class EraserBossAI : MonoBehaviour
     private GameObject bounds1; // for Erase circle cast, requires 2 circle colliders
     private GameObject bounds2;
     private GameObject bounds3;
+    private GameObject shieldSprite;
     private Collider2D KSCollider;
+    private Rigidbody2D KSrb; // King Scribble's Rigidbody
+    private CapsuleCollider2D physicalCollider; // EB's collider with physics
+    private Rigidbody2D EBrb; // EB's Rigidbody2D
+    private LineRenderer closestLine = null; // For searching
+    // timer vars:
     private float timer = 0.0f; // used for cooldowns
     private float searchTime = 2.0f; // variables ending in "Time" relate to the timer
     private float slamCooldownTime = 1.0f;
@@ -63,33 +75,28 @@ public class EraserBossAI : MonoBehaviour
     private float damageTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
     private float KSStunTime = 2.0f; // time KS is stunned
-    private float minDamageMass = 5.0f; // 10 works good
+    private float rotateTweenTime = 0.5f;
+    // booleans:
     private bool isErasingLine = false; // booleans for states that are not independent enough for the state machine
     private bool isSlamming = false; // whether EB is in a tweening state
     private bool isRotated = false; // assists with EB's animations
     private bool isInvulnerable = false; // whether EB is invulnerable (force field)
     private bool isKSHit = false; // true when KS has been hit in general
     private bool isSlamHit = false; // true when KS has been hit by a slam
-    private bool isShielding = false;
-
-    private LineRenderer closestLine = null; // For searching
-
-    private Tween rotateTween;
+    private bool isShielding = false; // assists with starting the ActivateShield and RemoveShield coroutines
     
-    private Rigidbody2D KSrb; // King Scribble's Rigidbody
-    private CapsuleCollider2D physicalCollider; // EB's collider with physics
-    private Rigidbody2D EBrb; // EB's Rigidbody2D
-    private int hitpoints = 3;
-    private float totalPenMass = 0;
-
+    // idk vars:
+    private Tween rotateTween;
     Coroutine eraseLineSequence;
+
 
     void Start() {
         KingScribble = PlayerVars.instance.gameObject; // Initialize KS, his RigidBody2D, and MainBody trigger collider
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
         EBrb = GetComponent<Rigidbody2D>(); 
         KSCollider = KingScribble.transform.Find("MainBody").GetComponent<PolygonCollider2D>(); // very iffy code
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer = transform.Find("EB_Sprite").GetComponent<SpriteRenderer>();
+        shieldSprite = transform.Find("EB_Sprite/EB_Shield").gameObject;
 
         bounds1 = transform.Find("Bounds1").gameObject; // initalize erasing colliders bounds
         bounds2 = transform.Find("Bounds2").gameObject;
@@ -136,7 +143,7 @@ public class EraserBossAI : MonoBehaviour
                 if(targetLine == null) {
                     state = State.Searching;
                 }
-                Vector3 lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;
+                Vector3 lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized; // this line sometimes bugs
 
                 anim.Play("EB_Idle");
                 if(lineUp.x > 0) {
@@ -149,7 +156,7 @@ public class EraserBossAI : MonoBehaviour
                 
                 // when destination reached, start windup
                 Hover(destination, baseSpeed); // hover in the average direction of the line
-                Debug.Log("DISTANCE TO END POINT IS: " + Vector3.Distance(transform.position, destination));
+                //Debug.Log("DISTANCE TO END POINT IS: " + Vector3.Distance(transform.position, destination));
                 // explain to me unity why the lowest distance you can get with your movement function is 2.0 like where is the ACCURACY??
                 if(Vector3.Distance(transform.position, destination) < 2.5 || timer > 5) {
                     Debug.Log("Starting Windup");
@@ -257,14 +264,14 @@ public class EraserBossAI : MonoBehaviour
             GameObject penObj = other.gameObject;
             Rigidbody2D penRB = penObj.GetComponent<Rigidbody2D>();
             if(penRB.mass >= minDamageMass) { // Pen obj is big enough
-                if(state == State.Charging) {
+                if(state == State.Charging && !isInvulnerable) {
                     Debug.Log("DIZZIED");
                     timer = 0;
                     state = State.Dizzied;
                     StopCoroutine(eraseLineSequence); // stop the erasing coroutine
                     isErasingLine = false;
                     Destroy(other.gameObject); // destroy pen object
-                    other.GetComponent<Line>().deleted = true;
+                    other.GetComponent<Line>().deleted = true; // ensures the Line is deleted
                 }
                 else if(state == State.Dizzied) {
                     // play damaged animation
@@ -285,6 +292,7 @@ public class EraserBossAI : MonoBehaviour
             else { // Pen obj is too small
                 if(state == State.Charging) {
                     Destroy(other.gameObject); // destroy pen object
+                    other.GetComponent<Line>().deleted = true;
                 }
             }
         }
@@ -299,6 +307,13 @@ public class EraserBossAI : MonoBehaviour
                 else { // launch left 
                     Knockback(new Vector2(-1f, 1f), knockbackForce);
                 }
+            }
+        }
+
+        // Ink waterfalls
+        if(other.gameObject.layer == LayerMask.NameToLayer("EB_Hurt")) {
+            if(!isShielding) {
+                StartCoroutine(RemoveShield());
             }
         }
 
@@ -454,49 +469,141 @@ public class EraserBossAI : MonoBehaviour
 
 
     private IEnumerator Roar() {
+        // play animation
         yield return null;
     }
 
     // Despawns all pen objects in scene and knocks back KS off platform
     private IEnumerator ActivateShield() {
+        Debug.Log("ACTIVATING SHIELD");
         isShielding = true;
-        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(1.0f);
+
+        // Roar here!
+
+        isInvulnerable = true;
+        shieldSprite.SetActive(true);
+        yield return new WaitForSeconds(3.0f);
         state = State.Searching;
         isShielding = false;
 
-        // toggle button activation here!
+        Debug.Log("ACTIVATING BUTTON");
+        EraserBossEvent.ActivateButton();
+
         // break chain!
 
+        DespawnAllPenObj();
+        
+    }
+
+    private void DespawnAllPenObj() {
+        Debug.Log("DESPAWNING PEN OBJS");
         foreach (Transform childTransform in PenLinesFolder.transform) {
-            // play pen obj despawn warning animation
-            SpriteRenderer temp = childTransform.GetComponent<SpriteRenderer>();
-            temp.color = Color.red;
-            yield return new WaitForSeconds(3.0f);
-            Destroy(childTransform.gameObject);
+            StartCoroutine(DespawnPenObj(childTransform));
         }
     }
     
+    private IEnumerator DespawnPenObj(Transform pen) {
+        // play pen obj despawn warning animation
+        // this code kinda sucks :(
+        GameObject penObject = pen.gameObject;
+        LineRenderer tempLine = pen.GetComponent<LineRenderer>();
+        Color original = tempLine.startColor;
+        Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
+
+        // Create 2 material blocks, one being the original and the other being transparent
+        MeshRenderer polyRend = penObject.GetComponentInChildren<MeshRenderer>();
+        MaterialPropertyBlock matBlockOG = new MaterialPropertyBlock();
+        MaterialPropertyBlock matBlockOpacity = new MaterialPropertyBlock();
+        polyRend.GetPropertyBlock(matBlockOpacity);
+        polyRend.GetPropertyBlock(matBlockOG);
+        matBlockOpacity.SetColor("_Color", opacity);
+
+        // toggle opacities
+        polyRend.SetPropertyBlock(matBlockOpacity);
+        tempLine.startColor = opacity;
+        tempLine.endColor = opacity;
+        yield return new WaitForSeconds(.5f);
+        polyRend.SetPropertyBlock(matBlockOG);
+        tempLine.startColor = original;
+        tempLine.endColor = original;
+        yield return new WaitForSeconds(.5f);
+        polyRend.SetPropertyBlock(matBlockOpacity);
+        tempLine.startColor = opacity;
+        tempLine.endColor = opacity;
+        yield return new WaitForSeconds(.5f);
+        polyRend.SetPropertyBlock(matBlockOG);
+        tempLine.startColor = original;
+        tempLine.endColor = original;
+        yield return new WaitForSeconds(.5f);
+        Destroy(pen.gameObject);
+    }
+
+    private void DespawnAllPencilObj() {
+        Debug.Log("DESPAWNING PENCIL OBJS");
+        foreach (Transform childTransform in PencilLinesFolder.transform) {
+            StartCoroutine(DespawnPencilObj(childTransform));
+        }
+    }
+    
+
+    private IEnumerator DespawnPencilObj(Transform pencil) {
+        // play pen obj despawn warning animation
+        // this code kinda sucks :(
+        LineRenderer tempLine = pencil.GetComponent<LineRenderer>();
+        Color original = tempLine.startColor;
+        Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
+
+        // toggle opacities
+        tempLine.startColor = opacity;
+        tempLine.endColor = opacity;
+        yield return new WaitForSeconds(.5f);
+        tempLine.startColor = original;
+        tempLine.endColor = original;
+        yield return new WaitForSeconds(.5f);
+        tempLine.startColor = opacity;
+        tempLine.endColor = opacity;
+        yield return new WaitForSeconds(.5f);
+        tempLine.startColor = original;
+        tempLine.endColor = original;
+        yield return new WaitForSeconds(.5f);
+        Destroy(pencil.gameObject);
+    }
+
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield() {
         Debug.Log("DEACTIVATING SHIELD");
+
+        isShielding = true;
+        isInvulnerable = false;
+        shieldSprite.SetActive(false);
+        DespawnAllPenObj();
+        DespawnAllPencilObj();
+
+        // play Roar animation
+        yield return new WaitForSeconds(2.0f);
+
+        // Knockback KS to a wall!
         Vector3 distance = transform.position - KingScribble.transform.position;
         if(distance.x < 0) { // launch right
-            Knockback(new Vector2(1f, 1f), roarForce);
+            Knockback(new Vector2(1f, .1f), roarForce);
         }
         else { // launch left 
-            Knockback(new Vector2(-1f, 1f), roarForce);
+            Knockback(new Vector2(-1f, .1f), roarForce);
         }
 
-        // cutscene behavior here!
+        yield return new WaitForSeconds(1.0f);
 
-        yield return new WaitForSeconds(3.0f);
-
+        // cutscene behavior here! 
+        EraserBossEvent.DeactivateButton(); // needs to be after the button is clear! otherwise the ink will continue flowing
         state = State.Searching;
+        isShielding = false;
+
+        
     }
 
     // increase the speeds and initiates shield:
     private void Difficulty2() {
-        isInvulnerable = true;
         baseSpeed += 10;
         chargeSpeed += 10;
     }

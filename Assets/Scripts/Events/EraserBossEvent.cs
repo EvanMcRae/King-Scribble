@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class EBInkfallEvent : MonoBehaviour
+public class EraserBossEvent : MonoBehaviour
 {
     [SerializeField] private Transform l_start;
     [SerializeField] private Transform l_active;
@@ -13,20 +13,41 @@ public class EBInkfallEvent : MonoBehaviour
     [SerializeField] private Transform r_deactivated;
     [SerializeField] private GameObject l_inkfall;
     [SerializeField] private GameObject r_inkfall;
+    [SerializeField] private GameObject button;
+    private static SpriteRenderer buttonTop;
+    [SerializeField] static bool isButtonActive = false;
 
     void Start()
     {
         l_inkfall.transform.position = l_start.position;
         r_inkfall.transform.position = r_start.position;
+        buttonTop = button.transform.Find("Top").GetComponent<SpriteRenderer>();
+        DeactivateButton();
+    }
+
+    public static void ActivateButton() {
+        // change color to purple
+        buttonTop.color = Color.white;
+        isButtonActive = true;
+    }
+
+    public static void DeactivateButton() {
+        // change color to black
+        buttonTop.color = Color.black;
+        isButtonActive = false;
     }
 
     public void Activate() {
-        l_inkfall.transform.DOMoveY(l_active.position.y, 0.5f);
-        r_inkfall.transform.DOMoveY(r_active.position.y, 0.5f);
+        if(isButtonActive) {
+            l_inkfall.transform.DOMoveY(l_active.position.y, 0.5f);
+            r_inkfall.transform.DOMoveY(r_active.position.y, 0.5f);
+        }
     }
 
     public void Deactivate() {
-        StartCoroutine(Deactivate_());
+        if(isButtonActive) {
+            StartCoroutine(Deactivate_());
+        }
     }
 
     IEnumerator Deactivate_() {
