@@ -153,7 +153,7 @@ public class PlayerVars : MonoBehaviour
         if (!inventory.hasTool(cur_tool))
             cur_tool = ToolType.None;
 
-        GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.one * 0.15f;
+        GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.one * (PlayerController.instance.oldPlayer ? 0.7f : 0.15f);
         GetComponent<PlayerController>().facingRight = true;
         GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
