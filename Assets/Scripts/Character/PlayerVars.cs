@@ -48,6 +48,7 @@ public class PlayerVars : MonoBehaviour
             isDead = true;
             PlayerController.instance.DeathSound();
             doodleEvent(doodleFuelLeft());
+            GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.zero;
             GameManager.instance.Reset();
         }
         if (!isDead)
@@ -152,6 +153,7 @@ public class PlayerVars : MonoBehaviour
         if (!inventory.hasTool(cur_tool))
             cur_tool = ToolType.None;
 
+        GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.one * 0.15f;
         GetComponent<PlayerController>().facingRight = true;
         GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;

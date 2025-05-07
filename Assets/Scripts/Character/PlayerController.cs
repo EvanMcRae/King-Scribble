@@ -49,7 +49,8 @@ public class PlayerController : MonoBehaviour
     private bool holdingJump;
     private bool isGrounded = false;
     [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private PolygonCollider2D bodyCollider, groundCheck, roofCheck, landCheck, wallCheck;
+    [SerializeField] private PolygonCollider2D bodyCollider, roofCheck, landCheck, wallCheck;
+    [SerializeField] private Collider2D groundCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
     public CinemachineVirtualCamera virtualCamera;
     private float realVelocity;
@@ -62,7 +63,7 @@ public class PlayerController : MonoBehaviour
     private float cheatSpeed = 0.0f;
     public const int SIZE_STAGES = 4;
     [SerializeField] private List<PolygonCollider2D> sizeColliders = new();
-    [SerializeField] private List<PolygonCollider2D> groundCheckers = new();
+    [SerializeField] private List<Collider2D> groundCheckers = new();
     public bool oldPlayer = true;
 
     // Start is called before the first frame update
@@ -259,7 +260,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (isJumping)
+            if (isJumping && timeSinceJump > 0.1f)
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -325,6 +326,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.AddForce(new Vector2(0f, jumpForce * rb.mass * (holdingJump ? 1 : 0.7f))); // force added during a jump
             timeSinceJump = 0.0f;
+            timeSinceJumpPressed = 0.3f;
             if (holdingJump && releasedJumpSinceJump)
             {
                 releasedJumpSinceJump = false;
@@ -413,6 +415,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void NotJumping()
+    {
+        // Get trolled
+        isJumping = false;
+        anim.SetBool("isJumping", false);
+    }
+
     void RoofCheck()
     {
         isRoofed = false;
@@ -487,12 +496,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             anim.SetFloat("size", fuel_left);
-
-            // TODO this is not the final death animation I imagine...
-            mainBody.transform.localScale = fuel_left == 0 ? Vector3.zero : Vector3.one;
-
             bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
-            groundCheck.points = groundCheckers[(int)(fuel_left * SIZE_STAGES)].points;
+            // Written this way to allow the old player prefab to work
+            groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
+            groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
         }
     }
 

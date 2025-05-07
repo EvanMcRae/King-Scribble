@@ -251,7 +251,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5134605551133159938}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -467,10 +467,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 904
   bodyCollider: {fileID: 5108078074794873328}
-  groundCheck: {fileID: 2175459678399007660}
   roofCheck: {fileID: 0}
   landCheck: {fileID: 3419832881364647439}
   wallCheck: {fileID: 0}
+  groundCheck: {fileID: 2175459678399007660}
   groundedRadius: 0.1
   roofedRadius: 0.1
   virtualCamera: {fileID: 0}
@@ -485,6 +485,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  groundCheckers: []
   oldPlayer: 1
 --- !u!114 &7087994594828487266
 MonoBehaviour:
