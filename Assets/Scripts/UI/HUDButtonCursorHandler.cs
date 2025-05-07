@@ -9,7 +9,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     public static bool inside = false;
     public bool disablesWhileDrawing = false;
     private bool hovering = false;
-
+    [SerializeField] private GameObject disableOrigin;
 
     public void Update()
     {
@@ -17,7 +17,12 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
         {
             if (!DrawManager.instance.isDrawing && disablesWhileDrawing && !inside)
             {
-                GetComponent<Button>().interactable = true;
+                if (disableOrigin == null)
+                    GetComponent<Button>().interactable = true;
+                else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                {
+                    b.interactable = true;
+                }
                 inside = true;
                 DrawManager.instance.SetCursor(ToolType.None);
             }
@@ -28,7 +33,12 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     {
         if (disablesWhileDrawing && DrawManager.instance.isDrawing)
         {
-            GetComponent<Button>().interactable = false;
+            if (disableOrigin == null)
+                GetComponent<Button>().interactable = false;
+            else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+            {
+                b.interactable = false;
+            }
         }
         else
         {
@@ -46,12 +56,15 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
                 DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
             if (disablesWhileDrawing && DrawManager.instance.isDrawing)
             {
-                GetComponent<Button>().interactable = true;
+                if (disableOrigin == null)
+                    GetComponent<Button>().interactable = true;
+                else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                {
+                    b.interactable = true;
+                }
             }
         }
         inside = false;
         hovering = false;
     }
-
-    // TODO: When releasing draw and still inside, set inside to true which will then disable drawing
 }

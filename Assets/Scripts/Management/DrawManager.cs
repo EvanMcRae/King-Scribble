@@ -152,9 +152,8 @@ public class DrawManager : MonoBehaviour
             Draw(mousePos);
 
         // If the mouse has been released, stop drawing
-        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused))
+        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused || HUDButtonCursorHandler.inside))
         {
-            beganDraw = false;
             EndDraw();
         }
 

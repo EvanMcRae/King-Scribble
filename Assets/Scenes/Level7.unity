@@ -93236,7 +93236,6 @@ MonoBehaviour:
   rigidBody: {fileID: 1501333981}
   soundPlayer: {fileID: 0}
   sound: {fileID: 0}
-  playsSound: 0
 --- !u!50 &1501333981
 Rigidbody2D:
   serializedVersion: 4
@@ -95342,7 +95341,6 @@ MonoBehaviour:
   rigidBody: {fileID: 1608410518}
   soundPlayer: {fileID: 961480049}
   sound: {fileID: 11400000, guid: e5de85e69bc9741a19ce6af6509bff31, type: 2}
-  playsSound: 1
 --- !u!61 &1608410520
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -108435,7 +108433,6 @@ MonoBehaviour:
   rigidBody: {fileID: 3320391401117397213}
   soundPlayer: {fileID: 674838104744979758}
   sound: {fileID: 11400000, guid: e5de85e69bc9741a19ce6af6509bff31, type: 2}
-  playsSound: 1
 --- !u!1 &7929745543494698541
 GameObject:
   m_ObjectHideFlags: 0
