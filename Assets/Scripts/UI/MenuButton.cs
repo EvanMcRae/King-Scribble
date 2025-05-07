@@ -22,7 +22,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnDeselect(BaseEventData eventData)
     {
-        if (normal != null && PopupPanel.numPopups == 0)
+        if (normal != null)
             image.sprite = normal;
     }
 

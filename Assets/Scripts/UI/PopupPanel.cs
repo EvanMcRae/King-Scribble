@@ -89,6 +89,7 @@ public class PopupPanel : MonoBehaviour
         PreviousButton = EventSystem.current.currentSelectedGameObject;
         MenuButton.globalNoSound = true;
         EventSystem.current.SetSelectedGameObject(PrimaryButton);
+        PrimaryButton.GetComponent<MenuButton>().OnSelect(null);
         MenuButton.globalNoSound = false;
         if (darkensScreen)
         {
