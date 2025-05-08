@@ -250,7 +250,7 @@ public class EraserBossAI : MonoBehaviour
                     rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
                     isRotated = true;
                 }
-                Hover(new Vector3(KSpos.x, KSpos.y + 20.0f), baseSpeed); // hover above KS
+                Hover(new Vector3(KSpos.x, KSpos.y + 22.0f), baseSpeed); // hover above KS
                 if(timer >= slamPrepTime) {
                     timer = 0;
                     destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor
