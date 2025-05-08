@@ -530,7 +530,7 @@ public class PlayerController : MonoBehaviour
 
     public void CollectKey()
     {
-        // TODO add key collect sound
+        soundPlayer.PlaySound("Level.GetKey");
     }
 
     public void DeathSound()
