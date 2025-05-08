@@ -14,6 +14,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public UnityEvent closeDoor;
     private bool doorClosed;
     private bool isAnimating;
+    public SoundPlayer soundPlayer;
+
     public void StartEvent()
     {
         StartCoroutine(Start_Event());
@@ -30,6 +32,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         yield return new WaitForSeconds(1);
         inkFlow_L.transform.DOLocalMoveY(-110, 0.5f);
         inkFlow_R.transform.DOLocalMoveY(-118, 0.5f);
+        soundPlayer.PlaySound("Ink.Flow", 1, true);
         yield return new WaitForSeconds(3);
         cam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);
@@ -58,6 +61,10 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             } 
             startFlood.Invoke();
             isAnimating = false;
+            if (!soundPlayer.sources[0].isPlaying)
+            {
+                soundPlayer.PlaySound("Ink.Flow", 1, true);
+            }
         }
     }
 }

@@ -22,12 +22,15 @@ public class InkFlood : MonoBehaviour
     private bool waiting = false;
     public float killThreshold = 0.5f;
 
+    public SoundPlayer soundPlayer;
+
     public void SetDest(int dest_index) {curDest = dest_index;}
     public void NextDest() {if (destinations.Length > curDest - 1) curDest++;}
     public void PrevDest() {if (curDest > 0) curDest--;}
 
     public void StartFlood()
     {
+
         flooding = true;
         // Possibly add: if not first time in the level (must implement into save functionality)
         if (speedUp_enabled)
@@ -37,6 +40,13 @@ public class InkFlood : MonoBehaviour
             waiting = true;
             StartCoroutine(WaitTime(waitTime));
         }
+        else
+        {
+            if (soundPlayer != null && !soundPlayer.sources[0].isPlaying)
+            {
+                soundPlayer.PlaySound("Ink.Flow", 1, true);
+            }
+        }
     }
 
     IEnumerator WaitTime(float wait_time)
@@ -44,11 +54,17 @@ public class InkFlood : MonoBehaviour
         waiting = true;
         yield return new WaitForSeconds(wait_time);
         waiting = false;
+        if (soundPlayer != null && !soundPlayer.sources[0].isPlaying)
+        {
+            soundPlayer.PlaySound("Ink.Flow", 1, true);
+        }
     }
 
     public void StopFlood()
     {
         flooding = false;
+        if (soundPlayer != null)
+            soundPlayer.EndSound("Ink.Flow");
     }
 
     void FixedUpdate()
@@ -77,7 +93,7 @@ public class InkFlood : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, destinations[curDest].position, floodSpeed * Time.fixedDeltaTime);
         }
 
-        if (transform.position == destinations[curDest].position) flooding = false;
+        if (transform.position == destinations[curDest].position) StopFlood();
     }
 
     void OnTriggerStay2D(Collider2D collision)

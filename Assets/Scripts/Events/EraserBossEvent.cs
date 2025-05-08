@@ -16,6 +16,8 @@ public class EraserBossEvent : MonoBehaviour
     [SerializeField] private GameObject button;
     private static SpriteRenderer buttonTop;
     [SerializeField] static bool isButtonActive = false;
+    [SerializeField] private SoundPlayer soundPlayer;
+    private int soundsPlaying = 0;
 
     void Start()
     {
@@ -41,6 +43,8 @@ public class EraserBossEvent : MonoBehaviour
         if(isButtonActive) {
             l_inkfall.transform.DOMoveY(l_active.position.y, 0.5f);
             r_inkfall.transform.DOMoveY(r_active.position.y, 0.5f);
+            soundsPlaying = 2;
+            soundPlayer.PlaySound("Ink.Flow", 1, true);
         }
     }
 
@@ -63,6 +67,8 @@ public class EraserBossEvent : MonoBehaviour
         l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
         r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
+        soundsPlaying = 0;
+        soundPlayer.EndSound("Ink.Flow");
         l_inkfall.transform.position = l_start.position;
         r_inkfall.transform.position = r_start.position;
     }
@@ -71,12 +77,16 @@ public class EraserBossEvent : MonoBehaviour
     IEnumerator DeactivateLeft_() {
         l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
+        soundsPlaying--;
+        if (soundsPlaying == 0) soundPlayer.EndSound("Ink.Flow");
         l_inkfall.SetActive(false);
     }
 
     IEnumerator DeactivateRight_() {
         r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
+        soundsPlaying--;
+        if (soundsPlaying == 0) soundPlayer.EndSound("Ink.Flow");
         r_inkfall.SetActive(false);
     }
 

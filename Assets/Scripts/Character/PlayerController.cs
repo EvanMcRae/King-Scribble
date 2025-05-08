@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
             PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
             Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
             rb.isKinematic = PlayerVars.instance.cheatMode;
-            bodyCollider.enabled = !PlayerVars.instance.cheatMode;
+            //bodyCollider.enabled = !PlayerVars.instance.cheatMode;
         }
         if (PlayerVars.instance.cheatMode)
         {

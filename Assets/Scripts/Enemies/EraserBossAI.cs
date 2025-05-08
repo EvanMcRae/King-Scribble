@@ -754,4 +754,10 @@ public class EraserBossAI : MonoBehaviour
         baseSpeed += 10;
         chargeSpeed += 10;
     }
+
+    // unbinds delegate upon destroying the eraser boss -- this is good practice!! - evan
+    private void OnDestroy()
+    {
+        DrawManager.instance.updatePenAreaEvent -= updatePenArea;
+    }
 }
