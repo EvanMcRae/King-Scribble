@@ -59,7 +59,7 @@ public class DrawManager : MonoBehaviour
 
     [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab
     private GameObject trail; // To hold the instantiated prefab
-    private bool cutting = false;
+    public bool cutting = false;
 
     public delegate void UpdatePenAction(float mass);
     public UpdatePenAction updatePenAreaEvent;
@@ -71,6 +71,11 @@ public class DrawManager : MonoBehaviour
             SwitchTool(PlayerVars.instance.cur_tool);
         else
             SetCursor(ToolType.None);
+    }
+
+    public bool IsUsingTool()
+    {
+        return isDrawing || isErasing || cutting;
     }
 
     void LoadSubmeter(ToolType tool)
@@ -110,7 +115,7 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse has just been pressed, start drawing
-        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !cutting)
+        if (Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !beganDraw) && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !cutting && !HUDButtonCursorHandler.inside)
         {
             beganDraw = true;
             switch (PlayerVars.instance.cur_tool)
@@ -152,13 +157,12 @@ public class DrawManager : MonoBehaviour
         }
 
         // If the mouse is continuously held, continue to draw
-        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused)
+        if (Input.GetMouseButton(0) && beganDraw && GameManager.canMove && !PlayerVars.instance.isDead && !GameManager.paused && !HUDButtonCursorHandler.inside)
             Draw(mousePos);
 
         // If the mouse has been released, stop drawing
-        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused))
+        if (beganDraw && (Input.GetMouseButtonUp(0) || !GameManager.canMove || PlayerVars.instance.isDead || GameManager.paused || HUDButtonCursorHandler.inside))
         {
-            beganDraw = false;
             EndDraw();
         }
 
@@ -215,6 +219,7 @@ public class DrawManager : MonoBehaviour
         {
             mouse_pos += new Vector2(0.5f, -0.5f);
             lastMousePos = mouse_pos;
+            isErasing = true;
             EraserFunctions.Erase(mouse_pos, eraserRadius, true);
             soundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
             return;
@@ -381,6 +386,7 @@ public class DrawManager : MonoBehaviour
     public void EndDraw()
     {
         isDrawing = false; // the user has stopped drawing
+        isErasing = false;
         beganDraw = false;
         if (currentSoundPause != null)
             AudioManager.instance.StopCoroutine(currentSoundPause);
@@ -496,6 +502,7 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.cur_tool != newTool)
         {
             SwitchTool(newTool);
+            soundPlayer.PlaySound("Player.SelectTool");
         }
     }
 
@@ -522,6 +529,7 @@ public class DrawManager : MonoBehaviour
         if (hit == true)
         {
             hit.collider.gameObject.GetComponent<Breakable>().Break();
+            soundPlayer.PlaySound("Player.Slice");
         }
     }
 }

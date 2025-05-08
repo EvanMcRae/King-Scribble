@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SliderNavHandler : MonoBehaviour
 {
     public Navigation nav;
     public bool navOn = true;
+    [SerializeField] private Image image;
+    [SerializeField] private Sprite inactive, active;
 
     public void Start()
     {
@@ -19,6 +22,7 @@ public class SliderNavHandler : MonoBehaviour
         if (navOn)
         {
             GetComponent<Slider>().navigation = nav;
+            image.sprite = inactive;
         }
         else
         {
@@ -26,6 +30,7 @@ public class SliderNavHandler : MonoBehaviour
             newNav.selectOnLeft = null;
             newNav.selectOnRight = null;
             GetComponent<Slider>().navigation = newNav;
+            image.sprite = active;
         }
     }
 

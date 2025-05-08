@@ -12,6 +12,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
     public UnityEvent closeDoor;
+    private bool doorClosed;
+    private bool isAnimating;
     public void StartEvent()
     {
         StartCoroutine(Start_Event());
@@ -19,6 +21,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
 
     IEnumerator Start_Event()
     {
+        isAnimating = true;
         GameManager.canMove = false;
         yield return new WaitForSeconds(0.5f);
         cam.gameObject.SetActive(true);
@@ -31,8 +34,30 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         cam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         closeDoor.Invoke();
+        doorClosed = true;
         startFlood.Invoke();
         followCam.Follow = sourceCam.transform;
         GameManager.canMove = true;
+        isAnimating = false;
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H) && isAnimating)
+        {
+            StopAllCoroutines();
+            cam.gameObject.SetActive(false);
+            followCam.Follow = sourceCam.transform;
+            inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -115f, 0f);
+            inkFlow_R.transform.localPosition = new Vector3(inkFlow_R.transform.localPosition.x, -115f, 0f);
+            GameManager.canMove = true;
+            if (!doorClosed)
+            {
+                closeDoor.Invoke();
+                doorClosed = true;
+            } 
+            startFlood.Invoke();
+            isAnimating = false;
+        }
     }
 }

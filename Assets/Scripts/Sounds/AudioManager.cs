@@ -43,6 +43,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        AudioSettings.Reset(AudioSettings.GetConfiguration());
+
         if (FindObjectsByType<AudioManager>(FindObjectsSortMode.None).Length > 1)
         {
             instance = null;

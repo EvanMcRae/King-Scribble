@@ -209,6 +209,7 @@ public class Line : MonoBehaviour
         };
         if (polyCollider.OverlapCollider(def, results) != 0)
         {
+            deleted = true;
             Destroy(gameObject);
             return false;
         }
@@ -247,7 +248,7 @@ public class Line : MonoBehaviour
     {
         // Create the pen object destruction particle effect
         if (gameObject.scene.isLoaded) { // Only call if the destruction is not a result of a scene change/exit
-            if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>()) return; // Only run on pen objects
+            if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>() || deleted) return; // Only run on pen objects
             ParticleSystem part = Instantiate(penObjDestroy, gameObject.GetComponent<PolygonCollider2D>().bounds.center, Quaternion.identity);
             // Set the mesh of the particle system to the mesh of the pen object
             var shape = part.shape;

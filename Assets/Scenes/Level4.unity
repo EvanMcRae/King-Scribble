@@ -4784,7 +4784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4639114126970813102, guid: ba42ea68aa6554f1fb71f360af2fb77e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 21.272295
+      value: 42.278687
       objectReference: {fileID: 0}
     - target: {fileID: 4639114126970813102, guid: ba42ea68aa6554f1fb71f360af2fb77e, type: 3}
       propertyPath: m_LocalScale.y
@@ -14767,7 +14767,7 @@ Transform:
   m_GameObject: {fileID: 1728184582}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 49.88, y: 7.45, z: -0.22790086}
+  m_LocalPosition: {x: 49.88, y: 4.96, z: -0.22790086}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16076,6 +16076,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2935742833353717475, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Name
       value: RequiredObjects
@@ -16222,7 +16234,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5787455613730548055, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_text
-      value: Level 4
+      value: <b>Level 4:</b> Clever Crate Cradle
       objectReference: {fileID: 0}
     - target: {fileID: 6201593291800123279, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Priority

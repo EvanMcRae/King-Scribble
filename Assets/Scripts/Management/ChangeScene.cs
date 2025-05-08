@@ -9,7 +9,7 @@ public class ChangeScene : MonoBehaviour
     public static bool changingScene = false;
     public string scene; // Name of the scene to change to
     public static string nextScene;
-    [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] protected SoundPlayer soundPlayer;
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {

@@ -39,7 +39,8 @@ public class PlayerChecker : MonoBehaviour
                 }
                 else
                 {
-                    vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
+                    if (GameSaver.GetScene(GameSaver.currData.scene) != null)
+                        vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
                 }
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
