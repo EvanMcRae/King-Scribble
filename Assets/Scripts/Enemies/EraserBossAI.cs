@@ -41,7 +41,7 @@ public class EraserBossAI : MonoBehaviour
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
-    private float cooldownSpeed = 10f; // slower speed for cooldown to mimic tiredness
+    private float cooldownSpeed = 20f; // slower speed for cooldown to mimic tiredness
     private float eraserRadius = 1f; // Space that will be erased
     private float slamForce = 5000f; // assits with the slam "tween"
     private float knockbackForce = 20f; // upon KS hitting EB
@@ -49,6 +49,7 @@ public class EraserBossAI : MonoBehaviour
     private float roarForce = 200f;
     private int hitpoints = 3;
     private float totalPenMass = 0;
+    private int minimumLinePoints = 10; // minimum number of points in a line for EB to want to erase it
     // common objects
     private State state;
     private GameObject KingScribble;
@@ -64,10 +65,12 @@ public class EraserBossAI : MonoBehaviour
     private CapsuleCollider2D physicalCollider; // EB's collider with physics
     private Rigidbody2D EBrb; // EB's Rigidbody2D
     private LineRenderer closestLine = null; // For searching
+
+
     // timer vars:
     private float timer = 0.0f; // used for cooldowns
     private float searchTime = 2.0f; // variables ending in "Time" relate to the timer
-    private float slamCooldownTime = 1.0f;
+    private float slamCooldownTime = 2.0f;
     private float chargeCooldownTime = 1.0f;
     private float chargePrepTime = .66f;
     private float slamPrepTime = 2.0f;
@@ -88,6 +91,12 @@ public class EraserBossAI : MonoBehaviour
     // idk vars:
     private Tween rotateTween;
     Coroutine eraseLineSequence;
+    private int numPoints; // line data
+    private Vector3 targetPosition; // line data
+    private bool firstIsClosest; // whether the first or last point is closer
+    Vector3 lineUp;
+    Vector3[] tempArray;
+    Vector3 prevPosition;
 
 
     void Start() {
@@ -97,6 +106,7 @@ public class EraserBossAI : MonoBehaviour
         KSCollider = KingScribble.transform.Find("MainBody").GetComponent<PolygonCollider2D>(); // very iffy code
         spriteRenderer = transform.Find("EB_Sprite").GetComponent<SpriteRenderer>();
         shieldSprite = transform.Find("EB_Sprite/EB_Shield").gameObject;
+        prevPosition = transform.position;
 
         bounds1 = transform.Find("Bounds1").gameObject; // initalize erasing colliders bounds
         bounds2 = transform.Find("Bounds2").gameObject;
@@ -127,39 +137,40 @@ public class EraserBossAI : MonoBehaviour
         if(disable) return;
         timer += Time.deltaTime;
         Erase(); // should move Erase() to the designated states eventually!
+
+        Vector3 direction = transform.position - prevPosition;
+        //Debug.Log("direction: " + direction);
         
+        // flip sprite appropriately
+        if(direction.x > 0.01) {
+            spriteRenderer.flipX = false;
+        }
+        if(direction.x < -0.01) {
+            spriteRenderer.flipX = true;
+        }
+
+        prevPosition = transform.position;
+
         switch (state) {
             default:
             case State.Searching:
                 anim.Play("EB_Idle");
                 SearchForPosition();
+                Hover(transform.position, 1f);
                 break;
 
             case State.Moving:
                 break;
 
             case State.ChargePrep:
-                // Position self in line with the pos(0) and pos(1) if closer
-                if(targetLine == null) {
-                    state = State.Searching;
-                }
-                Vector3 lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized; // this line sometimes bugs
-
                 anim.Play("EB_Idle");
-                if(lineUp.x > 0) {
-                    spriteRenderer.flipX = true;
-                }
-                else {
-                    spriteRenderer.flipX = false;
-                }  
-                destination = targetLine.GetPosition(0) + targetLine.transform.position + (lineUp * 4); // position 0 in line renderer
                 
                 // when destination reached, start windup
                 Hover(destination, baseSpeed); // hover in the average direction of the line
                 //Debug.Log("DISTANCE TO END POINT IS: " + Vector3.Distance(transform.position, destination));
                 // explain to me unity why the lowest distance you can get with your movement function is 2.0 like where is the ACCURACY??
                 if(Vector3.Distance(transform.position, destination) < 2.5 || timer > 5) {
-                    Debug.Log("Starting Windup");
+                    //Debug.Log("Starting Windup");
                     timer = 0;
                     state = State.WindUp;
                 }
@@ -240,8 +251,10 @@ public class EraserBossAI : MonoBehaviour
 
             case State.SlamCooldown:
                 anim.Play("EB_Idle");
+                if(timer >= 0.5f) {
+                    Hover(new Vector3(transform.position.x,-7f,0f), cooldownSpeed); // -7f is above the ground
+                }
                 if(timer >= 1.0f) {
-                    Hover(transform.position + new Vector3(0f,1f,0f), cooldownSpeed);
                     rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
                     isRotated = false;
                 }
@@ -325,9 +338,18 @@ public class EraserBossAI : MonoBehaviour
             isSlamHit = true;
             state = State.SlamImpact;
         }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Water") && state == State.Slamming) {
+            Debug.Log("WATER DETECTED, pos is: " + transform.position);
+            EBrb.AddForce(new Vector2(0f, 1f * (slamForce - 10)), ForceMode2D.Impulse);
+            timer = 0;
+            isSlamming = false;
+            isSlamHit = true;
+            state = State.SlamImpact;
+        }
+        
 
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && state == State.Slamming) {
-            Debug.Log("GROUND DETECTED, pos is: " + transform.position);
+            //Debug.Log("GROUND DETECTED, pos is: " + transform.position);
             Destroy(other.gameObject);
             timer = 0;
             isSlamming = false;
@@ -339,32 +361,37 @@ public class EraserBossAI : MonoBehaviour
     void SearchForPosition() {
         // If line renderer present, goes for the biggest one OR closest one?
         float closestDistance = 100f;
-        if(closestLine != null) {
-            closestDistance = Vector3.Distance(transform.position, closestLine.transform.position);
-        }
+        // if(closestLine != null) {
+        //     closestDistance = Vector3.Distance(transform.position, closestLine.transform.position);
+        // }
 
         foreach (Transform childTransform in PencilLinesFolder.transform) // for each pencil line
         {
             LineRenderer tempLine = childTransform.GetComponent<LineRenderer>();
-            if(tempLine.positionCount > 1) {
+            if(tempLine.positionCount > minimumLinePoints) {
                 // for each first and last point in the pencil line find which is the closest to EB
-                for(int i = 0; i < tempLine.positionCount; i++) {
-                    float pointDistanceFirst = Vector3.Distance(transform.position, tempLine.GetPosition(i)); // first point in line
-                    float pointDistanceLast = Vector3.Distance(transform.position, tempLine.GetPosition(tempLine.positionCount - 1)); // last point in line
-                    if(pointDistanceFirst < closestDistance) {
-                        closestDistance = pointDistanceFirst;
-                        closestLine = tempLine;
-                    }
-                    if(pointDistanceLast < closestDistance) {
-                        closestDistance = pointDistanceLast;
-                        closestLine = tempLine;
-                    }
+                float pointDistanceFirst = Vector3.Distance(transform.position, tempLine.GetPosition(0) + tempLine.transform.position); // first point in line
+                float pointDistanceLast = Vector3.Distance(transform.position, tempLine.GetPosition(tempLine.positionCount - 1) + tempLine.transform.position); // last point in line
+                
+
+                if(pointDistanceFirst < closestDistance) {
+                    closestDistance = pointDistanceFirst;
+                    firstIsClosest = true;
+                    closestLine = tempLine;
                 }
+                if(pointDistanceLast < closestDistance) {
+                    closestDistance = pointDistanceLast;
+                    firstIsClosest = false;
+                    closestLine = tempLine;
+                }
+                // Debug.Log("First: " + pointDistanceFirst + " Last: " + pointDistanceLast + " Closest: " + closestDistance);
+                // Debug.Log("first closest is " + firstIsClosest);
             }
         }
 
         if(closestLine != null) { // target is the closest line
             targetLine = closestLine;
+            setLineData();
         }
 
         if(timer >= searchTime){
@@ -383,7 +410,7 @@ public class EraserBossAI : MonoBehaviour
 
     void Slam() {
         if (!isSlamming) {    
-            Debug.Log("APPLYING SLAM FORCE");
+            //Debug.Log("APPLYING SLAM FORCE");
             EBrb.AddForce(new Vector2(0f, -1f * slamForce), ForceMode2D.Impulse);
             isSlamming = true;
         }
@@ -396,29 +423,60 @@ public class EraserBossAI : MonoBehaviour
         EraserFunctions.Erase(bounds3.transform.position, eraserRadius, true, PencilLinesFolder);
     }
 
+    
+    // used to avoid null references to a line that will be erased
+    private void setLineData() {
+        numPoints = targetLine.positionCount;
+        targetPosition = targetLine.transform.position;
+        tempArray = new Vector3[numPoints];
+        targetLine.GetPositions(tempArray); // get the positions into the array
+        if(firstIsClosest) {
+            lineUp = (targetLine.GetPosition(0) - targetLine.GetPosition(1)).normalized;  // this line sometimes bugs
+            destination = targetLine.GetPosition(0) + targetLine.transform.position + (lineUp * 4); // position 0 in line renderer
+        }
+        else {
+            lineUp = (targetLine.GetPosition(numPoints - 1) - targetLine.GetPosition(numPoints - 2)).normalized;
+            destination = targetLine.GetPosition(numPoints-1) + targetLine.transform.position + (lineUp * 4); // position 0 in line renderer
+        }
+    }
+
+
     private IEnumerator EraseLineSequence(float speed) {
-        if (targetLine.positionCount == 0) yield break;
+        // if (targetLine.positionCount == 0) yield break;
 
         isErasingLine = true;
         float step; // calculate the maxDistanceDelta based on the distance
-        int numPoints = targetLine.positionCount;
-        Vector3 targetPosition = targetLine.transform.position;
-
-        Vector3[] tempArray = new Vector3[numPoints];
-        targetLine.GetPositions(tempArray); // get the positions into the array
         int mult = 1; // multipler if points need to be iterated not one by one
 
-        for(int i = 0; i < numPoints;) { // for each point in the pencil line move
-            Vector3 point = tempArray[i] + targetPosition; // the destination
-            step = speed * Time.fixedDeltaTime;
-            EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
-            
-            //END POINT IS: " + Vector3.Distance(transform.position, point));
-            if (Vector3.Distance(transform.position, point) < 2.5f) {  // ws > 0.01f
-                //Debug.LogWarning("increment i = " + i);
-                i+= mult; 
+        if(firstIsClosest) {
+            for(int i = 0; i < numPoints;) { // for each point in the pencil line move
+                Vector3 point = tempArray[i] + targetPosition; // the destination
+                step = speed * Time.fixedDeltaTime;
+                
+
+                EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
+                
+                //END POINT IS: " + Vector3.Distance(transform.position, point));
+                if (Vector3.Distance(transform.position, point) < 2.5f) {  // ws > 0.01f
+                    //Debug.LogWarning("increment i = " + i);
+                    i+= mult; 
+                }
+                yield return null; // wait for a bit... i think
             }
-            yield return null; // wait for a bit... i think
+        }
+        else {
+            for(int i = numPoints - 1; i > -1;) { // for each point in the pencil line move
+                Vector3 point = tempArray[i] + targetPosition; // the destination
+                step = speed * Time.fixedDeltaTime;
+                EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
+                
+                //Debug.Log("END POINT IS: " + Vector3.Distance(transform.position, point));
+                if (Vector3.Distance(transform.position, point) < 2.5f) {  // ws > 0.01f
+                    //Debug.LogWarning("increment i = " + i);
+                    i-= mult; 
+                }
+                yield return null; // wait for a bit... i think
+            }
         }
 
         Debug.LogWarning("EXITED FOR LOOP " + Vector3.Distance(transform.position, tempArray[numPoints - 1] + targetPosition));
