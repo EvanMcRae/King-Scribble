@@ -6309,6 +6309,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2935742833353717475, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Name
       value: RequiredObjects
@@ -6431,7 +6443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5787455613730548055, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_text
-      value: Level 7
+      value: <b>Level 7:</b> Rowboat Rapids
       objectReference: {fileID: 0}
     - target: {fileID: 6391028859284896578, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y

@@ -492,6 +492,7 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.cur_tool != newTool)
         {
             SwitchTool(newTool);
+            soundPlayer.PlaySound("Player.SelectTool");
         }
     }
 
