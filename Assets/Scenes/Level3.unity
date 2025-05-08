@@ -8601,6 +8601,10 @@ PrefabInstance:
       value: 0.544816
       objectReference: {fileID: 0}
     - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 11400000, guid: 88d5398ccd533425fb69f453602e459c, type: 2}
+    - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: isWall
       value: 1
       objectReference: {fileID: 0}
@@ -8617,7 +8621,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6652482066997626213}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6649049541367774318, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       insertIndex: -1
@@ -9500,6 +9505,10 @@ PrefabInstance:
       value: 0.32819223
       objectReference: {fileID: 0}
     - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 11400000, guid: 88d5398ccd533425fb69f453602e459c, type: 2}
+    - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: isWall
       value: 1
       objectReference: {fileID: 0}
@@ -9516,7 +9525,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6652482066997626213}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6649049541367774318, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       insertIndex: -1
@@ -19854,6 +19864,10 @@ PrefabInstance:
       value: 0.42361307
       objectReference: {fileID: 0}
     - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 11400000, guid: 88d5398ccd533425fb69f453602e459c, type: 2}
+    - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: isWall
       value: 1
       objectReference: {fileID: 0}
@@ -19878,7 +19892,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6652482066997626213}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6649049541367774318, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       insertIndex: -1
@@ -24189,6 +24204,10 @@ PrefabInstance:
       value: -0.06961393
       objectReference: {fileID: 0}
     - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: sound
+      value: 
+      objectReference: {fileID: 11400000, guid: 88d5398ccd533425fb69f453602e459c, type: 2}
+    - target: {fileID: 8926986550997032292, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: isWall
       value: 1
       objectReference: {fileID: 0}
@@ -24214,7 +24233,8 @@ PrefabInstance:
       objectReference: {fileID: 6652482066997626213}
     m_RemovedComponents:
     - {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6649049541367774318, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5878564112312497364, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       insertIndex: -1
