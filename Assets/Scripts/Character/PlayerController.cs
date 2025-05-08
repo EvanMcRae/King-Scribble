@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
     public bool frictionOverride = false;
     private float cheatSpeed = 0.0f;
     public const int SIZE_STAGES = 4;
+    public int currentSize = SIZE_STAGES;
     [SerializeField] private List<PolygonCollider2D> sizeColliders = new();
     [SerializeField] private List<Collider2D> groundCheckers = new();
     public bool oldPlayer = true;
@@ -490,6 +491,17 @@ public class PlayerController : MonoBehaviour
     
     public void ResizePlayer(float fuel_left)
     {
+        int newSize = (int)Mathf.Ceil(fuel_left * SIZE_STAGES);
+        if (newSize < currentSize && newSize != 0)
+        {
+            soundPlayer.PlaySound("Player.SizeDown");
+        }
+        else if (newSize > currentSize)
+        {
+            soundPlayer.PlaySound("Player.SizeUp");
+        }
+        currentSize = newSize;
+
         fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
         if (oldPlayer)
             mainBody.transform.localScale = Vector3.one * fuel_left;
