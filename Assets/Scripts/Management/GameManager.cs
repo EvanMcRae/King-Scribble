@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        // Application.targetFrameRate = 60;
+        Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame
