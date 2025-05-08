@@ -518,6 +518,7 @@ public class DrawManager : MonoBehaviour
         if (hit == true)
         {
             hit.collider.gameObject.GetComponent<Breakable>().Break();
+            soundPlayer.PlaySound("Player.Slice");
         }
     }
 }
