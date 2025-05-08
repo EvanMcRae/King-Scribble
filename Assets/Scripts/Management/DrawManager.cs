@@ -17,7 +17,8 @@ public class DrawManager : MonoBehaviour
 {
     [SerializeField] public Line linePrefab;
     [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased
-    [SerializeField] private GameObject PencilLinesFolder;
+    [SerializeField] private GameObject PencilLinesFolder; // used in EB fight
+    [SerializeField] private GameObject PenLinesFolder; // used in EB fight
     public const float RESOLUTION = 0.1f;
     public const float DRAW_CD = 0.5f;
     private Line currentLine;
@@ -59,6 +60,9 @@ public class DrawManager : MonoBehaviour
     [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab
     private GameObject trail; // To hold the instantiated prefab
     public bool cutting = false;
+
+    public delegate void UpdatePenAction(float mass);
+    public UpdatePenAction updatePenAreaEvent;
 
     private void Awake()
     {
@@ -265,7 +269,12 @@ public class DrawManager : MonoBehaviour
             SetPencilParams(currentLine);
         }
         else if (PlayerVars.instance.cur_tool == ToolType.Pen) {
-            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
+            if(PenLinesFolder != null) {
+            currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity, PenLinesFolder.transform); // Create a new line with the first point at the mouse's current position
+            }
+            else {
+                currentLine = Instantiate(linePrefab, mouse_pos, Quaternion.identity); // Create a new line with the first point at the mouse's current position
+            }
             currentLine.is_pen = true;
             currentLine.SetThickness(penThickness_start);
             currentLine.collisionsActive = false;
@@ -403,6 +412,7 @@ public class DrawManager : MonoBehaviour
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line
+                    updatePenAreaEvent(currentLine.area);
 
                     // Create material for pen object polygon mesh (texture selected by object area)
                     int fillTexture = Mathf.FloorToInt(Mathf.Min(Line.MAX_WEIGHT, currentLine.area) / Line.MAX_WEIGHT * (fillTextures.Count - 1));
