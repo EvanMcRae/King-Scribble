@@ -475,7 +475,7 @@ public class EraserBossAI : MonoBehaviour
 
         isErasingLine = true;
         float step; // calculate the maxDistanceDelta based on the distance
-        int mult = 1; // multipler if points need to be iterated not one by one
+        int mult = 3; // multipler if points need to be iterated not one by one
 
         if(firstIsClosest) {
             for(int i = 0; i < numPoints;) { // for each point in the pencil line move
