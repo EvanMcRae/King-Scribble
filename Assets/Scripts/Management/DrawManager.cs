@@ -61,6 +61,9 @@ public class DrawManager : MonoBehaviour
     private GameObject trail; // To hold the instantiated prefab
     private bool cutting = false;
 
+    public delegate void UpdatePenAction(float mass);
+    public UpdatePenAction updatePenAreaEvent;
+
     private void Awake()
     {
         instance = this;
@@ -403,6 +406,7 @@ public class DrawManager : MonoBehaviour
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line
+                    updatePenAreaEvent(currentLine.area);
 
                     // Create material for pen object polygon mesh (texture selected by object area)
                     int fillTexture = Mathf.FloorToInt(Mathf.Min(Line.MAX_WEIGHT, currentLine.area) / Line.MAX_WEIGHT * (fillTextures.Count - 1));

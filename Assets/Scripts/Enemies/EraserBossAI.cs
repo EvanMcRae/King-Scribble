@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Splines;
+using Unity.VisualScripting;
 
 /*
 General notes:
@@ -28,7 +30,8 @@ public class EraserBossAI : MonoBehaviour
         Slamming, // for KS on ground
         SlamImpact, // hitting the ground (animation)
         SlamCooldown, // used for Slam Cooldown and Charge Cooldown
-        EndScene
+        EndScene,
+        Nothing
     }
     // serialized vars
     [SerializeField] private bool disable = false;
@@ -37,7 +40,11 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject platform;
     [SerializeField] private TextMeshProUGUI myText;
-    [SerializeField] private GameObject InkEvents;
+    [SerializeField] GameObject leftChainL;
+    [SerializeField] GameObject leftChainR;
+    [SerializeField] GameObject rightChainL;
+    [SerializeField] GameObject rightChainR;
+    [SerializeField] EraserBossEvent eraserBossEvent;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -48,7 +55,8 @@ public class EraserBossAI : MonoBehaviour
     private float minDamageMass = 5.0f; // 10 works good
     private float roarForce = 200f;
     private int hitpoints = 3;
-    private float totalPenMass = 0;
+    private float maxPenArea = 100;
+    private float totalPenArea = 0;
     private int minimumLinePoints = 10; // minimum number of points in a line for EB to want to erase it
     // common objects
     private State state;
@@ -65,7 +73,7 @@ public class EraserBossAI : MonoBehaviour
     private CapsuleCollider2D physicalCollider; // EB's collider with physics
     private Rigidbody2D EBrb; // EB's Rigidbody2D
     private LineRenderer closestLine = null; // For searching
-
+    
 
     // timer vars:
     private float timer = 0.0f; // used for cooldowns
@@ -78,7 +86,7 @@ public class EraserBossAI : MonoBehaviour
     private float damageTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
     private float KSStunTime = 2.0f; // time KS is stunned
-    private float rotateTweenTime = 0.5f;
+    private float rotateTweenTime = 0.65f;
     // booleans:
     private bool isErasingLine = false; // booleans for states that are not independent enough for the state machine
     private bool isSlamming = false; // whether EB is in a tweening state
@@ -100,6 +108,9 @@ public class EraserBossAI : MonoBehaviour
 
 
     void Start() {
+
+        DrawManager.instance.updatePenAreaEvent += updatePenArea;
+
         KingScribble = PlayerVars.instance.gameObject; // Initialize KS, his RigidBody2D, and MainBody trigger collider
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
         EBrb = GetComponent<Rigidbody2D>(); 
@@ -135,6 +146,13 @@ public class EraserBossAI : MonoBehaviour
         myText.text = state.ToString();
 
         if(disable) return;
+        
+        // temp fix for shielding state! look into the logic abt why the state changes to SlamPrep before RemoveShield() enumerator ends
+        if(isShielding) {
+            anim.Play("EB_Idle");
+            return;
+        }
+
         timer += Time.deltaTime;
         Erase(); // should move Erase() to the designated states eventually!
 
@@ -160,6 +178,7 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.Moving:
+                Hover(destination, baseSpeed);
                 break;
 
             case State.ChargePrep:
@@ -178,6 +197,7 @@ public class EraserBossAI : MonoBehaviour
 
             case State.WindUp:
                 anim.Play("EB_WindUp");
+                Hover(transform.position, 1.0f);
                 if(timer >= chargePrepTime) {
                     timer = 0;
                     state = State.Charging;
@@ -195,6 +215,7 @@ public class EraserBossAI : MonoBehaviour
 
             case State.ChargeCooldown:
                 anim.Play("EB_Stop");
+                Hover(transform.position, 1.0f);
                 if(timer >= chargeCooldownTime) {
                     if(spriteRenderer.flipX == true) {
                         spriteRenderer.flipX = false;
@@ -205,6 +226,7 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.Dizzied:
+                Hover(transform.position, 1f);
                 anim.Play("EB_Stun");
                 if(timer >= dizzyTime) {
                     state = State.Searching;
@@ -216,13 +238,13 @@ public class EraserBossAI : MonoBehaviour
                     if(!isShielding) {
                         StartCoroutine(ActivateShield());
                     }
-                   
-                    // state = State.Searching;
                 }
                 break;
 
             case State.SlamPrep:
+                //Debug.Log("State = SlamPrep");
                 anim.Play("EB_SlamPrep");
+                spriteRenderer.flipX = false;
                 Vector3 KSpos = KingScribble.transform.position;
                 if(!isRotated) {
                     rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
@@ -237,11 +259,13 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.Slamming:
+                //Debug.Log("State = SLAMMING");
                 anim.Play("EB_Slamming");
                 Slam();
                 break;
             
             case State.SlamImpact:
+                //Debug.Log("State = SlamImpact");
                 anim.Play("EB_SlamImpact");
                 if(timer >= 1.0f) {
                     timer = 0;
@@ -251,13 +275,12 @@ public class EraserBossAI : MonoBehaviour
 
             case State.SlamCooldown:
                 anim.Play("EB_Idle");
-                if(timer >= 0.5f) {
-                    Hover(new Vector3(transform.position.x,-7f,0f), cooldownSpeed); // -7f is above the ground
-                }
-                if(timer >= 1.0f) {
+                Hover(new Vector3(transform.position.x,-7f,0f), cooldownSpeed); // -7f is above the ground
+
+                //if(timer >= 1.0f) {
                     rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
                     isRotated = false;
-                }
+                //}
                 if(timer >= slamCooldownTime) {
                     timer = 0;
                     state = State.Searching;
@@ -280,8 +303,8 @@ public class EraserBossAI : MonoBehaviour
                 if(state == State.Charging && !isInvulnerable) {
                     Debug.Log("DIZZIED");
                     timer = 0;
-                    state = State.Dizzied;
                     StopCoroutine(eraseLineSequence); // stop the erasing coroutine
+                    state = State.Dizzied;
                     isErasingLine = false;
                     Destroy(other.gameObject); // destroy pen object
                     other.GetComponent<Line>().deleted = true; // ensures the Line is deleted
@@ -325,8 +348,16 @@ public class EraserBossAI : MonoBehaviour
 
         // Ink waterfalls
         if(other.gameObject.layer == LayerMask.NameToLayer("EB_Hurt")) {
-            if(!isShielding) {
-                StartCoroutine(RemoveShield());
+            // check for left or right pipe
+            if(other.gameObject.name == "Flowing Ink Left") {
+                if(!isShielding) {
+                    StartCoroutine(RemoveShield(false));
+                }
+            }
+            if(other.gameObject.name == "Flowing Ink Right") {
+                if(!isShielding) {
+                    StartCoroutine(RemoveShield(true));
+                }
             }
         }
 
@@ -348,7 +379,7 @@ public class EraserBossAI : MonoBehaviour
         }
         
 
-        if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && state == State.Slamming) {
+        if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && (state == State.Slamming || state == State.SlamImpact)) {
             //Debug.Log("GROUND DETECTED, pos is: " + transform.position);
             Destroy(other.gameObject);
             timer = 0;
@@ -384,8 +415,6 @@ public class EraserBossAI : MonoBehaviour
                     firstIsClosest = false;
                     closestLine = tempLine;
                 }
-                // Debug.Log("First: " + pointDistanceFirst + " Last: " + pointDistanceLast + " Closest: " + closestDistance);
-                // Debug.Log("first closest is " + firstIsClosest);
             }
         }
 
@@ -537,8 +566,7 @@ public class EraserBossAI : MonoBehaviour
         isShielding = true;
         yield return new WaitForSeconds(1.0f);
 
-        // Roar here!
-
+        // Roar angry here! >:((
         isInvulnerable = true;
         shieldSprite.SetActive(true);
         yield return new WaitForSeconds(3.0f);
@@ -554,8 +582,16 @@ public class EraserBossAI : MonoBehaviour
         
     }
 
+    private void updatePenArea(float area) {
+        totalPenArea += area;
+        Debug.Log("area: " + area);
+        if(area > maxPenArea) {
+            DespawnAllPenObj();
+        }
+    }
+
     private void DespawnAllPenObj() {
-        Debug.Log("DESPAWNING PEN OBJS");
+        //Debug.Log("DESPAWNING PEN OBJS");
         foreach (Transform childTransform in PenLinesFolder.transform) {
             StartCoroutine(DespawnPenObj(childTransform));
         }
@@ -598,7 +634,7 @@ public class EraserBossAI : MonoBehaviour
     }
 
     private void DespawnAllPencilObj() {
-        Debug.Log("DESPAWNING PENCIL OBJS");
+        //Debug.Log("DESPAWNING PENCIL OBJS");
         foreach (Transform childTransform in PencilLinesFolder.transform) {
             StartCoroutine(DespawnPencilObj(childTransform));
         }
@@ -613,33 +649,74 @@ public class EraserBossAI : MonoBehaviour
         Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
 
         // toggle opacities
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        Destroy(pencil.gameObject);
+        // ADD NULL CHECK cuz the line can be erased
+        if(tempLine != null) {
+            tempLine.startColor = opacity;
+            tempLine.endColor = opacity;
+            yield return new WaitForSeconds(.5f);
+        }
+        if(tempLine != null) {
+            tempLine.startColor = original;
+            tempLine.endColor = original;
+            yield return new WaitForSeconds(.5f);
+        }
+        if(tempLine != null) {
+            tempLine.startColor = opacity;
+            tempLine.endColor = opacity;
+            yield return new WaitForSeconds(.5f);
+        }
+        if(tempLine != null) {
+            tempLine.startColor = original;
+            tempLine.endColor = original;
+            yield return new WaitForSeconds(.5f);
+        }
+        if(tempLine != null) {
+            Destroy(pencil.gameObject);
+        }
     }
 
     // Happens when the player pushes the button and EB gets hit with ink falling
-    private IEnumerator RemoveShield() {
+    private IEnumerator RemoveShield(bool isRight) {
+        state = State.Nothing;
         Debug.Log("DEACTIVATING SHIELD");
-
         isShielding = true;
         isInvulnerable = false;
         shieldSprite.SetActive(false);
+
+        EBrb.AddForce(new Vector2(0f, 1f * slamForce), ForceMode2D.Impulse); // break pipe
+
+        if(isRight) {
+            eraserBossEvent.DeactivateRight(); // so ink cannot flow again from it
+        }
+        else {
+            eraserBossEvent.DeactivateLeft();
+        }
+
+
+        //yield return new WaitForSeconds(2.0f); // how do we know when he is at the top...
+        rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
+        yield return new WaitForSeconds(1.0f);
+
+        EBrb.AddForce(new Vector2(0f, -1f * slamForce), ForceMode2D.Impulse); // slamming
+        Debug.Log("SHIELD SLAM FORCE ADDED");
+
+        yield return new WaitForSeconds(.75f);
+        // SLOW THE TIMEEEE
+        Debug.Log("BREAKING CHAIN");
+        if(isRight) { // break chain
+            BreakRightChain();
+        }
+        else {
+            BreakLeftChain();
+        }
+        
+        
         DespawnAllPenObj();
         DespawnAllPencilObj();
 
         // play Roar animation
         yield return new WaitForSeconds(2.0f);
+        rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
 
         // Knockback KS to a wall!
         Vector3 distance = transform.position - KingScribble.transform.position;
@@ -650,18 +727,30 @@ public class EraserBossAI : MonoBehaviour
             Knockback(new Vector2(-1f, .1f), roarForce);
         }
 
-        yield return new WaitForSeconds(1.0f);
+        //yield return new WaitForSeconds(1.0f);
 
         // cutscene behavior here! 
         EraserBossEvent.DeactivateButton(); // needs to be after the button is clear! otherwise the ink will continue flowing
+        Debug.Log("EXITING REMOVESHIELD");
+        timer = 0;
         state = State.Searching;
         isShielding = false;
+    }
 
-        
+
+    private void BreakLeftChain() {
+        leftChainL.GetComponent<BreakableChainLink>().Break();
+        leftChainR.GetComponent<BreakableChainLink>().Break();
+    }
+
+    private void BreakRightChain() {
+        rightChainL.GetComponent<BreakableChainLink>().Break();
+        rightChainR.GetComponent<BreakableChainLink>().Break();
     }
 
     // increase the speeds and initiates shield:
     private void Difficulty2() {
+        Debug.Log("INCREASING DIFFICULTY");
         baseSpeed += 10;
         chargeSpeed += 10;
     }

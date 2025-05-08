@@ -50,6 +50,15 @@ public class EraserBossEvent : MonoBehaviour
         }
     }
 
+    public void DeactivateLeft() {
+        StartCoroutine(DeactivateLeft_());
+    }
+
+    public void DeactivateRight() {
+        StartCoroutine(DeactivateRight_());
+    }
+    
+
     IEnumerator Deactivate_() {
         l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
         r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
@@ -57,5 +66,20 @@ public class EraserBossEvent : MonoBehaviour
         l_inkfall.transform.position = l_start.position;
         r_inkfall.transform.position = r_start.position;
     }
+
+    // Stops ink from falling
+    IEnumerator DeactivateLeft_() {
+        l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        l_inkfall.SetActive(false);
+    }
+
+    IEnumerator DeactivateRight_() {
+        r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
+        yield return new WaitForSeconds(0.5f);
+        r_inkfall.SetActive(false);
+    }
+
+
 }
 
