@@ -490,7 +490,7 @@ public class EraserBossAI : MonoBehaviour
                     //Debug.LogWarning("increment i = " + i);
                     i+= mult; 
                 }
-                yield return null; // wait for a bit... i think
+                yield return new WaitForSeconds(0.01f); // wait for a bit... i think
             }
         }
         else {
@@ -504,7 +504,7 @@ public class EraserBossAI : MonoBehaviour
                     //Debug.LogWarning("increment i = " + i);
                     i-= mult; 
                 }
-                yield return null; // wait for a bit... i think
+                yield return new WaitForSeconds(0.01f); // wait for a bit... i think
             }
         }
 
