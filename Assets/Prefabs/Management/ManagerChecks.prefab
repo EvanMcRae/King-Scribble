@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7063382920539804015}
   - component: {fileID: 7063382920539804014}
   - component: {fileID: 8182301963735822740}
+  - component: {fileID: 8208698008592134839}
   m_Layer: 6
   m_Name: ManagerChecks
   m_TagString: Untagged
@@ -59,3 +60,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameSaver: {fileID: 4733609094683534596, guid: 1db2fc551a55c43f2a90aefa5371db73, type: 3}
+--- !u!114 &8208698008592134839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7063382920539804017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83d7c998eb5fe4c89b660a8e55270830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
