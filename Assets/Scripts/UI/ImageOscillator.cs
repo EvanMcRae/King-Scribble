@@ -17,11 +17,12 @@ public class ImageOscillator : MonoBehaviour
     {
         if (!GameManager.paused)
         {
-            pos.y += amplitude * Mathf.Sin(Time.time * period * 2 * Mathf.PI);
+            Vector3 newPos = pos;
+            newPos.y += amplitude * Mathf.Sin(Time.time * period * 2 * Mathf.PI);
             if (local)
-                transform.localPosition = pos;
+                transform.localPosition = newPos;
             else
-                transform.position = pos;
+                transform.position = newPos;
         }
     }
 }
