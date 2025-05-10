@@ -3,12 +3,13 @@ using System.IO;
 
 public class ScreenshotManager : MonoBehaviour
 {
-    private static bool initialized = false;
+    public static bool initialized = false;
     private static int numScreenshots;
 
     // Use this for initialization
     void Awake()
     {
+        if (initialized) return;
         string path = Path.Combine(Application.persistentDataPath, "Screenshots");
         if (!Directory.Exists(path))
         {
@@ -19,6 +20,7 @@ public class ScreenshotManager : MonoBehaviour
         {
             numScreenshots++;
         }
+        initialized = true;
     }
 
     // Update is called once per frame
