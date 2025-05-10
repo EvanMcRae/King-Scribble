@@ -27,6 +27,7 @@ public class PlayerVars : MonoBehaviour
     public bool isDead = false;
     private Vector3 spawn_pos;
     public bool cheatMode = false;
+    public float curCamZoom;
 
     public void SetSpawnPos(Vector3 spawnPos) {spawn_pos = spawnPos;}
     public Vector3 GetSpawnPos() {return spawn_pos;}

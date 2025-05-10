@@ -57,6 +57,7 @@ public class PlayerChecker : MonoBehaviour
             cam.Follow = player.transform;
             player.GetComponent<PlayerController>().virtualCamera = cam;
             player.GetComponent<PlayerController>().levelZoom = cam.m_Lens.OrthographicSize;
+            vars.curCamZoom = cam.m_Lens.OrthographicSize;
         }
         else
         {

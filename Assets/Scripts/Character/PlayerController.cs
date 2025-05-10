@@ -206,7 +206,6 @@ public class PlayerController : MonoBehaviour
         {
             targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * calculatedSpeed * -slopeNormalPerp.y, 0.0f);
         }
-
         // apply velocity, dampening between current and target
         if (!PlayerVars.instance.cheatMode)
         {
@@ -387,7 +386,7 @@ public class PlayerController : MonoBehaviour
             bool onground = false;
             foreach (ContactPoint2D point in contactPoint2Ds)
             {
-                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.125f * transform.localScale.y), Color.red);
+                Debug.DrawLine(point.point, transform.position - (0.125f * transform.localScale.y * Vector3.up), Color.red);
                 if (point.point.y < transform.position.y - 0.125f * transform.localScale.y)
                 {
                     onground = true;
@@ -400,7 +399,6 @@ public class PlayerController : MonoBehaviour
                 moveX *= 0.5f;
             }
         }
-
         else if (rb.velocity.y < 0)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
