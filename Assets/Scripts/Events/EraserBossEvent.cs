@@ -5,14 +5,8 @@ using DG.Tweening;
 
 public class EraserBossEvent : MonoBehaviour
 {
-    [SerializeField] private Transform l_start;
-    [SerializeField] private Transform l_active;
-    [SerializeField] private Transform l_deactivated;
-    [SerializeField] private Transform r_start;
-    [SerializeField] private Transform r_active;
-    [SerializeField] private Transform r_deactivated;
-    [SerializeField] private GameObject l_inkfall;
-    [SerializeField] private GameObject r_inkfall;
+    [SerializeField] private EBInkPipe left;
+    [SerializeField] private EBInkPipe right;
     [SerializeField] private GameObject button;
     [SerializeField] private SoundPlayer soundPlayer;
     private int soundsPlaying = 0;
@@ -23,8 +17,6 @@ public class EraserBossEvent : MonoBehaviour
 
     void Start()
     {
-        l_inkfall.transform.position = l_start.position;
-        r_inkfall.transform.position = r_start.position;
         buttonTop = button.transform.Find("Top").GetComponent<SpriteRenderer>();
         purpleColor = buttonTop.color;
         DeactivateButton();
@@ -52,63 +44,28 @@ public class EraserBossEvent : MonoBehaviour
     public void Activate() {
         isButtonPressed = true;
         if(isButtonActive) {
-            l_inkfall.transform.DOMoveY(l_active.position.y, 0.5f);
-            r_inkfall.transform.DOMoveY(r_active.position.y, 0.5f);
+            left.Activate();
+            right.Activate();
             soundsPlaying = 2;
-            soundPlayer.PlaySound("Ink.Flow", 1, true);
+ 
         }
     }
 
     public void Deactivate() {
         isButtonPressed = false;
         if(isButtonActive) {
-            StartCoroutine(Deactivate_());
+            left.Deactivate();
+            right.Deactivate();
+            soundsPlaying = 0;
         }
     }
 
     public void DeactivateLeft() {
-        StartCoroutine(DeactivateLeft_());
+        left.Break();
     }
 
     public void DeactivateRight() {
-        StartCoroutine(DeactivateRight_());
-    }
-    
-
-    IEnumerator Deactivate_() {
-        l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
-        r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
-        yield return new WaitForSeconds(0.5f);
-        soundsPlaying = 0;
-        soundPlayer.EndSound("Ink.Flow");
-        l_inkfall.transform.position = l_start.position;
-        r_inkfall.transform.position = r_start.position;
-    }
-
-    // Stops ink from falling
-    IEnumerator DeactivateLeft_() {
-        l_inkfall.transform.DOMoveY(l_deactivated.position.y, 0.5f);
-        yield return new WaitForSeconds(0.5f);
-        soundsPlaying--;
-        if (soundsPlaying == 0) soundPlayer.EndSound("Ink.Flow");
-        l_inkfall.SetActive(false);
-    }
-
-    IEnumerator DeactivateRight_() {
-        r_inkfall.transform.DOMoveY(r_deactivated.position.y, 0.5f);
-        yield return new WaitForSeconds(0.5f);
-        soundsPlaying--;
-        if (soundsPlaying == 0) soundPlayer.EndSound("Ink.Flow");
-        r_inkfall.SetActive(false);
-    }
-
-    IEnumerator test() {
-        for(int i = 0; i < 30; i++) {
-            Activate();
-            yield return new WaitForSeconds(1);
-            Deactivate();
-            yield return new WaitForSeconds(1);
-        }
+        right.Break();
     }
 }
 
