@@ -35,10 +35,12 @@ public class Moving_Platform : MonoBehaviour
     public Dictionary<Transform, PhysicsMaterial2D> physicsMats = new();
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private SoundClip sound;
+    private static bool fadedOut = false;
 
     private void Awake()
     {
         soundPool = new();
+        fadedOut = false;
     }
 
     void Start()
@@ -51,6 +53,23 @@ public class Moving_Platform : MonoBehaviour
         {
             soundPool.TryAdd(sound, 0);
         }
+
+        GameManager.ResetAction += FadeOut;
+    }
+
+    private void FadeOut()
+    {
+        if (fadedOut) return;
+        foreach (AudioSource source in soundPlayer.sources)
+        {
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(source, 1f, 0f, () => { }));
+        }
+        fadedOut = true;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.ResetAction -= FadeOut;
     }
 
     public void MoveToDest()

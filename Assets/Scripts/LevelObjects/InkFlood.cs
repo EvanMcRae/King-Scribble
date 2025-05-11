@@ -55,8 +55,8 @@ public class InkFlood : MonoBehaviour
             if (soundPlayer != null)
             {
                 if (!soundPlayer.sources[0].isPlaying)
-                    soundPlayer.PlaySound("Ink.Flow", 1, true);
-                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0f, 1f, () => { }));
+                    soundPlayer.PlaySound("Ink.Flow", 0, true);
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 1f, () => { }));
             }
         }
     }
@@ -69,8 +69,8 @@ public class InkFlood : MonoBehaviour
         if (soundPlayer != null)
         {
             if (!soundPlayer.sources[0].isPlaying)
-                soundPlayer.PlaySound("Ink.Flow", 1, true);
-            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0f, 1f, () => { }));
+                soundPlayer.PlaySound("Ink.Flow", 0, true);
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 1f, () => { }));
         }
     }
 

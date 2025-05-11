@@ -17,8 +17,8 @@ public class PlayAmbientSound : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        soundPlayer.PlaySound(sound, volume, loop);
-        AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0f, volume, () => { }));
+        soundPlayer.PlaySound(sound, 0, loop);
+        AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, volume, () => { }));
         GameManager.ResetAction += FadeOut;
     }
 
