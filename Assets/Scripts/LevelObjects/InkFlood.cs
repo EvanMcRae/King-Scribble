@@ -28,6 +28,16 @@ public class InkFlood : MonoBehaviour
     public void NextDest() {if (destinations.Length > curDest - 1) curDest++;}
     public void PrevDest() {if (curDest > 0) curDest--;}
 
+    private void Start()
+    {
+        GameManager.ResetAction += FadeOut;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.ResetAction -= FadeOut;
+    }
+
     public void StartFlood()
     {
 
@@ -71,6 +81,12 @@ public class InkFlood : MonoBehaviour
         {
             AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 0f, () => { }));
         }
+    }
+
+    public void FadeOut()
+    {
+        if (soundPlayer != null)
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 0f, () => { }));
     }
 
     void FixedUpdate()
