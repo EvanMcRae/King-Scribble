@@ -14040,6 +14040,7 @@ MonoBehaviour:
   r_inkfall: {fileID: 2092374306}
   button: {fileID: 1810280221}
   soundPlayer: {fileID: 121074980}
+  isButtonActive: 0
 --- !u!4 &1114107047
 Transform:
   m_ObjectHideFlags: 0
@@ -17932,6 +17933,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: fillColor.b
+      value: 0.35686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: fillColor.g
+      value: 0.043137256
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: fillColor.r
+      value: 0.38039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: cuttingTrail
       value: 
       objectReference: {fileID: 1465479247098009191, guid: b900bed1df7535d4c8444484ff2982f1, type: 3}
@@ -17940,9 +17953,57 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2131398971}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_fin.b
+      value: 0.3529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_fin.g
+      value: 0.039215688
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_fin.r
+      value: 0.3764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_start.b
+      value: 0.4745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_start.g
+      value: 0.03529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: penColor_start.r
+      value: 0.50980395
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: PencilLinesFolder
       value: 
       objectReference: {fileID: 1044835375}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_end.b
+      value: 0.1882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_end.g
+      value: 0.1882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_end.r
+      value: 0.1882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_start.b
+      value: 0.27450982
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_start.g
+      value: 0.27450982
+      objectReference: {fileID: 0}
+    - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: pencilColor_start.r
+      value: 0.27450982
+      objectReference: {fileID: 0}
     - target: {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: submeters.Array.size
       value: 4
