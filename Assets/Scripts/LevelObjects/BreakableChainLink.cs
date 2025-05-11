@@ -11,6 +11,7 @@ public class BreakableChainLink : Breakable
     [SerializeField] private GameObject lower_link; // The next link in the chain (from top to bottom)
     [SerializeField] private GameObject ub_pref; // Prefab for the upper fragment of the broken chain
     [SerializeField] private GameObject lb_pref; // Prefab for the lower fragment of the broken chain
+    [SerializeField] private ParticleSystem part;
     public override void Break()
     {
         chain_base.GetComponent<DistanceJoint2D>().enabled = false;
@@ -21,6 +22,9 @@ public class BreakableChainLink : Breakable
         GameObject low = Instantiate(lb_pref, gameObject.transform.position, Quaternion.identity, gameObject.transform.parent);
         low.GetComponent<HingeJoint2D>().connectedBody = lower_link.GetComponent<Rigidbody2D>();
         low.GetComponent<HingeJoint2D>().connectedAnchor = new(0.01f, 0.03f); // No need to set autoConfigureConnectedAnchor - it is already set to false on the version we want to change
+        ParticleSystem particles = Instantiate(part, gameObject.transform.position, Quaternion.identity);
+        var thisIsDumbAsShit = particles.main; // Seriously why can't I just modify particles.main directly? Why do I have to set it to a variable and then modify THAT variable?
+        thisIsDumbAsShit.startSize = PlayerVars.instance.curCamZoom / 30f; // They should be functionally identical. This is just a waste of space. Fuck unity man.
         Destroy(gameObject);
     }
 
