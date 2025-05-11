@@ -177,7 +177,7 @@ SpringJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: -0.006577226, y: 1.097548}
   m_AutoConfigureDistance: 1
-  m_Distance: 0.45531094
+  m_Distance: 0.4553107
   m_DampingRatio: 1
   m_Frequency: 1
 --- !u!1 &6001434979272687398
@@ -274,7 +274,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ed6183da7af2aab45b09a76fe8f18019, type: 3}
   - {fileID: 21300000, guid: 7cf1d89416aee2a47a86d5c984835a95, type: 3}
   - {fileID: 21300000, guid: 03d49aa0865615b4ba69565dc84c0ffc, type: 3}
+  - {fileID: 21300000, guid: f979fc38cfb364d088896a27f9d31d89, type: 3}
   soundPlayer: {fileID: 3385541167332679919}
+  cur_ground: {fileID: 0}
 --- !u!61 &3176018100405734386
 BoxCollider2D:
   m_ObjectHideFlags: 0

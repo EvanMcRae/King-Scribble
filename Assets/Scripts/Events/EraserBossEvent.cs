@@ -18,13 +18,16 @@ public class EraserBossEvent : MonoBehaviour
     [SerializeField] static bool isButtonActive = false;
     [SerializeField] private SoundPlayer soundPlayer;
     private int soundsPlaying = 0;
+    [SerializeField] static Color purpleColor;
 
     void Start()
     {
         l_inkfall.transform.position = l_start.position;
         r_inkfall.transform.position = r_start.position;
         buttonTop = button.transform.Find("Top").GetComponent<SpriteRenderer>();
+        purpleColor = buttonTop.color;
         DeactivateButton();
+        StartCoroutine(test());
     }
 
     public static void ActivateButton() {
@@ -35,7 +38,7 @@ public class EraserBossEvent : MonoBehaviour
 
     public static void DeactivateButton() {
         // change color to black
-        buttonTop.color = Color.black;
+        buttonTop.color = Color.gray;
         isButtonActive = false;
     }
 
@@ -90,6 +93,14 @@ public class EraserBossEvent : MonoBehaviour
         r_inkfall.SetActive(false);
     }
 
-
+    IEnumerator test() {
+        Activate();
+        yield return new WaitForSeconds(1);
+        Deactivate();
+        yield return new WaitForSeconds(1);
+        Activate();
+        yield return new WaitForSeconds(1);
+        Deactivate();
+    }
 }
 

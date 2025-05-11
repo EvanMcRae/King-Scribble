@@ -16848,14 +16848,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1415374307}
   - component: {fileID: 1415374308}
-  - component: {fileID: 1415374309}
   m_Layer: 14
   m_Name: EB_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1415374307
 Transform:
   m_ObjectHideFlags: 0
@@ -16923,41 +16922,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1415374309
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1415374306}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 32743
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!1 &1453819389
 GameObject:
   m_ObjectHideFlags: 0
@@ -22056,19 +22020,19 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: f979fc38cfb364d088896a27f9d31d89, type: 3}
     - target: {fileID: 1265843585962280866, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Color.b
-      value: 0.63529414
+      value: 0.64705884
       objectReference: {fileID: 0}
     - target: {fileID: 1265843585962280866, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Color.g
-      value: 0.63529414
+      value: 0.18039216
       objectReference: {fileID: 0}
     - target: {fileID: 1265843585962280866, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Color.r
-      value: 0.63529414
+      value: 0.4392157
       objectReference: {fileID: 0}
     - target: {fileID: 2070811245707455653, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: b_color
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2070811245707455653, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: cur_ground
