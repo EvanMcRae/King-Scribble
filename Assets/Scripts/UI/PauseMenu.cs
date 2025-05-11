@@ -73,6 +73,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Unpause()
     {
+        if (!GameManager.paused) return;
+
         firstopen = false;
         GameManager.paused = false;
         pauseButton.enabled = true;
@@ -114,7 +116,7 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        Unpause();
+        GameManager.ResetAction.Invoke();
         pauseButton.enabled = false;
         GameManager.resetting = true;
         GameSaver.instance.SaveGame();

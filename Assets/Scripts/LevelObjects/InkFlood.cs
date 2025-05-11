@@ -42,9 +42,11 @@ public class InkFlood : MonoBehaviour
         }
         else
         {
-            if (soundPlayer != null && !soundPlayer.sources[0].isPlaying)
+            if (soundPlayer != null)
             {
-                soundPlayer.PlaySound("Ink.Flow", 1, true);
+                if (!soundPlayer.sources[0].isPlaying)
+                    soundPlayer.PlaySound("Ink.Flow", 1, true);
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0f, 1f, () => { }));
             }
         }
     }
@@ -54,9 +56,11 @@ public class InkFlood : MonoBehaviour
         waiting = true;
         yield return new WaitForSeconds(wait_time);
         waiting = false;
-        if (soundPlayer != null && !soundPlayer.sources[0].isPlaying)
+        if (soundPlayer != null)
         {
-            soundPlayer.PlaySound("Ink.Flow", 1, true);
+            if (!soundPlayer.sources[0].isPlaying)
+                soundPlayer.PlaySound("Ink.Flow", 1, true);
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0f, 1f, () => { }));
         }
     }
 
@@ -64,7 +68,9 @@ public class InkFlood : MonoBehaviour
     {
         flooding = false;
         if (soundPlayer != null)
-            soundPlayer.EndSound("Ink.Flow");
+        {
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 0f, () => { }));
+        }
     }
 
     void FixedUpdate()
@@ -93,7 +99,7 @@ public class InkFlood : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, destinations[curDest].position, floodSpeed * Time.fixedDeltaTime);
         }
 
-        if (transform.position == destinations[curDest].position) StopFlood();
+        if (transform.position == destinations[curDest].position && flooding) StopFlood();
     }
 
     void OnTriggerStay2D(Collider2D collision)

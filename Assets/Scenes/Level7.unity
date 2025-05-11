@@ -6945,7 +6945,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InkSoundPlayer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1647153247365225457, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+    - {fileID: 8424736505339978238, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+    - {fileID: 1468440315524141772, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -6973,6 +6976,7 @@ MonoBehaviour:
   sound: {fileID: 11400000, guid: d4cdcc86d99594bdbae820fd79173f03, type: 2}
   volume: 1
   loop: 1
+  soundPlayer: {fileID: 0}
 --- !u!1 &339469888
 GameObject:
   m_ObjectHideFlags: 0

@@ -115,10 +115,10 @@ public class GameManager : MonoBehaviour
         resetting = true;
         ClearResetPrompt();
         ScreenWipe.instance.WipeIn();
-        yield return new WaitForSecondsRealtime(1f);
+        ResetAction.Invoke();
+        yield return new WaitForSeconds(1f);
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();
-        ResetAction.Invoke();
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         Light2D[] Lights = FindObjectsOfType<Light2D>();
