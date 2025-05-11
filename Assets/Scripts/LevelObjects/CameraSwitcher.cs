@@ -14,6 +14,7 @@ public class CameraSwitcher : MonoBehaviour
     public GameObject n_cam_bounds_r;
     private bool hasEntered = false;
     public UnityEvent onEnter;
+    public bool copyFollow = false;
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -30,6 +31,8 @@ public class CameraSwitcher : MonoBehaviour
                 hasEntered = true;
                 onEnter.Invoke();
             }
+
+            if (copyFollow) next_cam.Follow = prev_cam.Follow;
         }
     }
 }

@@ -417,9 +417,9 @@ public class DrawManager : MonoBehaviour
                         PlayerVars.instance.ResetTempPenFuel();
                         return;
                     }
-                    currentLine.SmoothPen(10);
+                    currentLine.SmoothPen(1);
                     if (PlayerVars.instance.curCamZoom > 15) // If the camera zoom is high enough that pen objects would cause collision issues, attempt to prevent that
-                        currentLine.Generalize(PlayerVars.instance.curCamZoom / 60f, (int)PlayerVars.instance.curCamZoom * 3);
+                        currentLine.Generalize(PlayerVars.instance.curCamZoom / 60f, (int)PlayerVars.instance.curCamZoom * 5);
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line
