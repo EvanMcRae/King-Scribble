@@ -92,6 +92,8 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        instance = this;
+
         if (PlayerVars.instance == null) return;
 
         // Can't draw if you're dead/paused
