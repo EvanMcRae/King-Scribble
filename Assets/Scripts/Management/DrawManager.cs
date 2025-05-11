@@ -431,8 +431,6 @@ public class DrawManager : MonoBehaviour
                     fillMatBlock.SetColor("_Color", fillColor);
                     fillMatBlock.SetTexture("_MainTex", fillTextures[fillTexture].texture);
 
-                    toolSoundPlayer.PlaySound("Drawing.PenComplete");
-
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
                 }
