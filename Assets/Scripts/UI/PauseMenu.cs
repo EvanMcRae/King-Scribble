@@ -12,6 +12,7 @@ public class PauseMenu : MonoBehaviour
     private GameObject previousButton;
     public static bool unpausedWithSpace = false;
     public static bool firstopen = false;
+    private float prevTimeScale = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +56,7 @@ public class PauseMenu : MonoBehaviour
         if (!(PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)) return;
         GameManager.paused = true;
         pauseButton.enabled = false;
+        prevTimeScale = Time.timeScale;
         Time.timeScale = 0;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {
@@ -75,7 +77,7 @@ public class PauseMenu : MonoBehaviour
         GameManager.paused = false;
         pauseButton.enabled = true;
         if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
-        Time.timeScale = 1;
+        Time.timeScale = prevTimeScale;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
         {
             if (!AudioManager.instance.OwnsSource(_))

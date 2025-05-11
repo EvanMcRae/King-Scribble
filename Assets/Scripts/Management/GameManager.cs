@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
     public void SetCamera(CinemachineVirtualCamera cam)
     {
         cam.gameObject.SetActive(true);
+        PlayerVars.instance.curCamZoom = cam.m_Lens.OrthographicSize;
     }
 
     public void DeactivateCamera(CinemachineVirtualCamera cam)
@@ -95,8 +96,10 @@ public class GameManager : MonoBehaviour
         canMove = false;
         // cam1.gameObject.SetActive(false);
         cam2.gameObject.SetActive(true);
+        PlayerVars.instance.curCamZoom = cam2.m_Lens.OrthographicSize;
         yield return new WaitForSeconds(time);
         cam2.gameObject.SetActive(false);
+        PlayerVars.instance.curCamZoom = cam1.m_Lens.OrthographicSize;
         // cam1.gameObject.SetActive(true);
         canMove = true;
     }

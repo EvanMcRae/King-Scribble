@@ -112,6 +112,16 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isSprinting", isSprinting);
         anim.SetBool("isGrounded", isGrounded);
 
+        // TODO: TEMPORARY CHEAT MODE KEYBIND
+        if (Input.GetKeyDown(KeyCode.Backslash))
+        {
+            ToggleCheatMode();
+        }
+        if (PlayerVars.instance.cheatMode)
+        {
+            CheatModeUpdate();
+        }
+
         if (vars.isDead || !GameManager.canMove)
         {
             anim.SetBool("isMoving", false);
@@ -155,28 +165,65 @@ public class PlayerController : MonoBehaviour
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
         }
-
-        // TODO: TEMPORARY CHEAT MODE KEYBIND
-        if (Input.GetKeyDown(KeyCode.Backslash))
-        {
-            PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
-            Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
-            rb.isKinematic = PlayerVars.instance.cheatMode;
-            //bodyCollider.enabled = !PlayerVars.instance.cheatMode;
-        }
-        if (PlayerVars.instance.cheatMode)
-        {
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                cheatSpeed += Input.mouseScrollDelta.x;
-            else
-                cheatSpeed += Input.mouseScrollDelta.y;
-            if (cheatSpeed < 0) cheatSpeed = 0;
-        }
     }
 
     public void KillTweens()
     {
         DOTween.KillAll();
+    }
+
+    void ToggleCheatMode()
+    {
+        PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
+        Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
+        rb.isKinematic = PlayerVars.instance.cheatMode;
+        //bodyCollider.enabled = !PlayerVars.instance.cheatMode;
+    }
+
+    void CheatModeUpdate()
+    {
+        // increase fly speed -- NOTE: this conflicts with tool selection!
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            cheatSpeed += Input.mouseScrollDelta.x;
+        else
+            cheatSpeed += Input.mouseScrollDelta.y;
+        if (cheatSpeed < 0) cheatSpeed = 0;
+
+        // slow time
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Time.timeScale *= 0.5f;
+        }
+
+        // raise time
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            Time.timeScale *= 2f;
+        }
+
+        // unlock pencil
+        if (Input.GetKeyDown(KeyCode.I) && !PlayerVars.instance.inventory.hasTool(ToolType.Pencil))
+        {
+            PlayerVars.instance.inventory.addTool(ToolType.Pencil);
+            CollectTool();
+            DrawManager.instance.TrySwitchTool(ToolType.Pencil);
+        }
+
+        // unlock pen
+        if (Input.GetKeyDown(KeyCode.O) && !PlayerVars.instance.inventory.hasTool(ToolType.Pen))
+        {
+            PlayerVars.instance.inventory.addTool(ToolType.Pen);
+            CollectTool();
+            DrawManager.instance.TrySwitchTool(ToolType.Pen);
+        }
+
+        // unlock eraser
+        if (Input.GetKeyDown(KeyCode.P) && !PlayerVars.instance.inventory.hasTool(ToolType.Eraser))
+        {
+            PlayerVars.instance.inventory.addTool(ToolType.Eraser);
+            CollectTool();
+            DrawManager.instance.TrySwitchTool(ToolType.Eraser);
+        }
     }
 
     void FixedUpdate()
@@ -206,7 +253,6 @@ public class PlayerController : MonoBehaviour
         {
             targetVelocity.Set(vars.isDead ? 0 : moveX * calculatedSpeed * -slopeNormalPerp.x, moveX * calculatedSpeed * -slopeNormalPerp.y, 0.0f);
         }
-
         // apply velocity, dampening between current and target
         if (!PlayerVars.instance.cheatMode)
         {
@@ -387,7 +433,7 @@ public class PlayerController : MonoBehaviour
             bool onground = false;
             foreach (ContactPoint2D point in contactPoint2Ds)
             {
-                Debug.DrawLine(point.point, transform.position - (Vector3.up * 0.125f * transform.localScale.y), Color.red);
+                Debug.DrawLine(point.point, transform.position - (0.125f * transform.localScale.y * Vector3.up), Color.red);
                 if (point.point.y < transform.position.y - 0.125f * transform.localScale.y)
                 {
                     onground = true;
@@ -400,7 +446,6 @@ public class PlayerController : MonoBehaviour
                 moveX *= 0.5f;
             }
         }
-
         else if (rb.velocity.y < 0)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;

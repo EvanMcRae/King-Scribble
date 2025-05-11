@@ -92,6 +92,8 @@ public class DrawManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        instance = this;
+
         if (PlayerVars.instance == null) return;
 
         // Can't draw if you're dead/paused
@@ -399,6 +401,11 @@ public class DrawManager : MonoBehaviour
             if (currentLine.GetPointsCount() < 2) // Destroy the current line if it is too small
                 Destroy(currentLine.gameObject);
 
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) // If we are drawing with the pencil, smooth the colliders
+            {
+                currentLine.SmoothPencil(3);
+            }
+
             if (PlayerVars.instance.cur_tool == ToolType.Pen) // If we are drawing with a pen, check for a closed loop
             {
                 if (currentLine.CheckClosedLoop()) // If the line is a closed loop: enable physics, set width and color to final parameters, and set weight based on area of the drawn polygon
@@ -409,6 +416,9 @@ public class DrawManager : MonoBehaviour
                         PlayerVars.instance.ResetTempPenFuel();
                         return;
                     }
+                    currentLine.SmoothPen(10);
+                    if (PlayerVars.instance.curCamZoom > 15) // If the camera zoom is high enough that pen objects would cause collision issues, attempt to prevent that
+                        currentLine.Generalize(PlayerVars.instance.curCamZoom / 60f, (int)PlayerVars.instance.curCamZoom * 3);
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
                     currentLine.SetColor(penColor_fin); // Set the color of the line

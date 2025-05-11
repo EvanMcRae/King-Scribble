@@ -261,5 +261,77 @@ public class Line : MonoBehaviour
             part.Play();
         }
     }
+
+    public void SmoothPencil(int severity = 1) // Smooth the collider positions of a pencil line, to prevent janky player movement/collision
+    {
+        Vector3[] points3 = new Vector3[GetPointsCount()];
+        lineRenderer.GetPositions(points3);
+        Vector2[] points2 = ConvertArray(points3);
+
+        for (int i = 1; i < GetPointsCount(); i++)
+        {
+            // Compute the average position of closest N neighbors, where N is the severity
+            int startPos = i - severity > 0 ? i - severity : 0;
+            int endPos = i + severity < GetPointsCount() ? i + severity : GetPointsCount();
+            float avgX = 0f, avgY = 0f;
+            for (int j = startPos; j < endPos; j++)
+            {
+                avgX += points2[j].x;
+                avgY += points2[j].y;
+            }
+            avgX /= endPos - startPos;
+            avgY /= endPos - startPos;
+            // Set the collider's position to the average
+            colliders[i].offset = new Vector2(avgX, avgY);
+        }
+    }
+
+    public void SmoothPen(int severity = 1)
+    {
+        PolygonCollider2D polyCollider = gameObject.GetComponent<PolygonCollider2D>();
+        if (!polyCollider) return;
+
+        Vector2[] path = polyCollider.GetPath(0);
+
+        for (int i = 1; i < path.Length; i++)
+        {
+            int startPos = i - severity > 0 ? i - severity : 0;
+            int endPos = i + severity < path.Length ? i + severity : path.Length;
+            float avgX = 0f, avgY = 0f;
+            for (int j = startPos; j < endPos; j++)
+            {
+                avgX += path[j].x;
+                avgY += path[j].y;
+            }
+            avgX /= endPos - startPos;
+            avgY /= endPos - startPos;
+            path[i] = new Vector2(avgX, avgY);
+        }
+        polyCollider.SetPath(0, path);
+    }
+
+    public void Generalize(float threshold = 0.1f, int minSize = 50) // Generalize a pen object - reducing its vertices by removing any that are closer than the given threshold
+    {
+        PolygonCollider2D polyCollider = gameObject.GetComponent<PolygonCollider2D>();
+        if (!polyCollider) return;
+        int numRemoved = 1;
+        int iter = 0;
+        while (numRemoved != 0 && GetPointsCount() > minSize)
+        {
+            iter ++;
+            numRemoved = 0;
+            List<Vector2> path = new(polyCollider.GetPath(0));
+            for (int i = 1; i < path.Count - 1; i++)
+            {
+                if (Vector2.Distance(path[i - 1], path[i]) < threshold || Vector2.Distance(path[i], path[i + 1]) < threshold)
+                {
+                    path.RemoveAt(i);
+                    numRemoved ++;
+                }  
+            }
+            polyCollider.SetPath(0, path);
+        }
+        Debug.Log("Number of iterations for vertex culling: " + iter);
+    }
 }
 
