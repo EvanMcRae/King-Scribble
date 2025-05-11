@@ -14,32 +14,43 @@ public class EraserBossEvent : MonoBehaviour
     [SerializeField] private GameObject l_inkfall;
     [SerializeField] private GameObject r_inkfall;
     [SerializeField] private GameObject button;
-    private static SpriteRenderer buttonTop;
-    [SerializeField] static bool isButtonActive = false;
     [SerializeField] private SoundPlayer soundPlayer;
     private int soundsPlaying = 0;
+    [SerializeField] bool isButtonActive = false; // whether KS should be able to interact with it
+    bool isButtonPressed = false; // if it is pressed
+    private  SpriteRenderer buttonTop;
+    private Color purpleColor;
 
     void Start()
     {
         l_inkfall.transform.position = l_start.position;
         r_inkfall.transform.position = r_start.position;
         buttonTop = button.transform.Find("Top").GetComponent<SpriteRenderer>();
+        purpleColor = buttonTop.color;
         DeactivateButton();
+        //StartCoroutine(test());
     }
 
-    public static void ActivateButton() {
+    public void ActivateButton() {
         // change color to purple
-        buttonTop.color = Color.white;
+        buttonTop.color = purpleColor;
         isButtonActive = true;
+        if(isButtonPressed) {
+            Activate();
+        }
     }
 
-    public static void DeactivateButton() {
-        // change color to black
-        buttonTop.color = Color.black;
+    public void DeactivateButton() {
+        // change color to gray
+        buttonTop.color = Color.gray;
+        if(isButtonPressed) {
+            Deactivate();
+        }
         isButtonActive = false;
     }
 
     public void Activate() {
+        isButtonPressed = true;
         if(isButtonActive) {
             l_inkfall.transform.DOMoveY(l_active.position.y, 0.5f);
             r_inkfall.transform.DOMoveY(r_active.position.y, 0.5f);
@@ -49,6 +60,7 @@ public class EraserBossEvent : MonoBehaviour
     }
 
     public void Deactivate() {
+        isButtonPressed = false;
         if(isButtonActive) {
             StartCoroutine(Deactivate_());
         }
@@ -90,6 +102,13 @@ public class EraserBossEvent : MonoBehaviour
         r_inkfall.SetActive(false);
     }
 
-
+    IEnumerator test() {
+        for(int i = 0; i < 30; i++) {
+            Activate();
+            yield return new WaitForSeconds(1);
+            Deactivate();
+            yield return new WaitForSeconds(1);
+        }
+    }
 }
 
