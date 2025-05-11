@@ -51,7 +51,7 @@ public class DrawManager : MonoBehaviour
     private Vector2 lastMousePos;
     private bool beganDraw = false;
 
-    [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private SoundPlayer toolSoundPlayer, drawSoundPlayer;
     [SerializeField] private List<SoundClip> drawSounds = new();
     private Coroutine currentSoundPause, currentSoundUnpause;
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
@@ -223,7 +223,7 @@ public class DrawManager : MonoBehaviour
             lastMousePos = mouse_pos;
             isErasing = true;
             EraserFunctions.Erase(mouse_pos, eraserRadius, true);
-            soundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
+            drawSoundPlayer.PlaySound(drawSounds[(int)ToolType.Eraser], 1, true);
             return;
         }
 
@@ -285,7 +285,8 @@ public class DrawManager : MonoBehaviour
             currentLine.startPoint.enabled = true;
             currentLine.startPoint.color = penColor_start;
         }
-        soundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
+        drawSoundPlayer.EndAllSounds();
+        drawSoundPlayer.PlaySound(drawSounds[(int)PlayerVars.instance.cur_tool], 1, true);
     }
 
     private IEnumerator EraseMarch(Vector2 mouse_pos)
@@ -394,7 +395,7 @@ public class DrawManager : MonoBehaviour
             AudioManager.instance.StopCoroutine(currentSoundPause);
         if (currentSoundUnpause != null)
             AudioManager.instance.StopCoroutine(currentSoundUnpause);
-        soundPlayer.EndAllSounds();
+        drawSoundPlayer.EndAllSounds();
 
         if (currentLine != null)
         {
@@ -454,7 +455,7 @@ public class DrawManager : MonoBehaviour
             soundPauseCounter += Time.deltaTime;
             if (soundPauseCounter >= soundPauseThreshold && !soundPaused)
             {
-                currentSoundPause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 0f, () => { }));
+                currentSoundPause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(drawSoundPlayer.sources[0], 0.2f, 0f, () => { }));
                 soundPaused = true;
             }
         }
@@ -464,7 +465,7 @@ public class DrawManager : MonoBehaviour
                 AudioManager.instance.StopCoroutine(currentSoundPause);
             soundPauseCounter = 0;
             soundPaused = false;
-            currentSoundUnpause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 0.2f, 1f, () => { }));
+            currentSoundUnpause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(drawSoundPlayer.sources[0], 0.2f, 1f, () => { }));
         }
     }
 
@@ -512,7 +513,7 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.cur_tool != newTool)
         {
             SwitchTool(newTool);
-            soundPlayer.PlaySound("Player.SelectTool");
+            toolSoundPlayer.PlaySound("Player.SelectTool");
         }
     }
 
@@ -539,7 +540,7 @@ public class DrawManager : MonoBehaviour
         if (hit == true)
         {
             hit.collider.gameObject.GetComponent<Breakable>().Break();
-            soundPlayer.PlaySound("Player.Slice");
+            toolSoundPlayer.PlaySound("Player.Slice");
         }
     }
 }

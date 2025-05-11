@@ -11149,6 +11149,7 @@ MonoBehaviour:
   floodWait: 1
   waitTime: 0.5
   killThreshold: 0.5
+  soundPlayer: {fileID: 0}
 --- !u!114 &1559441297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17595,6 +17596,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 909481752378173358, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2935742833353717475, guid: d543b05aee12690479007aa93e26909d, type: 3}
