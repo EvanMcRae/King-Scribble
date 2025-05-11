@@ -248,17 +248,20 @@ public class Line : MonoBehaviour
     {
         // Create the pen object destruction particle effect
         if (gameObject.scene.isLoaded) { // Only call if the destruction is not a result of a scene change/exit
-            if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>() || deleted) return; // Only run on pen objects
+            if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>()) return; // Only run on pen objects
             ParticleSystem part = Instantiate(penObjDestroy, gameObject.GetComponent<PolygonCollider2D>().bounds.center, Quaternion.identity);
             // Set the mesh of the particle system to the mesh of the pen object
             var shape = part.shape;
             shape.mesh = gameObject.GetComponentInChildren<MeshFilter>().mesh;
-            // Set the number of particles based on the object's area
-            var burst = part.emission.GetBurst(0);
-            burst.count = 20 * area;
-            part.emission.SetBurst(0, burst);
-            // Play the effect (and then destroy)
-            part.Play();
+            
+            if(area != 0) {
+                // Set the number of particles based on the object's area
+                var burst = part.emission.GetBurst(0);
+                burst.count = 20 * area;
+                part.emission.SetBurst(0, burst);
+                // Play the effect (and then destroy)
+                part.Play();
+            } 
         }
     }
 
