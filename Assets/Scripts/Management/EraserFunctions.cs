@@ -67,6 +67,7 @@ public class EraserFunctions : MonoBehaviour
                         }
                         
                         DrawManager.instance.SetPencilParams(newLine);
+                        DrawManager.instance.SwapColors(newLine);
 
                         // Fill the new line and delete from the current line
                         int ct = 0;

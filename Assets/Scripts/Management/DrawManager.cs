@@ -501,6 +501,13 @@ public class DrawManager : MonoBehaviour
         line.gameObject.layer = 1<<3; // 100 is binary for 8, Lines are on the 8th layer
     }
 
+    public void SwapColors(Line line)
+    {
+        Color temp = line.GetComponent<LineRenderer>().startColor;
+        line.GetComponent<LineRenderer>().startColor = pencilColor_end;
+        line.GetComponent<LineRenderer>().endColor = temp;
+    }
+
     public void SwitchTool(int index)
     {
         if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
