@@ -4308,6 +4308,7 @@ MonoBehaviour:
   lower_link: {fileID: 1720406169}
   ub_pref: {fileID: 7592137000982373077, guid: 864415368b296864a9eb1119dbf5c673, type: 3}
   lb_pref: {fileID: 8137311281945643648, guid: f61968eb68588a14fa0788912bec62a6, type: 3}
+  part: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
 --- !u!1 &322120274
 GameObject:
   m_ObjectHideFlags: 0
@@ -6479,8 +6480,9 @@ GameObject:
   m_Component:
   - component: {fileID: 468072976}
   - component: {fileID: 468072975}
+  - component: {fileID: 468072977}
   m_Layer: 0
-  m_Name: Ink Pipe
+  m_Name: Left Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6553,6 +6555,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &468072977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468072974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4710c746c9460347921bf02a8c23ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {fileID: 739348045}
+  active: {fileID: 1386422840}
+  end: {fileID: 942500436}
+  inkfall: {fileID: 790334229}
+  broken: {fileID: 0}
+  break_particles: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
+  sound_player: {fileID: 121074980}
+  other: {fileID: 1745935660}
 --- !u!1 &497288901
 GameObject:
   m_ObjectHideFlags: 0
@@ -6745,6 +6767,7 @@ MonoBehaviour:
   lower_link: {fileID: 687929725}
   ub_pref: {fileID: 7592137000982373077, guid: 864415368b296864a9eb1119dbf5c673, type: 3}
   lb_pref: {fileID: 8137311281945643648, guid: f61968eb68588a14fa0788912bec62a6, type: 3}
+  part: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
 --- !u!1 &514486919
 GameObject:
   m_ObjectHideFlags: 0
@@ -8135,6 +8158,7 @@ MonoBehaviour:
   lower_link: {fileID: 139788916}
   ub_pref: {fileID: 7592137000982373077, guid: 864415368b296864a9eb1119dbf5c673, type: 3}
   lb_pref: {fileID: 8137311281945643648, guid: f61968eb68588a14fa0788912bec62a6, type: 3}
+  part: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
 --- !u!1 &677874598
 GameObject:
   m_ObjectHideFlags: 0
@@ -14030,14 +14054,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffe764408951ee142a56a0eec2292ae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  l_start: {fileID: 739348045}
-  l_active: {fileID: 1386422840}
-  l_deactivated: {fileID: 942500436}
-  r_start: {fileID: 1163048089}
-  r_active: {fileID: 140431958}
-  r_deactivated: {fileID: 968518619}
-  l_inkfall: {fileID: 790334229}
-  r_inkfall: {fileID: 2092374306}
+  left: {fileID: 468072977}
+  right: {fileID: 1745935660}
   button: {fileID: 1810280221}
   soundPlayer: {fileID: 121074980}
   isButtonActive: 0
@@ -20973,8 +20991,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1745935659}
   - component: {fileID: 1745935658}
+  - component: {fileID: 1745935660}
   m_Layer: 0
-  m_Name: Ink Pipe (1)
+  m_Name: Right Pipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21047,6 +21066,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1745935660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745935657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4710c746c9460347921bf02a8c23ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {fileID: 1163048089}
+  active: {fileID: 140431958}
+  end: {fileID: 968518619}
+  inkfall: {fileID: 2092374306}
+  broken: {fileID: 0}
+  break_particles: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
+  sound_player: {fileID: 121074980}
+  other: {fileID: 468072977}
 --- !u!1 &1755834801
 GameObject:
   m_ObjectHideFlags: 0
@@ -22792,6 +22831,7 @@ MonoBehaviour:
   lower_link: {fileID: 17466707}
   ub_pref: {fileID: 7592137000982373077, guid: 864415368b296864a9eb1119dbf5c673, type: 3}
   lb_pref: {fileID: 8137311281945643648, guid: f61968eb68588a14fa0788912bec62a6, type: 3}
+  part: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
 --- !u!1001 &1879744566
 PrefabInstance:
   m_ObjectHideFlags: 0
