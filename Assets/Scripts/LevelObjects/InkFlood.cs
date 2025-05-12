@@ -9,8 +9,10 @@ public class InkFlood : MonoBehaviour
     public Transform[] destinations; // There MUST be at least one
     public bool flooding = false;
     public bool catchUp_enabled = true; // Set to false if the ink is not "chasing" the player
+    public float catchUp_factor = 2f;
     public bool speedUp_enabled = true; // Set to false if no "speed up point" is desired
-    public float speedUpPoint = 0f; // (Optional) the y-value of the point at which the ink will double its speed permanently
+    public float speedUp_factor = 2f;
+    public float speedUpPoint = 0f; // (Optional) the y-value of the point at which the ink will increase its speed permanently
     private bool hasSped = false; // If the ink has reached the "speed up" point
     private bool catchUp = false; // If the ink is currently "catching up"
     public float maxDist = 10f; // How far the player can move away from the ink before it speeds up to catch him
@@ -43,8 +45,10 @@ public class InkFlood : MonoBehaviour
 
         flooding = true;
         // Possibly add: if not first time in the level (must implement into save functionality)
+        /*
         if (speedUp_enabled)
-            floodSpeed /= 2f; // Initial speed half of final
+            floodSpeed /= speedUp_factor;
+        */
         if (floodWait) 
         {
             waiting = true;
@@ -96,19 +100,19 @@ public class InkFlood : MonoBehaviour
             // If the "speed up point" has been reached, speed up permanently
             if (speedUp_enabled && !hasSped && transform.position.y >= speedUpPoint)
             {
-                floodSpeed *= 2;
+                floodSpeed *= speedUp_factor;
                 hasSped = true;
             }
             // If the player is too far ahead, double speed until caught up
             if (catchUp_enabled && ((speedUp_enabled && hasSped) || !speedUp_enabled) && !catchUp && PlayerVars.instance.transform.position.y >= transform.position.y + maxDist)
             {
-                floodSpeed *= 2;
+                floodSpeed *= catchUp_factor;
                 catchUp = true;
             }
             // If caught up, set the speed back to normal
             if (catchUp_enabled && catchUp && PlayerVars.instance.transform.position.y < transform.position.y + maxDist)
             {
-                floodSpeed /= 2;
+                floodSpeed /= catchUp_factor;
                 catchUp = false;
             } 
 

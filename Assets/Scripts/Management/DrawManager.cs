@@ -418,7 +418,7 @@ public class DrawManager : MonoBehaviour
                         return;
                     }
                     currentLine.SmoothPen(1);
-                    if (PlayerVars.instance.curCamZoom > 15) // If the camera zoom is high enough that pen objects would cause collision issues, attempt to prevent that
+                    if (PlayerVars.instance.curCamZoom > 10) // If the camera zoom is high enough that pen objects would cause collision issues, attempt to prevent that
                         currentLine.Generalize(PlayerVars.instance.curCamZoom / 60f, (int)PlayerVars.instance.curCamZoom * 5);
                     currentLine.AddPhysics(); // This function also sets the weight of the object based on its area
                     currentLine.SetThickness(penThickness_fin); // Set the thickness of the line
@@ -430,8 +430,6 @@ public class DrawManager : MonoBehaviour
                     MaterialPropertyBlock fillMatBlock = new MaterialPropertyBlock();
                     fillMatBlock.SetColor("_Color", fillColor);
                     fillMatBlock.SetTexture("_MainTex", fillTextures[fillTexture].texture);
-
-                    toolSoundPlayer.PlaySound("Drawing.PenComplete");
 
                     currentLine.AddMesh(fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
                     currentLine = null;
