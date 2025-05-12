@@ -78,8 +78,9 @@ public class EraserBossAI : MonoBehaviour
 
     // timer vars:
     private float timer = 0.0f; // used for cooldowns
+    private float oscillationTimer = 0.0f; // used for oscillation
     private float searchTime = 2.0f; // variables ending in "Time" relate to the timer
-    private float slamCooldownTime = 2.0f;
+    private float slamCooldownTime = 1.5f;
     private float chargeCooldownTime = 1.0f;
     private float chargePrepTime = .66f;
     private float slamPrepTime = 2.0f;
@@ -108,6 +109,8 @@ public class EraserBossAI : MonoBehaviour
     Vector3 prevPosition;
     private bool faceRight; // the direction EB should face when performing the windup animation
 
+    private float oscillation = 3000;
+    private float swap = 1;
 
     void Start() {
 
@@ -124,6 +127,7 @@ public class EraserBossAI : MonoBehaviour
         bounds1 = transform.Find("Bounds1").gameObject; // initalize erasing colliders bounds
         bounds2 = transform.Find("Bounds2").gameObject;
         bounds3 = transform.Find("Bounds3").gameObject;
+        eraserRadius *= transform.localScale.x;
 
         BoxCollider2D platformCol = platform.GetComponent<BoxCollider2D>();
         foreach (CapsuleCollider2D col in GetComponents<CapsuleCollider2D>()) // find EB's trigger collider (used for collision detection)
@@ -141,7 +145,43 @@ public class EraserBossAI : MonoBehaviour
                 Debug.Log("disabling physics isTrigger");
             }
         }
+
+        ChangeState(State.Searching);
     }
+
+    // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
+    // This will be reworked after the semester and will be how states change
+    private void ChangeState(State tempState) {
+        state = tempState;
+
+        switch (tempState) {
+            case State.Searching:
+                EBrb.gravityScale = 0;
+                EBrb.drag = 10;
+                break;
+            case State.Moving:
+                break;
+            case State.ChargePrep:
+                break;
+            case State.WindUp:
+                break;
+            case State.Charging:
+                break;
+            case State.ChargeCooldown:
+                break;
+            case State.SlamPrep:
+                EBrb.gravityScale = 1;
+                EBrb.drag = 0;
+                break;
+            case State.SlamCooldown:
+                break;
+            case State.Shield:
+                EBrb.gravityScale = 1;
+                EBrb.drag = 0;
+                break;
+        }
+    }
+
 
     void FixedUpdate()
     {   
@@ -155,16 +195,18 @@ public class EraserBossAI : MonoBehaviour
             return;
         }
 
+        
         timer += Time.deltaTime;
+        oscillationTimer += Time.deltaTime; // should be placed better in the code for more consistent behavior
         Erase(); // should move Erase() to the designated states eventually!
-
 
         switch (state) {
             default:
             case State.Searching:
                 anim.Play("EB_Idle");
                 SearchForPosition();
-                Hover(transform.position, 1f);
+                Oscillate();
+                //Hover(transform.position, 1f);
                 break;
 
             case State.Moving:
@@ -189,12 +231,13 @@ public class EraserBossAI : MonoBehaviour
                     else {
                         spriteRenderer.flipX = true;
                     }
-                    state = State.WindUp;
+
+                    ChangeState(State.WindUp);
                 }
-                if (timer > 5) {
-                    Debug.LogError("EB could not reach chargePrep position. Entering search state");
+                if (timer > 3) {
+                    Debug.LogError("EB could not reach chargePrep position.");
                     timer = 0;
-                    state = State.Searching;
+                    ChangeState(State.WindUp);
                 }
                 break;
 
@@ -203,7 +246,7 @@ public class EraserBossAI : MonoBehaviour
                 Hover(transform.position, 1.0f);
                 if(timer >= chargePrepTime) {
                     timer = 0;
-                    state = State.Charging;
+                    ChangeState(State.Charging);
                 }
                 break;
 
@@ -225,7 +268,7 @@ public class EraserBossAI : MonoBehaviour
                         spriteRenderer.flipX = false;
                     }
                     timer = 0;
-                    state = State.Searching;
+                    ChangeState(State.Searching);
                 }
                 break;
 
@@ -233,7 +276,7 @@ public class EraserBossAI : MonoBehaviour
                 Hover(transform.position, 1f);
                 anim.Play("EB_Stun");
                 if(timer >= dizzyTime) {
-                    state = State.Searching;
+                    ChangeState(State.Searching);
                 }
                 break;
 
@@ -258,7 +301,7 @@ public class EraserBossAI : MonoBehaviour
                 if(timer >= slamPrepTime) {
                     timer = 0;
                     destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor
-                    state = State.Slamming;
+                    ChangeState(State.Slamming);
                 }
                 break;
 
@@ -273,21 +316,19 @@ public class EraserBossAI : MonoBehaviour
                 anim.Play("EB_SlamImpact");
                 if(timer >= 1.0f) {
                     timer = 0;
-                    state = State.SlamCooldown;
+                    ChangeState(State.SlamCooldown);
                 }
                 break;
 
             case State.SlamCooldown:
                 anim.Play("EB_Idle");
                 Hover(new Vector3(transform.position.x,-7f,0f), cooldownSpeed); // -7f is above the ground
+                rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
+                isRotated = false;
 
-                //if(timer >= 1.0f) {
-                    rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
-                    isRotated = false;
-                //}
                 if(timer >= slamCooldownTime) {
                     timer = 0;
-                    state = State.Searching;
+                    ChangeState(State.Searching);
                 }
                 break;
             
@@ -309,7 +350,7 @@ public class EraserBossAI : MonoBehaviour
                     Debug.Log("DIZZIED");
                     timer = 0;
                     StopCoroutine(eraseLineSequence); // stop the erasing coroutine
-                    state = State.Dizzied;
+                    ChangeState(State.Dizzied);
                     isErasingLine = false;
                     Destroy(other.gameObject); // destroy pen object
                     other.GetComponent<Line>().deleted = true; // ensures the Line is deleted
@@ -322,10 +363,10 @@ public class EraserBossAI : MonoBehaviour
                     other.GetComponent<Line>().deleted = true;
                     timer = 0;
                     if(hitpoints == 0) {
-                        state = State.EndScene;
+                        ChangeState(State.EndScene);
                     }
                     else {
-                        state = State.Damaged;
+                        ChangeState(State.Damaged);
                         Difficulty2();
                     }
                 }
@@ -372,7 +413,7 @@ public class EraserBossAI : MonoBehaviour
             timer = 0;
             isSlamming = false;
             isSlamHit = true;
-            state = State.SlamImpact;
+            ChangeState(State.SlamImpact);
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Water") && state == State.Slamming) {
             Debug.Log("WATER DETECTED, pos is: " + transform.position);
@@ -380,7 +421,7 @@ public class EraserBossAI : MonoBehaviour
             timer = 0;
             isSlamming = false;
             isSlamHit = true;
-            state = State.SlamImpact;
+            ChangeState(State.SlamImpact);
         }
         
 
@@ -390,7 +431,7 @@ public class EraserBossAI : MonoBehaviour
             timer = 0;
             isSlamming = false;
             isSlamHit = true;
-            state = State.SlamImpact;
+            ChangeState(State.SlamImpact);
         }
     }
 
@@ -446,9 +487,11 @@ public class EraserBossAI : MonoBehaviour
         if(timer >= searchTime){
             timer = 0;
             if(closestLine != null) {
-                state = State.ChargePrep;
+                ChangeState(State.ChargePrep);
             }
-            else { state = State.SlamPrep; }    
+            else {
+                ChangeState(State.SlamPrep);
+            }    
         }
     }
 
@@ -536,7 +579,7 @@ public class EraserBossAI : MonoBehaviour
         //if(Vector3.Distance(transform.position, tempArray[numPoints - 1] + targetPosition) < 2 || timer > 5) {
         isErasingLine = false;
         timer = 0;
-        state = State.ChargeCooldown; 
+        ChangeState(State.ChargeCooldown);
     }
 
     // Knocks back the player if they are not in the hit cooldown period
@@ -583,7 +626,7 @@ public class EraserBossAI : MonoBehaviour
         isInvulnerable = true;
         shieldSprite.SetActive(true);
         yield return new WaitForSeconds(3.0f);
-        state = State.Searching;
+        ChangeState(State.Searching);
         isShielding = false;
 
         Debug.Log("ACTIVATING BUTTON");
@@ -688,7 +731,7 @@ public class EraserBossAI : MonoBehaviour
 
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield(bool isRight) {
-        state = State.Shield;
+        ChangeState(State.Shield);
         Debug.Log("DEACTIVATING SHIELD");
         isShielding = true;
         isInvulnerable = false;
@@ -745,10 +788,9 @@ public class EraserBossAI : MonoBehaviour
         // cutscene behavior here! 
         Debug.Log("EXITING REMOVESHIELD");
         timer = 0;
-        state = State.Searching;
+        ChangeState(State.Searching);
         isShielding = false;
     }
-
 
     private void BreakLeftChain() {
         leftChainL.GetComponent<BreakableChainLink>().Break();
@@ -765,6 +807,16 @@ public class EraserBossAI : MonoBehaviour
         Debug.Log("INCREASING DIFFICULTY");
         baseSpeed += 20;
         chargeSpeed += 20;
+    }
+
+    // simulates an oscillating hover movement (not perfectly but close enough for boss fight purposes! :p)
+    private void Oscillate() {
+        if(oscillationTimer % swap > (swap/2)) {
+            EBrb.AddForce(new Vector2(0f, oscillation), ForceMode2D.Force);
+        }
+        else {
+            EBrb.AddForce(new Vector2(0f, -oscillation), ForceMode2D.Force);
+        } 
     }
 
     // unbinds delegate upon destroying the eraser boss -- this is good practice!! - evan
