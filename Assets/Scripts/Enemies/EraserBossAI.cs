@@ -80,7 +80,7 @@ public class EraserBossAI : MonoBehaviour
     private float timer = 0.0f; // used for cooldowns
     private float oscillationTimer = 0.0f; // used for oscillation
     private float searchTime = 2.0f; // variables ending in "Time" relate to the timer
-    private float slamCooldownTime = 1.5f;
+    private float slamCooldownTime = 1.0f;
     private float chargeCooldownTime = 1.0f;
     private float chargePrepTime = .66f;
     private float slamPrepTime = 2.0f;
@@ -176,6 +176,10 @@ public class EraserBossAI : MonoBehaviour
             case State.SlamCooldown:
                 break;
             case State.Shield:
+                EBrb.gravityScale = 1;
+                EBrb.drag = 0;
+                break;
+            case State.EndScene:
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
@@ -334,7 +338,7 @@ public class EraserBossAI : MonoBehaviour
             
             case State.EndScene:
                 OrientSpriteDirection();
-                Hover(transform.position + new Vector3(1f,0f,0f), baseSpeed);
+                //Hover(transform.position + new Vector3(1f,0f,0f), baseSpeed);
                 break;
         }
     }
@@ -424,15 +428,19 @@ public class EraserBossAI : MonoBehaviour
             ChangeState(State.SlamImpact);
         }
         
-
-        if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && (state == State.Slamming || state == State.SlamImpact)) {
-            //Debug.Log("GROUND DETECTED, pos is: " + transform.position);
+        if (other.gameObject.layer == LayerMask.NameToLayer("PenLines")) {
             Destroy(other.gameObject);
-            timer = 0;
-            isSlamming = false;
-            isSlamHit = true;
-            ChangeState(State.SlamImpact);
         }
+
+        // confused why i had this code... need to rework it
+        // if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && (state == State.Slamming || state == State.SlamImpact)) {
+        //     Debug.Log("PEN DETECTED, pos is: " + transform.position);
+        //     Destroy(other.gameObject);
+        //     timer = 0;
+        //     isSlamming = false;
+        //     isSlamHit = true;
+        //     ChangeState(State.SlamImpact);
+        // }
     }
 
     private void OrientSpriteDirection() {
@@ -688,7 +696,6 @@ public class EraserBossAI : MonoBehaviour
     }
 
     private void DespawnAllPencilObj() {
-        //Debug.Log("DESPAWNING PENCIL OBJS");
         foreach (Transform childTransform in PencilLinesFolder.transform) {
             StartCoroutine(DespawnPencilObj(childTransform));
         }
@@ -769,7 +776,7 @@ public class EraserBossAI : MonoBehaviour
         DespawnAllPenObj();
         DespawnAllPencilObj();
 
-        // play Roar animation
+        // play Roar animation and add impulse shader
         yield return new WaitForSeconds(1.0f);
         rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
         isRotated = false;
