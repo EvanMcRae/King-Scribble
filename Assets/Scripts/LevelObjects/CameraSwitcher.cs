@@ -15,6 +15,7 @@ public class CameraSwitcher : MonoBehaviour
     private bool hasEntered = false;
     public UnityEvent onEnter;
     public bool copyFollow = false;
+    public int newLensSize = 0;
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -33,6 +34,8 @@ public class CameraSwitcher : MonoBehaviour
             }
 
             if (copyFollow) next_cam.Follow = prev_cam.Follow;
+
+            if (newLensSize != 0) next_cam.m_Lens.OrthographicSize = newLensSize;
         }
     }
 }
