@@ -64,6 +64,7 @@ public class EBInkPipe : MonoBehaviour
         }
         is_active = false;
         gameObject.GetComponent<SpriteRenderer>().sprite = broken;
+        ParticleSystem fart = Instantiate(break_particles, gameObject.transform.position, Quaternion.identity);
         is_enabled = false;
     }
 }
