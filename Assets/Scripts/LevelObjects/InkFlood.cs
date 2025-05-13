@@ -25,6 +25,7 @@ public class InkFlood : MonoBehaviour
     public float killThreshold = 0.5f;
 
     public SoundPlayer soundPlayer;
+    public SoundClip soundClip;
 
     public void SetDest(int dest_index) {curDest = dest_index;}
     public void NextDest() {if (destinations.Length > curDest - 1) curDest++;}
@@ -59,7 +60,7 @@ public class InkFlood : MonoBehaviour
             if (soundPlayer != null)
             {
                 if (!soundPlayer.sources[0].isPlaying)
-                    soundPlayer.PlaySound("Ink.Flow", 0, true);
+                    soundPlayer.PlaySound(soundClip, 0, true);
                 AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 1f, () => { }));
             }
         }
@@ -73,7 +74,7 @@ public class InkFlood : MonoBehaviour
         if (soundPlayer != null)
         {
             if (!soundPlayer.sources[0].isPlaying)
-                soundPlayer.PlaySound("Ink.Flow", 0, true);
+                soundPlayer.PlaySound(soundClip, 0, true);
             AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 1f, () => { }));
         }
     }
