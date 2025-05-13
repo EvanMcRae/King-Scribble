@@ -150,6 +150,7 @@ public class GameSaver : MonoBehaviour
             returnData.scenes = new();
             returnData.stickers = new();
             returnData.emptySave = true;
+            tempStickers = new();
             return returnData;
         }
     }
