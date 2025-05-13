@@ -16,6 +16,7 @@ EB has 2 capsule colliders, one isTrigger and the other is not:
 public class EraserBossAI : MonoBehaviour
 {    
     private enum State {
+        Start,
         Searching, // search for a position
         Moving,
         ChargePrep,
@@ -146,7 +147,7 @@ public class EraserBossAI : MonoBehaviour
             }
         }
 
-        ChangeState(State.Searching);
+        ChangeState(State.Start);
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
@@ -155,7 +156,13 @@ public class EraserBossAI : MonoBehaviour
         state = tempState;
 
         switch (tempState) {
+            case State.Start:
+                StartCoroutine(StartUp());
+                EBrb.gravityScale = 0;
+                EBrb.drag = 10;
+                break;
             case State.Searching:
+                timer = 0;
                 EBrb.gravityScale = 0;
                 EBrb.drag = 10;
                 break;
@@ -194,10 +201,10 @@ public class EraserBossAI : MonoBehaviour
         if(disable) return;
         
         // temp fix for shielding state! look into the logic abt why the state changes to SlamPrep before RemoveShield() enumerator ends
-        if(isShielding) {
-            anim.Play("EB_Idle");
-            return;
-        }
+        // if(isShielding) {
+        //     anim.Play("EB_Idle");
+        //     return;
+        // }
 
         
         timer += Time.deltaTime;
@@ -292,6 +299,13 @@ public class EraserBossAI : MonoBehaviour
                 }
                 break;
 
+            case State.Roar:
+                Debug.Log("rawr :3");
+                anim.Play("EB_Roar");
+                break;
+
+            case State.Shield:
+                
             case State.SlamPrep:
                 //Debug.Log("State = SlamPrep");
                 anim.Play("EB_SlamPrep");
@@ -631,6 +645,7 @@ public class EraserBossAI : MonoBehaviour
 
     // Despawns all pen objects in scene and knocks back KS off platform
     private IEnumerator ActivateShield() {
+        ChangeState(State.Roar);
         Debug.Log("ACTIVATING SHIELD");
         isShielding = true;
         yield return new WaitForSeconds(1.0f);
@@ -799,7 +814,6 @@ public class EraserBossAI : MonoBehaviour
 
         // cutscene behavior here! 
         Debug.Log("EXITING REMOVESHIELD");
-        timer = 0;
         ChangeState(State.Searching);
         isShielding = false;
     }
@@ -835,5 +849,11 @@ public class EraserBossAI : MonoBehaviour
     private void OnDestroy()
     {
         DrawManager.instance.updatePenAreaEvent -= updatePenArea;
+    }
+
+    // Cut scene that shows EB roaring and then something dropps on his head
+    private IEnumerator StartUp() {
+
+        yield return new WaitForSeconds(3.0f);
     }
 }

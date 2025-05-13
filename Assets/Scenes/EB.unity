@@ -2932,7 +2932,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!70 &196569750
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -16991,7 +16991,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1419768558
 Transform:
   m_ObjectHideFlags: 0
@@ -17056,7 +17056,7 @@ SpriteRenderer:
   m_Size: {x: 10.000001, y: 10.000001}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &1419768560
@@ -18193,6 +18193,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5458475097085019732, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -171.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 5458475097085019732, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 54
+      objectReference: {fileID: 0}
     - target: {fileID: 5787455613730548055, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_text
       value: <b>Level 8:</b> A Close Shave
@@ -18285,7 +18293,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8136064663288634364, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -34.73
+      value: 5.99
       objectReference: {fileID: 0}
     - target: {fileID: 8136064663288634364, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -20331,7 +20339,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 6c1db572f1f7546bd9d0c270ab407bc2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
   m_Size: {x: 62.858734, y: 43.48}
@@ -23540,7 +23548,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1932981669
 RectTransform:
   m_ObjectHideFlags: 0
@@ -113401,6 +113409,10 @@ PrefabInstance:
     - target: {fileID: 5431513795883784181, guid: ba42ea68aa6554f1fb71f360af2fb77e, type: 3}
       propertyPath: m_Name
       value: NoDrawMask (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5431513795883784181, guid: ba42ea68aa6554f1fb71f360af2fb77e, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7336436690181969916, guid: ba42ea68aa6554f1fb71f360af2fb77e, type: 3}
       propertyPath: m_FrontSortingOrder
