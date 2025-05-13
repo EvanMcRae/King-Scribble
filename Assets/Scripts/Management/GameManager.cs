@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public static Action ResetAction;
     public ResetPrompt resetPrompt;
     public float resetTime;
-    public const float maxResetTime = 2f;
+    public const float maxResetTime = 1.5f;
 
     // Start is called before the first frame update
     void Start()
