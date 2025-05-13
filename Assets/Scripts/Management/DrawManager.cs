@@ -227,8 +227,8 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, or the "player" layer (3, 6, 7, 9, and 10 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10);
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
@@ -329,12 +329,12 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, or the "objects" layer (3, 6, 7, and 9 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9);
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
+        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null) {
             EndDraw();
-            drawCooldown = DRAW_CD;
+            //drawCooldown = DRAW_CD;
             return;
         }
         layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
@@ -551,6 +551,12 @@ public class DrawManager : MonoBehaviour
             hit.collider.gameObject.GetComponent<Breakable>().Break();
             toolSoundPlayer.PlaySound("Player.Slice");
         }
+    }
+
+    public void CheckRefreshLine(Line line)
+    {
+        if (line == currentLine)
+            EndDraw();
     }
 }
 

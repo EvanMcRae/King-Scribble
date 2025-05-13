@@ -9,11 +9,11 @@ public class EraserBossEvent : MonoBehaviour
     [SerializeField] private EBInkPipe right;
     [SerializeField] private GameObject button;
     [SerializeField] private SoundPlayer soundPlayer;
-    private int soundsPlaying = 0;
     [SerializeField] bool isButtonActive = false; // whether KS should be able to interact with it
     bool isButtonPressed = false; // if it is pressed
-    private  SpriteRenderer buttonTop;
+    private SpriteRenderer buttonTop;
     private Color purpleColor;
+    [SerializeField] private GameObject buttonParticles;
 
     void Start()
     {
@@ -26,6 +26,7 @@ public class EraserBossEvent : MonoBehaviour
     public void ActivateButton() {
         // change color to purple
         buttonTop.color = purpleColor;
+        buttonParticles.SetActive(true);
         isButtonActive = true;
         if(isButtonPressed) {
             Activate();
@@ -35,7 +36,8 @@ public class EraserBossEvent : MonoBehaviour
     public void DeactivateButton() {
         // change color to gray
         buttonTop.color = Color.gray;
-        if(isButtonPressed) {
+        buttonParticles.SetActive(false);
+        if (isButtonPressed) {
             Deactivate();
         }
         isButtonActive = false;
@@ -46,8 +48,6 @@ public class EraserBossEvent : MonoBehaviour
         if(isButtonActive) {
             left.Activate();
             right.Activate();
-            soundsPlaying = 2;
- 
         }
     }
 
@@ -56,7 +56,6 @@ public class EraserBossEvent : MonoBehaviour
         if(isButtonActive) {
             left.Deactivate();
             right.Deactivate();
-            soundsPlaying = 0;
         }
     }
 

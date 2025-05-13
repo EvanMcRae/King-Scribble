@@ -16,6 +16,7 @@ public class EraserFunctions : MonoBehaviour
                 LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
 
                 if(lineRenderer != null) {
+                    DrawManager.instance.CheckRefreshLine(c.GetComponent<Line>());
                     List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
                     int c_index = collidersList.IndexOf(c); // the collider's index in the list
                     int numPoints = lineRenderer.positionCount; // position count starts at 1 while c_index starts at 0
