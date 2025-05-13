@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<PolygonCollider2D> sizeColliders = new();
     [SerializeField] private List<Collider2D> groundCheckers = new();
     public bool oldPlayer = true;
+    [SerializeField] private Animator popAnim; 
 
     // Start is called before the first frame update
     void Start()
@@ -541,9 +542,15 @@ public class PlayerController : MonoBehaviour
     public void ResizePlayer(float fuel_left)
     {
         int newSize = (int)Mathf.Ceil(fuel_left * SIZE_STAGES);
-        if (newSize < currentSize && newSize != 0)
+        if (newSize < currentSize)
         {
-            soundPlayer.PlaySound("Player.SizeDown");
+            if (popAnim != null)
+            {
+                popAnim.gameObject.SetActive(true);
+                popAnim.Play("PlayerPop", 0, 0);
+            }
+            if (newSize != 0)
+                soundPlayer.PlaySound("Player.SizeDown");
         }
         else if (newSize > currentSize)
         {
