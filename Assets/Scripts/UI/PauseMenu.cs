@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject resumeButton;
     [SerializeField] private GameObject SettingsPanel;
+    [SerializeField] private Image pauseButton;
 
     private GameObject previousButton;
+    public static bool unpausedWithSpace = false;
+    public static bool firstopen = false;
+    private float prevTimeScale = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +28,10 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        unpausedWithSpace = false;
+
+        if (GameManager.paused) firstopen = true;
+
         if (Input.GetButtonDown("Pause") && PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)
         {
             if (!GameManager.paused) Pause();
@@ -34,7 +41,11 @@ public class PauseMenu : MonoBehaviour
         if (GameManager.paused)
         {
             if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                MenuButton.globalNoSound = true;
                 EventSystem.current.SetSelectedGameObject(previousButton);
+                MenuButton.globalNoSound = false;
+            }
             else
                 previousButton = EventSystem.current.currentSelectedGameObject;
         }
@@ -42,23 +53,43 @@ public class PauseMenu : MonoBehaviour
 
     public void Pause()
     {
+        if (!(PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)) return;
         GameManager.paused = true;
+        pauseButton.enabled = false;
+        prevTimeScale = Time.timeScale;
         Time.timeScale = 0;
-        // Stop all sounds
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            if (!AudioManager.instance.OwnsSource(_))
+                _.Pause();
+        }
         pauseScreen.SetActive(true);
+        AudioManager.instance.PauseEffect(true);
 
-        DrawManager.instance.SetCursor(ToolType.None);
+        if (DrawManager.instance != null)
+            DrawManager.instance.SetCursor(ToolType.None);
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
     public void Unpause()
     {
+        if (!GameManager.paused) return;
+
+        firstopen = false;
         GameManager.paused = false;
-        Time.timeScale = 1;
-        // Resume all sounds
+        pauseButton.enabled = true;
+        if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
+        Time.timeScale = prevTimeScale;
+        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        {
+            if (!AudioManager.instance.OwnsSource(_))
+                _.UnPause();
+        }
+        AudioManager.instance.PauseEffect(false);
         pauseScreen.SetActive(false);
 
-        DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+        if (DrawManager.instance != null && !HUDButtonCursorHandler.inside && PlayerVars.instance != null)
+            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
         if (previousButton != null)
         {
             MenuButton prevButton = previousButton.GetComponent<MenuButton>();
@@ -71,6 +102,7 @@ public class PauseMenu : MonoBehaviour
     public void ResetLevel()
     {
         Unpause();
+        pauseButton.enabled = false;
         GameManager.instance.Reset();
     }
 
@@ -84,19 +116,26 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        Unpause();
+        GameManager.ResetAction.Invoke();
+        pauseButton.enabled = false;
         GameManager.resetting = true;
+        GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += GoToMainMenu;
     }
 
     public void GoToMainMenu()
     {
-        GameManager.resetting = false;
-        Destroy(PlayerVars.instance);
+        GameManager.canMove = true;
+        if (PlayerController.instance != null)
+        {
+            PlayerController.instance.KillTweens();
+            Destroy(PlayerVars.instance.gameObject);
+        }
         EventSystem eventSystem = FindObjectOfType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");
+        GameManager.resetting = false;
         ScreenWipe.PostWipe -= GoToMainMenu;
     }
 }

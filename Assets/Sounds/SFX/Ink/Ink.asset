@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783d8f720fc1cb44d9426eab631c9ddc, type: 3}
+  m_Name: Ink
+  m_EditorClassIdentifier: 
+  children:
+  - {fileID: 11400000, guid: d4cdcc86d99594bdbae820fd79173f03, type: 2}
+  - {fileID: 11400000, guid: 7c72cce4971fd4ae68b4408b70b4613a, type: 2}
+  - {fileID: 11400000, guid: ca375ea2316cf459a8b32d90da81cf63, type: 2}

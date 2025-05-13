@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PopupPanel : MonoBehaviour
@@ -20,6 +16,8 @@ public class PopupPanel : MonoBehaviour
     private GameObject currentSelection;
     [SerializeField] private Image ScreenDarkener;
     [SerializeField] private bool darkensScreen = true, selectsPrevious = true;
+    public static bool closedThisFrame = false;
+    [SerializeField] private Image blocker;
 
     private void Awake()
     {
@@ -38,7 +36,9 @@ public class PopupPanel : MonoBehaviour
             }
             else
             {
+                MenuButton.globalNoSound = true;
                 EventSystem.current.SetSelectedGameObject(currentSelection);
+                MenuButton.globalNoSound = false;
             }
         }
         else if (EventSystem.current.currentSelectedGameObject == PrimaryButton)
@@ -79,15 +79,23 @@ public class PopupPanel : MonoBehaviour
         open = true;
         mouseNeverMoved = 2;
         numPopups++;
+        if (blocker != null)
+            blocker.enabled = true;
         foreach (MenuButton c in GetComponentsInChildren<MenuButton>())
         {
             c.popupID = numPopups;
         }
         visible = true;
         PreviousButton = EventSystem.current.currentSelectedGameObject;
+        MenuButton.globalNoSound = true;
         EventSystem.current.SetSelectedGameObject(PrimaryButton);
+        PrimaryButton.GetComponent<MenuButton>().OnSelect(null);
+        MenuButton.globalNoSound = false;
         if (darkensScreen)
+        {
+            ScreenDarkener.gameObject.SetActive(true);
             ScreenDarkener.raycastTarget = true;
+        }
     }
 
     public void Close()
@@ -102,7 +110,11 @@ public class PopupPanel : MonoBehaviour
         if (numPopups < 0) numPopups = 0;
         visible = false;
         if (selectsPrevious)
+        {
+            closedThisFrame = true;
             EventSystem.current.SetSelectedGameObject(PreviousButton);
+            closedThisFrame = false;
+        }
     }
 
     public void Disable()
@@ -110,6 +122,7 @@ public class PopupPanel : MonoBehaviour
         if (anim.GetFloat("Speed") < 0)
         {
             gameObject.SetActive(false);
+            ScreenDarkener.gameObject.SetActive(false);
             anim.SetFloat("Speed", 0);
             open = false;
         }
@@ -120,6 +133,11 @@ public class PopupPanel : MonoBehaviour
         if (anim.GetFloat("Speed") < 0)
         {
             anim.SetFloat("Speed", -2);
+        }
+        else if (anim.GetFloat("Speed") > 0)
+        {
+            if (blocker != null)
+                blocker.enabled = false;
         }
     }
 

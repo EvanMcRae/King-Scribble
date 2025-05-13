@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -9,13 +7,26 @@ public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
     public const string fileName = "Settings.txt";
-    [SerializeField] private Slider qualitySlider;
-    [SerializeField] private TextMeshProUGUI qualityValue;
+    [SerializeField] private Slider musicSlider, soundSlider, masterSlider;
+    [SerializeField] private TextMeshProUGUI musicValue, soundValue, masterValue;
     [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
+    [SerializeField] private Image musicSliderFill, soundSliderFill, masterSliderFill;
 
     void Awake()
     {
         LoadSettings();
+        gameObject.SetActive(false);
+        ScreenshotManager.ToggleFullScreen += ToggleFullScreen;
+    }
+
+    private void OnDestroy()
+    {
+        ScreenshotManager.ToggleFullScreen -= ToggleFullScreen;
+    }
+
+    private void OnDisable()
+    {
+        SaveSettings();
     }
 
     public void LoadSettings()
@@ -25,7 +36,9 @@ public class SettingsManager : MonoBehaviour
         currentSettings ??= new Settings();
         UpdateFullScreen(false);
         UpdateVSync(false);
-        UpdateQuality(false);
+        UpdateMusic(false);
+        UpdateSound(false);
+        UpdateMaster(false);
     }
 
     public static void SaveSettings()
@@ -37,15 +50,37 @@ public class SettingsManager : MonoBehaviour
         Debug.Log("Saved settings to: " + path);
     }
 
-    public void UpdateQuality(bool user)
+    public void UpdateMusic(bool user)
     {
         if (user)
-            currentSettings.quality = (int)qualitySlider.value;
+            currentSettings.musicVolume = musicSlider.value;
         else
-            qualitySlider.value = currentSettings.quality;
+            musicSlider.value = currentSettings.musicVolume;
 
-        QualitySettings.SetQualityLevel(currentSettings.quality);
-        qualityValue.text = QualitySettings.names[QualitySettings.GetQualityLevel()];
+        musicSliderFill.fillAmount = musicSlider.value / 100;
+        musicValue.text = (int)musicSlider.value + "";
+    }
+
+    public void UpdateSound(bool user)
+    {
+        if (user)
+            currentSettings.sfxVolume = soundSlider.value;
+        else
+            soundSlider.value = currentSettings.sfxVolume;
+
+        soundSliderFill.fillAmount = soundSlider.value / 100;
+        soundValue.text = (int)soundSlider.value + "";
+    }
+
+    public void UpdateMaster(bool user)
+    {
+        if (user)
+            currentSettings.masterVolume = masterSlider.value;
+        else
+            masterSlider.value = currentSettings.masterVolume;
+
+        masterSliderFill.fillAmount = masterSlider.value / 100;
+        masterValue.text = (int)masterSlider.value + "";
     }
 
     public void UpdateFullScreen(bool user)
@@ -55,21 +90,17 @@ public class SettingsManager : MonoBehaviour
             currentSettings.fullScreen = fullScreenToggle.isOn;
         }
         else
+        {
             fullScreenToggle.isOn = currentSettings.fullScreen;
+        }
+        Screen.SetResolution(Display.main.systemWidth, (int)(9/16f * Display.main.systemWidth), currentSettings.fullScreen);
+    }
 
-        if (currentSettings.fullScreen)
-        {
-            currentSettings.xRes = (float)Screen.width / Display.main.systemWidth;
-            currentSettings.yRes = (float)Screen.height / Display.main.systemHeight;
-            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, true);
-        }
-        else
-        {
-            currentSettings.xRes = Mathf.Clamp(currentSettings.xRes, 0.1f, 1.0f);
-            currentSettings.yRes = Mathf.Clamp(currentSettings.yRes, 4 / 9f, 1.0f);
-            Screen.SetResolution((int)(currentSettings.xRes * Display.main.systemWidth), (int)(currentSettings.yRes * Display.main.systemHeight), false);
-            Screen.SetResolution((int)(currentSettings.xRes * Display.main.systemWidth), (int)(currentSettings.yRes * Display.main.systemHeight), false);
-        }
+    public void ToggleFullScreen()
+    {
+        fullScreenToggle.GetComponent<MenuButton>().noSound = true;
+        fullScreenToggle.isOn = currentSettings.fullScreen;
+        fullScreenToggle.GetComponent<MenuButton>().noSound = false;
     }
 
     public void UpdateVSync(bool user)
@@ -85,5 +116,11 @@ public class SettingsManager : MonoBehaviour
             QualitySettings.vSyncCount = 1;
         else
             QualitySettings.vSyncCount = 0;
+    }
+
+    // TODO: Temp implementation
+    public void DeleteSave()
+    {
+        GameSaver.instance.WipeSave();
     }
 }

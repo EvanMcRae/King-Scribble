@@ -1,28 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Inventory
 {
-    private Dictionary<ToolType, bool> toolUnlocks;
+    public List<ToolType> toolUnlocks;
     public Inventory() // By default, the player starts with no tools
     {
-        toolUnlocks = new Dictionary<ToolType, bool>();
-        toolUnlocks.Add(ToolType.Pencil, false);
-        toolUnlocks.Add(ToolType.Pen, false);
-        toolUnlocks.Add(ToolType.Eraser, false);
+        toolUnlocks = new List<ToolType>();
     }
     public bool hasTool(ToolType tool) // Checks if the player has a given tool
     {
-        if (toolUnlocks.ContainsKey(tool)) return toolUnlocks[tool];
-        else return false;
+        return toolUnlocks.Contains(tool);
     }
     public void addTool(ToolType tool) // Adds a given tool to the player's tool inventory
     {
-        if (toolUnlocks.ContainsKey(tool)) toolUnlocks[tool] = true;
+        if (!toolUnlocks.Contains(tool))
+            toolUnlocks.Add(tool);
     }
     public void copy(Inventory other)
     {
-        toolUnlocks = other.toolUnlocks;
+        toolUnlocks = new List<ToolType>(other.toolUnlocks);
     }
 }

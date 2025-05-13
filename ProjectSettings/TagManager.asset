@@ -5,6 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Button
+  - TempObj
+  - MovPlat
+  - Pen
+  - Spring
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX
@@ -12,16 +19,16 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - NoDraw
+  - PenLines
   - Lines
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Objects
+  - Player
+  - NoDraw-Pen
+  - NoDraw-Pencil
+  - Breakable
+  - EB
+  - EB_Hurt
   - 
   - 
   - 
@@ -45,9 +52,15 @@ TagManager:
   - name: Background
     uniqueID: 3448904071
     locked: 0
+  - name: Alt-Background
+    uniqueID: 2097942903
+    locked: 0
   - name: Ground
     uniqueID: 1017815201
     locked: 0
   - name: Player
     uniqueID: 4128561837
+    locked: 0
+  - name: Enemy
+    uniqueID: 1823589961
     locked: 0

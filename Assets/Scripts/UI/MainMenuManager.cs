@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-using TMPro;
-using System.IO;
 
 //holds functions of the main menu and sub menus
 public class MainMenuManager : MonoBehaviour
@@ -20,7 +16,7 @@ public class MainMenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.ForceSoftware);
+        Cursor.SetCursor(defaultCursor, Vector2.zero, CursorMode.Auto);
 
         EventSystem.current.SetSelectedGameObject(PlayButton.gameObject);
         firstopen = true;
@@ -34,13 +30,23 @@ public class MainMenuManager : MonoBehaviour
             if (EventSystem.current.currentSelectedGameObject != null)
                 currentSelection = EventSystem.current.currentSelectedGameObject;
             else
+            {
+                MenuButton.globalNoSound = true;
                 EventSystem.current.SetSelectedGameObject(currentSelection);
+                MenuButton.globalNoSound = false;
+            }
         }
     }
 
     public void PlayGame()
     {
         if (playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= PlayGame;
         SettingsManager.SaveSettings();
         playing = true;
         ScreenWipe.instance.WipeIn();
@@ -52,11 +58,48 @@ public class MainMenuManager : MonoBehaviour
         ScreenWipe.PostWipe -= EnterGame;
         firstopen = false;
         playing = false;
-        SceneManager.LoadScene("Level1_1"); //TODO change this whenever
+        if (SaveSystem.instance.SaveFileExists())
+        {
+            SceneManager.LoadScene("LevelSelect");
+        }
+        else
+        {
+            PlayerChecker.firstSpawned = false;
+            SceneManager.LoadScene("IntroAnimatic");
+        }
+        
+    }
+
+    public void EnterLevel(string Level)
+    {
+        if (playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, PlayGame);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= PlayGame;
+        SettingsManager.SaveSettings();
+        playing = true;
+        ScreenWipe.instance.WipeIn();
+        ScreenWipe.PostWipe += () =>
+        {
+            firstopen = false;
+            playing = false;
+            PlayerChecker.firstSpawned = false;
+            SceneManager.LoadScene(Level);
+            Utils.SetExclusiveAction(ref ScreenWipe.PostWipe, null);
+        };
     }
 
     public void Instructions()
     {
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Instructions);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Instructions;
         if (!PopupPanel.open && !playing && !quitting)
         {
             InstructionsPanel.gameObject.SetActive(true);
@@ -65,7 +108,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void Settings()
     {
-        if (!PopupPanel.open && !playing && !quitting)
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Settings);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Settings;
+        if (ScreenWipe.over && !PopupPanel.open && !playing && !quitting)
         {
             SettingsPanel.gameObject.SetActive(true);
         }
@@ -73,7 +122,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void Credits()
     {
-        if (!PopupPanel.open && !playing && !quitting)
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Credits);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Credits;
+        if (ScreenWipe.over && !PopupPanel.open && !playing && !quitting)
         {
             CreditsPanel.gameObject.SetActive(true);
         }
@@ -82,7 +137,14 @@ public class MainMenuManager : MonoBehaviour
     public void Quit()
     {
         if (quitting || playing) return;
+        if (!ScreenWipe.over)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, Quit);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= Quit;
         quitting = true;
+        AudioManager.instance.FadeOutCurrent();
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += ExitGame;
     }
