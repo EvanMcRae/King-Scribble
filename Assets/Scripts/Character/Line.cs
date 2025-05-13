@@ -212,7 +212,7 @@ public class Line : MonoBehaviour
             // Attempt to filter for colliders that could actually do this
             foreach (var result in results)
             {
-                if ((1 << 7 & result.excludeLayers) != 0) // If PenLines is excluded
+                if ((1 << 7 & result.excludeLayers) != 0) // If PenLines layer is excluded
                 {
                     continue;
                 }
