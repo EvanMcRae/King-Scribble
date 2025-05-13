@@ -607,6 +607,11 @@ public class EraserBossAI : MonoBehaviour
         }
     }
 
+    public void StunPlayerFor(float duration)
+    {
+        StartCoroutine(StunPlayer(duration));
+    }
+
     private IEnumerator StunPlayer(float duration) // Stun player movement upon slam
     {
         GameManager.canMove = false;
@@ -676,19 +681,19 @@ public class EraserBossAI : MonoBehaviour
         matBlockOpacity.SetColor("_Color", opacity);
 
         // toggle opacities
-        polyRend.SetPropertyBlock(matBlockOpacity);
+        polyRend?.SetPropertyBlock(matBlockOpacity);
         tempLine.startColor = opacity;
         tempLine.endColor = opacity;
         yield return new WaitForSeconds(.5f);
-        polyRend.SetPropertyBlock(matBlockOG);
+        polyRend?.SetPropertyBlock(matBlockOG);
         tempLine.startColor = original;
         tempLine.endColor = original;
         yield return new WaitForSeconds(.5f);
-        polyRend.SetPropertyBlock(matBlockOpacity);
+        polyRend?.SetPropertyBlock(matBlockOpacity);
         tempLine.startColor = opacity;
         tempLine.endColor = opacity;
         yield return new WaitForSeconds(.5f);
-        polyRend.SetPropertyBlock(matBlockOG);
+        polyRend?.SetPropertyBlock(matBlockOG);
         tempLine.startColor = original;
         tempLine.endColor = original;
         yield return new WaitForSeconds(.5f);
