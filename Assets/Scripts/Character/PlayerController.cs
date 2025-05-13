@@ -603,6 +603,6 @@ public class PlayerController : MonoBehaviour
 
     public void DeathSound()
     {
-        soundPlayer.PlaySound("Player.Die");
+        soundPlayer.PlaySound("Drawing.PenComplete");
     }
 }
