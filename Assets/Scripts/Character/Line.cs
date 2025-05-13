@@ -209,11 +209,19 @@ public class Line : MonoBehaviour
         };
         if (polyCollider.OverlapCollider(def, results) != 0)
         {
-            deleted = true;
-            Destroy(gameObject);
-            return false;
+            // Attempt to filter for colliders that could actually do this
+            foreach (var result in results)
+            {
+                if ((1 << 7 & result.excludeLayers) != 0) // If PenLines is excluded
+                {
+                    continue;
+                }
+                deleted = true;
+                Destroy(gameObject);
+                return false;
+            }
         }
-        return true;    
+        return true;
     }
 
     // Add a mesh from the polygon collider (if it has been created)
