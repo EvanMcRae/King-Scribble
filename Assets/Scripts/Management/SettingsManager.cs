@@ -16,6 +16,12 @@ public class SettingsManager : MonoBehaviour
     {
         LoadSettings();
         gameObject.SetActive(false);
+        ScreenshotManager.ToggleFullScreen += ToggleFullScreen;
+    }
+
+    private void OnDestroy()
+    {
+        ScreenshotManager.ToggleFullScreen -= ToggleFullScreen;
     }
 
     private void OnDisable()
@@ -87,16 +93,12 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.isOn = currentSettings.fullScreen;
         }
-            
+        Screen.SetResolution(Display.main.systemWidth, (int)(9/16f * Display.main.systemWidth), currentSettings.fullScreen);
+    }
 
-        if (currentSettings.fullScreen)
-        {
-            Screen.SetResolution(3940, 2160, true);
-        }
-        else
-        {
-            Screen.SetResolution(Display.main.systemWidth, (int)(9/16f * Display.main.systemWidth), false);
-        }
+    public void ToggleFullScreen()
+    {
+        fullScreenToggle.isOn = currentSettings.fullScreen;
     }
 
     public void UpdateVSync(bool user)

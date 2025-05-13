@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using System;
 using System.IO;
 
 public class ScreenshotManager : MonoBehaviour
 {
     public static bool initialized = false;
     private static int numScreenshots;
+    public static Action ToggleFullScreen;
 
     // Use this for initialization
     void Awake()
@@ -32,5 +34,11 @@ public class ScreenshotManager : MonoBehaviour
             numScreenshots++;
         }
 
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            SettingsManager.currentSettings.fullScreen = !SettingsManager.currentSettings.fullScreen;
+            Screen.SetResolution(Display.main.systemWidth, (int)(9 / 16f * Display.main.systemWidth), SettingsManager.currentSettings.fullScreen);
+            ToggleFullScreen?.Invoke();
+        }
     }
 }
