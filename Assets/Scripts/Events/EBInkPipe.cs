@@ -27,7 +27,7 @@ public class EBInkPipe : MonoBehaviour
         {
             inkfall.transform.DOMoveY(active.position.y, 0.5f);
             is_active = true;
-            sound_player.PlaySound("Ink.Flow", 1, true);
+            sound_player.PlaySound("Ink.Flood", 1, true);
         }
     }
 
@@ -41,7 +41,7 @@ public class EBInkPipe : MonoBehaviour
     {
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
-        sound_player.EndSound("Ink.Flow");
+        sound_player.EndSound("Ink.Flood");
         inkfall.transform.position = start.transform.position;
         is_active = false;
     }
@@ -59,7 +59,7 @@ public class EBInkPipe : MonoBehaviour
             inkfall.transform.DOMoveY(end.position.y, 0.5f);
             yield return new WaitForSeconds(0.5f);
             if (!other.is_active || !other.is_enabled)
-                sound_player.EndSound("Ink.Flow");
+                sound_player.EndSound("Ink.Flood");
             inkfall.transform.position = start.transform.position;
         }
         is_active = false;
