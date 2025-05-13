@@ -178,4 +178,9 @@ public class GameSaver : MonoBehaviour
     {
         currData.stickers = new(tempStickers);
     }
+
+    public static void ResetStickers()
+    {
+        tempStickers = new(currData.stickers);
+    }
 }
