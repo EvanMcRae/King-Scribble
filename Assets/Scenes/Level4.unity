@@ -6425,7 +6425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 2235489652106905392, guid: 38731b42928333441b680e44c4a72f29, type: 3}
   interval: 1
-  maxAmt: 1
+  maxAmt: 2
   m_offset: -2.5
   m_force: -5000
   m_direction: 0
@@ -48663,6 +48663,10 @@ PrefabInstance:
       value: 28.34034
       objectReference: {fileID: 0}
     - target: {fileID: 6050792395046350892, guid: ed39959966f271243beba78ef44d2eec, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6050792395046350892, guid: ed39959966f271243beba78ef44d2eec, type: 3}
       propertyPath: m_Offset.x
       value: -23.732727
       objectReference: {fileID: 0}
@@ -52383,9 +52387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3025816c694c3154f8de2abf40ea5ae8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 2235489652106905392, guid: 8b8977c38c84d5a43912fbb630b57a19, type: 3}
+  item: {fileID: 2235489652106905392, guid: 38731b42928333441b680e44c4a72f29, type: 3}
   interval: 1
-  maxAmt: 1
+  maxAmt: 2
   m_offset: 2.5
   m_force: 7500
   m_direction: 0
@@ -52722,9 +52726,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3025816c694c3154f8de2abf40ea5ae8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 2235489652106905392, guid: 8b8977c38c84d5a43912fbb630b57a19, type: 3}
+  item: {fileID: 2235489652106905392, guid: 38731b42928333441b680e44c4a72f29, type: 3}
   interval: 1
-  maxAmt: 1
+  maxAmt: 2
   m_offset: -2.5
   m_force: -7500
   m_direction: 0
@@ -57007,7 +57011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 2235489652106905392, guid: 38731b42928333441b680e44c4a72f29, type: 3}
   interval: 1
-  maxAmt: 1
+  maxAmt: 2
   m_offset: 2.5
   m_force: 5000
   m_direction: 0
@@ -57788,6 +57792,10 @@ PrefabInstance:
     - target: {fileID: 5090186426004696285, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
       propertyPath: m_Name
       value: Dispenser
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718478046967509415, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
+      propertyPath: maxAmt
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7718478046967509415, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
       propertyPath: m_force
@@ -61764,6 +61772,10 @@ PrefabInstance:
     - target: {fileID: 5090186426004696285, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
       propertyPath: m_Name
       value: Dispenser
+      objectReference: {fileID: 0}
+    - target: {fileID: 7718478046967509415, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
+      propertyPath: maxAmt
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7718478046967509415, guid: bef0cea2d9c5c1945a4e39639bb95a8d, type: 3}
       propertyPath: m_force
