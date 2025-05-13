@@ -98,7 +98,9 @@ public class SettingsManager : MonoBehaviour
 
     public void ToggleFullScreen()
     {
+        fullScreenToggle.GetComponent<MenuButton>().noSound = true;
         fullScreenToggle.isOn = currentSettings.fullScreen;
+        fullScreenToggle.GetComponent<MenuButton>().noSound = false;
     }
 
     public void UpdateVSync(bool user)

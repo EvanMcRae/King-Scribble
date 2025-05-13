@@ -16,7 +16,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private SoundClip select, press;
     public bool soundOnPointerEnter = true;
-    private bool noSound = false;
+    public bool noSound = false;
     public static bool globalNoSound = false;
     private bool hovered = false;
 
@@ -111,6 +111,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnClick()
     {
-        soundPlayer.PlaySound(press);
+        if (!globalNoSound && !noSound)
+            soundPlayer.PlaySound(press);
     }
 }
