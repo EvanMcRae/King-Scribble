@@ -321,6 +321,10 @@ public class PlayerController : MonoBehaviour
                         soundPlayer.PlaySound("Player.Land");
                 }
             }
+            else
+            {
+                softFall = false;
+            }
         }
 
         // hold jump distance extentions
