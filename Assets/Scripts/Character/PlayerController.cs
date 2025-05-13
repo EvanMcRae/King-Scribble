@@ -308,7 +308,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (isJumping && timeSinceJump > 0.1f && rb.velocity.y <= 0)
+            if (isJumping && timeSinceJump > 0.1f && rb.velocity.y <= 0.001f)
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -448,7 +448,7 @@ public class PlayerController : MonoBehaviour
             if (!onground && !isOnSlope)
             {
                 isStuck = true;
-                moveX *= 0.5f;
+                //moveX *= 0.5f;
             }
         }
         else if (rb.velocity.y < 0)
