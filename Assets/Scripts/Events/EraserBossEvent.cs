@@ -47,7 +47,6 @@ public class EraserBossEvent : MonoBehaviour
 
     public void Activate() {
         isButtonPressed = true;
-        Debug.Log("activate");
         buttonBound.offset = offset2;
         buttonBound.size = size2;
         if (isButtonActive) {
@@ -59,7 +58,6 @@ public class EraserBossEvent : MonoBehaviour
 
     public void Deactivate() {
         isButtonPressed = false;
-        Debug.Log("deactivate");
         buttonBound.offset = offset1;
         buttonBound.size = size1;
         if (isButtonActive) {
