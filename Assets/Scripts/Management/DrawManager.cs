@@ -334,7 +334,7 @@ public class DrawManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null) {
             EndDraw();
-            //drawCooldown = DRAW_CD;
+            drawCooldown = DRAW_CD;
             return;
         }
         layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
