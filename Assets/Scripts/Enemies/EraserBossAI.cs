@@ -183,6 +183,7 @@ public class EraserBossAI : MonoBehaviour
             case State.SlamCooldown:
                 break;
             case State.Shield:
+                timer = 0;
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
@@ -300,7 +301,6 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.Roar:
-                Debug.Log("rawr :3");
                 anim.Play("EB_Roar");
                 break;
 
@@ -445,21 +445,10 @@ public class EraserBossAI : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines")) {
             Destroy(other.gameObject);
         }
-
-        // confused why i had this code... need to rework it
-        // if (other.gameObject.layer == LayerMask.NameToLayer("PenLines") && (state == State.Slamming || state == State.SlamImpact)) {
-        //     Debug.Log("PEN DETECTED, pos is: " + transform.position);
-        //     Destroy(other.gameObject);
-        //     timer = 0;
-        //     isSlamming = false;
-        //     isSlamHit = true;
-        //     ChangeState(State.SlamImpact);
-        // }
     }
 
     private void OrientSpriteDirection() {
         Vector3 direction = transform.position - prevPosition;
-        //Debug.Log("direction: " + direction);
         
         // flip sprite appropriately
         if(direction.x > 0.01) {
@@ -512,6 +501,7 @@ public class EraserBossAI : MonoBehaviour
                 ChangeState(State.ChargePrep);
             }
             else {
+                Debug.Log("why are u here?");
                 ChangeState(State.SlamPrep);
             }    
         }
@@ -621,10 +611,13 @@ public class EraserBossAI : MonoBehaviour
         }
     }
 
+
+    // Used for moving wall cutscene, no walking left outside the fight!
     public void StunPlayerFor(float duration)
     {
         StartCoroutine(StunPlayer(duration));
     }
+
 
     private IEnumerator StunPlayer(float duration) // Stun player movement upon slam
     {
@@ -753,6 +746,7 @@ public class EraserBossAI : MonoBehaviour
         }
         if(tempLine != null) {
             Destroy(pencil.gameObject);
+            PlayerVars.instance.AddDoodleFuel(tempLine.positionCount); // Give player back their health
         }
     }
 
@@ -773,16 +767,14 @@ public class EraserBossAI : MonoBehaviour
             eraserBossEvent.DeactivateLeft();
         }
 
-
-        //yield return new WaitForSeconds(2.0f); // how do we know when he is at the top...
         rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
         isRotated = true;
         yield return new WaitForSeconds(1.0f);
 
         EBrb.AddForce(new Vector2(0f, -1f * slamForce), ForceMode2D.Impulse); // slamming
         Debug.Log("SHIELD SLAM FORCE ADDED");
-
         yield return new WaitForSeconds(.75f);
+
         // SLOW THE TIMEEEE
         Debug.Log("BREAKING CHAIN");
         if(isRight) { // break chain
@@ -792,14 +784,16 @@ public class EraserBossAI : MonoBehaviour
             BreakLeftChain();
         }
         
-        eraserBossEvent.DeactivateButton(); // needs to be after the button is clear! otherwise the ink will continue flowing
-        DespawnAllPenObj();
-        DespawnAllPencilObj();
-
         // play Roar animation and add impulse shader
         yield return new WaitForSeconds(1.0f);
         rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
         isRotated = false;
+        ChangeState(State.Roar);
+
+        yield return new WaitForSeconds(1.0f);
+        eraserBossEvent.DeactivateButton();
+        DespawnAllPenObj();
+        DespawnAllPencilObj();
 
         // Knockback KS to a wall!
         Vector3 distance = transform.position - KingScribble.transform.position;
@@ -814,8 +808,8 @@ public class EraserBossAI : MonoBehaviour
 
         // cutscene behavior here! 
         Debug.Log("EXITING REMOVESHIELD");
-        ChangeState(State.Searching);
         isShielding = false;
+        ChangeState(State.Searching); 
     }
 
     private void BreakLeftChain() {
