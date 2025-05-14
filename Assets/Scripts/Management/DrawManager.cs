@@ -343,8 +343,8 @@ public class DrawManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
-            // Don't allow ink refill if our cursor overlaps tilemap, pen, objects, player, or EB
-            layerMask = (1 << 16) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+            // Don't allow ink refill if our cursor overlaps tilemap
+            layerMask = (1 << 16);
             hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
             if (hit.collider == null)
             {
