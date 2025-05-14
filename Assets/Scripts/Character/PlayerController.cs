@@ -313,7 +313,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (isJumping && timeSinceJump > 0.1f && rb.velocity.y <= 0.001f)
+            if (isJumping && timeSinceJump > 0.1f && (rb.velocity.y <= 0.001f || beenOnLand > 0.1f))
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;

@@ -18282,6 +18282,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7673098356251539842, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -44.503906
+      objectReference: {fileID: 0}
     - target: {fileID: 7726990010429243309, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_text
       value: '
@@ -18307,6 +18311,14 @@ PrefabInstance:
     - target: {fileID: 8288433974469190263, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 230.2998
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -121.72998
       objectReference: {fileID: 0}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
@@ -23875,7 +23887,7 @@ GameObject:
   - component: {fileID: 1958646439}
   - component: {fileID: 1958646438}
   - component: {fileID: 1958646437}
-  m_Layer: 3
+  m_Layer: 16
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

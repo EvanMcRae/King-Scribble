@@ -232,8 +232,8 @@ public class DrawManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
-            // Don't allow ink refill if our cursor overlaps ground, pen, objects, player, or EB
-            layerMask = (1 << 3) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+            // Don't allow ink refill if our cursor overlaps tilemap
+            layerMask = (1 << 16);
             hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
             if (hit.collider == null)
             {
@@ -244,8 +244,8 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
-        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, the "EB" layer, or the "tilemap ground" layer (3, 6, 7, 9, 10, 14, and 16 respectively)
+        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14) | (1 << 16);
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
@@ -343,8 +343,8 @@ public class DrawManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
-            // Don't allow ink refill if our cursor overlaps ground, pen, objects, player, or EB
-            layerMask = (1 << 3) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+            // Don't allow ink refill if our cursor overlaps tilemap, pen, objects, player, or EB
+            layerMask = (1 << 16) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
             hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
             if (hit.collider == null)
             {
@@ -359,8 +359,8 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
-        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, the "EB" layer, or the "tilemap ground" layer (3, 6, 7, 9, 10, 14, and 16 respectively)
+        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14) | (1 << 16);
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
