@@ -35,7 +35,13 @@ public class CameraSwitcher : MonoBehaviour
 
             if (copyFollow) next_cam.Follow = prev_cam.Follow;
 
-            if (newLensSize != 0) next_cam.m_Lens.OrthographicSize = newLensSize;
+            if (newLensSize != 0)
+            {
+                if (next_cam != PlayerController.instance.virtualCamera)
+                    next_cam.m_Lens.OrthographicSize = newLensSize;
+                else
+                    PlayerController.instance.levelZoom = newLensSize;
+            }
         }
     }
 }
