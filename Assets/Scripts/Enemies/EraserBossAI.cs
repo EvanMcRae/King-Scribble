@@ -27,7 +27,8 @@ public class EraserBossAI : MonoBehaviour
         Damaged,
         PenInk,
         Roar,
-        Shield,
+        ShieldActivate,
+        ShieldRemove,
         SlamPrep, // hovering above KS before slam
         Slamming, // for KS on ground
         SlamImpact, // hitting the ground (animation)
@@ -147,7 +148,8 @@ public class EraserBossAI : MonoBehaviour
             }
         }
 
-        ChangeState(State.Start);
+        //ChangeState(State.Start);
+        StartCoroutine(ActivateShield());
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
@@ -163,7 +165,7 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Searching:
                 timer = 0;
-                EBrb.gravityScale = 0;
+                EBrb.gravityScale = 0; // these values are needed for oscillation
                 EBrb.drag = 10;
                 break;
             case State.Moving:
@@ -177,12 +179,16 @@ public class EraserBossAI : MonoBehaviour
             case State.ChargeCooldown:
                 break;
             case State.SlamPrep:
-                EBrb.gravityScale = 1;
+                EBrb.gravityScale = 1; // these values are needed for gravity and forces
                 EBrb.drag = 0;
                 break;
             case State.SlamCooldown:
                 break;
-            case State.Shield:
+            case State.ShieldActivate:
+                EBrb.gravityScale = 0;
+                EBrb.drag = 10;
+                break;
+            case State.ShieldRemove:
                 timer = 0;
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
@@ -202,10 +208,10 @@ public class EraserBossAI : MonoBehaviour
         if(disable) return;
         
         // temp fix for shielding state! look into the logic abt why the state changes to SlamPrep before RemoveShield() enumerator ends
-        // if(isShielding) {
-        //     anim.Play("EB_Idle");
-        //     return;
-        // }
+        if(isShielding) {
+            // anim.Play("EB_Idle");
+            // return;
+        }
 
         
         timer += Time.deltaTime;
@@ -304,7 +310,12 @@ public class EraserBossAI : MonoBehaviour
                 anim.Play("EB_Roar");
                 break;
 
-            case State.Shield:
+            case State.ShieldActivate:
+                break;
+
+            case State.ShieldRemove:
+            anim.Play("EB_Stun");
+                break;
                 
             case State.SlamPrep:
                 //Debug.Log("State = SlamPrep");
@@ -411,7 +422,7 @@ public class EraserBossAI : MonoBehaviour
         }
 
         // Ink waterfalls
-        if(other.gameObject.layer == LayerMask.NameToLayer("EB_Hurt") && state != State.Shield) {
+        if(other.gameObject.layer == LayerMask.NameToLayer("EB_Hurt") && state != State.ShieldRemove) {
             // check for left or right pipe
             if(other.gameObject.name == "Flowing Ink Left") {
                 if(!isShielding) {
@@ -464,9 +475,6 @@ public class EraserBossAI : MonoBehaviour
     void SearchForPosition() {
         // If line renderer present, goes for the biggest one OR closest one?
         float closestDistance = 100f;
-        // if(closestLine != null) {
-        //     closestDistance = Vector3.Distance(transform.position, closestLine.transform.position);
-        // }
 
         foreach (Transform childTransform in PencilLinesFolder.transform) // for each pencil line
         {
@@ -638,21 +646,24 @@ public class EraserBossAI : MonoBehaviour
 
     // Despawns all pen objects in scene and knocks back KS off platform
     private IEnumerator ActivateShield() {
-        ChangeState(State.Roar);
+        ChangeState(State.ShieldActivate);
         Debug.Log("ACTIVATING SHIELD");
+        yield return new WaitForSeconds(0.01f);
+
+        ChangeState(State.Roar);
         isShielding = true;
         yield return new WaitForSeconds(1.0f);
 
-        // Roar angry here! >:((
         isInvulnerable = true;
         shieldSprite.SetActive(true);
-        yield return new WaitForSeconds(3.0f);
-        ChangeState(State.Searching);
-        isShielding = false;
-
-        Debug.Log("ACTIVATING BUTTON");
         eraserBossEvent.ActivateButton();
+        Debug.Log("ACTIVATING BUTTON");
         DespawnAllPenObj();
+
+        yield return new WaitForSeconds(2.0f);
+
+        ChangeState(State.Searching);
+        isShielding = false;    
     }
 
     private void updatePenArea(float area) {
@@ -752,11 +763,14 @@ public class EraserBossAI : MonoBehaviour
 
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield(bool isRight) {
-        ChangeState(State.Shield);
+        ChangeState(State.ShieldRemove);
         Debug.Log("DEACTIVATING SHIELD");
         isShielding = true;
         isInvulnerable = false;
         shieldSprite.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);
+        ChangeState(State.Roar);
 
         EBrb.AddForce(new Vector2(0f, 1f * slamForce), ForceMode2D.Impulse); // break pipe
 
@@ -788,12 +802,14 @@ public class EraserBossAI : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
         isRotated = false;
+        Debug.Log("CHANGING TO ROAR");
+        EBrb.AddForce(new Vector2(0f, 1f * 2000), ForceMode2D.Impulse);  // add a force upward so he doesnt drown
         ChangeState(State.Roar);
-
-        yield return new WaitForSeconds(1.0f);
         eraserBossEvent.DeactivateButton();
         DespawnAllPenObj();
         DespawnAllPencilObj();
+        yield return new WaitForSeconds(1.0f);
+        
 
         // Knockback KS to a wall!
         Vector3 distance = transform.position - KingScribble.transform.position;
@@ -804,9 +820,9 @@ public class EraserBossAI : MonoBehaviour
             Knockback(new Vector2(-1f, .1f), roarForce);
         }
 
-        //yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.0f);
 
-        // cutscene behavior here! 
+        // End of roar here
         Debug.Log("EXITING REMOVESHIELD");
         isShielding = false;
         ChangeState(State.Searching); 
