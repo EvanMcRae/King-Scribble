@@ -6513,6 +6513,7 @@ GameObject:
   - component: {fileID: 468072976}
   - component: {fileID: 468072975}
   - component: {fileID: 468072977}
+  - component: {fileID: 468072978}
   m_Layer: 0
   m_Name: Left Pipe
   m_TagString: Untagged
@@ -6561,7 +6562,7 @@ SpriteRenderer:
   m_SortingLayerID: 1017815201
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e1ce1a8b888fd394099d5a5e66cd7f55, type: 3}
+  m_Sprite: {fileID: -684698515, guid: d51d3c748fc0f432e9c9b69e94d2b3d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -6581,7 +6582,7 @@ Transform:
   m_GameObject: {fileID: 468072974}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 33.9, y: 22.93, z: 0}
+  m_LocalPosition: {x: 33.9, y: 20.53, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6606,7 +6607,28 @@ MonoBehaviour:
   broken: {fileID: 21300000, guid: 5d92c499797ab22478a3f79f15a98a2f, type: 3}
   break_particles: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
   sound_player: {fileID: 121074980}
-  other: {fileID: 1745935660}
+  other: {fileID: 1090844162}
+--- !u!95 &468072978
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468072974}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a6a01e02f67a4595bb94d8834202d9d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &497288901
 GameObject:
   m_ObjectHideFlags: 0
@@ -13883,6 +13905,133 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1090844160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1090844164}
+  - component: {fileID: 1090844163}
+  - component: {fileID: 1090844162}
+  - component: {fileID: 1090844161}
+  m_Layer: 0
+  m_Name: Right Pipe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!95 &1090844161
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090844160}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a6a01e02f67a4595bb94d8834202d9d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1090844162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090844160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4710c746c9460347921bf02a8c23ef1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {fileID: 1163048089}
+  active: {fileID: 140431958}
+  end: {fileID: 968518619}
+  inkfall: {fileID: 2092374306}
+  broken: {fileID: 21300000, guid: 5d92c499797ab22478a3f79f15a98a2f, type: 3}
+  break_particles: {fileID: 8069062060861335685, guid: a4a58306db40d0b42b3deef12c61cf76, type: 3}
+  sound_player: {fileID: 121074980}
+  other: {fileID: 468072977}
+--- !u!212 &1090844163
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090844160}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 1017815201
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -684698515, guid: d51d3c748fc0f432e9c9b69e94d2b3d1, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 10.44, y: 13.06}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &1090844164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090844160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 63.47, y: 20.53, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1092011371
 GameObject:
   m_ObjectHideFlags: 0
@@ -14087,7 +14236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   left: {fileID: 468072977}
-  right: {fileID: 1745935660}
+  right: {fileID: 1090844162}
   button: {fileID: 1810280221}
   soundPlayer: {fileID: 121074980}
   isButtonActive: 0
@@ -21176,12 +21325,12 @@ GameObject:
   - component: {fileID: 1745935658}
   - component: {fileID: 1745935660}
   m_Layer: 0
-  m_Name: Right Pipe
+  m_Name: Right Pipe OLD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1745935658
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -116145,6 +116294,7 @@ SceneRoots:
   - {fileID: 1889042682}
   - {fileID: 1804278404}
   - {fileID: 468072976}
+  - {fileID: 1090844164}
   - {fileID: 1745935659}
   - {fileID: 1197847002}
   - {fileID: 1810280220}
