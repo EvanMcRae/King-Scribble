@@ -14,6 +14,8 @@ public class EraserBossEvent : MonoBehaviour
     private SpriteRenderer buttonTop;
     private Color purpleColor;
     [SerializeField] private GameObject buttonParticles;
+    [SerializeField] private BoxCollider2D buttonBound;
+    [SerializeField] private Vector2 offset1, size1, offset2, size2;
 
     void Start()
     {
@@ -45,7 +47,10 @@ public class EraserBossEvent : MonoBehaviour
 
     public void Activate() {
         isButtonPressed = true;
-        if(isButtonActive) {
+        buttonBound.offset = offset2;
+        buttonBound.size = size2;
+        if (isButtonActive) {
+            soundPlayer.PlaySound("EraserBoss.ButtonActivate");
             left.Activate();
             right.Activate();
         }
@@ -53,7 +58,9 @@ public class EraserBossEvent : MonoBehaviour
 
     public void Deactivate() {
         isButtonPressed = false;
-        if(isButtonActive) {
+        buttonBound.offset = offset1;
+        buttonBound.size = size1;
+        if (isButtonActive) {
             left.Deactivate();
             right.Deactivate();
         }

@@ -227,23 +227,32 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+        // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        int layerMask = (1 << 4);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
+            // Don't allow ink refill if our cursor overlaps tilemap
+            layerMask = (1 << 16);
+            hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+            if (hit.collider == null)
+            {
+                if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                    PlayerVars.instance.AddPenFuel(10);
+            }
             beganDraw = false;
             return;
         }
-        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+
+        // Don't draw if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, the "EB" layer, or the "tilemap ground" layer (3, 6, 7, 9, 10, 14, and 16 respectively)
+        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14) | (1 << 16);
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
             beganDraw = false;
-            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
-                PlayerVars.instance.AddPenFuel(10);
             return;
         }
+        
         // If drawing with the pencil, and we overlap the NoDraw-Pencil layer (12), don't draw
         layerMask = 1 << 12;
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
@@ -329,25 +338,37 @@ public class DrawManager : MonoBehaviour
             return;
         }
 
-        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, or the "EB" layer (3, 6, 7, 9, 10, and 14 respectively)
-        int layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14);
+        // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+        int layerMask = (1 << 4);
         RaycastHit2D hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
-        if (hit.collider != null) {
+        if (hit.collider != null)
+        {
+            // Don't allow ink refill if our cursor overlaps tilemap
+            layerMask = (1 << 16);
+            hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
+            if (hit.collider == null)
+            {
+                if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
+                    PlayerVars.instance.AddPenFuel(10);
+                else
+                    drawCooldown = DRAW_CD;
+            }
+            else
+                drawCooldown = DRAW_CD;
             EndDraw();
-            drawCooldown = DRAW_CD;
             return;
         }
-        layerMask = (1 << 4); // If our cursor overlaps the "water" layer, prevent drawing - and if the pen is selected, slowly refill the meter
+
+        // Stop drawing if our cursor overlaps the ground, the "no draw" layer, the "pen lines" layer, the "objects" layer, the "player" layer, the "EB" layer, or the "tilemap ground" layer (3, 6, 7, 9, 10, 14, and 16 respectively)
+        layerMask = (1 << 3) | (1 << 6) | (1 << 7) | (1 << 9) | (1 << 10) | (1 << 14) | (1 << 16);
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (hit.collider != null)
         {
             EndDraw();
-            if (PlayerVars.instance.cur_tool == ToolType.Pen && PlayerVars.instance.penFuelLeft() != 1f)
-                PlayerVars.instance.AddPenFuel(10);
-            else
-                drawCooldown = DRAW_CD;
+            drawCooldown = DRAW_CD;
             return;
         }
+
         layerMask = 1 << 12;
         hit = Physics2D.CircleCast(mouse_pos, 0.1f, Vector2.zero, Mathf.Infinity, layerMask);
         if (PlayerVars.instance.cur_tool == ToolType.Pencil && hit.collider != null)

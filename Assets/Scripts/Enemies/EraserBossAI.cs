@@ -426,7 +426,7 @@ public class EraserBossAI : MonoBehaviour
         }
 
         // Stop at the ground when slamming, not at pencil lines
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground") && state == State.Slamming) {
+        if ((other.gameObject.layer == LayerMask.NameToLayer("Ground") || other.gameObject.layer == LayerMask.NameToLayer("Tilemap")) && state == State.Slamming) {
             Debug.Log("GROUND DETECTED, pos is: " + transform.position);
             timer = 0;
             isSlamming = false;

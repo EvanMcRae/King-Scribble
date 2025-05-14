@@ -14092,6 +14092,11 @@ MonoBehaviour:
   soundPlayer: {fileID: 121074980}
   isButtonActive: 0
   buttonParticles: {fileID: 1419768557}
+  buttonBound: {fileID: 1810280224}
+  offset1: {x: 0.8725972, y: -3.1871893}
+  size1: {x: 3.2035313, y: 0.12562132}
+  offset2: {x: 0.8725972, y: -3.0263958}
+  size2: {x: 3.2035313, y: 0.44720864}
 --- !u!4 &1114107047
 Transform:
   m_ObjectHideFlags: 0
@@ -18285,6 +18290,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7673098356251539842, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -44.503906
+      objectReference: {fileID: 0}
     - target: {fileID: 7726990010429243309, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_text
       value: '
@@ -18310,6 +18319,14 @@ PrefabInstance:
     - target: {fileID: 8288433974469190263, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 230.2998
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -121.72998
       objectReference: {fileID: 0}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
@@ -22396,6 +22413,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3176018100405734386, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Size.y
+      value: 0.12562132
+      objectReference: {fileID: 0}
+    - target: {fileID: 3176018100405734386, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Offset.y
+      value: -3.1871893
+      objectReference: {fileID: 0}
+    - target: {fileID: 4506833880363380205, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Mass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4579342135882081637, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -22415,6 +22444,14 @@ PrefabInstance:
     - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_Distance
       value: 0.45531046
+      objectReference: {fileID: 0}
+    - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_Frequency
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+      propertyPath: m_DampingRatio
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 7555348251166858608, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
       propertyPath: m_AutoConfigureDistance
@@ -22470,6 +22507,11 @@ ParentConstraint:
 --- !u!4 &1810280223 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3172549540408935919, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
+  m_PrefabInstance: {fileID: 1810280220}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &1810280224 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 3176018100405734386, guid: 089dbbca0b020c546ae0e2b3deacd56e, type: 3}
   m_PrefabInstance: {fileID: 1810280220}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1812914665
@@ -23853,7 +23895,7 @@ GameObject:
   - component: {fileID: 1958646439}
   - component: {fileID: 1958646438}
   - component: {fileID: 1958646437}
-  m_Layer: 3
+  m_Layer: 16
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

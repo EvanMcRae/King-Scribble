@@ -66,7 +66,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<PolygonCollider2D> sizeColliders = new();
     [SerializeField] private List<Collider2D> groundCheckers = new();
     public bool oldPlayer = true;
-    [SerializeField] private Animator popAnim; 
+    [SerializeField] private Animator popAnim;
+    private float timeSinceSprint;
 
     // Start is called before the first frame update
     void Start()
@@ -110,7 +111,7 @@ public class PlayerController : MonoBehaviour
         
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
-        anim.SetBool("isSprinting", isSprinting);
+        anim.SetBool("isSprinting", isSprinting || timeSinceSprint < 0.1f);
         anim.SetBool("isGrounded", isGrounded);
 
         // TODO: TEMPORARY CHEAT MODE KEYBIND
@@ -143,6 +144,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButton("Sprint"))
         {
             isSprinting = true;
+            timeSinceSprint = 0;
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
             if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && !ChangeScene.changingScene && virtualCamera != null)
             {
@@ -166,6 +168,9 @@ public class PlayerController : MonoBehaviour
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
         }
+
+        if (!isSprinting && timeSinceSprint < 1f)
+            timeSinceSprint += Time.deltaTime;
     }
 
     public void KillTweens()
@@ -308,7 +313,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (isJumping && timeSinceJump > 0.1f && rb.velocity.y <= 0)
+            if (isJumping && timeSinceJump > 0.1f && (rb.velocity.y <= 0.001f || beenOnLand > 0.1f))
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -448,7 +453,7 @@ public class PlayerController : MonoBehaviour
             if (!onground && !isOnSlope)
             {
                 isStuck = true;
-                moveX *= 0.5f;
+                //moveX *= 0.5f;
             }
         }
         else if (rb.velocity.y < 0)

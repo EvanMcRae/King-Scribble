@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class PenObjDestroyer : MonoBehaviour
 {
+    [SerializeField] private SoundPlayer soundPlayer;
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("TempObj") || collision.gameObject.CompareTag("Pen"))
-            Destroy(collision.gameObject);
+        {
+            Line line = collision.gameObject.GetComponent<Line>();
+            if (!line.deleted)
+            {
+                line.deleted = true;
+                soundPlayer.PlaySound("Ink.Zap");
+                Destroy(collision.gameObject);
+            }
+        }
     }
 }
