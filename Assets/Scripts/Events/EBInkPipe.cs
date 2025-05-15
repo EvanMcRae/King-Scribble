@@ -13,18 +13,21 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private ParticleSystem break_particles;
     [SerializeField] private SoundPlayer sound_player;
     [SerializeField] private EBInkPipe other;
+    private Animator anim;
     private bool is_enabled = true;
     private bool is_active = false;
 
     void Start()
     {
         inkfall.transform.position = start.position;
+        anim = GetComponent<Animator>();
     }
 
     public void Activate()
     {
         if (is_enabled && !is_active)
-        {
+        {   
+            anim.Play("Pipe_Flowing");
             inkfall.transform.DOMoveY(active.position.y, 0.5f);
             is_active = true;
             sound_player.PlaySound("Ink.Flood", 1, true);
@@ -39,8 +42,10 @@ public class EBInkPipe : MonoBehaviour
 
     IEnumerator Deactivate_()
     {
+        anim.Play("Pipe_Stop");
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
+        anim.Play("Pipe_Idle");
         sound_player.EndSound("Ink.Flood");
         inkfall.transform.position = start.transform.position;
         is_active = false;
@@ -63,10 +68,11 @@ public class EBInkPipe : MonoBehaviour
             inkfall.transform.position = start.transform.position;
         }
         is_active = false;
-        gameObject.GetComponent<SpriteRenderer>().sprite = broken;
+        // gameObject.GetComponent<SpriteRenderer>().sprite = broken;
         ParticleSystem fart = Instantiate(break_particles, gameObject.transform.position, Quaternion.identity);
         var farte = fart.shape;
         farte.scale = 4f * Vector3.one;
+        anim.Play("Pipe_Broken");
         is_enabled = false;
     }
 }
