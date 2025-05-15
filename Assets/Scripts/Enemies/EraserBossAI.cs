@@ -76,7 +76,6 @@ public class EraserBossAI : MonoBehaviour
     private CapsuleCollider2D physicalCollider; // EB's collider with physics
     private Rigidbody2D EBrb; // EB's Rigidbody2D
     private LineRenderer closestLine = null; // For searching
-    
 
     // timer vars:
     private float timer = 0.0f; // used for cooldowns
@@ -114,6 +113,8 @@ public class EraserBossAI : MonoBehaviour
     private float oscillation = 3000;
     private float swap = 1;
 
+    [SerializeField] private SoundPlayer soundPlayer;
+
     void Start() {
 
         DrawManager.instance.updatePenAreaEvent += updatePenArea;
@@ -148,13 +149,20 @@ public class EraserBossAI : MonoBehaviour
             }
         }
 
-        //ChangeState(State.Start);
-        StartCoroutine(ActivateShield());
+        ChangeState(State.Start);
+        //StartCoroutine(ActivateShield());
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
     // This will be reworked after the semester and will be how states change
     private void ChangeState(State tempState) {
+
+        // End the dizzy sound if it's leaving the dizzy state -- TODO rework this, feels bad, sorry - evan
+        if ((state == State.Dizzied || state == State.Damaged) && tempState != State.Dizzied && tempState != State.Damaged)
+        {
+            soundPlayer.EndSound("EraserBoss.Dizzy");
+        }
+
         state = tempState;
 
         switch (tempState) {
@@ -197,9 +205,19 @@ public class EraserBossAI : MonoBehaviour
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
+            case State.Roar:
+                Invoke(nameof(RoarSound), 10/12f);
+                break;
+            case State.Dizzied:
+                soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
+                break;
         }
     }
 
+    void RoarSound()
+    {
+        soundPlayer.PlaySound("EraserBoss.Roar");
+    }
 
     void FixedUpdate()
     {   
@@ -443,6 +461,7 @@ public class EraserBossAI : MonoBehaviour
             isSlamming = false;
             isSlamHit = true;
             ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Thud");
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Water") && state == State.Slamming) {
             Debug.Log("WATER DETECTED, pos is: " + transform.position);
@@ -451,8 +470,19 @@ public class EraserBossAI : MonoBehaviour
             isSlamming = false;
             isSlamHit = true;
             ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Splash");
         }
-        
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Chain") && state == State.Slamming)
+        {
+            Debug.Log("CHAIN DETECTED, pos is: " + transform.position);
+            timer = 0;
+            isSlamming = false;
+            isSlamHit = true;
+            ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Thud");
+            soundPlayer.PlaySound("EraserBoss.Chain");
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines")) {
             Destroy(other.gameObject);
         }
@@ -764,6 +794,7 @@ public class EraserBossAI : MonoBehaviour
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield(bool isRight) {
         StopCoroutine(eraseLineSequence);
+        isErasingLine = false;
         ChangeState(State.ShieldRemove);
         Debug.Log("DEACTIVATING SHIELD");
         isShielding = true;
@@ -800,7 +831,7 @@ public class EraserBossAI : MonoBehaviour
         else {
             BreakLeftChain();
         }
-        
+
         // play Roar animation and add impulse shader
         yield return new WaitForSeconds(1.0f);
         rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
@@ -834,11 +865,13 @@ public class EraserBossAI : MonoBehaviour
     private void BreakLeftChain() {
         leftChainL.GetComponent<BreakableChainLink>().Break();
         leftChainR.GetComponent<BreakableChainLink>().Break();
+        soundPlayer.PlaySound("EraserBoss.ChainBreak");
     }
 
     private void BreakRightChain() {
         rightChainL.GetComponent<BreakableChainLink>().Break();
         rightChainR.GetComponent<BreakableChainLink>().Break();
+        soundPlayer.PlaySound("EraserBoss.ChainBreak");
     }
 
     // increase the speeds and initiates shield:

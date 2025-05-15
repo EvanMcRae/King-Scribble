@@ -269,6 +269,7 @@ public class Line : MonoBehaviour
                 part.emission.SetBurst(0, burst);
                 // Play the effect (and then destroy)
                 part.Play();
+                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy");
             } 
         }
     }

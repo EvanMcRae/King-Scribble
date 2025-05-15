@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a913750643e7984d8ea61409649b0da, type: 3}
-  m_Name: PipeExplosion
+  m_Script: {fileID: 11500000, guid: c1b0146616629614b84288f5db3aba66, type: 3}
+  m_Name: Thud
   m_EditorClassIdentifier: 
-  clip: {fileID: 8300000, guid: 511794f323c0f42fe918dd742a9055a2, type: 3}
+  clips:
+  - {fileID: 8300000, guid: de6816d76475c432faef0a5c7631b603, type: 3}
+  - {fileID: 8300000, guid: 993ee7966f9d449e78903a631b74f7ce, type: 3}

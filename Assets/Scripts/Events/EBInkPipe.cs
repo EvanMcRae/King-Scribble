@@ -12,6 +12,7 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private Sprite broken;
     [SerializeField] private ParticleSystem break_particles;
     [SerializeField] private SoundPlayer sound_player;
+    [SerializeField] private SoundPlayer pipeSoundPlayer;
     [SerializeField] private EBInkPipe other;
     private Animator anim;
     private bool is_enabled = true;
@@ -73,6 +74,7 @@ public class EBInkPipe : MonoBehaviour
         var farte = fart.shape;
         farte.scale = 4f * Vector3.one;
         anim.Play("Pipe_Broken");
+        pipeSoundPlayer.PlaySound("EraserBoss.PipeExplosion");
         is_enabled = false;
     }
 }
