@@ -7288,6 +7288,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1360501246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &504822328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026d252835e9a46f3b3bed914a8295ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &511351793
 GameObject:
   m_ObjectHideFlags: 0
@@ -16701,6 +16712,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!224 &1191152198 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3450143813569061130, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1200087941
 GameObject:
   m_ObjectHideFlags: 0
@@ -19388,6 +19404,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1360501246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1377376172 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6804172182562570170, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1381448909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20090,6 +20111,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!224 &1431379094 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7556595683314112690, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1432441451
 GameObject:
   m_ObjectHideFlags: 0
@@ -30505,6 +30531,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1110298488262191259, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_text
+      value: <b>Level 3:</b> Button Ball Bash
+      objectReference: {fileID: 0}
     - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0
@@ -30637,6 +30667,18 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: end
+      value: 
+      objectReference: {fileID: 1431379094}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: start
+      value: 
+      objectReference: {fileID: 1191152198}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: active
+      value: 
+      objectReference: {fileID: 1377376172}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -30777,6 +30819,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: levelStartBanner
+      value: 
+      objectReference: {fileID: 504822328}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 1
