@@ -30,6 +30,7 @@ public class GameSaver : MonoBehaviour
     public void WipeSave()
     {
         saveSystem.DeleteSave();
+        PlayerVars.lastSavedInventory = new();
         currData = SaveData.EmptySave();
     }
 
