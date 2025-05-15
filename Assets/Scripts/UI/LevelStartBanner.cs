@@ -10,16 +10,18 @@ public class LevelStartBanner : MonoBehaviour
     [SerializeField] private RectTransform active;
     [SerializeField] private RectTransform end;
     RectTransform rectTransform;
+    private bool needsStartPos = false;
     
     void Start()
     {
        rectTransform = GetComponent<RectTransform>();
+       if (needsStartPos)
+            rectTransform.position = new Vector3(rectTransform.position.x, active.position.y);
     }
 
     public void setStartPosition() {
         Debug.Log("setting banner pos");
-        rectTransform = GetComponent<RectTransform>();
-        rectTransform.position = new Vector3(active.position.x, rectTransform.position.y); 
+        needsStartPos = true;
     }
 
     public void PlayLevelStartAnimation() {
@@ -30,8 +32,8 @@ public class LevelStartBanner : MonoBehaviour
 
     // Update is called once per frame
     private IEnumerator StartAnimation() {
-        //transform.DOMoveX(active.position.x, 0.5f);
+        //transform.DOMoveY(active.position., 0.5f);
         yield return new WaitForSeconds(2.0f);
-        transform.DOMoveX(end.position.x, 0.8f);
+        transform.DOMoveY(end.position.y, 0.8f);
     }
 }
