@@ -52,8 +52,16 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         followCam.Follow = sourceCam.transform;
         GameManager.canMove = true;
         isAnimating = false;
+        SceneSerialization s = GameSaver.GetScene("Level5");
+        if (s == null)
+        {
+            s = new("Level5", PlayerVars.instance.GetSpawnPos());
+            s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            s.unlockPoints = new();
+            GameSaver.currData.scenes.Add(s);
+        }
+        s.unlockPoints.Add("cutsceneWatched");
         GameSaver.instance.SaveGame();
-        GameSaver.GetScene("Level5").unlockPoints.Add("cutsceneWatched");
         skipButton.SetActive(false);
     }
 
