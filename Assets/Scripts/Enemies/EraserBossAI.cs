@@ -84,7 +84,7 @@ public class EraserBossAI : MonoBehaviour
     private float slamCooldownTime = 1.0f;
     private float chargeCooldownTime = 1.0f;
     private float chargePrepTime = .66f;
-    private float slamPrepTime = 2.0f;
+    private float slamPrepTime = 2.5f;
     private float dizzyTime = 4.0f;
     private float damageTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
@@ -112,6 +112,8 @@ public class EraserBossAI : MonoBehaviour
 
     private float oscillation = 3000;
     private float swap = 1;
+
+    private Vector3 KSpos;
 
     [SerializeField] private SoundPlayer soundPlayer;
 
@@ -343,14 +345,21 @@ public class EraserBossAI : MonoBehaviour
                 //Debug.Log("State = SlamPrep");
                 anim.Play("EB_SlamPrep");
                 spriteRenderer.flipX = false;
-                Vector3 KSpos = KingScribble.transform.position;
                 if(!isRotated) {
                     rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
                     isRotated = true;
                 }
+
+                // Only track KS pos until 0.5 seconds left in the prep time - evan
+                if (timer < 0.8f * slamPrepTime)
+                {
+                    KSpos = KingScribble.transform.position;
+                }
+
                 // Adding the sin function to oscillate, the first 2 is the period
                 // Clamp EB's height just below the ceiling so he can oscillate
                 Hover(new Vector3(KSpos.x, Mathf.Min(KSpos.y + 22.0f, 22) + Mathf.Sin(Time.time * 1.5f * 2 * Mathf.PI)), baseSpeed); // hover above KS
+                
                 if(timer >= slamPrepTime) {
                     timer = 0;
                     destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor

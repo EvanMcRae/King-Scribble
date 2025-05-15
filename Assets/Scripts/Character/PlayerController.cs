@@ -615,6 +615,9 @@ public class PlayerController : MonoBehaviour
     public void Hurt()
     {
         if (!PlayerVars.instance.isDead)
+        {
             anim.SetTrigger("hurt");
+            soundPlayer.PlaySound("Player.Hurt");
+        }
     }
 }
