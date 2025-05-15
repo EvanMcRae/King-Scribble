@@ -763,6 +763,7 @@ public class EraserBossAI : MonoBehaviour
 
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield(bool isRight) {
+        StopCoroutine(eraseLineSequence);
         ChangeState(State.ShieldRemove);
         Debug.Log("DEACTIVATING SHIELD");
         isShielding = true;
@@ -771,6 +772,7 @@ public class EraserBossAI : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         ChangeState(State.Roar);
+        yield return new WaitForSeconds(0.5f);
 
         EBrb.AddForce(new Vector2(0f, 1f * slamForce), ForceMode2D.Impulse); // break pipe
 
