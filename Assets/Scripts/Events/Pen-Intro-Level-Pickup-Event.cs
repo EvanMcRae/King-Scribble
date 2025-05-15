@@ -14,7 +14,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public UnityEvent closeDoor;
     private bool doorClosed;
     private bool isAnimating;
-    public SoundPlayer soundPlayer;
+    public SoundPlayer rumblePlayer, soundPlayer;
     public GameObject skipButton;
 
     public void StartEvent()
@@ -33,7 +33,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         GameManager.canMove = false;
         yield return new WaitForSeconds(0.5f);
         cam.gameObject.SetActive(true);
-        soundPlayer.PlaySound("Ink.Rumble", 1, false);
+        rumblePlayer.PlaySound("Ink.Rumble", 1, false);
         var noise = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         noise.m_AmplitudeGain = 0.125f;
         DOTween.To(() => noise.m_AmplitudeGain, x => noise.m_AmplitudeGain = x, 0.5f, 4f);
@@ -70,8 +70,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         if (isAnimating)
         {
             StopAllCoroutines();
-            soundPlayer.EndAllSounds();
-            soundPlayer.PlaySound("Ink.Flood", 1, true);
+            rumblePlayer.EndAllSounds();
             cam.gameObject.SetActive(false);
             followCam.Follow = sourceCam.transform;
             inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -115f, 0f);
