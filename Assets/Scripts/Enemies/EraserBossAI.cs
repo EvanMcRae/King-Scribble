@@ -642,6 +642,7 @@ public class EraserBossAI : MonoBehaviour
     private void Knockback(Vector2 knockbackDirection, float force) {
         if (KSrb != null && !isKSHit) {
             Debug.Log("KNOCKING BACK");
+            PlayerController.instance.Hurt();
             KSrb.AddForce(knockbackDirection * force, ForceMode2D.Impulse); // Use Impulse or VelocityChange
             isKSHit = true;
             print("state: " + state);

@@ -108,7 +108,8 @@ public class PlayerController : MonoBehaviour
             isSprinting = false;
             sprintSpeedMultiplier = 1f;
         }
-        
+
+        anim.SetBool("isDead", PlayerVars.instance.isDead);
         anim.SetBool("isJumping", isJumping);
         anim.SetBool("isFalling", isFalling);
         anim.SetBool("isSprinting", isSprinting || timeSinceSprint < 0.1f);
@@ -609,5 +610,11 @@ public class PlayerController : MonoBehaviour
     public void DeathSound()
     {
         soundPlayer.PlaySound("Drawing.PenComplete");
+    }
+
+    public void Hurt()
+    {
+        if (!PlayerVars.instance.isDead)
+            anim.SetTrigger("hurt");
     }
 }
