@@ -8,7 +8,7 @@ public class PlayerVars : MonoBehaviour
     public static PlayerVars instance;
 
     public Inventory inventory = null;
-    public static Inventory lastSavedInventory = null;
+    public static Inventory lastSavedInventory = new();
     [SerializeField] private int maxDoodleFuel = 750;
     [SerializeField] private int maxPenFuel = 1000;
     [SerializeField] private int maxEraserFuel = 500;
