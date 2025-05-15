@@ -8,6 +8,12 @@ public class PlayerSerialization
     public Inventory inventory;
     public ToolType currentTool;
 
+    public PlayerSerialization()
+    {
+        inventory = new();
+        currentTool = ToolType.None;
+    }
+
     public PlayerSerialization(PlayerVars player)
     {
         inventory = PlayerVars.lastSavedInventory;

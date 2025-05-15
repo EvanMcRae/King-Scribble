@@ -31,6 +31,8 @@ public class GameSaver : MonoBehaviour
     {
         saveSystem.DeleteSave();
         PlayerVars.lastSavedInventory = new();
+        if (PlayerVars.instance != null)
+            PlayerVars.instance.inventory = new();
         currData = SaveData.EmptySave();
     }
 
@@ -148,6 +150,7 @@ public class GameSaver : MonoBehaviour
         public static SaveData EmptySave()
         {
             SaveData returnData = new();
+            returnData.player = new PlayerSerialization();
             returnData.scenes = new();
             returnData.stickers = new();
             returnData.emptySave = true;
