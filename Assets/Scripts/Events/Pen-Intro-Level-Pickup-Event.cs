@@ -15,10 +15,16 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     private bool doorClosed;
     private bool isAnimating;
     public SoundPlayer soundPlayer;
+    public GameObject skipButton;
 
     public void StartEvent()
     {
         StartCoroutine(Start_Event());
+
+        if (GameSaver.GetScene("Level5") != null && GameSaver.GetScene("Level5").unlockPoints.Contains("cutsceneWatched"))
+        {
+            skipButton.SetActive(true);
+        }
     }
 
     IEnumerator Start_Event()
@@ -46,13 +52,18 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         followCam.Follow = sourceCam.transform;
         GameManager.canMove = true;
         isAnimating = false;
+        GameSaver.instance.SaveGame();
+        GameSaver.GetScene("Level5").unlockPoints.Add("cutsceneWatched");
+        skipButton.SetActive(false);
     }
 
-    public void Update()
+    public void SkipCutscene()
     {
-        if (Input.GetKeyDown(KeyCode.H) && isAnimating)
+        if (isAnimating)
         {
             StopAllCoroutines();
+            soundPlayer.EndAllSounds();
+            soundPlayer.PlaySound("Ink.Flood", 1, true);
             cam.gameObject.SetActive(false);
             followCam.Follow = sourceCam.transform;
             inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -115f, 0f);
@@ -62,13 +73,10 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             {
                 closeDoor.Invoke();
                 doorClosed = true;
-            } 
+            }
             startFlood.Invoke();
             isAnimating = false;
-            if (!soundPlayer.sources[0].isPlaying)
-            {
-                soundPlayer.PlaySound("Ink.Flow", 1, true);
-            }
+            skipButton.SetActive(false);
         }
     }
 }

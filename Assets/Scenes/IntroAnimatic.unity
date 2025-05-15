@@ -1205,6 +1205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scene: Level1
+  startAt: 3
 --- !u!82 &1816498822
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1364,6 +1365,7 @@ MonoBehaviour:
   - {fileID: 0}
   toolSoundPlayer: {fileID: 0}
   drawSoundPlayer: {fileID: 0}
+  penSoundPlayer: {fileID: 0}
   drawSounds:
   - {fileID: 0}
   - {fileID: 11400000, guid: 20ddd93e45fae442d97558530b9de754, type: 2}
@@ -1437,7 +1439,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7063382920539804017, guid: e80fcde0e5ed5a84a841be0422cd4685, type: 3}
       propertyPath: m_Name
-      value: AMCheck
+      value: ManagerChecks
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
