@@ -28,11 +28,16 @@ public class EBInkPipe : MonoBehaviour
     {
         if (is_enabled && !is_active)
         {   
-            anim.Play("Pipe_Flowing");
-            inkfall.transform.DOMoveY(active.position.y, 0.5f);
-            is_active = true;
-            sound_player.PlaySound("Ink.Flood", 1, true);
+            StartCoroutine(Activate_());
         }
+    }
+
+    private IEnumerator Activate_() {
+        anim.Play("Pipe_Start");
+        yield return new WaitForSeconds(1.0f);
+        inkfall.transform.DOMoveY(active.position.y, 0.5f);
+        is_active = true;
+        sound_player.PlaySound("Ink.Flood", 1, true);
     }
 
     public void Deactivate()

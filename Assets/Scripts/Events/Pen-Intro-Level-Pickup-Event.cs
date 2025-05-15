@@ -16,6 +16,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     private bool isAnimating;
     public SoundPlayer soundPlayer;
     public GameObject skipButton;
+    [SerializeField] Animator anim_L;
+    [SerializeField] Animator anim_R;
 
     public void StartEvent()
     {
@@ -25,6 +27,16 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         {
             skipButton.SetActive(true);
         }
+    }
+
+    public void StopEvent()
+    {
+        // DOTween Ink flows
+        inkFlow_L.transform.DOMoveY(-330f, 0.5f);
+        inkFlow_R.transform.DOMoveY(-330f, 0.5f);
+        // Stop anims
+        anim_L.Play("Pipe_Stop");
+        anim_R.Play("Pipe_Stop");
     }
 
     IEnumerator Start_Event()
@@ -37,8 +49,11 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         var noise = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         noise.m_AmplitudeGain = 0.125f;
         DOTween.To(() => noise.m_AmplitudeGain, x => noise.m_AmplitudeGain = x, 0.5f, 4f);
-        yield return new WaitForSeconds(4);
-        inkFlow_L.transform.DOLocalMoveY(-110, 0.5f);
+        yield return new WaitForSeconds(3);
+        anim_L.Play("Pipe_Start");
+        anim_R.Play("Pipe_Start");
+        yield return new WaitForSeconds(1); // For the Pipe animation to transition from start to flowing
+        inkFlow_L.transform.DOLocalMoveY(-118, 0.5f);
         inkFlow_R.transform.DOLocalMoveY(-118, 0.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.m_AmplitudeGain = 0.25f;
@@ -74,8 +89,10 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             soundPlayer.PlaySound("Ink.Flood", 1, true);
             cam.gameObject.SetActive(false);
             followCam.Follow = sourceCam.transform;
-            inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -115f, 0f);
-            inkFlow_R.transform.localPosition = new Vector3(inkFlow_R.transform.localPosition.x, -115f, 0f);
+            anim_L.Play("Pipe_Flowing");
+            anim_R.Play("Pipe_Flowing");
+            inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -118f, 0f);
+            inkFlow_R.transform.localPosition = new Vector3(inkFlow_R.transform.localPosition.x, -118f, 0f);
             GameManager.canMove = true;
             if (!doorClosed)
             {

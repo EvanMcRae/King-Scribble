@@ -187,7 +187,11 @@ public class EraserBossAI : MonoBehaviour
             case State.ChargeCooldown:
                 break;
             case State.SlamPrep:
-                EBrb.gravityScale = 1; // these values are needed for gravity and forces
+                EBrb.gravityScale = 0;
+                EBrb.drag = 10;
+                break;
+            case State.Slamming:
+                EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
             case State.SlamCooldown:
@@ -198,7 +202,7 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.ShieldRemove:
                 timer = 0;
-                EBrb.gravityScale = 1;
+                EBrb.gravityScale = 1;  // these values are needed for gravity and forces
                 EBrb.drag = 0;
                 break;
             case State.EndScene:
@@ -344,7 +348,9 @@ public class EraserBossAI : MonoBehaviour
                     rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
                     isRotated = true;
                 }
-                Hover(new Vector3(KSpos.x, KSpos.y + 22.0f), baseSpeed); // hover above KS
+                // Adding the sin function to oscillate, the first 2 is the period
+                // Clamp EB's height just below the ceiling so he can oscillate
+                Hover(new Vector3(KSpos.x, Mathf.Min(KSpos.y + 22.0f, 22) + Mathf.Sin(Time.time * 1.5f * 2 * Mathf.PI)), baseSpeed); // hover above KS
                 if(timer >= slamPrepTime) {
                     timer = 0;
                     destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor
