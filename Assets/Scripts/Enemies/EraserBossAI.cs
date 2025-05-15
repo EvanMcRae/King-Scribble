@@ -775,6 +775,7 @@ public class EraserBossAI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         EBrb.AddForce(new Vector2(0f, 1f * slamForce), ForceMode2D.Impulse); // break pipe
+        yield return new WaitForSeconds(0.35f);
 
         if(isRight) {
             eraserBossEvent.DeactivateRight(); // so ink cannot flow again from it
