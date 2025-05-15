@@ -32,9 +32,9 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public void StopEvent()
     {
         // DOTween Ink flows
-        inkFlow_L.transform.DOMoveY(-330f, 0.5f);
-        inkFlow_R.transform.DOMoveY(-330f, 0.5f);
-        // Stop anims
+        inkFlow_L.transform.DOMoveY(-330f, 5f);
+        inkFlow_R.transform.DOMoveY(-330f, 5f);
+        // Stop anim
         anim_L.Play("Pipe_Stop");
         anim_R.Play("Pipe_Stop");
     }
@@ -53,8 +53,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         anim_L.Play("Pipe_Start");
         anim_R.Play("Pipe_Start");
         yield return new WaitForSeconds(1); // For the Pipe animation to transition from start to flowing
-        inkFlow_L.transform.DOLocalMoveY(-118, 0.5f);
-        inkFlow_R.transform.DOLocalMoveY(-118, 0.5f);
+        inkFlow_L.transform.DOLocalMoveY(-118, 2.5f);
+        inkFlow_R.transform.DOLocalMoveY(-118, 2.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.m_AmplitudeGain = 0.25f;
         DOTween.To(() => noise.m_AmplitudeGain, x => noise.m_AmplitudeGain = x, 0f, 3f);
