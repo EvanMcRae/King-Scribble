@@ -957,7 +957,7 @@ GameObject:
   m_Component:
   - component: {fileID: 50050134}
   - component: {fileID: 50050135}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2518,7 +2518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166224209}
   - component: {fileID: 166224210}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10551,6 +10551,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Moving Wall 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -11479,6 +11483,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Moving Wall 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -11921,7 +11929,7 @@ GameObject:
   m_Component:
   - component: {fileID: 904030339}
   - component: {fileID: 904030340}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15535,7 +15543,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1114335641}
   - component: {fileID: 1114335642}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
