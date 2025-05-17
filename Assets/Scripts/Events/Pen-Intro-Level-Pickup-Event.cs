@@ -77,6 +77,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         }
         s.unlockPoints.Add("cutsceneWatched");
         GameSaver.instance.SaveGame();
+        skipButton.GetComponent<HUDButtonCursorHandler>().OnPointerExit(null);
         skipButton.SetActive(false);
     }
 
@@ -100,6 +101,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             }
             startFlood.Invoke();
             isAnimating = false;
+            skipButton.GetComponent<HUDButtonCursorHandler>().OnPointerExit(null);
             skipButton.SetActive(false);
         }
     }
