@@ -8855,6 +8855,10 @@ PrefabInstance:
       propertyPath: levelStartBanner
       value: 
       objectReference: {fileID: 513949812}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: defaultInventory.toolUnlocks.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
