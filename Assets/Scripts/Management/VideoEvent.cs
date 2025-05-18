@@ -19,6 +19,7 @@ public class VideoEvent : MonoBehaviour
     void EndReached(VideoPlayer vp)
     {
         GameSaver.currData.scenes.Add(new SceneSerialization(scene, Vector3.zero));
+        ScreenWipe.over = false;
         SceneManager.LoadScene(scene);
     }
 }
