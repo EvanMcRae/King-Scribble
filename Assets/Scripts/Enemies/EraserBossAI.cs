@@ -48,6 +48,7 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] GameObject rightChainL;
     [SerializeField] GameObject rightChainR;
     [SerializeField] EraserBossEvent eraserBossEvent;
+    [SerializeField] private PhysicsMaterial2D slippery, friction;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -197,6 +198,7 @@ public class EraserBossAI : MonoBehaviour
                 EBrb.drag = 0;
                 break;
             case State.SlamCooldown:
+                GetComponent<Rigidbody2D>().sharedMaterial = slippery;
                 break;
             case State.ShieldActivate:
                 EBrb.gravityScale = 0;
@@ -216,6 +218,9 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Dizzied:
                 soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
+                break;
+            case State.SlamImpact:
+                GetComponent<Rigidbody2D>().sharedMaterial = friction;
                 break;
         }
     }
@@ -746,23 +751,39 @@ public class EraserBossAI : MonoBehaviour
         matBlockOpacity.SetColor("_Color", opacity);
 
         // toggle opacities
-        polyRend?.SetPropertyBlock(matBlockOpacity);
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOG);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOpacity);
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOG);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        Destroy(pen.gameObject);
+        if (polyRend != null && !pen.GetComponent<Line>().deleted)
+        {
+            polyRend.SetPropertyBlock(matBlockOpacity);
+            tempLine.startColor = opacity;
+            tempLine.endColor = opacity;
+            yield return new WaitForSeconds(.5f);
+        }
+        if (polyRend != null && !pen.GetComponent<Line>().deleted)
+        {
+            polyRend.SetPropertyBlock(matBlockOG);
+            tempLine.startColor = original;
+            tempLine.endColor = original;
+            yield return new WaitForSeconds(.5f);
+        }
+        if (polyRend != null && !pen.GetComponent<Line>().deleted)
+        {
+            polyRend.SetPropertyBlock(matBlockOpacity);
+            tempLine.startColor = opacity;
+            tempLine.endColor = opacity;
+            yield return new WaitForSeconds(.5f);
+        }
+        if (polyRend != null && !pen.GetComponent<Line>().deleted)
+        {
+            polyRend.SetPropertyBlock(matBlockOG);
+            tempLine.startColor = original;
+            tempLine.endColor = original;
+            yield return new WaitForSeconds(.5f);
+        }
+        if (polyRend != null && !pen.GetComponent<Line>().deleted)
+        {
+            pen.GetComponent<Line>().deleted = true;
+            Destroy(pen.gameObject);
+        }
     }
 
     private void DespawnAllPencilObj() {
@@ -781,27 +802,28 @@ public class EraserBossAI : MonoBehaviour
 
         // toggle opacities
         // ADD NULL CHECK cuz the line can be erased
-        if(tempLine != null) {
+        if(tempLine != null && !tempLine.GetComponent<Line>().deleted) {
             tempLine.startColor = opacity;
             tempLine.endColor = opacity;
             yield return new WaitForSeconds(.5f);
         }
-        if(tempLine != null) {
+        if(tempLine != null && !tempLine.GetComponent<Line>().deleted) {
             tempLine.startColor = original;
             tempLine.endColor = original;
             yield return new WaitForSeconds(.5f);
         }
-        if(tempLine != null) {
+        if(tempLine != null && !tempLine.GetComponent<Line>().deleted) {
             tempLine.startColor = opacity;
             tempLine.endColor = opacity;
             yield return new WaitForSeconds(.5f);
         }
-        if(tempLine != null) {
+        if(tempLine != null && !tempLine.GetComponent<Line>().deleted) {
             tempLine.startColor = original;
             tempLine.endColor = original;
             yield return new WaitForSeconds(.5f);
         }
-        if(tempLine != null) {
+        if(tempLine != null && !tempLine.GetComponent<Line>().deleted) {
+            pencil.GetComponent<Line>().deleted = true;
             Destroy(pencil.gameObject);
             PlayerVars.instance.AddDoodleFuel(tempLine.positionCount); // Give player back their health
         }

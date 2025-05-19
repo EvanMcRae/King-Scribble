@@ -465,7 +465,7 @@ MonoBehaviour:
   movementSmoothing: 0.05
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 904
+    m_Bits: 459400
   bodyCollider: {fileID: 5108078074794873328}
   roofCheck: {fileID: 0}
   landCheck: {fileID: 3419832881364647439}
@@ -479,6 +479,7 @@ MonoBehaviour:
   softFall: 1
   isStuck: 0
   frictionOverride: 0
+  currentSize: 4
   sizeColliders:
   - {fileID: 0}
   - {fileID: 0}
@@ -487,6 +488,7 @@ MonoBehaviour:
   - {fileID: 0}
   groundCheckers: []
   oldPlayer: 1
+  popAnim: {fileID: 0}
 --- !u!114 &7087994594828487266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,14 +503,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory:
     toolUnlocks: 
-  lastSavedInventory:
-    toolUnlocks: 
   maxDoodleFuel: 750
   maxPenFuel: 1000
   maxEraserFuel: 500
   cur_tool: 0
   isDead: 0
   cheatMode: 0
+  curCamZoom: 0
 --- !u!1 &6572444059410629193
 GameObject:
   m_ObjectHideFlags: 0
@@ -667,7 +668,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -166405459
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c87b157c07015fc42ba7c5b857be80cb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -3026,6 +3026,8 @@ MonoBehaviour:
   rightChainL: {fileID: 1872619982}
   rightChainR: {fileID: 317294157}
   eraserBossEvent: {fileID: 1114107046}
+  slippery: {fileID: 6200000, guid: 92c73c7f3e6bfd047bb6b5c36d4d6322, type: 2}
+  friction: {fileID: 6200000, guid: f36a8a45d392d5145ba43dbb3928e89d, type: 2}
   soundPlayer: {fileID: 872414853}
 --- !u!50 &196569753
 Rigidbody2D:
@@ -3043,7 +3045,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 92c73c7f3e6bfd047bb6b5c36d4d6322, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
