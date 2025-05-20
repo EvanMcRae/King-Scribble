@@ -798,6 +798,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5213788469562545308, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5255414638260928348, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1159,7 +1163,7 @@ VideoPlayer:
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 0
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 1
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 1
@@ -1171,10 +1175,10 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
-  m_WaitForFirstFrame: 1
+  m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
 --- !u!4 &1816498820
@@ -1206,6 +1210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scene: Level1
   startAt: 3
+  fileName: intro.mp4
 --- !u!82 &1816498822
 AudioSource:
   m_ObjectHideFlags: 0

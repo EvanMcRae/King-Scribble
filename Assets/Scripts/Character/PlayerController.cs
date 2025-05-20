@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     public bool oldPlayer = true;
     [SerializeField] private Animator popAnim;
     private float timeSinceSprint;
+    public bool deadLanded = false;
 
     // Start is called before the first frame update
     void Start()
@@ -298,7 +299,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (softFall)
                         softFall = false;
-                    else
+                    else if ((PlayerVars.instance.isDead && deadLanded) || !PlayerVars.instance.isDead)
                         soundPlayer.PlaySound("Player.Land");
                 }
                 fallTime = 0.0f;
@@ -324,7 +325,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (softFall)
                         softFall = false;
-                    else
+                    else if ((PlayerVars.instance.isDead && deadLanded) || !PlayerVars.instance.isDead)
                         soundPlayer.PlaySound("Player.Land");
                 }
             }
@@ -619,5 +620,12 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("hurt");
             soundPlayer.PlaySound("Player.Hurt");
         }
+    }
+
+    public void DeadLanded()
+    {
+        deadLanded = true;
+        if (isGrounded)
+            soundPlayer.PlaySound("Player.Land");
     }
 }
