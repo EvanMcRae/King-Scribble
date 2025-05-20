@@ -171,6 +171,7 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
         GetComponent<PlayerController>().SetFriction(false);
+        GetComponent<PlayerController>().deadLanded = false;
     }
 
     public void Dismount()

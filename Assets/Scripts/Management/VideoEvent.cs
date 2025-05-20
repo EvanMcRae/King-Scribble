@@ -10,6 +10,7 @@ public class VideoEvent : MonoBehaviour
     [SerializeField] private string scene;
     [SerializeField] private float startAt = 0;
     [SerializeField] private string fileName;
+    [SerializeField] private List<GameObject> dependencies;
     private VideoPlayer videoPlayer;
 
     // Start is called before the first frame update
@@ -19,7 +20,32 @@ public class VideoEvent : MonoBehaviour
         videoPlayer.url = Path.Combine(Application.streamingAssetsPath, fileName);
         videoPlayer.loopPointReached += EndReached;
         videoPlayer.Prepare();
-        videoPlayer.prepareCompleted += Play;
+        if (MainMenuManager.firstopen)
+        {
+            SceneManager.sceneUnloaded += MenuUnloaded;
+        }
+        else
+        {
+            MenuUnloaded(new Scene());
+        }
+    }
+
+    void MenuUnloaded(Scene scene)
+    {
+        Camera.main.GetComponent<AudioListener>().enabled = true;
+        foreach (GameObject dependency in dependencies)
+        {
+            dependency.SetActive(true);
+        }
+        SceneManager.sceneUnloaded -= MenuUnloaded;
+        if (videoPlayer.isPrepared)
+        {
+            Play(videoPlayer);
+        }
+        else
+        {
+            videoPlayer.prepareCompleted += Play;
+        }
     }
 
     void Play(VideoPlayer vp)
