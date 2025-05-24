@@ -50,14 +50,14 @@ Material:
     - _DistortionScale: 30
     - _DistortionStrength: 0.0073
     - _LineLength: 0.985
-    - _WaveCount: 0.75
+    - _WaveCount: 0
     - _WaveFlowDirection: 1
     - _WaveSize: 0.16
-    - _WaveSpeed: 4
+    - _WaveSpeed: 1
     m_Colors:
     - _BodyColor: {r: 0.35294116, g: 0.25098038, b: 0.34117648, a: 1}
     - _CausticColor: {r: 0.682353, g: 0.4078431, b: 0.6509804, a: 1}
-    - _CausticScrollDir: {r: 0.045, g: 0, b: 0, a: 0}
+    - _CausticScrollDir: {r: 0.01, g: 0, b: 0, a: 0}
     - _CausticTiling: {r: 0.5, g: 1.5, b: 0, a: 0}
     - _DistortionDir: {r: 0.05, g: 0, b: 0, a: 0}
     - _LineColor: {r: 0.68301874, g: 0.40594506, b: 0.6510488, a: 1}
