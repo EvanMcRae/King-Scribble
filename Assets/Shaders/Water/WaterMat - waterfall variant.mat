@@ -26,9 +26,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _CausticOffsetSpeed: 1
+    - _yCull: -3.44
     m_Colors:
-    - _CausticScrollDir: {r: 0, g: 0.5, b: 0, a: 0}
-    - _CausticTiling: {r: 3, g: 8, b: 0, a: 0}
+    - _CausticScrollDir: {r: 0, g: 1, b: 0, a: 0}
+    - _CausticTiling: {r: 10, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5862496782502598175
 MonoBehaviour:
