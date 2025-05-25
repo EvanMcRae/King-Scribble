@@ -20,6 +20,7 @@ public class WaterFall : MonoBehaviour
     private Collider2D _cur_blocking_obj;
     [SerializeField] private ParticleSystem _part;
     private ParticleSystem _curPart;
+    private int _obj_counter = 0;
     private void Start()
     {
         _col = GetComponent<Collider2D>();
@@ -36,7 +37,6 @@ public class WaterFall : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(top, Vector2.down, -3*_cur_max_height, _waterLayers); // Don't ask about the -3. Please.
         if (hit)
         {
-            //Debug.Log("a");
             if (hit.collider.transform.parent.TryGetComponent<InteractableWater>(out _water))
             {
                 if (!_curPart)
@@ -52,19 +52,28 @@ public class WaterFall : MonoBehaviour
         }
         _timer = _tickTime;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
+        {
+            _obj_counter++;
+        }
+            
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
         {
             float top = collision.bounds.center.y + collision.bounds.extents.y;
-            if (top > _cur_max_height)
+            if (top > _cur_max_height) // Object is the highest - block the waterfall
             {
                 _cur_blocking_obj = collision;
                 _mat.SetFloat("_ObjTop", top);
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
             }
-            else if (top < _cur_max_height && (collision == _cur_blocking_obj) && (top > _base_cull_height + 2f))
+            else if (top < _cur_max_height && (_cur_blocking_obj == collision) && (top > _base_cull_height + 2f)) // Highest object has moved downwards (but not below the water's surface)
             {
                 _mat.SetFloat("_ObjTop", top);
                 _cur_max_height = top;
@@ -74,10 +83,22 @@ public class WaterFall : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
+        {
+            _obj_counter--;
+        }
+            
+        
         if (collision == _cur_blocking_obj)
             _cur_blocking_obj = null;
+        
         _cur_max_height = _base_cull_height;
-        _mat.SetFloat("_ObjTop", _base_cull_height);
-        _curPart.transform.position = gameObject.transform.position;
+        
+        if (_obj_counter == 0)
+        {
+            // Reset position to water surface
+            _mat.SetFloat("_ObjTop", _cur_max_height);
+            _curPart.transform.position = gameObject.transform.position;
+        }
     }
 }
