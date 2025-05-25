@@ -122,4 +122,26 @@ public class InkFlood : MonoBehaviour
 
         if (transform.position == destinations[curDest].position && flooding) StopFlood();
     }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!GameManager.resetting && collision.gameObject.CompareTag("Player") && collision.gameObject.name != "LandCheck") // != LandCheck to prevent early deaths due to the land check object mistakenly colliding with the ink
+        {
+            PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 10f;
+            if (transform.position.y - collision.transform.position.y > killThreshold && !PlayerVars.instance.cheatMode)
+            {
+                GetComponent<BuoyancyEffector2D>().density = 0.1f;
+                GameManager.instance.Reset();
+                PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
+            }
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
+        }
+    }
 }
