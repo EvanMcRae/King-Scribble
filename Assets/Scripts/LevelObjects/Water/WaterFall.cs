@@ -36,7 +36,7 @@ public class WaterFall : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(top, Vector2.down, -3*_cur_max_height, _waterLayers); // Don't ask about the -3. Please.
         if (hit)
         {
-            Debug.Log("a");
+            //Debug.Log("a");
             if (hit.collider.transform.parent.TryGetComponent<InteractableWater>(out _water))
             {
                 if (!_curPart)

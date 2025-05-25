@@ -56,9 +56,9 @@ Material:
     m_Floats:
     - _BodyTransparency: 0.1
     - _CausticOffsetSpeed: 1
-    - _CausticPower: 9.5
-    - _CausticScale: 10
-    - _CausticStrength: 1
+    - _CausticPower: 2.57
+    - _CausticScale: 6.08
+    - _CausticStrength: 5.24
     - _DistortionOffsetSpeed: 1
     - _DistortionScale: 30
     - _DistortionStrength: 0.0073
@@ -70,11 +70,11 @@ Material:
     - _WaveSize: 0.16
     - _WaveSpeed: 1
     m_Colors:
-    - _BodyColor: {r: 0.35294116, g: 0.25098038, b: 0.34117648, a: 1}
-    - _CausticColor: {r: 0.682353, g: 0.4078431, b: 0.6509804, a: 1}
+    - _BodyColor: {r: 0.45882353, g: 0.05490196, b: 0.43137255, a: 1}
+    - _CausticColor: {r: 0.050980393, g: 0.40392157, b: 0.043137256, a: 1}
     - _CausticScrollDir: {r: 0, g: 1, b: 0, a: 0}
     - _CausticTiling: {r: 10, g: 1, b: 0, a: 0}
     - _DistortionDir: {r: 0.05, g: 0, b: 0, a: 0}
-    - _LineColor: {r: 0.68301874, g: 0.40594506, b: 0.6510488, a: 1}
+    - _LineColor: {r: 0.6313726, g: 0, b: 0.56078434, a: 1}
     - _ObjPosition: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
