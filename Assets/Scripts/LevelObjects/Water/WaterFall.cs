@@ -16,8 +16,14 @@ public class WaterFall : MonoBehaviour
     [SerializeField] LayerMask _colliders;
     private Material _mat;
     private float _cur_max_height;
+    private float _cur_min_x;
+    private float _cur_max_x;
     private float _base_cull_height;
-    private Collider2D _cur_blocking_obj;
+    private float _base_min_x;
+    private float _base_max_x;
+    private Collider2D _cur_top_blocking_obj;
+    private Collider2D _cur_left_blocking_obj;
+    private Collider2D _cur_right_blocking_obj;
     [SerializeField] private ParticleSystem _part;
     private ParticleSystem _curPart;
     private int _obj_counter = 0;
@@ -27,6 +33,12 @@ public class WaterFall : MonoBehaviour
         _timer = 0f;
         _mat = transform.parent.GetComponent<SpriteRenderer>().material;
         _base_cull_height = _cur_max_height = _mat.GetFloat("_ObjTop");
+        _base_min_x = _col.bounds.center.x - _col.bounds.extents.x;
+        _base_max_x = _col.bounds.center.x + _col.bounds.extents.x;
+        _cur_min_x = _base_max_x;
+        _cur_max_x = _base_min_x;
+        _mat.SetFloat("_ObjBoundL", _cur_min_x);
+        _mat.SetFloat("_ObjBoundR", _cur_max_x);
     }
     private void FixedUpdate()
     {
@@ -68,22 +80,49 @@ public class WaterFall : MonoBehaviour
             float top = collision.bounds.center.y + collision.bounds.extents.y;
             float leftBound = collision.bounds.center.x - collision.bounds.extents.x;
             float rightBound = collision.bounds.center.x + collision.bounds.extents.x;
+
+            // Crop based on height
             if (top > _cur_max_height) // Object is the highest - block the waterfall
             {
-                _cur_blocking_obj = collision;
+                _cur_top_blocking_obj = collision;
                 _mat.SetFloat("_ObjTop", top);
-                _mat.SetFloat("_ObjBoundL", leftBound);
-                _mat.SetFloat("_ObjBoundR", rightBound);
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
             }
-            else if (top < _cur_max_height && (_cur_blocking_obj == collision) && (top > _base_cull_height + 2f)) // Highest object has moved downwards (but not below the water's surface)
+            
+            else if (top < _cur_max_height && (_cur_top_blocking_obj == collision) && (top > _base_cull_height + 2f)) // Highest object has moved downwards (but not below the water's surface)
             {
                 _mat.SetFloat("_ObjTop", top);
-                _mat.SetFloat("_ObjBoundL", leftBound);
-                _mat.SetFloat("_ObjBoundR", rightBound);
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
+            }
+            if (leftBound < _base_min_x && rightBound > _base_min_x && _cur_top_blocking_obj != collision) rightBound = leftBound;
+            // Crop based on left bound
+            if (leftBound <= _cur_min_x) // Object is the leftmost - block the waterfall
+            {
+                _cur_left_blocking_obj = collision;
+                _mat.SetFloat("_ObjBoundL", leftBound);
+                _cur_min_x = leftBound;
+            }
+
+            else if (_cur_left_blocking_obj == collision) // Leftmost object has moved and is still leftmost
+            {
+                _mat.SetFloat("_ObjBoundL", leftBound);
+                _cur_min_x = leftBound;
+            }
+
+            // Crop based on right bound
+            if (rightBound >= _cur_max_x)
+            {
+                _cur_right_blocking_obj = collision;
+                _mat.SetFloat("_ObjBoundR", rightBound);
+                _cur_max_x = rightBound;
+            }
+
+            else if (_cur_right_blocking_obj == collision) // Rightmost object has moved and is still rightmost
+            {
+                _mat.SetFloat("_ObjBoundR", rightBound);
+                _cur_max_x = rightBound;
             }
         }
     }
@@ -94,15 +133,20 @@ public class WaterFall : MonoBehaviour
             _obj_counter--;
         }
 
-        if (collision == _cur_blocking_obj)
-            _cur_blocking_obj = null;
+        if (collision == _cur_top_blocking_obj) _cur_top_blocking_obj = null;
+        if (collision == _cur_left_blocking_obj) _cur_left_blocking_obj = null;
+        if (collision == _cur_right_blocking_obj) _cur_right_blocking_obj = null;
         
         _cur_max_height = _base_cull_height;
-        
+        _cur_min_x = _base_max_x;
+        _cur_max_x = _base_min_x;
+
         if (_obj_counter == 0)
         {
             // Reset position to water surface
             _mat.SetFloat("_ObjTop", _cur_max_height);
+            _mat.SetFloat("_ObjBoundL", _cur_min_x);
+            _mat.SetFloat("_ObjBoundR", _cur_max_x);
             _curPart.transform.position = gameObject.transform.position;
         }
     }
