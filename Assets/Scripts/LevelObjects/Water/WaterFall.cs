@@ -98,8 +98,7 @@ public class WaterFall : MonoBehaviour
         {
             // Reset position to water surface
             _mat.SetFloat("_ObjTop", _cur_max_height);
-            if (_curPart.gameObject != null)
-                _curPart.transform.position = gameObject.transform.position;
+            _curPart.transform.position = gameObject.transform.position;
         }
     }
 }
