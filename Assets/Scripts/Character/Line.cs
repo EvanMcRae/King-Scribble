@@ -37,8 +37,10 @@ public class Line : MonoBehaviour
     void Start()
     {
         if (rigidBody != null)
+        {
             rigidBody.isKinematic = true;
-
+            rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        }
         lineRenderer.widthMultiplier = thickness;
         edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
