@@ -66,16 +66,22 @@ public class WaterFall : MonoBehaviour
         if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
         {
             float top = collision.bounds.center.y + collision.bounds.extents.y;
+            float leftBound = collision.bounds.center.x - collision.bounds.extents.x;
+            float rightBound = collision.bounds.center.x + collision.bounds.extents.x;
             if (top > _cur_max_height) // Object is the highest - block the waterfall
             {
                 _cur_blocking_obj = collision;
                 _mat.SetFloat("_ObjTop", top);
+                _mat.SetFloat("_ObjBoundL", leftBound);
+                _mat.SetFloat("_ObjBoundR", rightBound);
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
             }
             else if (top < _cur_max_height && (_cur_blocking_obj == collision) && (top > _base_cull_height + 2f)) // Highest object has moved downwards (but not below the water's surface)
             {
                 _mat.SetFloat("_ObjTop", top);
+                _mat.SetFloat("_ObjBoundL", leftBound);
+                _mat.SetFloat("_ObjBoundR", rightBound);
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
             }
@@ -87,8 +93,7 @@ public class WaterFall : MonoBehaviour
         {
             _obj_counter--;
         }
-            
-        
+
         if (collision == _cur_blocking_obj)
             _cur_blocking_obj = null;
         
