@@ -1012,6 +1012,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 375740626}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -3993,6 +3995,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1141723770}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -5421,6 +5425,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1446555558}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -5635,6 +5641,7 @@ GameObject:
   - component: {fileID: 1467692432}
   - component: {fileID: 1467692431}
   - component: {fileID: 1467692430}
+  - component: {fileID: 1467692434}
   m_Layer: 0
   m_Name: star stiker
   m_TagString: Untagged
@@ -5760,6 +5767,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467692434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467692429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d16e7e8d658d4bfcb9759e47d29f1a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplitude: 0.15
+  period: 0.5
+  local: 0
+  pos: {x: 19.59, y: -5.66, z: 0}
 --- !u!1 &1474017944
 GameObject:
   m_ObjectHideFlags: 0
@@ -5808,6 +5831,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1474017947}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -6627,6 +6652,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1725070395}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -7115,6 +7142,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1789339278}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -7777,6 +7806,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1881682443}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -8194,6 +8225,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 2001692364}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1

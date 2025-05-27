@@ -21994,6 +21994,7 @@ GameObject:
   - component: {fileID: 1560210053}
   - component: {fileID: 1560210052}
   - component: {fileID: 1560210051}
+  - component: {fileID: 1560210055}
   m_Layer: 0
   m_Name: banene stiker
   m_TagString: Untagged
@@ -22119,6 +22120,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1560210055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560210050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d16e7e8d658d4bfcb9759e47d29f1a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplitude: 0.15
+  period: 0.5
+  local: 0
+  pos: {x: 19.59, y: -5.66, z: 0}
 --- !u!1 &1565185654
 GameObject:
   m_ObjectHideFlags: 0
