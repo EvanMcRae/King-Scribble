@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -27,6 +28,7 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private ParticleSystem _part;
     private ParticleSystem _curPart;
     private int _obj_counter = 0;
+    private List<Collider2D> _objects;
     private void Start()
     {
         _col = GetComponent<Collider2D>();
@@ -39,6 +41,7 @@ public class WaterFall : MonoBehaviour
         _cur_max_x = _base_min_x;
         _mat.SetFloat("_ObjBoundL", _cur_min_x);
         _mat.SetFloat("_ObjBoundR", _cur_max_x);
+        _objects = new List<Collider2D>();
     }
     private void FixedUpdate()
     {
@@ -46,7 +49,7 @@ public class WaterFall : MonoBehaviour
         _timer -= Time.fixedDeltaTime;
         if (_timer > 0f) { return; }
         Vector2 top = new Vector2(_col.bounds.center.x, _col.bounds.center.y + _col.bounds.extents.y);
-        RaycastHit2D hit = Physics2D.Raycast(top, Vector2.down, -3*_cur_max_height, _waterLayers); // Don't ask about the -3. Please.
+        RaycastHit2D hit = Physics2D.Raycast(top, Vector2.down, -3 * _cur_max_height, _waterLayers); // Don't ask about the -3. Please.
         if (hit)
         {
             if (hit.collider.transform.parent.TryGetComponent<InteractableWater>(out _water))
@@ -63,14 +66,16 @@ public class WaterFall : MonoBehaviour
             }
         }
         _timer = _tickTime;
+        UpdateCrop();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
         {
             _obj_counter++;
+            _objects.Add(collision);
         }
-            
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -89,7 +94,7 @@ public class WaterFall : MonoBehaviour
                 _cur_max_height = top;
                 _curPart.transform.position = new Vector3(_curPart.transform.position.x, top, 0f);
             }
-            
+
             else if (top < _cur_max_height && (_cur_top_blocking_obj == collision) && (top > _base_cull_height + 2f)) // Highest object has moved downwards (but not below the water's surface)
             {
                 _mat.SetFloat("_ObjTop", top);
@@ -131,12 +136,13 @@ public class WaterFall : MonoBehaviour
         if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
         {
             _obj_counter--;
+            _objects.Remove(collision);
         }
 
         if (collision == _cur_top_blocking_obj) _cur_top_blocking_obj = null;
         if (collision == _cur_left_blocking_obj) _cur_left_blocking_obj = null;
         if (collision == _cur_right_blocking_obj) _cur_right_blocking_obj = null;
-        
+
         _cur_max_height = _base_cull_height;
         _cur_min_x = _base_max_x;
         _cur_max_x = _base_min_x;
@@ -149,5 +155,25 @@ public class WaterFall : MonoBehaviour
             _mat.SetFloat("_ObjBoundR", _cur_max_x);
             _curPart.transform.position = gameObject.transform.position;
         }
+    }
+    private void UpdateCrop()
+    {
+        if (_obj_counter == 0) return;
+        Texture2D objects = new Texture2D(width: _obj_counter, height: 2, textureFormat:TextureFormat.RGBA32, mipCount:0, false);
+        for (int i = 0; i < _obj_counter; i++)
+        {
+            // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
+            Collider2D cur = _objects[i];
+            Vector3 cen = cur.bounds.center;
+            Vector3 ext = cur.bounds.extents;
+            Color obj_info = new(Mathf.Abs((cen.y + ext.y) / 255), Mathf.Abs((cen.x - ext.x) / 255), Mathf.Abs((cen.x + ext.x) / 255));
+            Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y + ext.y) / 255)), Mathf.Clamp01(Mathf.Sign((cen.x - ext.x) / 255)), Mathf.Clamp01(Mathf.Sign((cen.x + ext.x) / 255)));
+            objects.SetPixel(i, 0, obj_info);
+            objects.SetPixel(i, 1, obj_sign);
+        }
+        objects.Apply();
+        _mat.SetTexture("_ObjArray", objects);
+        _mat.SetFloat("_NumObjs", _obj_counter);
+        Debug.Log(objects.GetPixel(0, 0));
     }
 }
