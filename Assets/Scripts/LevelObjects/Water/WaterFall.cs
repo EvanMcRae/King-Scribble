@@ -28,6 +28,8 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private float _particleRadius = 0.5f;
     [Tooltip("Determines how much the particles offsets itself from the bottom, as a scale factor on radius")]
     [SerializeField] private float _landOffset = 0.9f;
+    [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
+    [SerializeField] private bool _clipWaterInParticles = true;
 
     [Header("Force")]
     [Tooltip("The force that the waterfall will apply (in the upward direction) on the affected water objects at every interval")]
@@ -123,6 +125,8 @@ public class WaterFall : MonoBehaviour
             // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
             Collider2D cur = _objects[i];
             Vector3 cen = cur.bounds.center - transform.position;
+            if (_clipWaterInParticles)
+                cen += _landOffset * _particleRadius * Vector3.up;
             Vector3 ext = cur.bounds.extents;
             Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y + ext.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - ext.x)) / 255, Mathf.Floor(Mathf.Abs(cen.x + ext.x)) / 255);
             Color obj_deci = new(Mathf.Abs(cen.y + ext.y) % 1, Mathf.Abs(cen.x - ext.x) % 1, Mathf.Abs(cen.x + ext.x) % 1);
