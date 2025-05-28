@@ -7,11 +7,11 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float Num, out float Out)
     float top, left, right;
     for (int i = 0; i < Num; i++)
     {
+        // Cache info/sign colors
         float4 info = Objs.Load(int3(i, 0, 0));
         float4 sign = Objs.Load(int3(i, 1, 0));
-        // Convert from gamma to linear
 
-        // Decode the Objs array from the UnityTexture2D
+        // Decode the Objs array from the Texture2D
         // R = top bound
         top = info[0] * 255;
         if (sign[0] < 1) top *= -1;
