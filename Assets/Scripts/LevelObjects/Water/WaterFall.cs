@@ -24,6 +24,10 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private float _spawnRate = 1f;
     [Tooltip("The offset at which raycasts will begin from the top of the waterfall - adjust to avoid colliding with any overlapping foreground elements.")]
     [SerializeField] private float _offset = 1f;
+    [Tooltip("The radius of the particles spawned from the bottom of the waterfall")]
+    [SerializeField] private float _particleRadius = 0.5f;
+    [Tooltip("Determines how much the particles offsets itself from the bottom, as a scale factor on radius")]
+    [SerializeField] private float _landOffset = 0.9f;
 
     [Header("Force")]
     [Tooltip("The force that the waterfall will apply (in the upward direction) on the affected water objects at every interval")]
@@ -151,6 +155,9 @@ public class WaterFall : MonoBehaviour
                 if (hit)
                 {
                     _parts[i] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
+                    ParticleSystem.MainModule main = _parts[i].GetComponent<ParticleSystem>().main;
+                    main.startSizeMultiplier = _particleRadius * 2;
+                    _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
                 }
                 
             }
