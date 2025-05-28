@@ -173,7 +173,7 @@ public class WaterFall : MonoBehaviour
         {
             // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
             Collider2D cur = _objects[i];
-            Vector3 cen = cur.bounds.center;
+            Vector3 cen = cur.bounds.center - transform.position;
             Vector3 ext = cur.bounds.extents;
             Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y + ext.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - ext.x)) / 255, Mathf.Floor(Mathf.Abs(cen.x + ext.x)) / 255);
             Color obj_deci = new(Mathf.Abs(cen.y + ext.y) % 1, Mathf.Abs(cen.x - ext.x) % 1, Mathf.Abs(cen.x + ext.x) % 1);
@@ -183,6 +183,7 @@ public class WaterFall : MonoBehaviour
             objects.SetPixel(i, 2, obj_sign);
         }
         objects.Apply();
+        _mat.SetVector("_WorldPos", transform.position);
         _mat.SetTexture("_ObjArray", objects);
         _mat.SetFloat("_NumObjs", _obj_counter);
     }

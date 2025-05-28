@@ -2,7 +2,7 @@
 #ifndef MYHLSLINCLUDE_INCLUDED
 #define MYHLSLINCLUDE_INCLUDED
 
-float ObjCropping_float(float3 Pos, Texture2D Objs, float Num, out float Out)
+float ObjCropping_float(float3 Pos, float3 WorldPos, Texture2D Objs, float Num, out float Out)
 {
     float top, left, right;
     for (int i = 0; i < Num; i++)
@@ -16,12 +16,17 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float Num, out float Out)
         // R = top bound
         top = info[0] * 255 + deci[0];
         if (sign[0] < 1) top *= -1;
+        top += WorldPos[1];
+
         // G = left bound
         left = info[1] * 255 + deci[1];
         if (sign[1] < 1) left *= -1;
+        left += WorldPos[0];
+
         // B = right bound
         right = info[2] * 255 + deci[2];
         if (sign[2] < 1) right *= -1;
+        right += WorldPos[0];
 
         // If under the top bound and between the left and right bounds, crop
         if ((Pos[1] < top) && (Pos[0] > left) && (Pos[0] < right))
