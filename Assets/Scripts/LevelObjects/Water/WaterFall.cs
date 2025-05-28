@@ -153,27 +153,27 @@ public class WaterFall : MonoBehaviour
             _mat.SetFloat("_ObjTop", _cur_max_height);
             _mat.SetFloat("_ObjBoundL", _cur_min_x);
             _mat.SetFloat("_ObjBoundR", _cur_max_x);
-            _curPart.transform.position = gameObject.transform.position;
+            if (_curPart != null)
+                _curPart.transform.position = gameObject.transform.position;
         }
     }
     private void UpdateCrop()
     {
         if (_obj_counter == 0) return;
-        Texture2D objects = new Texture2D(width: _obj_counter, height: 2, textureFormat:TextureFormat.RGBA32, mipCount:0, false);
+        Texture2D objects = new(width: _obj_counter, height: 2, textureFormat:TextureFormat.RGBAFloat, mipCount:0, false);
         for (int i = 0; i < _obj_counter; i++)
         {
             // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
             Collider2D cur = _objects[i];
             Vector3 cen = cur.bounds.center;
             Vector3 ext = cur.bounds.extents;
-            Color obj_info = new(Mathf.Abs((cen.y + ext.y) / 255), Mathf.Abs((cen.x - ext.x) / 255), Mathf.Abs((cen.x + ext.x) / 255));
-            Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y + ext.y) / 255)), Mathf.Clamp01(Mathf.Sign((cen.x - ext.x) / 255)), Mathf.Clamp01(Mathf.Sign((cen.x + ext.x) / 255)));
+            Color obj_info = new(Mathf.Abs((cen.y + ext.y) / 255f), Mathf.Abs((cen.x - ext.x) / 255f), Mathf.Abs((cen.x + ext.x) / 255f));
+            Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y + ext.y) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x - ext.x) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x + ext.x) / 255f)));
             objects.SetPixel(i, 0, obj_info);
             objects.SetPixel(i, 1, obj_sign);
         }
         objects.Apply();
         _mat.SetTexture("_ObjArray", objects);
         _mat.SetFloat("_NumObjs", _obj_counter);
-        Debug.Log(objects.GetPixel(0, 0));
     }
 }
