@@ -9,17 +9,18 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float Num, out float Out)
     {
         // Cache info/sign colors
         float4 info = Objs.Load(int3(i, 0, 0));
-        float4 sign = Objs.Load(int3(i, 1, 0));
+        float4 deci = Objs.Load(int3(i, 1, 0));
+        float4 sign = Objs.Load(int3(i, 2, 0));
 
         // Decode the Objs array from the Texture2D
         // R = top bound
-        top = info[0] * 255;
+        top = info[0] * 255 + deci[0];
         if (sign[0] < 1) top *= -1;
         // G = left bound
-        left = info[1] * 255;
+        left = info[1] * 255 + deci[1];
         if (sign[1] < 1) left *= -1;
         // B = right bound
-        right = info[2] * 255;
+        right = info[2] * 255 + deci[2];
         if (sign[2] < 1) right *= -1;
 
         // If under the top bound and between the left and right bounds, crop

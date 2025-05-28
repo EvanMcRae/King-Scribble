@@ -66,6 +66,10 @@ public class WaterFall : MonoBehaviour
             }
         }
         _timer = _tickTime;
+    }
+
+    public void Update()
+    {
         UpdateCrop();
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -155,22 +159,28 @@ public class WaterFall : MonoBehaviour
             _mat.SetFloat("_ObjBoundR", _cur_max_x);
             if (_curPart != null)
                 _curPart.transform.position = gameObject.transform.position;
+
+            Texture2D objects = new(width: 1, height: 3, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
+            _mat.SetTexture("_ObjArray", objects);
+            _mat.SetFloat("_NumObjs", _obj_counter);
         }
     }
     private void UpdateCrop()
     {
         if (_obj_counter == 0) return;
-        Texture2D objects = new(width: _obj_counter, height: 2, textureFormat:TextureFormat.RGBAFloat, mipCount:0, false);
+        Texture2D objects = new(width: _obj_counter, height: 3, textureFormat:TextureFormat.RGBAFloat, mipCount:0, false);
         for (int i = 0; i < _obj_counter; i++)
         {
             // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
             Collider2D cur = _objects[i];
             Vector3 cen = cur.bounds.center;
             Vector3 ext = cur.bounds.extents;
-            Color obj_info = new(Mathf.Abs((cen.y + ext.y) / 255f), Mathf.Abs((cen.x - ext.x) / 255f), Mathf.Abs((cen.x + ext.x) / 255f));
+            Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y + ext.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - ext.x)) / 255, Mathf.Floor(Mathf.Abs(cen.x + ext.x)) / 255);
+            Color obj_deci = new(Mathf.Abs(cen.y + ext.y) % 1, Mathf.Abs(cen.x - ext.x) % 1, Mathf.Abs(cen.x + ext.x) % 1);
             Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y + ext.y) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x - ext.x) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x + ext.x) / 255f)));
             objects.SetPixel(i, 0, obj_info);
-            objects.SetPixel(i, 1, obj_sign);
+            objects.SetPixel(i, 1, obj_deci);
+            objects.SetPixel(i, 2, obj_sign);
         }
         objects.Apply();
         _mat.SetTexture("_ObjArray", objects);
