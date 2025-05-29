@@ -26,7 +26,7 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
         if (nextInfo[2] < 1) nextTop *= -1;
         nextTop += WorldY;
 
-        // Decode center and extent to calculate left and right bounds
+        // Calculate center, left and right bounds
         center = StartX + i * Interval;
         left = center - Interval;
         right = center + Interval;
