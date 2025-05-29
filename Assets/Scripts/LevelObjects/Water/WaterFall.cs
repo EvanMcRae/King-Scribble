@@ -13,14 +13,15 @@ public class WaterFall : MonoBehaviour
     [Header("Particles")]
     [SerializeField] private ParticleSystem _part;
     [Tooltip("Determines how many raycasts will be used in particle placement. A higher number will yield more \"precise\" behavior, but may decrease performance. Multiplied by the waterfall's width.")]
-    [SerializeField] private float _castMult = 10f;
+    [SerializeField] private float _castMult = 20f;
     [Tooltip("The offset at which raycasts will begin from the top of the waterfall - adjust to avoid colliding with any overlapping foreground elements.")]
     [SerializeField] private float _offset = 1f;
     [Tooltip("The radius of the particles spawned from the bottom of the waterfall")]
     [SerializeField] private float _particleRadius = 0.5f;
     [Tooltip("Determines how much the particles offsets itself from the bottom, as a scale factor on radius")]
     [SerializeField] private float _landOffset = 0.9f;
-
+    [Tooltip("Determines how many particles spawn per raycast")]
+    [SerializeField] private int _particleInterval = 2;
 
     [Header("Force")]
     [Tooltip("The force that the waterfall will apply (in the upward direction) on the affected water objects at every interval")]
@@ -86,28 +87,34 @@ public class WaterFall : MonoBehaviour
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
         if (_numCasts != oldNumCasts)
         {
-            _parts = new ParticleSystem[_numCasts];
+            _parts = new ParticleSystem[Mathf.FloorToInt(_numCasts / _particleInterval)];
         }
 
         // Define texture for water crop data
         Texture2D objects = new(width: Mathf.Max(1,_numCasts+1), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
 
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
-        for (int i = 0; i < _numCasts + 1; i++)
+        for (int i = 0, p = 0; i < _numCasts + 1; i++)
         {
             // Raycast downward from the current point on the top
             Vector2 start = new(startX + interval * i, yTop);
+            
             RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
             if (hit)
             {
-                // Only spawn if the timer is up and it's below the offset point
-                if (i != _numCasts && _parts[i] == null && hit.point.y < yTop - _offset)
+                // Increase separate counter for particles
+                if (i % Mathf.Max(1, _particleInterval) == 0)
                 {
-                    _parts[i] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
-                    ParticleSystem.MainModule main = _parts[i].GetComponent<ParticleSystem>().main;
-                    main.startSizeMultiplier = _particleRadius * 2;
-                    if ((_waterLayers & (1 << hit.collider.gameObject.layer)) == 0) // Only offset if not in water layer
-                        _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
+                    // Only spawn if the timer is up and it's below the offset point
+                    if (p < _parts.Length && _parts[p] == null && hit.point.y < yTop - _offset)
+                    {
+                        _parts[p] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
+                        ParticleSystem.MainModule main = _parts[p].GetComponent<ParticleSystem>().main;
+                        main.startSizeMultiplier = _particleRadius * 2;
+                        if ((_waterLayers & (1 << hit.collider.gameObject.layer)) == 0) // Only offset if not in water layer
+                            _parts[p].transform.position += _landOffset * _particleRadius * Vector3.up;
+                    }
+                    p++;
                 }
 
                 // Reuse raycast values for water crop positions
