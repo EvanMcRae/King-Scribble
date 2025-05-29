@@ -85,8 +85,8 @@ public class WaterFall : MonoBehaviour
 
     public void Update()
     {
-        UpdateCrop(); // Shader stuff
-        SpawnParticles(); // Particle stuff
+        //UpdateCrop(); // Shader stuff -- outdated
+        SpawnParticles(); // Particle/shader stuff
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -146,26 +146,46 @@ public class WaterFall : MonoBehaviour
     {
         float interval = _col.bounds.extents.x * 2 / _numCasts;
         float startX = _col.bounds.center.x - _col.bounds.extents.x;
-        float yTop = _col.bounds.center.y + _col.bounds.extents.y - _offset;
+        float yTop = _col.bounds.center.y + _col.bounds.extents.y;
         float yBot = _col.bounds.center.y - _col.bounds.extents.y;
+
+        // Define texture for water crop data
+        Texture2D objects = new(width: _numCasts, height: 3, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
+
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
         for (int i = 0; i < _numCasts; i++)
         {
-            if (_parts[i] == null) // Only raycast and spawn if the timer is up
+            // Raycast downward from the current point on the top
+            Vector2 start = new(startX + interval * i, yTop);
+            RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
+            if (hit)
             {
-                // Raycast downward from the current point on the top
-                Vector2 start = new(startX + interval * i, yTop);
-                RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
-                if (hit)
+                // Only spawn if the timer is up and it's below the offset point
+                if (_parts[i] == null && hit.point.y < yTop - _offset)
                 {
                     _parts[i] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
                     ParticleSystem.MainModule main = _parts[i].GetComponent<ParticleSystem>().main;
                     main.startSizeMultiplier = _particleRadius * 2;
                     _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
                 }
-                
+
+                // Reuse raycast values for water crop
+                Vector3 cen = (Vector3)(hit.point) - transform.position;
+                if (_clipWaterInParticles)
+                    cen += _landOffset * _particleRadius * Vector3.up;
+                Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - interval)) / 255, Mathf.Floor(Mathf.Abs(cen.x + interval)) / 255);
+                Color obj_deci = new(Mathf.Abs(cen.y) % 1, Mathf.Abs(cen.x - interval) % 1, Mathf.Abs(cen.x + interval) % 1);
+                Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x - interval) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x + interval) / 255f)));
+                objects.SetPixel(i, 0, obj_info);
+                objects.SetPixel(i, 1, obj_deci);
+                objects.SetPixel(i, 2, obj_sign);
             }
-            
         }
+
+        // Update water crop
+        objects.Apply();
+        _mat.SetVector("_WorldPos", transform.position);
+        _mat.SetTexture("_ObjArray", objects);
+        _mat.SetFloat("_NumObjs", _numCasts);
     }
 }
