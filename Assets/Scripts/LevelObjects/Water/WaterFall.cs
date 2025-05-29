@@ -112,7 +112,7 @@ public class WaterFall : MonoBehaviour
                     yPos += _landOffset * _particleRadius * Vector3.up;
 
                 // Encode y position as color channels in pixels of a Texture2D
-                // R = center.y integer, G = center.y decimal, B = center.y sign
+                // R = integer, G = decimal, B = sign
                 Color obj_info = new(Mathf.Floor(Mathf.Abs(yPos.y)) / 255, Mathf.Abs(yPos.y) % 1, Mathf.Clamp01(Mathf.Sign((yPos.y) / 255f)));
                 objects.SetPixel(i, 0, obj_info);
             }
