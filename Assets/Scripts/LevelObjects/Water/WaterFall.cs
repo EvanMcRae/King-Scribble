@@ -107,25 +107,23 @@ public class WaterFall : MonoBehaviour
                 }
 
                 // Reuse raycast values for water crop positions
-                Vector3 cen = (Vector3)(hit.point) - transform.position;
+                Vector3 yPos = (Vector3)(hit.point) - transform.position;
                 if (_clipWaterInParticles && hit.point.y < yTop - _offset)
-                    cen += _landOffset * _particleRadius * Vector3.up;
+                    yPos += _landOffset * _particleRadius * Vector3.up;
 
-                // Encode center and interval as color channels in two pixels of a Texture2D
-                // ENCODING FORMAT:
-                // - Row 0: R = center.y integer, G = center.x integer, B = interval integer, A = center.y sign
-                // - Row 1: R = center.y decimal, G = center.x decimal, B = interval decimal, A = center.x sign
-                Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x)) / 255, Mathf.Floor(Mathf.Abs(interval)) / 255, Mathf.Clamp01(Mathf.Sign((cen.y) / 255f)));
-                Color obj_deci = new(Mathf.Abs(cen.y) % 1, Mathf.Abs(cen.x) % 1, Mathf.Abs(interval) % 1, Mathf.Clamp01(Mathf.Sign((cen.x) / 255f)));
+                // Encode y position as color channels in pixels of a Texture2D
+                // R = center.y integer, G = center.y decimal, B = center.y sign
+                Color obj_info = new(Mathf.Floor(Mathf.Abs(yPos.y)) / 255, Mathf.Abs(yPos.y) % 1, Mathf.Clamp01(Mathf.Sign((yPos.y) / 255f)));
                 objects.SetPixel(i, 0, obj_info);
-                objects.SetPixel(i, 1, obj_deci);
             }
         }
 
         // Update water crop
         objects.Apply();
-        _mat.SetVector("_WorldPos", transform.position);
         _mat.SetTexture("_ObjArray", objects);
         _mat.SetFloat("_NumObjs", _numCasts);
+        _mat.SetFloat("_StartX", startX);
+        _mat.SetFloat("_Interval", interval);
+        _mat.SetFloat("_WorldY", transform.position.y);
     }
 }
