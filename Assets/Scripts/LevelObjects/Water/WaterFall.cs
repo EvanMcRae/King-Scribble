@@ -1,11 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.EditorTools;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Collider2D))]
 public class WaterFall : MonoBehaviour
@@ -41,8 +35,6 @@ public class WaterFall : MonoBehaviour
     private float _timer;
     private InteractableWater _water;
     private Material _mat;
-    private int _obj_counter = 0;
-    private List<Collider2D> _objects;
     private int _numCasts; // How many raycasts we will use to determine particle spawn positions - determined by waterfall width and _castMult
     private ParticleSystem[] _parts;
 
