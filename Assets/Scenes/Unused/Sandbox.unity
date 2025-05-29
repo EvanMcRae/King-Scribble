@@ -6023,11 +6023,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 263816
   _part: {fileID: 4185753103986646625, guid: b3a2abef0eff3e54bb4b001cadbd282a, type: 3}
-  _castMult: 10
-  _spawnRate: 10
+  _castMult: 20
   _offset: 1
+  _particleRadius: 0.5
+  _landOffset: 0.9
+  _particleInterval: 2
   _force: 1
   _tickTime: 0.1
+  _smooths: 0
+  _clipsInParticles: 1
 --- !u!61 &705936295
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15673,11 +15677,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 263816
   _part: {fileID: 4185753103986646625, guid: b3a2abef0eff3e54bb4b001cadbd282a, type: 3}
-  _castMult: 10
-  _spawnRate: 10
+  _castMult: 20
   _offset: 1
+  _particleRadius: 0.5
+  _landOffset: 0.9
+  _particleInterval: 2
   _force: 1
   _tickTime: 0.1
+  _smooths: 0
+  _clipsInParticles: 1
 --- !u!61 &1979624953
 BoxCollider2D:
   m_ObjectHideFlags: 0
