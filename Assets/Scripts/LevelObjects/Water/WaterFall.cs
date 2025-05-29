@@ -14,8 +14,6 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private ParticleSystem _part;
     [Tooltip("Determines how many raycasts will be used in particle placement. A higher number will yield more \"precise\" behavior, but may decrease performance. Multiplied by the waterfall's width.")]
     [SerializeField] private float _castMult = 10f;
-    [Tooltip("The rate at which particles will be spawned. Increasing this will decrease performance.")]
-    [SerializeField] private float _spawnRate = 1f;
     [Tooltip("The offset at which raycasts will begin from the top of the waterfall - adjust to avoid colliding with any overlapping foreground elements.")]
     [SerializeField] private float _offset = 1f;
     [Tooltip("The radius of the particles spawned from the bottom of the waterfall")]
@@ -103,12 +101,13 @@ public class WaterFall : MonoBehaviour
                     _parts[i] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
                     ParticleSystem.MainModule main = _parts[i].GetComponent<ParticleSystem>().main;
                     main.startSizeMultiplier = _particleRadius * 2;
-                    _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
+                    if ((_waterLayers & (1 << hit.collider.gameObject.layer)) == 0) // Only offset if not in water layer
+                        _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
                 }
 
                 // Reuse raycast values for water crop positions
                 Vector3 yPos = (Vector3)(hit.point) - transform.position;
-                if (_clipWaterInParticles && hit.point.y < yTop - _offset)
+                if (_clipWaterInParticles && hit.point.y < yTop - _offset && (_waterLayers & (1 << hit.collider.gameObject.layer)) == 0)
                     yPos += _landOffset * _particleRadius * Vector3.up;
 
                 // Encode y position as color channels in pixels of a Texture2D
