@@ -41,11 +41,9 @@ public class WaterFall : MonoBehaviour
     private float _timer;
     private InteractableWater _water;
     private Material _mat;
-    private ParticleSystem _curPart;
     private int _obj_counter = 0;
     private List<Collider2D> _objects;
     private int _numCasts; // How many raycasts we will use to determine particle spawn positions - determined by waterfall width and _castMult
-    private float[] _castTimers; // Array of timers for each raycast - particles may only be spawned if the raycast's corresponding timer is at 0
     private ParticleSystem[] _parts;
 
     private void Start()
@@ -55,12 +53,7 @@ public class WaterFall : MonoBehaviour
         _mat = transform.parent.GetComponent<SpriteRenderer>().material; // TODO: should probably amend this at some point to allow for use of alternate renderers (?)
         _objects = new List<Collider2D>();
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
-        _castTimers = new float[_numCasts];
         _parts = new ParticleSystem[_numCasts];
-        for (int i = 0; i < _numCasts; i++)
-        {
-            _castTimers[i] = 0f;
-        }
     }
 
     private void FixedUpdate()
@@ -68,7 +61,7 @@ public class WaterFall : MonoBehaviour
         // Apply force to the water if it is unblocked
         _timer -= Time.fixedDeltaTime; // Timer is used to ensure that force does not grow out of control - must be applied at a rate close to that at which gravity counteracts it
         if (_timer > 0f) { return; }
-        Vector2 top = new Vector2(_col.bounds.center.x, _col.bounds.center.y + _col.bounds.extents.y);
+        Vector2 top = new(_col.bounds.center.x, _col.bounds.center.y + _col.bounds.extents.y);
         RaycastHit2D hit = Physics2D.Raycast(top, Vector2.down, -3 * (_col.bounds.center.y - _col.bounds.extents.y), _waterLayers | _colliders); // Don't ask about the -3. Please.
         if (hit)
         {
@@ -85,61 +78,7 @@ public class WaterFall : MonoBehaviour
 
     public void Update()
     {
-        //UpdateCrop(); // Shader stuff -- outdated
         SpawnParticles(); // Particle/shader stuff
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
-        {
-            _obj_counter++;
-            _objects.Add(collision);
-        }
-
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if ((_colliders.value & (1 << collision.gameObject.layer)) > 0)
-        {
-            _obj_counter--;
-            _objects.Remove(collision);
-        }
-
-        if (_obj_counter == 0)
-        {
-            Texture2D objects = new(width: 1, height: 3, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
-            _mat.SetTexture("_ObjArray", objects);
-            _mat.SetFloat("_NumObjs", _obj_counter);
-        }
-    }
-
-    private void UpdateCrop()
-    {
-        if (_obj_counter == 0) return;
-        Texture2D objects = new(width: _obj_counter, height: 3, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
-
-        for (int i = 0; i < _obj_counter; i++)
-        {
-            // Pack the collider info for each present object into a Texture2D so it may be sent to the shader
-            Collider2D cur = _objects[i];
-            Vector3 cen = cur.bounds.center - transform.position;
-            if (_clipWaterInParticles)
-                cen += _landOffset * _particleRadius * Vector3.up;
-            Vector3 ext = cur.bounds.extents;
-            Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y + ext.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - ext.x)) / 255, Mathf.Floor(Mathf.Abs(cen.x + ext.x)) / 255);
-            Color obj_deci = new(Mathf.Abs(cen.y + ext.y) % 1, Mathf.Abs(cen.x - ext.x) % 1, Mathf.Abs(cen.x + ext.x) % 1);
-            Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y + ext.y) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x - ext.x) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x + ext.x) / 255f)));
-            objects.SetPixel(i, 0, obj_info);
-            objects.SetPixel(i, 1, obj_deci);
-            objects.SetPixel(i, 2, obj_sign);
-        }
-
-        objects.Apply();
-        _mat.SetVector("_WorldPos", transform.position);
-        _mat.SetTexture("_ObjArray", objects);
-        _mat.SetFloat("_NumObjs", _obj_counter);
     }
 
     private void SpawnParticles()
@@ -149,11 +88,18 @@ public class WaterFall : MonoBehaviour
         float yTop = _col.bounds.center.y + _col.bounds.extents.y;
         float yBot = _col.bounds.center.y - _col.bounds.extents.y;
 
+        float oldNumCasts = _numCasts;
+        _numCasts = (int)(_castMult * _col.bounds.extents.x);
+        if (_numCasts != oldNumCasts)
+        {
+            _parts = new ParticleSystem[_numCasts];
+        }
+
         // Define texture for water crop data
-        Texture2D objects = new(width: _numCasts, height: 3, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
+        Texture2D objects = new(width: Mathf.Max(1,_numCasts+1), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
 
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
-        for (int i = 0; i < _numCasts; i++)
+        for (int i = 0; i < _numCasts + 1; i++)
         {
             // Raycast downward from the current point on the top
             Vector2 start = new(startX + interval * i, yTop);
@@ -161,7 +107,7 @@ public class WaterFall : MonoBehaviour
             if (hit)
             {
                 // Only spawn if the timer is up and it's below the offset point
-                if (_parts[i] == null && hit.point.y < yTop - _offset)
+                if (i != _numCasts && _parts[i] == null && hit.point.y < yTop - _offset)
                 {
                     _parts[i] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
                     ParticleSystem.MainModule main = _parts[i].GetComponent<ParticleSystem>().main;
@@ -169,16 +115,19 @@ public class WaterFall : MonoBehaviour
                     _parts[i].transform.position += _landOffset * _particleRadius * Vector3.up;
                 }
 
-                // Reuse raycast values for water crop
+                // Reuse raycast values for water crop positions
                 Vector3 cen = (Vector3)(hit.point) - transform.position;
                 if (_clipWaterInParticles)
                     cen += _landOffset * _particleRadius * Vector3.up;
-                Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x - interval)) / 255, Mathf.Floor(Mathf.Abs(cen.x + interval)) / 255);
-                Color obj_deci = new(Mathf.Abs(cen.y) % 1, Mathf.Abs(cen.x - interval) % 1, Mathf.Abs(cen.x + interval) % 1);
-                Color obj_sign = new(Mathf.Clamp01(Mathf.Sign((cen.y) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x - interval) / 255f)), Mathf.Clamp01(Mathf.Sign((cen.x + interval) / 255f)));
+
+                // Encode center and interval as color channels in two pixels of a Texture2D
+                // ENCODING FORMAT:
+                // - Row 0: R = center.y integer, G = center.x integer, B = interval integer, A = center.y sign
+                // - Row 1: R = center.y decimal, G = center.x decimal, B = interval decimal, A = center.x sign
+                Color obj_info = new(Mathf.Floor(Mathf.Abs(cen.y)) / 255, Mathf.Floor(Mathf.Abs(cen.x)) / 255, Mathf.Floor(Mathf.Abs(interval)) / 255, Mathf.Clamp01(Mathf.Sign((cen.y) / 255f)));
+                Color obj_deci = new(Mathf.Abs(cen.y) % 1, Mathf.Abs(cen.x) % 1, Mathf.Abs(interval) % 1, Mathf.Clamp01(Mathf.Sign((cen.x) / 255f)));
                 objects.SetPixel(i, 0, obj_info);
                 objects.SetPixel(i, 1, obj_deci);
-                objects.SetPixel(i, 2, obj_sign);
             }
         }
 
