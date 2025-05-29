@@ -43,7 +43,6 @@ public class WaterFall : MonoBehaviour
         _col = GetComponent<Collider2D>();
         _timer = 0f;
         _mat = transform.parent.GetComponent<SpriteRenderer>().material; // TODO: should probably amend this at some point to allow for use of alternate renderers (?)
-        _objects = new List<Collider2D>();
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
         _parts = new ParticleSystem[_numCasts];
     }
