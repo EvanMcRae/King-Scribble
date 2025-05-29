@@ -31,7 +31,7 @@ public class WaterFall : MonoBehaviour
 
     [Header("Water")]
     [Tooltip("Determines whether the water cutoff mask smooths itself over height points")]
-    [SerializeField] private bool _smooths = false;
+    [SerializeField] private bool _smooths = true;
     [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
     [SerializeField] private bool _clipsInParticles = true;
 
@@ -79,22 +79,22 @@ public class WaterFall : MonoBehaviour
     private void SpawnParticles()
     {
         float interval = _col.bounds.extents.x * 2 / _numCasts;
-        float startX = _col.bounds.center.x - _col.bounds.extents.x;
+        float startX = _col.bounds.center.x - _col.bounds.extents.x - interval;
         float yTop = _col.bounds.center.y + _col.bounds.extents.y;
         float yBot = _col.bounds.center.y - _col.bounds.extents.y;
 
-        float oldNumCasts = _numCasts;
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
-        if (_numCasts != oldNumCasts)
+        _particleInterval = Mathf.Max(_particleInterval, 1);
+        if (_parts.Length != Mathf.FloorToInt(_numCasts / _particleInterval))
         {
             _parts = new ParticleSystem[Mathf.FloorToInt(_numCasts / _particleInterval)];
         }
 
         // Define texture for water crop data
-        Texture2D objects = new(width: Mathf.Max(1,_numCasts+1), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
+        Texture2D objects = new(width: Mathf.Max(1,_numCasts+3), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
 
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
-        for (int i = 0, p = 0; i < _numCasts + 1; i++)
+        for (int i = 0, p = 0; i < _numCasts + 3; i++)
         {
             // Raycast downward from the current point on the top
             Vector2 start = new(startX + interval * i, yTop);
@@ -132,7 +132,7 @@ public class WaterFall : MonoBehaviour
         // Update water crop
         objects.Apply();
         _mat.SetTexture("_ObjArray", objects);
-        _mat.SetFloat("_NumObjs", _numCasts);
+        _mat.SetFloat("_NumObjs", _numCasts+1);
         _mat.SetFloat("_StartX", startX);
         _mat.SetFloat("_Interval", interval);
         _mat.SetFloat("_WorldY", transform.position.y);

@@ -14,7 +14,7 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
     nextTop += WorldY;
 
     // Loop over all positions
-    for (int i = 0; i < Num; i++)
+    for (int i = 0; i < Num + 1; i++)
     {
         // Load pixel data for next position
         nextInfo = Objs.Load(int3(i+1, 0, 0));
@@ -41,15 +41,20 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
                 if (Pos[0] < center)
                 {
                     alpha = (Pos[0] - left) / (center - left);
-                    top = lerp(prevTop, top, alpha);
+                    if (abs(prevTop - top) <= 5*Interval)
+                        top = lerp(prevTop, top, alpha);
+                    else
+                        top = lerp(top - (nextTop - top), top, alpha);
                 }
                 else
                 {
                     alpha = (right - Pos[0]) / (right - center);
-                    top = lerp(nextTop, top, alpha);
+                    if (abs(nextTop - top) <= 5*Interval)
+                        top = lerp(nextTop, top, alpha);
+                    else
+                        top = lerp(top + (top - prevTop), top, alpha);
                 }
             }
-            
 
             // If under the top bound, crop 
             if (Pos[1] < top)
