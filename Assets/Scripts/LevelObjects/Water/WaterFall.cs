@@ -108,7 +108,7 @@ public class WaterFall : MonoBehaviour
 
                 // Reuse raycast values for water crop positions
                 Vector3 cen = (Vector3)(hit.point) - transform.position;
-                if (_clipWaterInParticles)
+                if (_clipWaterInParticles && hit.point.y < yTop - _offset)
                     cen += _landOffset * _particleRadius * Vector3.up;
 
                 // Encode center and interval as color channels in two pixels of a Texture2D
