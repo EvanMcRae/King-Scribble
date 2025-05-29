@@ -20,14 +20,19 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private float _particleRadius = 0.5f;
     [Tooltip("Determines how much the particles offsets itself from the bottom, as a scale factor on radius")]
     [SerializeField] private float _landOffset = 0.9f;
-    [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
-    [SerializeField] private bool _clipWaterInParticles = true;
+
 
     [Header("Force")]
     [Tooltip("The force that the waterfall will apply (in the upward direction) on the affected water objects at every interval")]
     public float _force = 5f;
     [Tooltip("The interval at which force will be applied on the affected water objects. A negative value will cause force to be applied at every FixedUpdate interval (this is bad).")]
     public float _tickTime = 0.5f;
+
+    [Header("Water")]
+    [Tooltip("Determines whether the water cutoff mask smooths itself over height points")]
+    [SerializeField] private bool _smooths = false;
+    [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
+    [SerializeField] private bool _clipsInParticles = true;
 
     private Collider2D _col;
     private float _timer;
@@ -107,7 +112,7 @@ public class WaterFall : MonoBehaviour
 
                 // Reuse raycast values for water crop positions
                 Vector3 yPos = (Vector3)(hit.point) - transform.position;
-                if (_clipWaterInParticles && hit.point.y < yTop - _offset && (_waterLayers & (1 << hit.collider.gameObject.layer)) == 0)
+                if (_clipsInParticles && hit.point.y < yTop - _offset && (_waterLayers & (1 << hit.collider.gameObject.layer)) == 0)
                     yPos += _landOffset * _particleRadius * Vector3.up;
 
                 // Encode y position as color channels in pixels of a Texture2D
@@ -124,5 +129,6 @@ public class WaterFall : MonoBehaviour
         _mat.SetFloat("_StartX", startX);
         _mat.SetFloat("_Interval", interval);
         _mat.SetFloat("_WorldY", transform.position.y);
+        _mat.SetInt("_Smooths", _smooths ? 1 : 0);
     }
 }

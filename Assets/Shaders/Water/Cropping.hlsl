@@ -2,7 +2,7 @@
 #ifndef MYHLSLINCLUDE_INCLUDED
 #define MYHLSLINCLUDE_INCLUDED
 
-float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, float Interval, float Num, out float Out)
+float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, float Interval, float Num, bool Smooths, out float Out)
 {
     // Initial variables/data
     float prevTop, top = 0, nextTop, left, right, center;
@@ -35,17 +35,21 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
         if (Pos[0] > left && Pos[0] < right)
         {
             // Smooth top bounds by lerping over distance from either side of center
-            float alpha = 0;
-            if (Pos[0] < center)
+            if (Smooths)
             {
-                alpha = (Pos[0] - left) / (center - left);
-                top = lerp(prevTop, top, alpha);
+                float alpha = 0;
+                if (Pos[0] < center)
+                {
+                    alpha = (Pos[0] - left) / (center - left);
+                    top = lerp(prevTop, top, alpha);
+                }
+                else
+                {
+                    alpha = (right - Pos[0]) / (right - center);
+                    top = lerp(nextTop, top, alpha);
+                }
             }
-            else
-            {
-                alpha = (right - Pos[0]) / (right - center);
-                top = lerp(nextTop, top, alpha);
-            }
+            
 
             // If under the top bound, crop 
             if (Pos[1] < top)
