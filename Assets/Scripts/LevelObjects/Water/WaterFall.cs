@@ -9,6 +9,8 @@ public class WaterFall : MonoBehaviour
     [SerializeField] LayerMask _waterLayers;
     [Tooltip("The layers that will be treated as solid objects. These objects will block the flow of water from the waterfall.")]
     [SerializeField] LayerMask _colliders;
+    [Tooltip("The amount to offset the collider (in the +Y direction) of the waterfall once its water has been found - sometimes necessary due to the collider's downwards movement to meet the water's surface")]
+    [SerializeField] private float _colOffset = 0f;
 
     [Header("Particles")]
     [SerializeField] private ParticleSystem _part;
@@ -41,6 +43,7 @@ public class WaterFall : MonoBehaviour
     private Material _mat;
     private int _numCasts; // How many raycasts we will use to determine particle spawn positions - determined by waterfall width and _castMult
     private ParticleSystem[] _parts;
+    private Vector2 _offsetVector; // To prevent repeatedly assigning memory for the same vector
 
     private void Start()
     {
@@ -49,6 +52,7 @@ public class WaterFall : MonoBehaviour
         _mat = transform.parent.GetComponent<SpriteRenderer>().material; // TODO: should probably amend this at some point to allow for use of alternate renderers (?)
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
         _parts = new ParticleSystem[_numCasts];
+        _offsetVector = new Vector2(0f, _colOffset);
     }
 
     private void FixedUpdate()
@@ -63,6 +67,7 @@ public class WaterFall : MonoBehaviour
             if (hit.collider.gameObject.TryGetComponent(out _water) || (hit.collider.transform.parent != null && hit.collider.transform.parent.TryGetComponent(out _water)))
             {
                 _col.transform.position = hit.point; // This could probably be made less obtuse - the current implementation of the water takes the collider itself and extracts its position
+                _col.offset = _offsetVector;
                 float vel = _force * _water.ForceMultiplier; // Therefore, the only way to ensure that the force is applied where we want it is to move the waterfall's actual collider to that position
                 vel = Mathf.Clamp(Mathf.Abs(vel), 0f, _water.MaxForce); // The water itself could likely be rewritten so that this is not necessary, but for now it is a non-issue
                 _water.Splash(_col, vel);
@@ -102,10 +107,16 @@ public class WaterFall : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
             if (hit)
             {
+                // Waterfalls kill the player on collision - if raycast hits the player, kill them >:)
+                if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !GameManager.resetting && !PlayerVars.instance.cheatMode)
+                {
+                    GameManager.instance.Reset();
+                }
+
                 // Increase separate counter for particles
                 if (i % Mathf.Max(1, _particleInterval) == 0)
                 {
-                    // Only spawn if the timer is up and it's below the offset point
+                    // Only spawn if the previous particle has died and it's below the offset point
                     if (p < _parts.Length && _parts[p] == null && hit.point.y < yTop - _offset)
                     {
                         _parts[p] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
