@@ -43,7 +43,7 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
                     alpha = (Pos[0] - left) / (center - left);
                     if (abs(prevTop - top) <= 5*Interval)
                         top = lerp(prevTop, top, alpha);
-                    else
+                    else if (abs(nextTop - top) <= 5*Interval)
                         top = lerp(top - (nextTop - top), top, alpha);
                 }
                 else
@@ -51,7 +51,7 @@ float ObjCropping_float(float3 Pos, Texture2D Objs, float WorldY, float StartX, 
                     alpha = (right - Pos[0]) / (right - center);
                     if (abs(nextTop - top) <= 5*Interval)
                         top = lerp(nextTop, top, alpha);
-                    else
+                    else if (abs(top - prevTop) <= 5*Interval)
                         top = lerp(top + (top - prevTop), top, alpha);
                 }
             }
