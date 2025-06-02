@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 public class PhysicsButton : MonoBehaviour
 {
     public Transform _base;
@@ -14,7 +15,6 @@ public class PhysicsButton : MonoBehaviour
     public UnityEvent on_first_press;
     public UnityEvent on_release;
     public float maxHeight;
-    public int b_color;
     const int NUM_SPRITES = 6;
     public Sprite[] sprites = new Sprite[NUM_SPRITES];
     public SoundPlayer soundPlayer;
@@ -36,6 +36,8 @@ public class PhysicsButton : MonoBehaviour
     private SpriteRenderer _top_sprite;
     private bool _is_active = true;
     [SerializeField] private GameObject _activateAnim;
+    [FormerlySerializedAs("b_color")]
+    [SerializeField] private Colors _base_color;
 
     void Start()
     {
@@ -48,7 +50,7 @@ public class PhysicsButton : MonoBehaviour
         }
         _top.GetComponent<Rigidbody2D>().mass = req_weight;
         maxHeight = _top.localPosition.y;
-        _top_sprite.sprite = sprites[b_color];
+        _top_sprite.sprite = sprites[(int)_base_color];
         if (_activateAnim)
         {
             _activateAnim.SetActive(false);
@@ -58,7 +60,7 @@ public class PhysicsButton : MonoBehaviour
     [ContextMenu("Update Color")]
     void SetColor()
     {
-        _top_sprite.sprite = sprites[b_color];
+        _top_sprite.sprite = sprites[(int)_base_color];
     }
 
     void Update()
