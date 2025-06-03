@@ -957,7 +957,7 @@ GameObject:
   m_Component:
   - component: {fileID: 50050134}
   - component: {fileID: 50050135}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2518,7 +2518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166224209}
   - component: {fileID: 166224210}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7288,6 +7288,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1360501246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &504822328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026d252835e9a46f3b3bed914a8295ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &511351793
 GameObject:
   m_ObjectHideFlags: 0
@@ -10540,6 +10551,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Moving Wall 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -11468,6 +11483,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Moving Wall 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -11910,7 +11929,7 @@ GameObject:
   m_Component:
   - component: {fileID: 904030339}
   - component: {fileID: 904030340}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15524,7 +15543,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1114335641}
   - component: {fileID: 1114335642}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Wall 1 Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16701,6 +16720,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!224 &1191152198 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3450143813569061130, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1200087941
 GameObject:
   m_ObjectHideFlags: 0
@@ -19388,6 +19412,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1360501246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1377376172 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6804172182562570170, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1381448909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20090,6 +20119,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!224 &1431379094 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7556595683314112690, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1432441451
 GameObject:
   m_ObjectHideFlags: 0
@@ -21960,6 +21994,7 @@ GameObject:
   - component: {fileID: 1560210053}
   - component: {fileID: 1560210052}
   - component: {fileID: 1560210051}
+  - component: {fileID: 1560210055}
   m_Layer: 0
   m_Name: banene stiker
   m_TagString: Untagged
@@ -22085,6 +22120,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1560210055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1560210050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d16e7e8d658d4bfcb9759e47d29f1a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplitude: 0.15
+  period: 0.5
+  local: 0
+  pos: {x: 19.59, y: -5.66, z: 0}
 --- !u!1 &1565185654
 GameObject:
   m_ObjectHideFlags: 0
@@ -30505,6 +30556,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1110298488262191259, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_text
+      value: <b>Level 3:</b> Button Ball Bash
+      objectReference: {fileID: 0}
     - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0
@@ -30637,6 +30692,18 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: end
+      value: 
+      objectReference: {fileID: 1431379094}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: start
+      value: 
+      objectReference: {fileID: 1191152198}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: active
+      value: 
+      objectReference: {fileID: 1377376172}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -30777,6 +30844,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: levelStartBanner
+      value: 
+      objectReference: {fileID: 504822328}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 1

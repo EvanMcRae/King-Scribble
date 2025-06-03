@@ -57,11 +57,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Update()
     {
         HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
-        if (handler != null && handler.disablesWhileDrawing && !DrawManager.instance.IsUsingTool())
+        if (handler != null && handler.disablesWhileDrawing && !DrawManager.instance.IsUsingTool() && GetComponent<Selectable>().interactable)
         {
             if (hovered && popupID == PopupPanel.numPopups)
             {
-                
                 if (!soundOnPointerEnter)
                     noSound = true;
                 EventSystem.current.SetSelectedGameObject(gameObject);

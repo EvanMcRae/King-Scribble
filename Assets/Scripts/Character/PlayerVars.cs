@@ -7,7 +7,8 @@ public class PlayerVars : MonoBehaviour
 {
     public static PlayerVars instance;
 
-    public Inventory inventory = null, lastSavedInventory = null;
+    public Inventory inventory = null;
+    public static Inventory lastSavedInventory = new();
     [SerializeField] private int maxDoodleFuel = 750;
     [SerializeField] private int maxPenFuel = 1000;
     [SerializeField] private int maxEraserFuel = 500;
@@ -49,11 +50,15 @@ public class PlayerVars : MonoBehaviour
             isDead = true;
             PlayerController.instance.DeathSound();
             doodleEvent(doodleFuelLeft());
-            GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.zero;
-            GameManager.instance.Reset();
+            Invoke(nameof(Die), 0.75f);
         }
         if (!isDead)
             doodleEvent(doodleFuelLeft());
+    }
+
+    public void Die()
+    {
+        GameManager.instance.Reset();
     }
 
     public void SpendPenFuel(int amount) // Called every time pen fuel (pen - obviously) is consumed
@@ -166,6 +171,7 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
         GetComponent<PlayerController>().SetFriction(false);
+        GetComponent<PlayerController>().deadLanded = false;
     }
 
     public void Dismount()

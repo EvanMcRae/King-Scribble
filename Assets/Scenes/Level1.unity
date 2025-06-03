@@ -675,6 +675,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4bd13b01211547c699243486c89d25d, type: 3}
+--- !u!224 &109494106 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7556595683314112690, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &117199857
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,6 +1012,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 375740626}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -1133,6 +1140,11 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!224 &424634776 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3450143813569061130, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &440468976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1506,6 +1518,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &513949812 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 026d252835e9a46f3b3bed914a8295ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2165,6 +2188,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 11.587213, y: 8.314513}
   m_EdgeRadius: 0
+--- !u!224 &728594965 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6804172182562570170, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 6652482066997626212}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &740689471
 GameObject:
   m_ObjectHideFlags: 0
@@ -3967,6 +3995,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1141723770}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -5395,6 +5425,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1446555558}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -5609,6 +5641,7 @@ GameObject:
   - component: {fileID: 1467692432}
   - component: {fileID: 1467692431}
   - component: {fileID: 1467692430}
+  - component: {fileID: 1467692434}
   m_Layer: 0
   m_Name: star stiker
   m_TagString: Untagged
@@ -5734,6 +5767,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467692434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467692429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d16e7e8d658d4bfcb9759e47d29f1a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amplitude: 0.15
+  period: 0.5
+  local: 0
+  pos: {x: 19.59, y: -5.66, z: 0}
 --- !u!1 &1474017944
 GameObject:
   m_ObjectHideFlags: 0
@@ -5782,6 +5831,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1474017947}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -6601,6 +6652,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1725070395}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -7089,6 +7142,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1789339278}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -7751,6 +7806,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 1881682443}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -8168,6 +8225,8 @@ MonoBehaviour:
   lineRenderer: {fileID: 2001692364}
   rigidBody: {fileID: 0}
   penObjDestroy: {fileID: 0}
+  edgeCollider: {fileID: 0}
+  points: []
   colliders: []
   canDraw: 1
   hasDrawn: 1
@@ -8681,6 +8740,18 @@ PrefabInstance:
       propertyPath: screenDarkener
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: end
+      value: 
+      objectReference: {fileID: 109494106}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: start
+      value: 
+      objectReference: {fileID: 424634776}
+    - target: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: active
+      value: 
+      objectReference: {fileID: 728594965}
     - target: {fileID: 5343458314647250439, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -8811,6 +8882,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultTool
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: levelStartBanner
+      value: 
+      objectReference: {fileID: 513949812}
+    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

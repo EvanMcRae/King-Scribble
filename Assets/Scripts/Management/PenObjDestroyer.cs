@@ -8,7 +8,7 @@ public class PenObjDestroyer : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("TempObj") || collision.gameObject.CompareTag("Pen"))
+        if (collision.gameObject.CompareTag("Pen"))
         {
             Line line = collision.gameObject.GetComponent<Line>();
             if (!line.deleted)
@@ -17,6 +17,10 @@ public class PenObjDestroyer : MonoBehaviour
                 soundPlayer.PlaySound("Ink.Zap");
                 Destroy(collision.gameObject);
             }
+        }
+        else if (collision.gameObject.CompareTag("TempObj"))
+        {
+            Destroy(collision.gameObject);
         }
     }
 }

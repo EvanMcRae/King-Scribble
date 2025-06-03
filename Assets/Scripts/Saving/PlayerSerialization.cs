@@ -8,16 +8,22 @@ public class PlayerSerialization
     public Inventory inventory;
     public ToolType currentTool;
 
+    public PlayerSerialization()
+    {
+        inventory = new();
+        currentTool = ToolType.None;
+    }
+
     public PlayerSerialization(PlayerVars player)
     {
-        inventory = player.lastSavedInventory;
+        inventory = PlayerVars.lastSavedInventory;
         currentTool = player.cur_tool;
     }
 
     public void SetValues(GameObject playerObj)
     {
         PlayerVars player = playerObj.GetComponent<PlayerVars>();
-        player.lastSavedInventory.copy(inventory);
+        PlayerVars.lastSavedInventory.copy(inventory);
         player.inventory.copy(inventory);
         if (player.inventory.hasTool(currentTool))
             player.cur_tool = currentTool;

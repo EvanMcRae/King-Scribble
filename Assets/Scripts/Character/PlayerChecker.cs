@@ -10,12 +10,20 @@ public class PlayerChecker : MonoBehaviour
     public static bool firstSpawned = false;
     public Inventory defaultInventory = new();
     public ToolType defaultTool = ToolType.None;
+    public LevelStartBanner levelStartBanner;
 
     // Use this for initialization
     void Awake()
     {
         var cams = transform.parent.GetComponentsInChildren<CinemachineVirtualCamera>();
         instance = this;
+
+        // Banner with level name DOTween
+        if (!firstSpawned) {
+            levelStartBanner.setStartPosition();
+            ScreenWipe.PostUnwipe += levelStartBanner.PlayLevelStartAnimation;
+        } 
+        
         if (PlayerVars.instance == null)
         {
             // Disable all secondary cameras in scene
@@ -57,7 +65,7 @@ public class PlayerChecker : MonoBehaviour
             cam.Follow = player.transform;
             player.GetComponent<PlayerController>().virtualCamera = cam;
             player.GetComponent<PlayerController>().levelZoom = cam.m_Lens.OrthographicSize;
-            vars.curCamZoom = cam.m_Lens.OrthographicSize;
+            vars.curCamZoom = cam.m_Lens.OrthographicSize; 
         }
         else
         {

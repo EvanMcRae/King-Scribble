@@ -92,6 +92,7 @@ public class EraserFunctions : MonoBehaviour
                     // Update the current Line Renderer
                     lineRenderer.positionCount = pointsList.Count;
                     lineRenderer.SetPositions(pointsList.ToArray());
+                    lineRenderer.GetComponent<Line>().RefreshEdge();
 
                     // Extra check for good measure
                     if (pointsList.Count <= 1)
@@ -112,7 +113,9 @@ public class EraserFunctions : MonoBehaviour
     private static void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel) {
         pl.RemoveAt(index); // Remove point from the list
         cl.RemoveAt(index); // Remove collider from the list
+        c.GetComponent<Line>().points.RemoveAt(index); // Remove point from the other 2D list
         Destroy(c); // Destroy collider
+
         if (addFuel)
         {
             PlayerVars.instance.AddDoodleFuel(1); // Add fuel

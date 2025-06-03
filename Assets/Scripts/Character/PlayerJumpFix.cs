@@ -8,4 +8,9 @@ public class PlayerJumpFix : MonoBehaviour
     {
         PlayerController.instance.NotJumping();
     }
+
+    public void DeadLanded()
+    {
+        PlayerController.instance.DeadLanded();
+    }
 }

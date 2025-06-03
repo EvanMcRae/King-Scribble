@@ -30,8 +30,8 @@ TagManager:
   - EB
   - EB_Hurt
   - Tilemap
-  - 
-  - 
+  - Chain
+  - PencilEdge
   - 
   - 
   - 
@@ -63,6 +63,12 @@ TagManager:
     locked: 0
   - name: Enemy
     uniqueID: 1823589961
+    locked: 0
+  - name: SortingTexture
+    uniqueID: 2171682765
+    locked: 0
+  - name: Foreground
+    uniqueID: 1986731877
     locked: 0
   - name: CameraSortingLayer
     uniqueID: 2638591827

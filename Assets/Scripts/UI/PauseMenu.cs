@@ -7,7 +7,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private GameObject resumeButton;
     [SerializeField] private GameObject SettingsPanel;
-    [SerializeField] private Image pauseButton;
+    [SerializeField] private Image pauseButton, skipButton;
 
     private GameObject previousButton;
     public static bool unpausedWithSpace = false;
@@ -55,7 +55,10 @@ public class PauseMenu : MonoBehaviour
     {
         if (!(PopupPanel.numPopups == 0 && ScreenWipe.over && !GameManager.resetting && !ChangeScene.changingScene)) return;
         GameManager.paused = true;
+        pauseButton.GetComponent<Button>().interactable = false;
         pauseButton.enabled = false;
+        skipButton.GetComponent<Button>().interactable = false;
+        skipButton.enabled = false;
         prevTimeScale = Time.timeScale;
         Time.timeScale = 0;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
@@ -77,7 +80,10 @@ public class PauseMenu : MonoBehaviour
 
         firstopen = false;
         GameManager.paused = false;
+        pauseButton.GetComponent<Button>().interactable = true;
         pauseButton.enabled = true;
+        skipButton.GetComponent<Button>().interactable = true;
+        skipButton.enabled = true;
         if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
         Time.timeScale = prevTimeScale;
         foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))

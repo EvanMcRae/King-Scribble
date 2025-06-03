@@ -52,6 +52,7 @@ public class DrawManager : MonoBehaviour
     private bool beganDraw = false;
 
     [SerializeField] private SoundPlayer toolSoundPlayer, drawSoundPlayer;
+    public SoundPlayer penSoundPlayer;
     [SerializeField] private List<SoundClip> drawSounds = new();
     private Coroutine currentSoundPause, currentSoundUnpause;
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;

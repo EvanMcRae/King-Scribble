@@ -48,6 +48,7 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] GameObject rightChainL;
     [SerializeField] GameObject rightChainR;
     [SerializeField] EraserBossEvent eraserBossEvent;
+    [SerializeField] private PhysicsMaterial2D slippery, friction;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -76,7 +77,6 @@ public class EraserBossAI : MonoBehaviour
     private CapsuleCollider2D physicalCollider; // EB's collider with physics
     private Rigidbody2D EBrb; // EB's Rigidbody2D
     private LineRenderer closestLine = null; // For searching
-    
 
     // timer vars:
     private float timer = 0.0f; // used for cooldowns
@@ -85,7 +85,7 @@ public class EraserBossAI : MonoBehaviour
     private float slamCooldownTime = 1.0f;
     private float chargeCooldownTime = 1.0f;
     private float chargePrepTime = .66f;
-    private float slamPrepTime = 2.0f;
+    private float slamPrepTime = 2.5f;
     private float dizzyTime = 4.0f;
     private float damageTime = 2.0f;
     private float KSHitCooldown = 2.0f; // cooldown for how long until KS can be hit again
@@ -113,6 +113,10 @@ public class EraserBossAI : MonoBehaviour
 
     private float oscillation = 3000;
     private float swap = 1;
+
+    private Vector3 KSpos;
+
+    [SerializeField] private SoundPlayer soundPlayer;
 
     void Start() {
 
@@ -148,13 +152,20 @@ public class EraserBossAI : MonoBehaviour
             }
         }
 
-        //ChangeState(State.Start);
-        StartCoroutine(ActivateShield());
+        ChangeState(State.Start);
+        //StartCoroutine(ActivateShield());
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
     // This will be reworked after the semester and will be how states change
     private void ChangeState(State tempState) {
+
+        // End the dizzy sound if it's leaving the dizzy state -- TODO rework this, feels bad, sorry - evan
+        if ((state == State.Dizzied || state == State.Damaged) && tempState != State.Dizzied && tempState != State.Damaged)
+        {
+            soundPlayer.EndSound("EraserBoss.Dizzy");
+        }
+
         state = tempState;
 
         switch (tempState) {
@@ -179,10 +190,18 @@ public class EraserBossAI : MonoBehaviour
             case State.ChargeCooldown:
                 break;
             case State.SlamPrep:
-                EBrb.gravityScale = 1; // these values are needed for gravity and forces
+                EBrb.gravityScale = 0;
+                EBrb.drag = 10;
+                break;
+            case State.Slamming:
+                EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
+            case State.SlamImpact:
+                GetComponent<Rigidbody2D>().sharedMaterial = friction;
+                break;
             case State.SlamCooldown:
+                GetComponent<Rigidbody2D>().sharedMaterial = slippery;
                 break;
             case State.ShieldActivate:
                 EBrb.gravityScale = 0;
@@ -190,16 +209,26 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.ShieldRemove:
                 timer = 0;
-                EBrb.gravityScale = 1;
+                EBrb.gravityScale = 1;  // these values are needed for gravity and forces
                 EBrb.drag = 0;
                 break;
             case State.EndScene:
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
+            case State.Roar:
+                Invoke(nameof(RoarSound), 10/12f);
+                break;
+            case State.Dizzied:
+                soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
+                break;
         }
     }
 
+    void RoarSound()
+    {
+        soundPlayer.PlaySound("EraserBoss.Roar");
+    }
 
     void FixedUpdate()
     {   
@@ -321,12 +350,21 @@ public class EraserBossAI : MonoBehaviour
                 //Debug.Log("State = SlamPrep");
                 anim.Play("EB_SlamPrep");
                 spriteRenderer.flipX = false;
-                Vector3 KSpos = KingScribble.transform.position;
                 if(!isRotated) {
                     rotateTween = transform.DORotate(new Vector3(0,0,-90), rotateTweenTime);
                     isRotated = true;
                 }
-                Hover(new Vector3(KSpos.x, KSpos.y + 22.0f), baseSpeed); // hover above KS
+
+                // Only track KS pos until 0.5 seconds left in the prep time - evan
+                if (timer < 0.8f * slamPrepTime)
+                {
+                    KSpos = KingScribble.transform.position;
+                }
+
+                // Adding the sin function to oscillate, the first 2 is the period
+                // Clamp EB's height just below the ceiling so he can oscillate
+                Hover(new Vector3(KSpos.x, Mathf.Min(KSpos.y + 22.0f, 22) + Mathf.Sin(Time.time * 1.5f * 2 * Mathf.PI)), baseSpeed); // hover above KS
+                
                 if(timer >= slamPrepTime) {
                     timer = 0;
                     destination = new Vector3(KSpos.x, -20.0f, KSpos.z); // y value should be below minimum floor
@@ -443,6 +481,7 @@ public class EraserBossAI : MonoBehaviour
             isSlamming = false;
             isSlamHit = true;
             ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Thud");
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Water") && state == State.Slamming) {
             Debug.Log("WATER DETECTED, pos is: " + transform.position);
@@ -451,8 +490,19 @@ public class EraserBossAI : MonoBehaviour
             isSlamming = false;
             isSlamHit = true;
             ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Splash");
         }
-        
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Chain") && state == State.Slamming)
+        {
+            Debug.Log("CHAIN DETECTED, pos is: " + transform.position);
+            timer = 0;
+            isSlamming = false;
+            isSlamHit = true;
+            ChangeState(State.SlamImpact);
+            soundPlayer.PlaySound("EraserBoss.Thud");
+            soundPlayer.PlaySound("EraserBoss.Chain");
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines")) {
             Destroy(other.gameObject);
         }
@@ -606,6 +656,7 @@ public class EraserBossAI : MonoBehaviour
     private void Knockback(Vector2 knockbackDirection, float force) {
         if (KSrb != null && !isKSHit) {
             Debug.Log("KNOCKING BACK");
+            PlayerController.instance.Hurt();
             KSrb.AddForce(knockbackDirection * force, ForceMode2D.Impulse); // Use Impulse or VelocityChange
             isKSHit = true;
             print("state: " + state);
@@ -678,7 +729,8 @@ public class EraserBossAI : MonoBehaviour
     private void DespawnAllPenObj() {
         //Debug.Log("DESPAWNING PEN OBJS");
         foreach (Transform childTransform in PenLinesFolder.transform) {
-            StartCoroutine(DespawnPenObj(childTransform));
+            if (childTransform.gameObject.layer == 7) // Only runs on spawned pen objects
+                StartCoroutine(DespawnPenObj(childTransform));
         }
     }
     
@@ -686,37 +738,56 @@ public class EraserBossAI : MonoBehaviour
         yield return new WaitForSeconds(.25f); // wait for MaterialPropertyBlock to load
         // play pen obj despawn warning animation
         // this code kinda sucks :(
-        GameObject penObject = pen.gameObject;
-        LineRenderer tempLine = pen.GetComponent<LineRenderer>();
-        Color original = tempLine.startColor;
-        Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
+        if (pen != null)
+        {
+            GameObject penObject = pen.gameObject;
+            LineRenderer tempLine = pen.GetComponent<LineRenderer>();
+            Color original = tempLine.startColor;
+            Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
 
-        // Create 2 material blocks, one being the original and the other being transparent
-        MeshRenderer polyRend = penObject.GetComponentInChildren<MeshRenderer>();
-        MaterialPropertyBlock matBlockOG = new MaterialPropertyBlock();
-        MaterialPropertyBlock matBlockOpacity = new MaterialPropertyBlock();
-        polyRend.GetPropertyBlock(matBlockOpacity);
-        polyRend.GetPropertyBlock(matBlockOG);
-        matBlockOpacity.SetColor("_Color", opacity);
+            // Create 2 material blocks, one being the original and the other being transparent
+            MeshRenderer polyRend = penObject.GetComponentInChildren<MeshRenderer>();
+            MaterialPropertyBlock matBlockOG = new MaterialPropertyBlock();
+            MaterialPropertyBlock matBlockOpacity = new MaterialPropertyBlock();
+            polyRend.GetPropertyBlock(matBlockOpacity);
+            polyRend.GetPropertyBlock(matBlockOG);
+            matBlockOpacity.SetColor("_Color", opacity);
 
-        // toggle opacities
-        polyRend?.SetPropertyBlock(matBlockOpacity);
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOG);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOpacity);
-        tempLine.startColor = opacity;
-        tempLine.endColor = opacity;
-        yield return new WaitForSeconds(.5f);
-        polyRend?.SetPropertyBlock(matBlockOG);
-        tempLine.startColor = original;
-        tempLine.endColor = original;
-        yield return new WaitForSeconds(.5f);
-        Destroy(pen.gameObject);
+            // toggle opacities
+            if (polyRend != null && !pen.GetComponent<Line>().deleted)
+            {
+                polyRend.SetPropertyBlock(matBlockOpacity);
+                tempLine.startColor = opacity;
+                tempLine.endColor = opacity;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (polyRend != null && !pen.GetComponent<Line>().deleted)
+            {
+                polyRend.SetPropertyBlock(matBlockOG);
+                tempLine.startColor = original;
+                tempLine.endColor = original;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (polyRend != null && !pen.GetComponent<Line>().deleted)
+            {
+                polyRend.SetPropertyBlock(matBlockOpacity);
+                tempLine.startColor = opacity;
+                tempLine.endColor = opacity;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (polyRend != null && !pen.GetComponent<Line>().deleted)
+            {
+                polyRend.SetPropertyBlock(matBlockOG);
+                tempLine.startColor = original;
+                tempLine.endColor = original;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (polyRend != null && !pen.GetComponent<Line>().deleted)
+            {
+                pen.GetComponent<Line>().deleted = true;
+                Destroy(pen.gameObject);
+            }
+        }
     }
 
     private void DespawnAllPencilObj() {
@@ -729,41 +800,51 @@ public class EraserBossAI : MonoBehaviour
     private IEnumerator DespawnPencilObj(Transform pencil) {
         // play pen obj despawn warning animation
         // this code kinda sucks :(
-        LineRenderer tempLine = pencil.GetComponent<LineRenderer>();
-        Color original = tempLine.startColor;
-        Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
+        if (pencil != null)
+        {
+            LineRenderer tempLine = pencil.GetComponent<LineRenderer>();
+            Color original = tempLine.startColor;
+            Color opacity = new Color(tempLine.startColor.r, tempLine.startColor.g, tempLine.startColor.b, 0.5f);
 
-        // toggle opacities
-        // ADD NULL CHECK cuz the line can be erased
-        if(tempLine != null) {
-            tempLine.startColor = opacity;
-            tempLine.endColor = opacity;
-            yield return new WaitForSeconds(.5f);
-        }
-        if(tempLine != null) {
-            tempLine.startColor = original;
-            tempLine.endColor = original;
-            yield return new WaitForSeconds(.5f);
-        }
-        if(tempLine != null) {
-            tempLine.startColor = opacity;
-            tempLine.endColor = opacity;
-            yield return new WaitForSeconds(.5f);
-        }
-        if(tempLine != null) {
-            tempLine.startColor = original;
-            tempLine.endColor = original;
-            yield return new WaitForSeconds(.5f);
-        }
-        if(tempLine != null) {
-            Destroy(pencil.gameObject);
-            PlayerVars.instance.AddDoodleFuel(tempLine.positionCount); // Give player back their health
+            // toggle opacities
+            // ADD NULL CHECK cuz the line can be erased
+            if (tempLine != null && !tempLine.GetComponent<Line>().deleted)
+            {
+                tempLine.startColor = opacity;
+                tempLine.endColor = opacity;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (tempLine != null && !tempLine.GetComponent<Line>().deleted)
+            {
+                tempLine.startColor = original;
+                tempLine.endColor = original;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (tempLine != null && !tempLine.GetComponent<Line>().deleted)
+            {
+                tempLine.startColor = opacity;
+                tempLine.endColor = opacity;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (tempLine != null && !tempLine.GetComponent<Line>().deleted)
+            {
+                tempLine.startColor = original;
+                tempLine.endColor = original;
+                yield return new WaitForSeconds(.5f);
+            }
+            if (tempLine != null && !tempLine.GetComponent<Line>().deleted)
+            {
+                pencil.GetComponent<Line>().deleted = true;
+                Destroy(pencil.gameObject);
+                PlayerVars.instance.AddDoodleFuel(tempLine.positionCount); // Give player back their health
+            }
         }
     }
 
     // Happens when the player pushes the button and EB gets hit with ink falling
     private IEnumerator RemoveShield(bool isRight) {
         StopCoroutine(eraseLineSequence);
+        isErasingLine = false;
         ChangeState(State.ShieldRemove);
         Debug.Log("DEACTIVATING SHIELD");
         isShielding = true;
@@ -800,7 +881,7 @@ public class EraserBossAI : MonoBehaviour
         else {
             BreakLeftChain();
         }
-        
+
         // play Roar animation and add impulse shader
         yield return new WaitForSeconds(1.0f);
         rotateTween = transform.DORotate(new Vector3(0,0,0), rotateTweenTime);
@@ -834,11 +915,13 @@ public class EraserBossAI : MonoBehaviour
     private void BreakLeftChain() {
         leftChainL.GetComponent<BreakableChainLink>().Break();
         leftChainR.GetComponent<BreakableChainLink>().Break();
+        soundPlayer.PlaySound("EraserBoss.ChainBreak");
     }
 
     private void BreakRightChain() {
         rightChainL.GetComponent<BreakableChainLink>().Break();
         rightChainR.GetComponent<BreakableChainLink>().Break();
+        soundPlayer.PlaySound("EraserBoss.ChainBreak");
     }
 
     // increase the speeds and initiates shield:

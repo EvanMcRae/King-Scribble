@@ -8,6 +8,8 @@ public class Line : MonoBehaviour
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private Rigidbody2D rigidBody;
     [SerializeField] private ParticleSystem penObjDestroy;
+    public EdgeCollider2D edgeCollider;
+    public List<Vector2> points = new();
     public const float MASS_COEFF = 2f;
     public const float MAX_WEIGHT = 100f;
     public List<CircleCollider2D> colliders = new(); // TODO use this for eraser checking?
@@ -35,9 +37,12 @@ public class Line : MonoBehaviour
     void Start()
     {
         if (rigidBody != null)
+        {
             rigidBody.isKinematic = true;
-
+            rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
+        }
         lineRenderer.widthMultiplier = thickness;
+        edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
     }
 
@@ -69,6 +74,10 @@ public class Line : MonoBehaviour
 
     private void AppendPos(Vector2 position, bool addFuel = true)
     {
+        // Add line renderer position for this point
+        lineRenderer.positionCount++;
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
+
         // Add circle collider component for this point if using pencil
         if (!is_pen) {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
@@ -76,11 +85,10 @@ public class Line : MonoBehaviour
             circleCollider.radius = thickness / 2;
             if (!collisionsActive || lineRenderer.positionCount == 0) circleCollider.enabled = false;
             colliders.Add(circleCollider);
+            points.Add(position);
+            edgeCollider.points = points.ToArray();
         }
-        // Add line renderer position for this point
-        lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
-        if (is_pen)
+        else
             CheckOverlap();
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
@@ -269,6 +277,7 @@ public class Line : MonoBehaviour
                 part.emission.SetBurst(0, burst);
                 // Play the effect (and then destroy)
                 part.Play();
+                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy");
             } 
         }
     }
@@ -294,7 +303,9 @@ public class Line : MonoBehaviour
             avgY /= endPos - startPos;
             // Set the collider's position to the average
             colliders[i].offset = new Vector2(avgX, avgY);
+            points[i] = colliders[i].offset;
         }
+        edgeCollider.points = points.ToArray();
     }
 
     public void SmoothPen(int severity = 1)
@@ -343,6 +354,14 @@ public class Line : MonoBehaviour
             polyCollider.SetPath(0, path);
         }
         Debug.Log("Number of iterations for vertex culling: " + iter);
+    }
+
+    public void RefreshEdge()
+    {
+        if (!is_pen)
+        {
+            edgeCollider.points = points.ToArray();
+        }
     }
 }
 

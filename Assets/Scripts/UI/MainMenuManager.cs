@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Button PlayButton;
     [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel;
     private GameObject currentSelection;
-    public static bool firstopen = false, quitting = false, playing = false;
+    public static bool firstopen = false, quitting = false, playing = false, loadingAnimatic = false;
     public Texture2D defaultCursor;
 
     // Start is called before the first frame update
@@ -49,6 +49,11 @@ public class MainMenuManager : MonoBehaviour
         ScreenWipe.PostUnwipe -= PlayGame;
         SettingsManager.SaveSettings();
         playing = true;
+        if (!SaveSystem.instance.SaveFileExists())
+        {
+            SceneManager.LoadScene("IntroAnimatic", LoadSceneMode.Additive);
+            loadingAnimatic = true;
+        }
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += EnterGame;
     }
@@ -58,14 +63,15 @@ public class MainMenuManager : MonoBehaviour
         ScreenWipe.PostWipe -= EnterGame;
         firstopen = false;
         playing = false;
-        if (SaveSystem.instance.SaveFileExists())
+        if (!loadingAnimatic)
         {
             SceneManager.LoadScene("LevelSelect");
         }
         else
         {
             PlayerChecker.firstSpawned = false;
-            SceneManager.LoadScene("IntroAnimatic");
+            loadingAnimatic = false;
+            SceneManager.UnloadSceneAsync("MainMenu");
         }
         
     }

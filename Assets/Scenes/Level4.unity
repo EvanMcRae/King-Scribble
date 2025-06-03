@@ -478,6 +478,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SoundPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 2106051775409183644, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1681,7 +1685,7 @@ GameObject:
   - component: {fileID: 162031536}
   - component: {fileID: 162031535}
   - component: {fileID: 162031534}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sliding door Full
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47448,7 +47452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 824405719}
   - component: {fileID: 824405720}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall V1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50703,7 +50707,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1065168563}
   - component: {fileID: 1065168564}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall 1 Edge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53066,6 +53070,10 @@ PrefabInstance:
     - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Name
       value: Moving Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 2751001846648573170, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5581544249141046444, guid: 20b3e395b6df01244bbd6897f1cdb1fd, type: 3}
       propertyPath: m_Enabled
@@ -59127,6 +59135,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1110298488262191259, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_text
+      value: <b>Level 4:</b> Clever Crate Cradle
+      objectReference: {fileID: 0}
     - target: {fileID: 1633697593539757099, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalScale.x
       value: 0
@@ -59287,6 +59299,10 @@ PrefabInstance:
       propertyPath: m_text
       value: <b>Level 4:</b> Clever Crate Cradle
       objectReference: {fileID: 0}
+    - target: {fileID: 6024097296844045959, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6201593291800123279, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_Priority
       value: 10
@@ -59398,14 +59414,6 @@ PrefabInstance:
     - target: {fileID: 8288433974469190263, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: defaultInventory.toolUnlocks.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: defaultInventory.toolUnlocks.Array.data[0]
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9146674026293768127, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -61359,7 +61367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2016105013}
   - component: {fileID: 2016105014}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall 1 Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
