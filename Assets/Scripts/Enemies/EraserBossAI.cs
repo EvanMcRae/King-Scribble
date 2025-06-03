@@ -118,6 +118,9 @@ public class EraserBossAI : MonoBehaviour
 
     [SerializeField] private SoundPlayer soundPlayer;
 
+    //refer to roar shader script
+    private ShockwaveMan shockwaveManScript;
+
     void Start() {
 
         DrawManager.instance.updatePenAreaEvent += updatePenArea;
@@ -154,6 +157,14 @@ public class EraserBossAI : MonoBehaviour
 
         ChangeState(State.Start);
         //StartCoroutine(ActivateShield());
+
+        //retrieves ShockwaveMan script from ShockFSTest object
+        //retrieves the visual sprite effect for roar
+        shockwaveManScript = GetComponentInChildren<ShockwaveMan>();
+        if (shockwaveManScript == null)
+        {
+            Debug.LogError("PEEPEEPOOPOO");
+        }
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
@@ -218,6 +229,11 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Roar:
                 Invoke(nameof(RoarSound), 10/12f);
+                if (shockwaveManScript != null)
+                {
+                    shockwaveManScript.CallShockwave();
+                }
+                
                 break;
             case State.Dizzied:
                 soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
