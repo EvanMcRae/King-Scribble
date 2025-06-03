@@ -17,7 +17,6 @@ public class WaterTriggerHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("a");
         // If collision gameObject is within the waterMask layerMask
         if ((_waterMask.value & (1 << collision.gameObject.layer)) > 0)
         {
