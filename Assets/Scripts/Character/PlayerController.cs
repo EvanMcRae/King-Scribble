@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -549,6 +550,9 @@ public class PlayerController : MonoBehaviour
     public void ResizePlayer(float fuel_left)
     {
         int newSize = (int)Mathf.Ceil(fuel_left * SIZE_STAGES);
+        bool sizeUpAllowed = false;
+        bool growing = false;
+
         if (newSize < currentSize)
         {
             if (popAnim != null)
@@ -561,21 +565,96 @@ public class PlayerController : MonoBehaviour
         }
         else if (newSize > currentSize)
         {
-            soundPlayer.PlaySound("Player.SizeUp");
+            growing = true;
+            sizeUpAllowed = CanIncreaseSize(currentSize, newSize);
+            if (sizeUpAllowed)
+            {
+                soundPlayer.PlaySound("Player.SizeUp");
+            }
         }
+        Debug.Log("growing is " + growing + " after newSize inequalities");
         currentSize = newSize;
 
         fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
         if (oldPlayer)
+        {
             mainBody.transform.localScale = Vector3.one * fuel_left;
+
+        }
         else
         {
-            anim.SetFloat("size", fuel_left);
-            bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
-            // Written this way to allow the old player prefab to work
-            groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
-            groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
+            // TODO: The value of growing is only true as soon as the player resizes and is then immediately false, so even when the player is erasing, growing is false.
+            // Potential fix Scott just thought of: maybe comparing the value of fuel_left to what it was in the previous call of ResizePlayer and setting growing based on the sign of the difference?
+
+            // Always change size if player is shrinking, only change size if the new collider allows for it
+            if ((growing && sizeUpAllowed) || (!growing))
+            {
+                if (!growing)
+                {
+                    Debug.Log("Shrinking...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                }
+                else
+                {
+                    Debug.Log("Growing...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                }
+
+                anim.SetFloat("size", fuel_left);
+                bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
+                // Debug.Log("Body size is now using " + sizeColliders[(int)(fuel_left * SIZE_STAGES)].name);
+                // Written this way to allow the old player prefab to work
+                groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
+                groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
+            }
         }
+    }
+
+    // TODO: This detects ground when King Scribble is on the ground (no way) but what this means is that you can only grow in size if you're mid-air
+    //       so if the way it's implemented right now isn't a problem you can leave it as is, and otherwise, this is something we gotta work around
+    private bool CanIncreaseSize(int currentSize, int newSize)
+    {
+        // Defensive checks, make sure this function is being used correctly
+        if (newSize < currentSize)
+        {
+            // You're shrinking
+            Debug.LogWarning("Calling CanIncreaseSize() with arguments that imply a size decrease, which will always return true");
+            return true;
+        }
+
+        if (newSize == currentSize)
+        {
+            // You're the same size
+            Debug.LogWarning("Calling CanIncreaseSize() with arguments that imply no change in size, which will always return true");
+            return true;
+        }
+
+        // Set up trigger to check if the player can resize
+        // This trigger will be the same size as what the player would grow into
+        PolygonCollider2D sizeChecker = gameObject.AddComponent<PolygonCollider2D>();
+        sizeChecker.isTrigger = true;
+        // Debug.Log("Trigger's points are about to be mapped to " + sizeColliders[newSize].name);
+        sizeChecker.points = sizeColliders[newSize].points;
+
+        // Set up contact filter
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(whatIsGround);
+        filter.useTriggers = false;
+
+        // Get a sample of what is being overlapped
+        Collider2D[] results = new Collider2D[10];
+        int overlapCount = sizeChecker.OverlapCollider(filter, results);
+
+        // If touching anything that is ground, don't grow
+        if (overlapCount > 0)
+        {
+            Debug.Log("Ground detected");
+            Destroy(sizeChecker);
+            return false;
+        }
+
+        Destroy(sizeChecker);
+        Debug.Log("No ground detected");
+        // Otherwise, the player is free to grow
+        return true;
     }
 
     public bool OverlapsPosition(Vector2 position)
