@@ -14,7 +14,7 @@ public class ShockwaveMan : MonoBehaviour
     private Material shaderMaterial;
 
     //shader property to change
-    private static int waveDistanceFromCenter = Shader.PropertyToID("waveDistanceFromCenter");
+    private static int _waveDistFromCenter = Shader.PropertyToID("_waveDistFromCenter");
 
     private void Awake()
     {
@@ -25,11 +25,15 @@ public class ShockwaveMan : MonoBehaviour
 
     public void CallShockwave()
     {
-        shockWaveCoroutine = StartCoroutine(ShockWaveAction(-0.1f, 1f));
+        shockWaveCoroutine = StartCoroutine(ShockWaveAction(-0.1f, 30f));
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos)
     {
+        
+        shaderMaterial.SetFloat(_waveDistFromCenter, startPos);
+
+
         float lerpedAmount = 0f;
         float elapsedTime = 0f;
 
@@ -37,11 +41,13 @@ public class ShockwaveMan : MonoBehaviour
         while (elapsedTime < shockWaveTime)
         {
             elapsedTime += Time.deltaTime;
+            Debug.Log("this is the elapsedTime " + elapsedTime);
 
-            //
+
             lerpedAmount = Mathf.Lerp(startPos, endPos, (elapsedTime / shockWaveTime));
-            //rate at which shockWave expands
-            shaderMaterial.SetFloat(waveDistanceFromCenter, lerpedAmount);
+            Debug.Log("this is the lerped amount " + lerpedAmount);
+            //rate at which shockWave expands 
+            shaderMaterial.SetFloat(_waveDistFromCenter, lerpedAmount);
 
             yield return null;
         }

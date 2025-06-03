@@ -232,6 +232,8 @@ public class EraserBossAI : MonoBehaviour
                 if (shockwaveManScript != null)
                 {
                     shockwaveManScript.CallShockwave();
+                    Debug.LogError("SHOCKWAVE CALLED?????");
+
                 }
                 
                 break;
