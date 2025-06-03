@@ -17,6 +17,7 @@ public class WaterTriggerHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("a");
         // If collision gameObject is within the waterMask layerMask
         if ((_waterMask.value & (1 << collision.gameObject.layer)) > 0)
         {
@@ -24,7 +25,7 @@ public class WaterTriggerHandler : MonoBehaviour
 
             if (((1 << 10) & (1 << collision.gameObject.layer)) > 0) // For player, collider is not on the same object as rigidbody
                 rb = collision.transform.root.GetComponent<Rigidbody2D>();
-            
+
             if (rb != null)
             {
                 // Clamp splash point to a MAX velocity
