@@ -9,6 +9,7 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private Transform active;
     [SerializeField] private Transform end;
     [SerializeField] private GameObject inkfall;
+    private GameObject physics;
     [SerializeField] private Sprite broken;
     [SerializeField] private ParticleSystem break_particles;
     [SerializeField] private SoundPlayer sound_player;
@@ -21,6 +22,8 @@ public class EBInkPipe : MonoBehaviour
     void Start()
     {
         inkfall.transform.position = start.position;
+        physics = inkfall.transform.GetChild(0).gameObject;
+        physics.SetActive(false);
         anim = GetComponent<Animator>();
     }
 
@@ -32,12 +35,15 @@ public class EBInkPipe : MonoBehaviour
         }
     }
 
-    private IEnumerator Activate_() {
+    private IEnumerator Activate_()
+    {
         anim.Play("Pipe_Start");
         yield return new WaitForSeconds(1.0f);
         inkfall.transform.DOMoveY(active.position.y, 0.5f);
-        is_active = true;
         sound_player.PlaySound("Ink.Flood", 1, true);
+        yield return new WaitForSeconds(0.5f);
+        physics.SetActive(true);
+        is_active = true;
     }
 
     public void Deactivate()
@@ -48,6 +54,7 @@ public class EBInkPipe : MonoBehaviour
 
     IEnumerator Deactivate_()
     {
+        physics.SetActive(false);
         anim.Play("Pipe_Stop");
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
@@ -64,6 +71,7 @@ public class EBInkPipe : MonoBehaviour
 
     IEnumerator Break_()
     {
+        physics.SetActive(false);
         if (is_active)
         {
             // Deactivate, then end sound only if other pipe's ink is not flowing
