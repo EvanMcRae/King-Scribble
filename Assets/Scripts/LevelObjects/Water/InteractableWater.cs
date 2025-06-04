@@ -102,6 +102,12 @@ public class InteractableWater : MonoBehaviour
     {
         float radius = collision.bounds.extents.x * _collisionRadiusMult;
         Vector2 center = collision.transform.position;
+        // For pen objects, the transform is at the position of the first point - which is often far from the object's actual center
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PenLines"))
+        {
+            // Rather than simply using collision.bounds.center, we use the bottom center point of the object. This ensures that force is applied even if the object's center does not enter the water.
+            center = new Vector2(collision.bounds.center.x, collision.bounds.center.y - collision.bounds.extents.y);
+        }
 
         for (int i = 0; i < _waterPoints.Count; i++)
         {

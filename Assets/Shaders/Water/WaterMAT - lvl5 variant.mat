@@ -25,11 +25,15 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _CausticPower: 0.7
+    - _CausticStrength: 3.13
     - _LineLength: 1
-    - _yCull: -200
+    - _WaveSize: 0
+    - _WaveSpeed: 0
+    - _yCull: -100
     m_Colors:
     - _CausticScrollDir: {r: 0, g: 0, b: 0, a: 0}
-    - _CausticTiling: {r: 1, g: 12, b: 0, a: 0}
+    - _CausticTiling: {r: 3, g: 9, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &2852610360748293099
 MonoBehaviour:

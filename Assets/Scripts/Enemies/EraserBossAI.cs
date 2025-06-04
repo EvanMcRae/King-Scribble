@@ -118,6 +118,23 @@ public class EraserBossAI : MonoBehaviour
 
     [SerializeField] private SoundPlayer soundPlayer;
 
+    // Added because checking the specific names of gameObjects as a means of identifying them is terrible practice and I couldn't let it remain, sorry - Brian
+    [SerializeField] private GameObject _leftInk;
+    [SerializeField] private GameObject _rightInk;
+
+
+    // ------------ SHOCKWAVE STUFF  ------------
+
+    //public GameObject shockPrefab;
+    //refer to roar shader script
+    private ShockwaveSpawner spawnerScript;
+    //[SerializeField] private SpriteRenderer shockwaveSpritePrefab;
+    //current rendered shockwave sprite
+    //private GameObject currShockwave;
+    // Added because checking the specific names of gameObjects as a means of identifying them is terrible practice and I couldn't let it remain, sorry - Brian
+    [SerializeField] private GameObject _leftInk;
+    [SerializeField] private GameObject _rightInk;
+
 
     // ------------ SHOCKWAVE STUFF  ------------
 
@@ -494,12 +511,12 @@ public class EraserBossAI : MonoBehaviour
         // Ink waterfalls
         if(other.gameObject.layer == LayerMask.NameToLayer("EB_Hurt") && state != State.ShieldRemove) {
             // check for left or right pipe
-            if(other.gameObject.name == "Flowing Ink Left") {
+            if(other.gameObject.GetInstanceID() == _leftInk.GetInstanceID()) {
                 if(!isShielding) {
                     StartCoroutine(RemoveShield(false));
                 }
             }
-            if(other.gameObject.name == "Flowing Ink Right") {
+            if(other.gameObject.GetInstanceID() == _rightInk.GetInstanceID()) {
                 if(!isShielding) {
                     StartCoroutine(RemoveShield(true));
                 }
