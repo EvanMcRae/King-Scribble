@@ -169,7 +169,7 @@ public class PlayerVars : MonoBehaviour
         curEraserFuel = maxEraserFuel;
         isDead = false;
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
-        GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
+        GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft(), true);
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
     }

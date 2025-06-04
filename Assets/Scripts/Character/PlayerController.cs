@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator popAnim;
     private float timeSinceSprint;
     public bool deadLanded = false;
+    private float oldFuelLeft = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -547,7 +548,7 @@ public class PlayerController : MonoBehaviour
         canWalkOnSlope = !(slopeDownAngle > maxSlopeAngle || slopeSideAngle > maxSlopeAngle);
     }
     
-    public void ResizePlayer(float fuel_left)
+    public void ResizePlayer(float fuel_left, bool forceGrow = false) // sorry tronster :(
     {
         int newSize = (int)Mathf.Ceil(fuel_left * SIZE_STAGES);
         bool sizeUpAllowed = false;
@@ -563,23 +564,23 @@ public class PlayerController : MonoBehaviour
             if (newSize != 0)
                 soundPlayer.PlaySound("Player.SizeDown");
         }
-        else if (newSize > currentSize)
+        if (fuel_left > oldFuelLeft)
         {
             growing = true;
-            sizeUpAllowed = CanIncreaseSize(currentSize, newSize);
-            if (sizeUpAllowed)
+            if (newSize > currentSize)
             {
-                soundPlayer.PlaySound("Player.SizeUp");
+                sizeUpAllowed = CanIncreaseSize(currentSize, newSize);
+                if (sizeUpAllowed && !forceGrow)
+                    soundPlayer.PlaySound("Player.SizeUp");
             }
         }
-        Debug.Log("growing is " + growing + " after newSize inequalities");
-        currentSize = newSize;
 
+        oldFuelLeft = fuel_left;
         fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
+
         if (oldPlayer)
         {
             mainBody.transform.localScale = Vector3.one * fuel_left;
-
         }
         else
         {
@@ -587,15 +588,18 @@ public class PlayerController : MonoBehaviour
             // Potential fix Scott just thought of: maybe comparing the value of fuel_left to what it was in the previous call of ResizePlayer and setting growing based on the sign of the difference?
 
             // Always change size if player is shrinking, only change size if the new collider allows for it
-            if ((growing && sizeUpAllowed) || (!growing))
+            if ((growing && (sizeUpAllowed || forceGrow)) || (!growing))
             {
-                if (!growing)
+                if (newSize != currentSize)
                 {
-                    Debug.Log("Shrinking...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
-                }
-                else
-                {
-                    Debug.Log("Growing...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                    if (!growing)
+                    {
+                        Debug.Log("Shrinking...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                    }
+                    else
+                    {
+                        Debug.Log("Growing...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                    }
                 }
 
                 anim.SetFloat("size", fuel_left);
@@ -606,6 +610,8 @@ public class PlayerController : MonoBehaviour
                 groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
             }
         }
+
+        currentSize = newSize;
     }
 
     // TODO: This detects ground when King Scribble is on the ground (no way) but what this means is that you can only grow in size if you're mid-air
