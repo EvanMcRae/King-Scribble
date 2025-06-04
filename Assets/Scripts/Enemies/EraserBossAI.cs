@@ -118,8 +118,15 @@ public class EraserBossAI : MonoBehaviour
 
     [SerializeField] private SoundPlayer soundPlayer;
 
+
+    // ------------ SHOCKWAVE STUFF  ------------
+
+    //public GameObject shockPrefab;
     //refer to roar shader script
-    private ShockwaveMan shockwaveManScript;
+    private ShockwaveSpawner spawnerScript;
+    //[SerializeField] private SpriteRenderer shockwaveSpritePrefab;
+    //current rendered shockwave sprite
+    //private GameObject currShockwave;
 
     void Start() {
 
@@ -158,13 +165,21 @@ public class EraserBossAI : MonoBehaviour
         ChangeState(State.Start);
         //StartCoroutine(ActivateShield());
 
+        /*
         //retrieves ShockwaveMan script from ShockFSTest object
         //retrieves the visual sprite effect for roar
         shockwaveManScript = GetComponentInChildren<ShockwaveMan>();
         if (shockwaveManScript == null)
         {
-            Debug.LogError("PEEPEEPOOPOO");
+            Debug.LogError("shockshader script not found");
         }
+        //might need to change this not sure if ok for performance reasons
+        //used to hide shockwave effect sprite
+        */
+
+        spawnerScript = GetComponent<ShockwaveSpawner>();
+
+
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
@@ -229,13 +244,12 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Roar:
                 Invoke(nameof(RoarSound), 10/12f);
-                if (shockwaveManScript != null)
+                if (spawnerScript != null)
                 {
-                    shockwaveManScript.CallShockwave();
                     Debug.LogError("SHOCKWAVE CALLED?????");
-
+                    //spawnerScript.SpawnShockwave();
+                    spawnerScript.Invoke(nameof(spawnerScript.SpawnShockwave), 10 / 12f);
                 }
-                
                 break;
             case State.Dizzied:
                 soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
