@@ -258,12 +258,12 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Roar:
                 Invoke(nameof(RoarSound), 10/12f);
-                if (spawnerScript != null)
+                /*if (spawnerScript != null)
                 {
                     Debug.LogError("SHOCKWAVE CALLED?????");
                     //spawnerScript.SpawnShockwave();
                     spawnerScript.Invoke(nameof(spawnerScript.SpawnShockwave), 10 / 12f);
-                }
+                }*/
                 break;
             case State.Dizzied:
                 soundPlayer.PlaySound("EraserBoss.Dizzy", 1, true);
