@@ -128,6 +128,9 @@ public class EraserBossAI : MonoBehaviour
     //public GameObject shockPrefab;
     //refer to roar shader script
     private ShockwaveSpawner spawnerScript;
+    [SerializeField] private Camera _shockwaveCamera;
+
+    [SerializeField] private Material _shockwaveMat;
     //[SerializeField] private SpriteRenderer shockwaveSpritePrefab;
     //current rendered shockwave sprite
     //private GameObject currShockwave;
@@ -137,6 +140,12 @@ public class EraserBossAI : MonoBehaviour
 
         DrawManager.instance.updatePenAreaEvent += updatePenArea;
 
+        if (_shockwaveCamera.targetTexture != null)
+            _shockwaveCamera.targetTexture.Release();
+        RenderTexture temp = new(Screen.width, Screen.height, 24);
+        _shockwaveCamera.targetTexture = temp;
+        _shockwaveMat.SetTexture("_RenderTexture", temp);
+        
         KingScribble = PlayerVars.instance.gameObject; // Initialize KS, his RigidBody2D, and MainBody trigger collider
         KSrb = KingScribble.GetComponent<Rigidbody2D>();
         EBrb = GetComponent<Rigidbody2D>(); 
@@ -266,7 +275,7 @@ public class EraserBossAI : MonoBehaviour
     {
         soundPlayer.PlaySound("EraserBoss.Roar");
     }
-
+    
     void FixedUpdate()
     {   
         myText.text = state.ToString();

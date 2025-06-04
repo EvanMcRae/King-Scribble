@@ -38,19 +38,6 @@ public class ShockwaveMan : MonoBehaviour
 
     public void CallShockwave()
     {
-
-        /*
-        Transform parentTransform = parent.transform;
-
-        //intializes shockwave sprite
-        GameObject shockwaveExist = Instantiate(shockPrefab, parentTransform.position,
-            parentTransform.rotation, parentTransform);
-
-        Debug.Log("did we spawn?"); */
-
-        /* GameObject shockwaveExist = Instantiate(shockPrefab, this.position,
-            this.rotation, this.transform); */
-
         StopAllCoroutines();
 
         Debug.Log("did we spawn?");
@@ -83,7 +70,7 @@ public class ShockwaveMan : MonoBehaviour
             yield return null;
         }
 
-        shaderMaterial.SetFloat(_waveDistFromCenter, endPos);
+        // shaderMaterial.SetFloat(_waveDistFromCenter, endPos);
        // Debug.Log($"[{Time.time:F2}] Shockwave animation finished for {gameObject.name} after {elapsedTime:F2}s. Preparing to destroy.", this);
         //destroys sprite once shockwave effect finishes
         Destroy(gameObject);
