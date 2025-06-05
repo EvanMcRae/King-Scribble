@@ -121,9 +121,6 @@
             "m_Id": "8e2ca9fc49e243a39fbd9041609f7f68"
         },
         {
-            "m_Id": "f25fb0c089a24017b526f9e35c2c9d10"
-        },
-        {
             "m_Id": "f2aaf5e39bbb46a1af10922e35e07bf8"
         },
         {
@@ -545,8 +542,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 253.99998474121095,
-            "y": 154.00001525878907
+            "x": 254.40003967285157,
+            "y": 176.8000030517578
         },
         "m_Blocks": [
             {
@@ -3517,19 +3514,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
-    "m_ObjectId": "dddbc83b42e445ef9fa17fb376af893c",
-    "m_Id": 0,
-    "m_DisplayName": "CameraSortingLayerTexture",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_BareResource": false
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "e06104ae61934de5972b5db4edd623c0",
     "m_Id": 3,
@@ -3704,42 +3688,6 @@
     },
     "m_Property": {
         "m_Id": "a62aaed090424c6b859080f84db9bd94"
-    }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
-    "m_ObjectId": "f25fb0c089a24017b526f9e35c2c9d10",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "Property",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -510.4000244140625,
-            "y": 16.0,
-            "width": 221.60003662109376,
-            "height": 33.5999755859375
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "dddbc83b42e445ef9fa17fb376af893c"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_Property": {
-        "m_Id": "c94b6a4b401b499884993f36cf43009f"
     }
 }
 
