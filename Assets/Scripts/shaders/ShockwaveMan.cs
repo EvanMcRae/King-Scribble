@@ -1,3 +1,4 @@
+//used for the actual shockwave animation over set rate of time
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,78 +6,57 @@ using UnityEngine;
 public class ShockwaveMan : MonoBehaviour
 {
 
-    //public GameObject shockPrefab;
-    
-    //object performing shockwave
-    //public GameObject parent;
-    //public Transform parTransform;
-
     //how long it takes for shockwave to expand outwards
-    //SeraizliedField: adj priv float in inspector
     [SerializeField] private float shockWaveTime = 2.0f;
-
-
     private Coroutine shockWaveCoroutine;
-
     private Material shaderMaterial;
 
-    //shader property to change
+    //shader property to change (how the wave spreads)
     private static int _waveDistFromCenter = Shader.PropertyToID("_waveDistFromCenter");
-
     
     private void Awake()
     {
-        //ref mat on sprite renderer
-
+        //refercing sprite material used for animation
         SpriteRenderer shockwaveSprite = GetComponent<SpriteRenderer>();
-
-        //Material shaderMaterial = shockwaveSprite.material;
-
-        shaderMaterial = GetComponent<SpriteRenderer>().material;
+        if (shockwaveSprite != null)
+        {
+            shaderMaterial = GetComponent<SpriteRenderer>().material;
+        }
     }
 
-
+    //queues the shockwave animation
     public void CallShockwave()
     {
         StopAllCoroutines();
-
-        Debug.Log("did we spawn?");
-        Debug.Log($"[{Time.time:F2}] Shockwave animation started for {gameObject.name}. Expected duration: {shockWaveTime}s.", this);
         shockWaveCoroutine = StartCoroutine(ShockWaveAction(-0.1f, 1f));
 
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos)
     {
-        
-        shaderMaterial.SetFloat(_waveDistFromCenter, startPos);
-
-
-        float lerpedAmount = 0f;
-        float elapsedTime = 0f;
-
-
-        while (elapsedTime < shockWaveTime)
+        if (shaderMaterial != null)
         {
-            elapsedTime += Time.deltaTime;
-            //Debug.Log("this is the elapsedTime " + elapsedTime);
+            shaderMaterial.SetFloat(_waveDistFromCenter, startPos);
 
+            float lerpedAmount = 0f;
+            float elapsedTime = 0f;
 
-            lerpedAmount = Mathf.Lerp(startPos, endPos, (elapsedTime / shockWaveTime));
-            //Debug.Log("this is the lerped amount " + lerpedAmount);
-            //rate at which shockWave expands 
-            shaderMaterial.SetFloat(_waveDistFromCenter, lerpedAmount);
+            while (elapsedTime < shockWaveTime)
+            {
+                elapsedTime += Time.deltaTime;
 
-            yield return null;
+                //used for smoothing the effect
+                lerpedAmount = Mathf.Lerp(startPos, endPos, (elapsedTime / shockWaveTime));
+                //rate at which shockWave expands 
+                shaderMaterial.SetFloat(_waveDistFromCenter, lerpedAmount);
+
+                yield return null;
+            }
+
+            //just to make ensure the shockwave has finshed
+            shaderMaterial.SetFloat(_waveDistFromCenter, endPos);
+            //destroys sprite once shockwave effect finishes
+            Destroy(gameObject);
         }
-
-        // shaderMaterial.SetFloat(_waveDistFromCenter, endPos);
-       // Debug.Log($"[{Time.time:F2}] Shockwave animation finished for {gameObject.name} after {elapsedTime:F2}s. Preparing to destroy.", this);
-        //destroys sprite once shockwave effect finishes
-        Destroy(gameObject);
-        //Debug.Log("did we destroy?");
-
-        //Debug.Log($"[{Time.time:F2}] Destroy call completed for {gameObject.name}. (This might not appear if object immediately gone)");
     }
-
 }

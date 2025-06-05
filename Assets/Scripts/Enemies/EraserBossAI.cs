@@ -124,16 +124,10 @@ public class EraserBossAI : MonoBehaviour
 
 
     // ------------ SHOCKWAVE STUFF  ------------
-
-    //public GameObject shockPrefab;
-    //refer to roar shader script
     private ShockwaveSpawner spawnerScript;
     [SerializeField] private Camera _shockwaveCamera;
-
     [SerializeField] private Material _shockwaveMat;
-    //[SerializeField] private SpriteRenderer shockwaveSpritePrefab;
-    //current rendered shockwave sprite
-    //private GameObject currShockwave;
+    
 
 
     void Start() {
@@ -260,8 +254,7 @@ public class EraserBossAI : MonoBehaviour
                 Invoke(nameof(RoarSound), 10/12f);
                 if (spawnerScript != null)
                 {
-                    Debug.LogError("SHOCKWAVE CALLED?????");
-                    //spawnerScript.SpawnShockwave();
+                    //spawning prefab with delay to sync with roar
                     spawnerScript.Invoke(nameof(spawnerScript.SpawnShockwave), 10 / 12f);
                 }
                 break;
