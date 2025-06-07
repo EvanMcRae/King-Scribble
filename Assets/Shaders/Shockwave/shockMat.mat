@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -24,6 +24,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _mainText:
         m_Texture: {fileID: 2800000, guid: 19e5819ffe8f741c7ba7a4fce16848c9, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -61,6 +65,7 @@ Material:
     - _ZWriteControl: 0
     - _swStrength: -0.1
     - _waveDistFromCenter: 0.465
+    - _xRatio: 1.777
     m_Colors:
     - _ringSpawnPos: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
