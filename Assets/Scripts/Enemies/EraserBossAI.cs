@@ -59,6 +59,7 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private GameObject _leftInk;
     [SerializeField] private GameObject _rightInk;
+    [SerializeField] private Moving_Platform movingWall;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -239,10 +240,6 @@ public class EraserBossAI : MonoBehaviour
                 EBrb.gravityScale = 1;  // these values are needed for gravity and forces
                 EBrb.drag = 0;
                 break;
-            case State.EndScene:
-                EBrb.gravityScale = 1;
-                EBrb.drag = 0;
-                break;
             case State.Roar:
                 Invoke(nameof(RoarSound), 10 / 12f); // the time accounts for the delay in the animation
                 if (spawnerScript != null)
@@ -257,6 +254,12 @@ public class EraserBossAI : MonoBehaviour
             case State.Idle:
                 EBrb.gravityScale = 0; // these values are needed for oscillation
                 EBrb.drag = 10;
+                break;
+            case State.EndScene:
+                EBrb.gravityScale = 0;
+                EBrb.drag = 0;
+                movingWall.ReturnToStart();
+                StartCoroutine(EndScene());
                 break;
         }
     }
@@ -290,6 +293,8 @@ public class EraserBossAI : MonoBehaviour
             case State.Moving:
                 OrientSpriteDirection();
                 Hover(destination, baseSpeed);
+                // Debug.Log("Moving to: " + destination);
+                // Debug.Log("Trasform is: " + transform.position);
                 break;
 
             case State.ChargePrep:
@@ -378,6 +383,7 @@ public class EraserBossAI : MonoBehaviour
                 break;
 
             case State.Damaged:
+                anim.Play("EB_Hurt");
                 if (timer >= damageTime)
                 {
                     if (!isShielding)
@@ -1092,6 +1098,21 @@ public class EraserBossAI : MonoBehaviour
         ChangeState(State.Searching);
     }
 
+    private IEnumerator EndScene()
+    {
+        baseSpeed = 25f;
+        anim.Play("EB_Stun");
+        yield return new WaitForSeconds(2.0f);
+
+        destination = new Vector3(transform.position.x, -9.25f, 0); // front of door coords
+        ChangeState(State.Moving);
+        yield return new WaitForSeconds(1.0f);
+
+        destination = new Vector3(120, -9.25f, 0);
+        yield return new WaitForSeconds(5.0f);
+        gameObject.SetActive(false); // bye bye :D
+
+    }
     // returns a point in bounds of the arena
     // arena bounds 3 < x 72.3 AND -21.5 < y < 11
     private Vector3 checkBounds(Vector3 point)
