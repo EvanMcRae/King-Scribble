@@ -20,6 +20,10 @@ public class Pencil : Tool
     protected override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
+        if (_currentLine.canDraw || !_currentLine.hasDrawn) 
+            _currentLine.SetPosition(mousePos);
+        else if (!_currentLine.canDraw && _currentLine.hasDrawn)
+            BeginDraw(mousePos);
     }
 
     protected override void EndDraw()

@@ -27,6 +27,21 @@ public class Pen : Tool
     protected override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
+        if (_currentLine.canDraw || !_currentLine.hasDrawn)
+        {
+            _currentLine.SetPosition(mousePos);
+
+            if (_currentLine.CheckClosedLoop() || _currentLine.hasOverlapped || PlayerVars.instance.tempPenFuelLeft() <= 0)
+            {
+                EndDraw();
+                _drawCooldown = _DRAW_CD;
+            }
+        }
+
+        else if (!_currentLine.canDraw && _currentLine.hasDrawn)
+        {
+            BeginDraw(mousePos);
+        } 
     }
 
     protected override void EndDraw()
