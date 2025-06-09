@@ -64,6 +64,7 @@ public class Tool : ScriptableObject
             EndDraw();
             return;
         }
+
         // Check for noDraw layers
         RaycastHit2D noDrawHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noDraw);
         if (noDrawHit.collider != null)
@@ -72,6 +73,7 @@ public class Tool : ScriptableObject
             EndDraw();
             return;
         }
+        
         // Check for refill layers
         RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill);
         if (refillHit.collider != null)

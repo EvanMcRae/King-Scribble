@@ -17,6 +17,11 @@ public class Pen : Tool
     protected override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
+        if (_linesFolder != null)
+            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity, _linesFolder.transform);
+        else
+            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity);
+        SetPenParams(_currentLine);
     }
 
     protected override void Draw(Vector2 mousePos)
@@ -32,5 +37,16 @@ public class Pen : Tool
     protected override void RightClick(Vector2 mousePos)
     {
         base.RightClick(mousePos);
+    }
+
+    private void SetPenParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
+    {   
+        line.is_pen = true;
+        line.SetThickness(_startThickness);
+        line.collisionsActive = false;
+        line.GetComponent<LineRenderer>().startColor = _startColor;
+        line.GetComponent<LineRenderer>().endColor = _startColor;
+        line.startPoint.enabled = true;
+        line.startPoint.color = _startColor;
     }
 }
