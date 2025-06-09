@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// Note - all variables (and otherwise) marked with RF are to be eventually removed and incorporated into the tool scripts when the refactor is complete
 [Serializable]
-public enum ToolType
+public enum ToolType // RF
 {
     None,
     Pencil,
@@ -15,34 +15,34 @@ public enum ToolType
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 public class DrawManager : MonoBehaviour
 {
-    [SerializeField] public Line linePrefab;
-    [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased
-    [SerializeField] private GameObject PencilLinesFolder; // used in EB fight
-    [SerializeField] private GameObject PenLinesFolder; // used in EB fight
-    public const float RESOLUTION = 0.1f;
-    public const float DRAW_CD = 0.5f;
-    private Line currentLine;
-    private float drawCooldown = 0f;
+    [SerializeField] public Line linePrefab; // RF
+    [SerializeField] public float eraserRadius = 0.5f; // radius of the raycast of what will be erased - RF
+    [SerializeField] private GameObject PencilLinesFolder; // used in EB fight - RF
+    [SerializeField] private GameObject PenLinesFolder; // used in EB fight - RF
+    public const float RESOLUTION = 0.1f; // RF
+    public const float DRAW_CD = 0.5f; // RF
+    private Line currentLine; // RF
+    private float drawCooldown = 0f; // RF
     private ToolType activeSubmeter = ToolType.Pencil;
-    public bool isDrawing = false; // True when the mouse is being held down with an drawing tool
-    public bool isErasing = false; // True when the mouse is being held down with an erasing tool
+    public bool isDrawing = false; // True when the mouse is being held down with an drawing tool - RF
+    public bool isErasing = false; // True when the mouse is being held down with an erasing tool - RF
 
-    public Color pencilColor_start; // Color of pencil lines at the start of the gradient
-    public Color pencilColor_end; // Color of pencil lines at the end of the gradient
-    public Color penColor_start; // Color of pen lines while being drawn
-    public Color penColor_fin; // Color of pen lines once finished
-    public float pencilThickness; // Thickness of pencil lines
-    public float penThickness_start; // Thickness of pen lines while being drawn
-    public float penThickness_fin; // Thickness of pen lines once finished
+    public Color pencilColor_start; // Color of pencil lines at the start of the gradient - RF
+    public Color pencilColor_end; // Color of pencil lines at the end of the gradient - RF
+    public Color penColor_start; // Color of pen lines while being drawn - RF
+    public Color penColor_fin; // Color of pen lines once finished - RF
+    public float pencilThickness; // Thickness of pencil lines - RF
+    public float penThickness_start; // Thickness of pen lines while being drawn - RF
+    public float penThickness_fin; // Thickness of pen lines once finished - RF
 
     public Texture2D defaultCursor; // The texture file for the cursor used by default
-    public Texture2D pencilCursor; // The texture file for the cursor used for the pencil
-    public Texture2D penCursor; // The texture file for the cursor used for the pen
-    public Texture2D eraserCursor; // The texture file for the cursor used for the eraser
+    public Texture2D pencilCursor; // The texture file for the cursor used for the pencil - RF
+    public Texture2D penCursor; // The texture file for the cursor used for the pen - RF
+    public Texture2D eraserCursor; // The texture file for the cursor used for the eraser - RF
 
-    public Material fillMat; // The material to fill pen objects with (temporary)
-    public List<Sprite> fillTextures = new(); // The textures to fill pen objects with (temporary)
-    public Color fillColor; // The color to fill pen objects with (temporary)
+    public Material fillMat; // The material to fill pen objects with (temporary) - RF
+    public List<Sprite> fillTextures = new(); // The textures to fill pen objects with (temporary) - RF
+    public Color fillColor; // The color to fill pen objects with (temporary) - RF
 
     [SerializeField] private List<GameObject> submeters;
 
@@ -58,9 +58,9 @@ public class DrawManager : MonoBehaviour
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
 
-    [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab
-    private GameObject trail; // To hold the instantiated prefab
-    public bool cutting = false;
+    [SerializeField] private GameObject cuttingTrail; // To hold a reference to the trail prefab - RF
+    private GameObject trail; // To hold the instantiated prefab - RF
+    public bool cutting = false; // RF
 
     public delegate void UpdatePenAction(float mass);
     public UpdatePenAction updatePenAreaEvent;

@@ -9,22 +9,22 @@ public class PlayerVars : MonoBehaviour
 
     public Inventory inventory = null;
     public static Inventory lastSavedInventory = new();
-    [SerializeField] private int maxDoodleFuel = 750;
-    [SerializeField] private int maxPenFuel = 1000;
-    [SerializeField] private int maxEraserFuel = 500;
+    [SerializeField] private int maxDoodleFuel = 750; // RF
+    [SerializeField] private int maxPenFuel = 1000; // RF
+    [SerializeField] private int maxEraserFuel = 500; // RF
     public ToolType cur_tool = ToolType.None;
-    private int curDoodleFuel;
-    private int curPenFuel, tempPenFuel;
-    private int curEraserFuel;
-    public delegate void DrawDoodleEvent(float doodlePercent);
-    public delegate void DrawPenEvent(float penPercent);
-    public delegate void PenMonitorEvent(float penPercent);
-    public delegate void EraseEvent(float erasePercent);
-    public DrawDoodleEvent doodleEvent;
-    public DrawPenEvent penEvent;
-    public PenMonitorEvent penMonitorEvent;
-    public EraseEvent eraseEvent;
-    public Action releaseEraser;
+    private int curDoodleFuel; // RF?
+    private int curPenFuel, tempPenFuel; // RF?
+    private int curEraserFuel; // RF?
+    public delegate void DrawDoodleEvent(float doodlePercent); // RF?
+    public delegate void DrawPenEvent(float penPercent); // RF?
+    public delegate void PenMonitorEvent(float penPercent); // RF?
+    public delegate void EraseEvent(float erasePercent); // RF?
+    public DrawDoodleEvent doodleEvent; // RF?
+    public DrawPenEvent penEvent; // RF?
+    public PenMonitorEvent penMonitorEvent; // RF?
+    public EraseEvent eraseEvent; // RF?
+    public Action releaseEraser; // RF?
     public bool isDead = false;
     private Vector3 spawn_pos;
     public bool cheatMode = false;
