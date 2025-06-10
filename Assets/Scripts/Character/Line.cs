@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
+// NOTE: all lines marked with a star (*) will need to be rewritten to some extent to accomodate the tool refactor
 public class Line : MonoBehaviour
 {
     [SerializeField] private LineRenderer lineRenderer;
@@ -25,9 +26,13 @@ public class Line : MonoBehaviour
     public float area = 0;
     public SpriteRenderer startPoint;
 
-    Vector2[] ConvertArray(Vector3[] v3){
-        Vector2 [] v2 = new Vector2[v3.Length];
-        for(int i = 0; i <  v3.Length; i++){
+    // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
+
+    Vector2[] ConvertArray(Vector3[] v3)
+    {
+        Vector2[] v2 = new Vector2[v3.Length];
+        for (int i = 0; i < v3.Length; i++)
+        {
             v2[i] = v3[i];
         }
         return v2;
@@ -57,14 +62,14 @@ public class Line : MonoBehaviour
             colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
-        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
+        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION) // * (replace DrawManager.RESOLUTION with DrawManager.currentTool._RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
-                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
+                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION); // *
                 AppendPos(marchPos, addFuel);
-            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
+            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION); // *
         }
 
         AppendPos(position, addFuel);
@@ -79,7 +84,8 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Add circle collider component for this point if using pencil
-        if (!is_pen) {
+        if (!is_pen)
+        {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
             circleCollider.radius = thickness / 2;
@@ -95,8 +101,8 @@ public class Line : MonoBehaviour
         if (lineRenderer.positionCount > 1 && addFuel)
         {
             int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost);
-            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost);
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost); // * fuel moved to tool script - reference current tool
+            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost); // *
         }
     }
 
@@ -115,8 +121,8 @@ public class Line : MonoBehaviour
 
         // Then check for minimum distance between points with local space-transformed position
         float distance = Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position));
-        if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw();
-        return distance > DrawManager.RESOLUTION && distance < MAX_DISTANCE;
+        if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw(); // * call EndDraw() from tool instead
+        return distance > DrawManager.RESOLUTION && distance < MAX_DISTANCE; // * DrawManager.RESOLUTION -> tool._RESOLUTION
     }
 
     public int GetPointsCount()
@@ -143,13 +149,13 @@ public class Line : MonoBehaviour
     {
         gameObject.layer = 7; // Pen line layer
         gameObject.tag = "Pen";
-        lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
+        lineRenderer.SetPosition(GetPointsCount() - 1, GetFirstPoint());
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
-        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount);
+        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount); // *
         // Set weight based on area
-        Vector3[] points = new Vector3[GetPointsCount()]; 
+        Vector3[] points = new Vector3[GetPointsCount()];
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
         // Note: This is ugly. I know this is ugly. It works. (from https://stackoverflow.com/questions/2034540/calculating-area-of-irregular-polygon-in-c-sharp)
         area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
@@ -175,7 +181,7 @@ public class Line : MonoBehaviour
         foreach (CircleCollider2D c in colliders)
             c.enabled = true;
     }
-    
+
     // TODO Could be used in the future for other tools
     public void SetThickness(float newThickness)
     {
@@ -213,7 +219,7 @@ public class Line : MonoBehaviour
         ContactFilter2D def = new()
         {
             useLayerMask = true,
-            layerMask =~ LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
+            layerMask = ~LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
         };
         if (polyCollider.OverlapCollider(def, results) != 0)
         {
@@ -263,22 +269,24 @@ public class Line : MonoBehaviour
     void OnDestroy()
     {
         // Create the pen object destruction particle effect
-        if (gameObject.scene.isLoaded) { // Only call if the destruction is not a result of a scene change/exit
+        if (gameObject.scene.isLoaded)
+        { // Only call if the destruction is not a result of a scene change/exit
             if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>()) return; // Only run on pen objects
             ParticleSystem part = Instantiate(penObjDestroy, gameObject.GetComponent<PolygonCollider2D>().bounds.center, Quaternion.identity);
             // Set the mesh of the particle system to the mesh of the pen object
             var shape = part.shape;
             shape.mesh = gameObject.GetComponentInChildren<MeshFilter>().mesh;
-            
-            if(area != 0) {
+
+            if (area != 0)
+            {
                 // Set the number of particles based on the object's area
                 var burst = part.emission.GetBurst(0);
                 burst.count = 20 * area;
                 part.emission.SetBurst(0, burst);
                 // Play the effect (and then destroy)
                 part.Play();
-                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy");
-            } 
+                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy"); // *?
+            }
         }
     }
 
@@ -340,7 +348,7 @@ public class Line : MonoBehaviour
         int iter = 0;
         while (numRemoved != 0 && GetPointsCount() > minSize)
         {
-            iter ++;
+            iter++;
             numRemoved = 0;
             List<Vector2> path = new(polyCollider.GetPath(0));
             for (int i = 1; i < path.Count - 1; i++)
@@ -348,8 +356,8 @@ public class Line : MonoBehaviour
                 if (Vector2.Distance(path[i - 1], path[i]) < threshold || Vector2.Distance(path[i], path[i + 1]) < threshold)
                 {
                     path.RemoveAt(i);
-                    numRemoved ++;
-                }  
+                    numRemoved++;
+                }
             }
             polyCollider.SetPath(0, path);
         }

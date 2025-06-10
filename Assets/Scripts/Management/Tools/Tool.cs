@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Tool", menuName = "ScriptableObjects/Tool", order = 1)]
 public class Tool : ScriptableObject
 {
     [SerializeField] protected Line _linePref;
@@ -23,14 +24,22 @@ public class Tool : ScriptableObject
 
     public const float _RESOLUTION = 0.1f;
     public const float _DRAW_CD = 0.5f;
+    public const int _index = 0;
 
     protected Line _currentLine;
     protected float _drawCooldown = 0f;
     protected int _curFuel;
+    protected int _tempFuel;
     protected bool _rmbActive = false;
 
     public int GetCurFuel() { return _curFuel; }
     public float GetFuelRemaining() { return (float)_curFuel / _maxFuel; }
+    public float GetTempFuelRemaining() { return (float)_tempFuel / _maxFuel; }
+
+    public delegate void FuelEvent(float fuelPercent);
+    public delegate void TempFuelEvent(float tempFuelPercent);
+    public FuelEvent _fuelEvent;
+    public TempFuelEvent _tempFuelEvent;
 
     protected virtual void BeginDraw(Vector2 mousePos)
     {
@@ -73,7 +82,7 @@ public class Tool : ScriptableObject
             EndDraw();
             return;
         }
-        
+
         // Check for refill layers
         RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill);
         if (refillHit.collider != null)
@@ -88,22 +97,40 @@ public class Tool : ScriptableObject
     {
         _beganDraw = false;
         _drawing = false;
-        return;
     }
 
     protected virtual void RightClick(Vector2 mousePos)
     {
-        return;
+        _rmbActive = true;
     }
 
     protected virtual void SpendFuel(int amount)
     {
         if (PlayerVars.instance.cheatMode) return;
         _curFuel = (int)Mathf.Clamp(_curFuel - amount, 0f, _maxFuel);
+        _tempFuel = _curFuel;
+        _fuelEvent(GetFuelRemaining());
     }
 
     protected virtual void AddFuel(int amount)
     {
         _curFuel = (int)Mathf.Clamp(_curFuel + amount, 0f, _maxFuel);
+        _tempFuel = _curFuel;
+        _fuelEvent(GetFuelRemaining());
+        _tempFuelEvent(GetTempFuelRemaining());
+    }
+
+    protected virtual void SpendTempFuel(int amount)
+    {
+        if (PlayerVars.instance.cheatMode) return;
+        _tempFuel = (int)Mathf.Clamp(_tempFuel - amount, 0f, _maxFuel);
+        _tempFuelEvent(GetTempFuelRemaining());
+    }
+
+    protected virtual void ResetTempFuel()
+    {
+        if (PlayerVars.instance.cheatMode) return;
+        _tempFuel = _curFuel;
+        _tempFuelEvent(GetTempFuelRemaining());
     }
 }

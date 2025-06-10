@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Eraser", menuName = "ScriptableObjects/Eraser", order = 4)]
 public class Eraser : Tool
 {
     [SerializeField] private float _radius = 0.5f;
     private Vector2 _lastMousePos;
+
+    public new const int _index = 3;
 
     protected override void BeginDraw(Vector2 mousePos)
     {
@@ -19,10 +22,6 @@ public class Eraser : Tool
     protected override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
-    }
-
-    protected override void EndDraw()
-    {
-        base.EndDraw();
+        // TODO: Port eraser "draw" functionality here (rewrite to avoid using coroutine)
     }
 }
