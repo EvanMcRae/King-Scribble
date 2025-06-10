@@ -8,9 +8,9 @@ public class Tool : ScriptableObject
     [SerializeField] protected Line _linePref;
     [SerializeField] protected Color _startColor;
     [SerializeField] protected Color _endColor;
-    [SerializeField] protected Texture2D _cursor;
+    public Texture2D _cursor;
     [SerializeField] protected int _maxFuel = 1000;
-    [SerializeField] protected SoundClip _sound;
+    public SoundClip _sound;
 
     [Tooltip("Layers that will prevent drawing with this tool. Will take precedence over refill layers - be sure to exclude those here.")]
     [SerializeField] protected LayerMask _noDraw;
@@ -21,16 +21,16 @@ public class Tool : ScriptableObject
 
     public bool _drawing = false;
     public bool _beganDraw = false;
+    public float _drawCooldown = 0f;
+    public bool _rmbActive = false;
 
     public const float _RESOLUTION = 0.1f;
     public const float _DRAW_CD = 0.5f;
     public const int _index = 0;
 
     protected Line _currentLine;
-    protected float _drawCooldown = 0f;
     protected int _curFuel;
     protected int _tempFuel;
-    protected bool _rmbActive = false;
 
     public int GetCurFuel() { return _curFuel; }
     public float GetFuelRemaining() { return (float)_curFuel / _maxFuel; }
@@ -41,7 +41,13 @@ public class Tool : ScriptableObject
     public FuelEvent _fuelEvent;
     public TempFuelEvent _tempFuelEvent;
 
-    protected virtual void BeginDraw(Vector2 mousePos)
+    void OnEnable()
+    {
+        _curFuel = _maxFuel;
+        _tempFuel = _curFuel;
+    }
+
+    public virtual void BeginDraw(Vector2 mousePos)
     {
         // Check base requirements - player not dead, game not paused, etc.
         if (PlayerVars.instance.isDead || !GameManager.canMove || GameManager.paused || _rmbActive || HUDButtonCursorHandler.inside) { return; }
@@ -60,13 +66,13 @@ public class Tool : ScriptableObject
             AddFuel(_refillRate);
             return;
         }
-
         _beganDraw = true;
         _drawing = true;
     }
 
-    protected virtual void Draw(Vector2 mousePos)
+    public virtual void Draw(Vector2 mousePos)
     {
+        if (PlayerVars.instance.isDead || !GameManager.canMove || GameManager.paused || _rmbActive || HUDButtonCursorHandler.inside) { return; }
         // Check fuel
         if (GetFuelRemaining() <= 0f)
         {
@@ -93,15 +99,21 @@ public class Tool : ScriptableObject
         }
     }
 
-    protected virtual void EndDraw()
+    public virtual void EndDraw()
     {
         _beganDraw = false;
         _drawing = false;
     }
 
-    protected virtual void RightClick(Vector2 mousePos)
+    public virtual void RightClick(Vector2 mousePos)
     {
+        if (PlayerVars.instance.isDead || !GameManager.canMove || GameManager.paused || _beganDraw || HUDButtonCursorHandler.inside) { return; }
         _rmbActive = true;
+    }
+
+    public virtual void EndRightClick()
+    {
+        _rmbActive = false;
     }
 
     protected virtual void SpendFuel(int amount)
@@ -132,5 +144,12 @@ public class Tool : ScriptableObject
         if (PlayerVars.instance.cheatMode) return;
         _tempFuel = _curFuel;
         _tempFuelEvent(GetTempFuelRemaining());
+    }
+
+    public void SwapColors(Line line)
+    {
+        Color temp = line.GetComponent<LineRenderer>().startColor;
+        line.GetComponent<LineRenderer>().startColor = _endColor;
+        line.GetComponent<LineRenderer>().endColor = temp;
     }
 }

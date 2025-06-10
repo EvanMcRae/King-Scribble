@@ -12,21 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879415acee029b0419084688d343b684, type: 3}
   m_Name: Pencil
   m_EditorClassIdentifier: 
-  _linePref: {fileID: 0}
-  _startColor: {r: 0, g: 0, b: 0, a: 0}
-  _endColor: {r: 0, g: 0, b: 0, a: 0}
-  _cursor: {fileID: 0}
-  _maxFuel: 1000
-  _sound: {fileID: 0}
+  _linePref: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  _startColor: {r: 0.43529415, g: 0.43529415, b: 0.43529415, a: 1}
+  _endColor: {r: 0.28235295, g: 0.28235295, b: 0.28235295, a: 1}
+  _cursor: {fileID: 2800000, guid: af4a0f8b72e884c05b666768ff9637cd, type: 3}
+  _maxFuel: 750
+  _sound: {fileID: 11400000, guid: 20ddd93e45fae442d97558530b9de754, type: 2}
   _noDraw:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 87768
   _refill:
     serializedVersion: 2
     m_Bits: 0
   _refillRate: 10
   _drawing: 0
   _beganDraw: 0
-  _lineThickness: 0
+  _drawCooldown: 0
+  _rmbActive: 0
+  _lineThickness: 0.1
   _linesFolder: {fileID: 0}
   _smoothSeverity: 3

@@ -10,7 +10,7 @@ public class Eraser : Tool
 
     public new const int _index = 3;
 
-    protected override void BeginDraw(Vector2 mousePos)
+    public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
         mousePos += new Vector2(0.5f, -0.5f);
@@ -19,9 +19,20 @@ public class Eraser : Tool
         return;
     }
 
-    protected override void Draw(Vector2 mousePos)
+    public override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
         // TODO: Port eraser "draw" functionality here (rewrite to avoid using coroutine)
+    }
+
+    public override void EndDraw()
+    {
+        base.EndDraw();
+        PlayerVars.instance.releaseEraser?.Invoke();
+    }
+
+    public void Replenish()
+    {
+
     }
 }

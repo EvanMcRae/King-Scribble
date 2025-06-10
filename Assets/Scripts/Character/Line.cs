@@ -62,14 +62,14 @@ public class Line : MonoBehaviour
             colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
-        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION) // * (replace DrawManager.RESOLUTION with DrawManager.currentTool._RESOLUTION)
+        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > Tool._RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
-                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION); // *
+                marchPos = Vector2.MoveTowards(marchPos, position, Tool._RESOLUTION); // *
                 AppendPos(marchPos, addFuel);
-            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION); // *
+            } while (Vector2.Distance(marchPos, position) > Tool._RESOLUTION); // *
         }
 
         AppendPos(position, addFuel);
@@ -122,7 +122,7 @@ public class Line : MonoBehaviour
         // Then check for minimum distance between points with local space-transformed position
         float distance = Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position));
         if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw(); // * call EndDraw() from tool instead
-        return distance > DrawManager.RESOLUTION && distance < MAX_DISTANCE; // * DrawManager.RESOLUTION -> tool._RESOLUTION
+        return distance > Tool._RESOLUTION && distance < MAX_DISTANCE;
     }
 
     public int GetPointsCount()

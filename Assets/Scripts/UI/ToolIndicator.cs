@@ -25,9 +25,9 @@ public class ToolIndicator : MonoBehaviour
                 slot.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < PlayerVars.instance.inventory.toolUnlocks.Count; i++)
+        for (int i = 0; i < PlayerVars.instance.inventory._toolTypes.Count; i++)
         {
-            ToolType currTool = PlayerVars.instance.inventory.toolUnlocks[i];
+            ToolType currTool = PlayerVars.instance.inventory._toolTypes[i];
 
             // TODO this feels really bad but interim solutions :,)
             Sprite used = null, unused = null;
@@ -55,7 +55,7 @@ public class ToolIndicator : MonoBehaviour
             }
         }
 
-        PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory.toolUnlocks.Count];
+        PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory._toolTypes.Count];
     }
 
     public void SelectTool(int index)

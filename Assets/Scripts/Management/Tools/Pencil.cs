@@ -12,10 +12,9 @@ public class Pencil : Tool
 
     public new const int _index = 1;
 
-    protected override void BeginDraw(Vector2 mousePos)
+    public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
-
         if (_linesFolder != null)
         {
             _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity, _linesFolder.transform);
@@ -25,11 +24,11 @@ public class Pencil : Tool
         {
             _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity);
         }
-
+        Debug.Log("a3");
         SetPencilParams(_currentLine);
     }
 
-    protected override void Draw(Vector2 mousePos)
+    public override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
 
@@ -44,7 +43,7 @@ public class Pencil : Tool
         }
     }
 
-    protected override void EndDraw()
+    public override void EndDraw()
     {
         base.EndDraw();
 
@@ -53,6 +52,8 @@ public class Pencil : Tool
             if (_currentLine.GetPointsCount() < 2) Destroy(_currentLine.gameObject);
             _currentLine.SmoothPencil(_smoothSeverity);
         }
+
+        _currentLine = null;
     }
 
     private void SetPencilParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor

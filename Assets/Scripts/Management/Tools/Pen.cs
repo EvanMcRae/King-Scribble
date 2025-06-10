@@ -25,14 +25,13 @@ public class Pen : Tool
     [SerializeField] private int _smoothSeverity = 1;
 
     private GameObject _trail;
-    private bool _cutting = false;
 
     public new const int _index = 2;
 
     public delegate void UpdatePenAction(float mass);
     public UpdatePenAction _updatePenAreaEvent;
 
-    protected override void BeginDraw(Vector2 mousePos)
+    public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
 
@@ -49,7 +48,7 @@ public class Pen : Tool
         SetPenParams(_currentLine);
     }
 
-    protected override void Draw(Vector2 mousePos)
+    public override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
         if (_currentLine.canDraw || !_currentLine.hasDrawn)
@@ -69,9 +68,12 @@ public class Pen : Tool
         }
     }
 
-    protected override void EndDraw()
+    public override void EndDraw()
     {
         base.EndDraw();
+
+        if (_currentLine == null)
+            return;
 
         if (_currentLine.CheckClosedLoop())
         {
@@ -84,11 +86,38 @@ public class Pen : Tool
             _currentLine = null;
             ResetTempFuel();
         }
+
+        _currentLine = null;
     }
 
-    protected override void RightClick(Vector2 mousePos)
+    public override void RightClick(Vector2 mousePos)
     {
         base.RightClick(mousePos);
+
+        if (_trail == null)
+        {
+            _trail = Instantiate(_trailPref, mousePos, Quaternion.identity);
+        }
+
+        _trail.transform.position = mousePos;
+        RaycastHit2D hit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _cutLayers);
+
+        if (hit == true)
+        {
+            hit.collider.gameObject.GetComponent<Breakable>().Break();
+            DrawManager_RF.instance.toolSoundPlayer.PlaySound("Player.Slice");
+        }
+    }
+
+    public override void EndRightClick()
+    {
+        base.EndRightClick();
+
+        if (_trail != null)
+        {
+            Destroy(_trail);
+            _trail = null;
+        }
     }
 
     private void SetPenParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
@@ -124,6 +153,9 @@ public class Pen : Tool
         MaterialPropertyBlock fillMatBlock = new MaterialPropertyBlock();
         fillMatBlock.SetColor("_Color", _fillColor);
         fillMatBlock.SetTexture("_MainTex", _fillTextures[fillTexture].texture);
+
+        DrawManager_RF.instance.toolSoundPlayer.PlaySound("Drawing.PenComplete");
+
         line.AddMesh(_fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
         line = null;
     }

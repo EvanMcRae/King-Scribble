@@ -178,7 +178,7 @@ public class DrawManager : MonoBehaviour
         if (GameManager.paused) return;
 
         // Tool selection
-        int count = PlayerVars.instance.inventory.toolUnlocks.Count;
+        int count = PlayerVars.instance.inventory._toolTypes.Count;
         if (count > 0)
         {
             // Tool switching
@@ -202,7 +202,7 @@ public class DrawManager : MonoBehaviour
             else
                 scrollDelta = Input.mouseScrollDelta.y;
 
-            int index = PlayerVars.instance.inventory.toolUnlocks.IndexOf(PlayerVars.instance.cur_tool);
+            int index = PlayerVars.instance.inventory._toolTypes.IndexOf(PlayerVars.instance.cur_tool);
             if (scrollDelta >= 0.1f)
             {
                 index = (index - 1 + count) % count;
@@ -532,9 +532,9 @@ public class DrawManager : MonoBehaviour
 
     public void SwitchTool(int index)
     {
-        if (PlayerVars.instance.inventory.toolUnlocks.Count > index)
+        if (PlayerVars.instance.inventory._toolTypes.Count > index)
         {
-            ToolType newTool = PlayerVars.instance.inventory.toolUnlocks[index];
+            ToolType newTool = PlayerVars.instance.inventory._toolTypes[index];
             TrySwitchTool(newTool);
         }
     }
