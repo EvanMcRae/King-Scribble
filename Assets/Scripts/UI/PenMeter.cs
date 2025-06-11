@@ -9,8 +9,8 @@ public class PenMeter : MonoBehaviour
 
     void Start()
     {
-        PlayerVars.instance.penEvent += UpdateSprite;
-        PlayerVars.instance.penMonitorEvent += UpdateMonitor;
+        PlayerVars.instance._pen._fuelEvent += UpdateSprite;
+        PlayerVars.instance._pen._tempFuelEvent += UpdateMonitor;
     }
 
     void UpdateSprite(float penPercent)
@@ -25,7 +25,7 @@ public class PenMeter : MonoBehaviour
 
     void OnDestroy()
     {
-        PlayerVars.instance.penEvent -= UpdateSprite;
-        PlayerVars.instance.penMonitorEvent -= UpdateMonitor;
+        PlayerVars.instance._pen._fuelEvent -= UpdateSprite;
+        PlayerVars.instance._pen._tempFuelEvent -= UpdateMonitor;
     }
 }

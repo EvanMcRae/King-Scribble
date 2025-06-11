@@ -101,8 +101,8 @@ public class Line : MonoBehaviour
         if (lineRenderer.positionCount > 1 && addFuel)
         {
             int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost); // * fuel moved to tool script - reference current tool
-            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost); // *
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance._pencil.SpendFuel(cost); // * fuel moved to tool script - reference current tool
+            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance._pen.SpendTempFuel(cost); // *
         }
     }
 
@@ -153,7 +153,7 @@ public class Line : MonoBehaviour
         // Apply physics behavior
         GetComponent<Rigidbody2D>().isKinematic = false;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
-        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount); // *
+        PlayerVars.instance._pen.SpendFuel(lineRenderer.positionCount); // *
         // Set weight based on area
         Vector3[] points = new Vector3[GetPointsCount()];
         lineRenderer.GetPositions(points); // Get an array containing all points in the line

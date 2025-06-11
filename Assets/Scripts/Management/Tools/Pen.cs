@@ -34,7 +34,7 @@ public class Pen : Tool
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
-
+        if (_abort) return;
         if (_linesFolder != null)
         {
             _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity, _linesFolder.transform);
@@ -51,6 +51,7 @@ public class Pen : Tool
     public override void Draw(Vector2 mousePos)
     {
         base.Draw(mousePos);
+        if (_abort) return;
         if (_currentLine.canDraw || !_currentLine.hasDrawn)
         {
             _currentLine.SetPosition(mousePos);

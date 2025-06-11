@@ -59,6 +59,11 @@ public class PlayerVars : MonoBehaviour
             doodleEvent(doodleFuelLeft());
     }
 
+    public void DieEvent()
+    {
+        Invoke(nameof(Die), 0.75f);
+    }
+
     public void Die()
     {
         GameManager.instance.Reset();
@@ -175,6 +180,9 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().ResizePlayer(doodleFuelLeft());
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
+        _pencil.OnStart();
+        _pen.OnStart();
+        _eraser.OnStart();
     }
 
     public void Dismount()

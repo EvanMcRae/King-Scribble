@@ -100,7 +100,6 @@ public class DrawManager : MonoBehaviour
         if ((Input.GetMouseButtonDown(0) || (Input.GetMouseButton(0) && !_currentTool._beganDraw)) && !_currentTool._rmbActive)
         {
             _currentTool.BeginDraw(mousePos);
-            drawSoundPlayer.PlaySound(_currentTool._sound, 1, true);
         }
 
         // LMB held -> draw
@@ -284,12 +283,13 @@ public class DrawManager : MonoBehaviour
         if (_currentTool._rmbActive)
             _currentTool.EndRightClick();
         LoadSubmeter(newTool);
+        PlayerVars.instance.cur_tool = newTool;
+        _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
         if (!HUDButtonCursorHandler.inside)
         {
             SetCursor();
         }
         ToolIndicator.instance.UpdateMenu(newTool);
-        PlayerVars.instance.cur_tool = newTool;
     }
 
     public bool IsUsingTool()

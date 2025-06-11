@@ -14,8 +14,8 @@ public class EraserMeter : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        PlayerVars.instance.eraseEvent += UpdateSprite;
-        PlayerVars.instance.releaseEraser += ReleaseCursor;
+        PlayerVars.instance._eraser._fuelEvent += UpdateSprite;
+        PlayerVars.instance._eraser._releaseEraser += ReleaseCursor;
         UpdateSprite(1);
     }
 
@@ -41,8 +41,8 @@ public class EraserMeter : MonoBehaviour
 
     void OnDestroy()
     {
-        PlayerVars.instance.eraseEvent -= UpdateSprite;
-        PlayerVars.instance.releaseEraser -= ReleaseCursor;
+        PlayerVars.instance._eraser._fuelEvent -= UpdateSprite;
+        PlayerVars.instance._eraser._releaseEraser -= ReleaseCursor;
     }
 
     private void Update()

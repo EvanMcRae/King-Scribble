@@ -9,7 +9,7 @@ public class ScribbleMeter : MonoBehaviour
 
     void Start()
     {
-        PlayerVars.instance.doodleEvent += UpdateSprite;
+        PlayerVars.instance._pencil._fuelEvent += UpdateSprite;
     }
 
     void UpdateSprite(float doodlePercent)
@@ -19,6 +19,6 @@ public class ScribbleMeter : MonoBehaviour
 
     void OnDestroy()
     {
-        PlayerVars.instance.doodleEvent -= UpdateSprite;
+        PlayerVars.instance._pencil._fuelEvent -= UpdateSprite;
     }
 }
