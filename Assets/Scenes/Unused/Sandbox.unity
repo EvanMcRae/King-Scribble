@@ -9774,6 +9774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f16e0abea11a11348b8b028d46ce53fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentTool: {fileID: 0}
   eraserRadius: 0.5
   defaultCursor: {fileID: 2800000, guid: 08148291e79704fe5ba4dc368c8a78d7, type: 3}
   submeters:
@@ -19181,6 +19182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4731269605357419608, guid: d543b05aee12690479007aa93e26909d, type: 3}
+    - {fileID: 7482471160524968776, guid: d543b05aee12690479007aa93e26909d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3676933707795059544, guid: d543b05aee12690479007aa93e26909d, type: 3}

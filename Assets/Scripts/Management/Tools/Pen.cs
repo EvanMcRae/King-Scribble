@@ -105,7 +105,7 @@ public class Pen : Tool
         if (hit == true)
         {
             hit.collider.gameObject.GetComponent<Breakable>().Break();
-            DrawManager_RF.instance.toolSoundPlayer.PlaySound("Player.Slice");
+            DrawManager.instance.toolSoundPlayer.PlaySound("Player.Slice");
         }
     }
 
@@ -154,7 +154,7 @@ public class Pen : Tool
         fillMatBlock.SetColor("_Color", _fillColor);
         fillMatBlock.SetTexture("_MainTex", _fillTextures[fillTexture].texture);
 
-        DrawManager_RF.instance.toolSoundPlayer.PlaySound("Drawing.PenComplete");
+        DrawManager.instance.toolSoundPlayer.PlaySound("Drawing.PenComplete");
 
         line.AddMesh(_fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
         line = null;

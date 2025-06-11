@@ -121,7 +121,7 @@ public class Line : MonoBehaviour
 
         // Then check for minimum distance between points with local space-transformed position
         float distance = Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position));
-        if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw(); // * call EndDraw() from tool instead
+        if (distance > MAX_DISTANCE) DrawManager.instance._currentTool.EndDraw(); // * call EndDraw() from tool instead
         return distance > Tool._RESOLUTION && distance < MAX_DISTANCE;
     }
 

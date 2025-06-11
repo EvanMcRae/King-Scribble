@@ -24,7 +24,6 @@ public class Pencil : Tool
         {
             _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity);
         }
-        Debug.Log("a3");
         SetPencilParams(_currentLine);
     }
 
@@ -55,9 +54,9 @@ public class Pencil : Tool
 
         _currentLine = null;
     }
-
-    private void SetPencilParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
-    {
+    // NOTE: SET TO PRIVATE ONCE ALL THE ERASER SHIT IS FIGURED OUT
+    public void SetPencilParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
+    { // Also I know it sucks for this to be public - temporarily needed in order for EraserFunctions to work
         line.is_pen = false;
         line.SetThickness(_lineThickness);
         line.collisionsActive = true;

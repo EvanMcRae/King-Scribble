@@ -12,6 +12,9 @@ public class PlayerVars : MonoBehaviour
     [SerializeField] private int maxDoodleFuel = 750; // RF
     [SerializeField] private int maxPenFuel = 1000; // RF
     [SerializeField] private int maxEraserFuel = 500; // RF
+    public Pencil _pencil;
+    public Pen _pen;
+    public Eraser _eraser;
     public ToolType cur_tool = ToolType.None;
     private int curDoodleFuel; // RF?
     private int curPenFuel, tempPenFuel; // RF?

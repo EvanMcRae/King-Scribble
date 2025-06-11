@@ -393,7 +393,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 5822156443712500876, guid: 7564453bbed8f4e929362f8af1791c19, type: 3}
   cam: {fileID: 6201593291800123279}
   defaultInventory:
-    toolUnlocks: 01000000
+    _toolTypes: 
+    _toolUnlocks: []
   defaultTool: 1
   levelStartBanner: {fileID: 5038671693450910097}
 --- !u!1 &4648267746133774761
@@ -712,7 +713,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6306996565702211968}
-  - component: {fileID: 4731269605357419608}
+  - component: {fileID: 7482471160524968776}
   m_Layer: 0
   m_Name: DrawManager
   m_TagString: Untagged
@@ -738,7 +739,7 @@ Transform:
   - {fileID: 9221284244797625017}
   m_Father: {fileID: 3676933707795059544}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4731269605357419608
+--- !u!114 &7482471160524968776
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -747,36 +748,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6592731765839169654}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13e0129cfacc5cd4880c41c6e6d5e33c, type: 3}
+  m_Script: {fileID: 11500000, guid: f16e0abea11a11348b8b028d46ce53fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linePrefab: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  _currentTool: {fileID: 0}
   eraserRadius: 0.5
-  PencilLinesFolder: {fileID: 0}
-  PenLinesFolder: {fileID: 0}
-  isDrawing: 0
-  isErasing: 0
-  pencilColor_start: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
-  pencilColor_end: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 1}
-  penColor_start: {r: 0.745283, g: 0.08788714, b: 0.6973935, a: 1}
-  penColor_fin: {r: 0.45882353, g: 0.05882353, b: 0.43137255, a: 1}
-  pencilThickness: 0.1
-  penThickness_start: 0.125
-  penThickness_fin: 0.15
   defaultCursor: {fileID: 2800000, guid: 08148291e79704fe5ba4dc368c8a78d7, type: 3}
-  pencilCursor: {fileID: 2800000, guid: af4a0f8b72e884c05b666768ff9637cd, type: 3}
-  penCursor: {fileID: 2800000, guid: 775783f421b7e4fa1a9fdee3e919740a, type: 3}
-  eraserCursor: {fileID: 2800000, guid: 10728b136319e40b58619b069e19e633, type: 3}
-  fillMat: {fileID: 2100000, guid: eae29e82f8aa244d6b87cb90f9a109f7, type: 2}
-  fillTextures:
-  - {fileID: 21300000, guid: 01a91343deb804ec695978f0e324afa8, type: 3}
-  - {fileID: 21300000, guid: 2c009f39ea58e41b2814a17293629497, type: 3}
-  - {fileID: 21300000, guid: aa72fa2c0760f4519ac05c9d7d89ab5f, type: 3}
-  - {fileID: 21300000, guid: c2cd1fc60a0074e8e85fed6b2e6d06d4, type: 3}
-  - {fileID: 21300000, guid: 427d4edc8e13d4732a9e8be234cc651a, type: 3}
-  - {fileID: 21300000, guid: 8788480d4757646cb873b140174ca2ef, type: 3}
-  - {fileID: 21300000, guid: 0daa446df4ddc46e18e7902653f98849, type: 3}
-  fillColor: {r: 0.45882353, g: 0.05882353, b: 0.43137255, a: 1}
   submeters:
   - {fileID: 2257417964739641019}
   - {fileID: 2257417964739641019}
@@ -785,13 +762,6 @@ MonoBehaviour:
   toolSoundPlayer: {fileID: 3344002993246173580}
   drawSoundPlayer: {fileID: 8929005846676493228}
   penSoundPlayer: {fileID: 5264261991842151227}
-  drawSounds:
-  - {fileID: 0}
-  - {fileID: 11400000, guid: 20ddd93e45fae442d97558530b9de754, type: 2}
-  - {fileID: 11400000, guid: 2d88dac28d6fc46d1a1676320236c78e, type: 2}
-  - {fileID: 11400000, guid: 12116ba87a9e343be8f52aa01643972c, type: 2}
-  cuttingTrail: {fileID: 1465479247098009191, guid: b900bed1df7535d4c8444484ff2982f1, type: 3}
-  cutting: 0
 --- !u!1 &8482218233780583181
 GameObject:
   m_ObjectHideFlags: 0

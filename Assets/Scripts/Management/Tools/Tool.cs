@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tool", menuName = "ScriptableObjects/Tool", order = 1)]
 public class Tool : ScriptableObject
 {
-    [SerializeField] protected Line _linePref;
+    public Line _linePref;
     [SerializeField] protected Color _startColor;
     [SerializeField] protected Color _endColor;
     public Texture2D _cursor;
@@ -151,5 +151,11 @@ public class Tool : ScriptableObject
         Color temp = line.GetComponent<LineRenderer>().startColor;
         line.GetComponent<LineRenderer>().startColor = _endColor;
         line.GetComponent<LineRenderer>().endColor = temp;
+    }
+
+    public void CheckRefreshLine(Line line)
+    {
+        if (line == _currentLine)
+            EndDraw();
     }
 }

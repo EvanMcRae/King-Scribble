@@ -130,7 +130,7 @@ public class EraserBossAI : MonoBehaviour
     void Start()
     {
 
-        DrawManager.instance.updatePenAreaEvent += updatePenArea;
+        PlayerVars.instance._pen._updatePenAreaEvent += updatePenArea;
 
         if (_shockwaveCamera.targetTexture != null)
             _shockwaveCamera.targetTexture.Release();
@@ -1082,7 +1082,7 @@ public class EraserBossAI : MonoBehaviour
     // unbinds delegate upon destroying the eraser boss -- this is good practice!! - evan
     private void OnDestroy()
     {
-        DrawManager.instance.updatePenAreaEvent -= updatePenArea;
+        PlayerVars.instance._pen._updatePenAreaEvent -= updatePenArea;
     }
 
     // Cut scene that shows EB roaring

@@ -70,7 +70,7 @@ public class PauseMenu : MonoBehaviour
         AudioManager.instance.PauseEffect(true);
 
         if (DrawManager.instance != null)
-            DrawManager.instance.SetCursor(ToolType.None);
+            DrawManager.instance.SetCursor(_override:true);
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
@@ -95,7 +95,7 @@ public class PauseMenu : MonoBehaviour
         pauseScreen.SetActive(false);
 
         if (DrawManager.instance != null && !HUDButtonCursorHandler.inside && PlayerVars.instance != null)
-            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+            DrawManager.instance.SetCursor();
         if (previousButton != null)
         {
             MenuButton prevButton = previousButton.GetComponent<MenuButton>();
