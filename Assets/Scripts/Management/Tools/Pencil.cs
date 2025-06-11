@@ -77,4 +77,16 @@ public class Pencil : Tool
             PlayerVars.instance.DieEvent();
         }
     }
+
+    public override void AddFuel(int amount)
+    {
+        base.AddFuel(amount);
+        PlayerController.instance.ResizePlayer(GetFuelRemaining());
+    }
+
+    public override void MaxFuel()
+    {
+        base.MaxFuel();
+        PlayerController.instance.ResizePlayer(GetFuelRemaining());
+    }
 }

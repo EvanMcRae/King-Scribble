@@ -174,6 +174,12 @@ public class Tool : ScriptableObject
         _tempFuelEvent(GetTempFuelRemaining());
     }
 
+    public virtual void MaxFuel()
+    {
+        _curFuel = _maxFuel;
+        _tempFuel = _curFuel;
+    }
+
     public virtual void SpendTempFuel(int amount)
     {
         if (PlayerVars.instance.cheatMode) return;

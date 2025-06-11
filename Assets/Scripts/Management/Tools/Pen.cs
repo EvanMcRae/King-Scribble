@@ -56,7 +56,7 @@ public class Pen : Tool
         {
             _currentLine.SetPosition(mousePos);
 
-            if (_currentLine.CheckClosedLoop() || _currentLine.hasOverlapped || PlayerVars.instance.tempPenFuelLeft() <= 0)
+            if (_currentLine.CheckClosedLoop() || _currentLine.hasOverlapped || GetTempFuelRemaining() <= 0f)
             {
                 EndDraw();
                 _drawCooldown = _DRAW_CD;

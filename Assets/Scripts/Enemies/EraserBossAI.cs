@@ -524,7 +524,7 @@ public class EraserBossAI : MonoBehaviour
         {
             if (other == KSCollider)
             { // Deplete health from KS
-                PlayerVars.instance.SpendDoodleFuel(50);
+                PlayerVars.instance._pencil.SpendFuel(50);
                 Vector3 distance = transform.position - KingScribble.transform.position;
                 if (distance.x < 0)
                 { // launch right
@@ -963,7 +963,7 @@ public class EraserBossAI : MonoBehaviour
             {
                 pencil.GetComponent<Line>().deleted = true;
                 Destroy(pencil.gameObject);
-                PlayerVars.instance.AddDoodleFuel(tempLine.positionCount); // Give player back their health
+                PlayerVars.instance._pencil.AddFuel(tempLine.positionCount); // Give player back their health
             }
         }
     }

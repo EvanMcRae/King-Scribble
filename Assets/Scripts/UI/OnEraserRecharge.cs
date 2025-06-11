@@ -8,6 +8,6 @@ public class OnEraserRecharge : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.enabled = false;
-        PlayerVars.instance.ReplenishEraser();
+        PlayerVars.instance._eraser.Replenish();
     }
 }

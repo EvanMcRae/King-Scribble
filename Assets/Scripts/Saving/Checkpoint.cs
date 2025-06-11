@@ -29,7 +29,11 @@ public class Checkpoint : MonoBehaviour
     void ActivateCheckpoint()
     {
         GetComponent<SpriteRenderer>().sprite = with_flag;
-        PlayerVars.instance.MaxDoodleFuel();
+        PlayerVars.instance.ReplenishTools();
+        foreach (Tool t in PlayerVars.instance.inventory._toolUnlocks)
+        {
+            t._fuelEvent(t.GetFuelRemaining());
+        }
         PlayerVars.instance.SetSpawnPos(transform.position);
         PlayerVars.instance.SaveInventory();
         GameSaver.SaveStickers();

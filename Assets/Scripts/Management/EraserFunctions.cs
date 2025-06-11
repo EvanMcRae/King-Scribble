@@ -36,8 +36,8 @@ public class EraserFunctions : MonoBehaviour
                     }
                     else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "destroying line with " + numPoints + " points");
-                        PlayerVars.instance.AddDoodleFuel(numPoints);
-                        PlayerVars.instance.SpendEraserFuel(numPoints);
+                        PlayerVars.instance._pencil.AddFuel(numPoints);
+                        PlayerVars.instance._eraser.SpendFuel(numPoints);
                         Destroy(c.gameObject);
                         lineRenderer.GetComponent<Line>().deleted = true;
                         continue;
@@ -101,8 +101,8 @@ public class EraserFunctions : MonoBehaviour
                     {
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "Destroying line with " + pointsList.Count + " points");
                         if (addFuel) {
-                            PlayerVars.instance.AddDoodleFuel(pointsList.Count);
-                            PlayerVars.instance.SpendEraserFuel(pointsList.Count);
+                            PlayerVars.instance._pencil.AddFuel(pointsList.Count);
+                            PlayerVars.instance._eraser.SpendFuel(pointsList.Count);
                         }
                         lineRenderer.GetComponent<Line>().deleted = true;
                         Destroy(c.gameObject);
@@ -120,8 +120,8 @@ public class EraserFunctions : MonoBehaviour
 
         if (addFuel)
         {
-            PlayerVars.instance.AddDoodleFuel(1); // Add fuel
-            PlayerVars.instance.SpendEraserFuel(1); // Spend eraser
+            PlayerVars.instance._pencil.AddFuel(1); // Add fuel
+            PlayerVars.instance._eraser.AddFuel(1); // Spend eraser
         }
         return;
     }
