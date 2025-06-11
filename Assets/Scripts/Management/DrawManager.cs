@@ -37,9 +37,11 @@ public class DrawManager : MonoBehaviour
 
     private void Awake()
     {
-        _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
+        _currentTool = null;
+        if (PlayerVars.instance.inventory._toolTypes.Count > 0)
+            _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
         instance = this;
-        if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside)
+        if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside && _currentTool != null)
             SwitchTool(PlayerVars.instance.cur_tool);
         else
             SetCursor();
@@ -61,8 +63,7 @@ public class DrawManager : MonoBehaviour
     {
         instance = this;
         if (PlayerVars.instance == null) return;
-
-        _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
+        if (_currentTool == null) return;
 
         // Player dead -> stop drawing and return
         if (PlayerVars.instance.isDead)
@@ -276,12 +277,17 @@ public class DrawManager : MonoBehaviour
 
     public void SwitchTool(ToolType newTool)
     {
-        // If LMB held, stop
-        if (_currentTool._drawing)
-            _currentTool.EndDraw();
-        // If RMB held, stop
-        if (_currentTool._rmbActive)
-            _currentTool.EndRightClick();
+        
+        if (_currentTool != null)
+        {
+            // If LMB held, stop
+            if (_currentTool._drawing)
+                _currentTool.EndDraw();
+            // If RMB held, stop
+            if (_currentTool._rmbActive)
+                _currentTool.EndRightClick();
+        }
+        
         LoadSubmeter(newTool);
         PlayerVars.instance.cur_tool = newTool;
         _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
@@ -294,6 +300,7 @@ public class DrawManager : MonoBehaviour
 
     public bool IsUsingTool()
     {
+        if (_currentTool == null) return false;
         return _currentTool._drawing || _currentTool._rmbActive;
     }
 }
