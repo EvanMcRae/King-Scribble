@@ -10,6 +10,7 @@ public class Pen : Tool
     [SerializeField] private float _startThickness;
     [Tooltip("The thickness of the drawn pen lines after they are completed.")]
     [SerializeField] private float _endThickness;
+    public float _thicknessMult = 1;
 
     [Header("Object Fill")]
     [SerializeField] private Material _fillMat;
@@ -17,7 +18,7 @@ public class Pen : Tool
     [SerializeField] private Color _fillColor;
 
     [SerializeField] private GameObject _trailPref;
-    [SerializeField] private GameObject _linesFolder;
+    public GameObject _linesFolder;
 
     [Tooltip("The layer(s) used for cutting - note that simply adding a layer to this list will NOT automatically make all objects in that layer cuttable - a script on each object is needed.")]
     [SerializeField] private LayerMask _cutLayers;
@@ -26,10 +27,18 @@ public class Pen : Tool
 
     private GameObject _trail;
 
-    public new const int _index = 2;
+    private float _startThicknessF;
+    private float _endThicknessF;
 
     public delegate void UpdatePenAction(float mass);
     public UpdatePenAction _updatePenAreaEvent;
+
+    public override void OnStart()
+    {
+        base.OnStart();
+        _startThicknessF = _startThickness * _thicknessMult;
+        _endThicknessF = _endThickness * _thicknessMult;
+    }
 
     public override void BeginDraw(Vector2 mousePos)
     {
@@ -124,7 +133,7 @@ public class Pen : Tool
     private void SetPenParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
     {
         line.is_pen = true;
-        line.SetThickness(_startThickness);
+        line.SetThickness(_startThicknessF);
         line.collisionsActive = false;
         line.GetComponent<LineRenderer>().startColor = _startColor;
         line.GetComponent<LineRenderer>().endColor = _startColor;
@@ -145,7 +154,7 @@ public class Pen : Tool
         if (PlayerVars.instance.curCamZoom > 10)  // Reduce unnecessary vertices if the camera is large enough (larger camera = more points drawn)
             line.Generalize(PlayerVars.instance.curCamZoom / 60f, (int)PlayerVars.instance.curCamZoom * 5);
         line.AddPhysics(); // This function also sets the weight of the object based on its area
-        line.SetThickness(_endThickness); // Set the thickness of the line
+        line.SetThickness(_endThicknessF); // Set the thickness of the line
         line.SetColor(_endColor); // Set the color of the line
         _updatePenAreaEvent?.Invoke(line.area); // This does something
 

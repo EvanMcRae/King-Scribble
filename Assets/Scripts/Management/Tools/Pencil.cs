@@ -6,11 +6,18 @@ using UnityEngine;
 public class Pencil : Tool
 {
     [SerializeField] private float _lineThickness;
-    [SerializeField] private GameObject _linesFolder;
+    public float _thicknessMult = 1;
+    public GameObject _linesFolder;
     [Tooltip("The factor by which to smooth pencil lines once they are complete.")]
     [SerializeField] private int _smoothSeverity = 3;
 
-    public new const int _index = 1;
+    private float _lineThicknessF;
+
+    public override void OnStart()
+    {
+        base.OnStart();
+        _lineThicknessF  = _lineThickness * _thicknessMult;
+    }
 
     public override void BeginDraw(Vector2 mousePos)
     {
@@ -59,7 +66,7 @@ public class Pencil : Tool
     public void SetPencilParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
     { // Also I know it sucks for this to be public - temporarily needed in order for EraserFunctions to work
         line.is_pen = false;
-        line.SetThickness(_lineThickness);
+        line.SetThickness(_lineThicknessF);
         line.collisionsActive = true;
         line.GetComponent<LineRenderer>().startColor = _startColor;
         line.GetComponent<LineRenderer>().endColor = _endColor;

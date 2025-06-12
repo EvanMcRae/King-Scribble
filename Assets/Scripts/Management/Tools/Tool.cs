@@ -26,7 +26,6 @@ public class Tool : ScriptableObject
 
     public const float _RESOLUTION = 0.1f;
     public const float _DRAW_CD = 0.5f;
-    public const int _index = 0;
 
     protected Line _currentLine;
     protected int _curFuel;

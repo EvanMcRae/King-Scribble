@@ -35,8 +35,18 @@ public class DrawManager : MonoBehaviour
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
 
+    [SerializeField] private GameObject _pencilLinesFolder;
+    [SerializeField] private GameObject _penLinesFolder;
+
+    [Tooltip("Tool line width will be multiplied by this value for this stage.")]
+    public float _lineWidthMult = 1;
+
     private void Awake()
     {
+        // Yes, I know this is "not future-proof". Yes, each new tool we create will require one (1) extra line of code in here. I don't care nearly enough to actually write a better solution.
+        PlayerVars.instance._pencil._thicknessMult = _lineWidthMult;
+        PlayerVars.instance._pen._thicknessMult = _lineWidthMult;
+        // Sure, we could store another scriptable object that contains references to all tools and reference that. But I feel lazy today, so we're doing this instead. Cry about it.
         _currentTool = null;
         if (PlayerVars.instance.inventory._toolTypes.Count > 0)
             _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];

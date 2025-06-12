@@ -10,7 +10,6 @@ public class Eraser : Tool
     private Vector2 _lastMousePos;
     public delegate void ReleaseEraser();
     public ReleaseEraser _releaseEraser;
-    public new const int _index = 3;
 
     public override void BeginDraw(Vector2 mousePos)
     {
