@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public List<Tool> tools = new();
     public static PlayerController instance;
     private PlayerVars vars;
     private Rigidbody2D rb;
@@ -213,7 +212,7 @@ public class PlayerController : MonoBehaviour
         // unlock pencil
         if (Input.GetKeyDown(KeyCode.I) && !PlayerVars.instance.inventory.hasTool(ToolType.Pencil))
         {
-            PlayerVars.instance.inventory.addTool(ToolType.Pencil, tools[0]);
+            PlayerVars.instance.inventory.addTool(ToolType.Pencil, DrawManager.instance.GetTool(ToolType.Pencil));
             CollectTool();
             DrawManager.instance.TrySwitchTool(ToolType.Pencil);
         }
@@ -221,7 +220,7 @@ public class PlayerController : MonoBehaviour
         // unlock pen
         if (Input.GetKeyDown(KeyCode.O) && !PlayerVars.instance.inventory.hasTool(ToolType.Pen))
         {
-            PlayerVars.instance.inventory.addTool(ToolType.Pen, tools[1]);
+            PlayerVars.instance.inventory.addTool(ToolType.Pen, DrawManager.instance.GetTool(ToolType.Pen));
             CollectTool();
             DrawManager.instance.TrySwitchTool(ToolType.Pen);
         }
@@ -229,7 +228,7 @@ public class PlayerController : MonoBehaviour
         // unlock eraser
         if (Input.GetKeyDown(KeyCode.P) && !PlayerVars.instance.inventory.hasTool(ToolType.Eraser))
         {
-            PlayerVars.instance.inventory.addTool(ToolType.Eraser, tools[2]);
+            PlayerVars.instance.inventory.addTool(ToolType.Eraser, DrawManager.instance.GetTool(ToolType.Eraser));
             CollectTool();
             DrawManager.instance.TrySwitchTool(ToolType.Eraser);
         }

@@ -38,6 +38,9 @@ public class DrawManager : MonoBehaviour
     [SerializeField] private GameObject _pencilLinesFolder;
     [SerializeField] private GameObject _penLinesFolder;
 
+    // This should be ordered EXACTLY CORRESPONDING TO ToolType enum entries, offset by 1 for the None type.
+    [SerializeField] private List<Tool> _toolDatabase;
+
     [Tooltip("Tool line width will be multiplied by this value for this stage.")]
     public float _lineWidthMult = 1;
 
@@ -46,6 +49,11 @@ public class DrawManager : MonoBehaviour
         // Yes, I know this is "not future-proof". Yes, each new tool we create will require one (1) extra line of code in here. I don't care nearly enough to actually write a better solution.
         PlayerVars.instance._pencil._thicknessMult = _lineWidthMult;
         PlayerVars.instance._pen._thicknessMult = _lineWidthMult;
+
+        // TODO This is also not future-proof, will need to change!!
+        PlayerVars.instance._pencil._linesFolder = _pencilLinesFolder;
+        PlayerVars.instance._pen._linesFolder = _penLinesFolder;
+
         // Sure, we could store another scriptable object that contains references to all tools and reference that. But I feel lazy today, so we're doing this instead. Cry about it.
         _currentTool = null;
         if (PlayerVars.instance.inventory._toolTypes.Count > 0)
@@ -156,15 +164,15 @@ public class DrawManager : MonoBehaviour
         if (count > 0)
         {
             // Tool switching
-            if (Input.GetKeyDown("1"))
+            if (Input.GetKeyDown("1") || Input.GetKeyDown(KeyCode.Keypad1))
             {
                 SwitchTool(0);
             }
-            if (Input.GetKeyDown("2"))
+            if (Input.GetKeyDown("2") || Input.GetKeyDown(KeyCode.Keypad2))
             {
                 SwitchTool(1);
             }
-            if (Input.GetKeyDown("3"))
+            if (Input.GetKeyDown("3") || Input.GetKeyDown(KeyCode.Keypad3))
             {
                 SwitchTool(2);
             }
@@ -287,7 +295,6 @@ public class DrawManager : MonoBehaviour
 
     public void SwitchTool(ToolType newTool)
     {
-        
         if (_currentTool != null)
         {
             // If LMB held, stop
@@ -300,7 +307,7 @@ public class DrawManager : MonoBehaviour
         
         LoadSubmeter(newTool);
         PlayerVars.instance.cur_tool = newTool;
-        _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
+        _currentTool = _toolDatabase[(int)newTool-1];
         if (!HUDButtonCursorHandler.inside)
         {
             SetCursor();
@@ -312,6 +319,11 @@ public class DrawManager : MonoBehaviour
     {
         if (_currentTool == null) return false;
         return _currentTool._drawing || _currentTool._rmbActive;
+    }
+
+    public Tool GetTool(ToolType toolType)
+    {
+        return _toolDatabase[(int)toolType - 1];
     }
 }
 

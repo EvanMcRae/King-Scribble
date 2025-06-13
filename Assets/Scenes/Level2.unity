@@ -8856,10 +8856,14 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: levelStartBanner
-      value: 
-      objectReference: {fileID: 6652482066997626217}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 230.2998
+      objectReference: {fileID: 0}
+    - target: {fileID: 8334660107952442498, guid: d543b05aee12690479007aa93e26909d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -121.72998
+      objectReference: {fileID: 0}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 1
@@ -8902,17 +8906,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3450143813569061130, guid: d543b05aee12690479007aa93e26909d, type: 3}
   m_PrefabInstance: {fileID: 6652482066997626212}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6652482066997626217 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
-  m_PrefabInstance: {fileID: 6652482066997626212}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 026d252835e9a46f3b3bed914a8295ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

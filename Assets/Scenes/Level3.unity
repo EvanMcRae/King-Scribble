@@ -7288,17 +7288,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1360501246}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &504822328 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5038671693450910097, guid: d543b05aee12690479007aa93e26909d, type: 3}
-  m_PrefabInstance: {fileID: 6652482066997626212}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 026d252835e9a46f3b3bed914a8295ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &511351793
 GameObject:
   m_ObjectHideFlags: 0
@@ -30844,10 +30833,6 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
-      propertyPath: levelStartBanner
-      value: 
-      objectReference: {fileID: 504822328}
     - target: {fileID: 8542659324521561911, guid: d543b05aee12690479007aa93e26909d, type: 3}
       propertyPath: defaultInventory.toolUnlocks.Array.size
       value: 1
