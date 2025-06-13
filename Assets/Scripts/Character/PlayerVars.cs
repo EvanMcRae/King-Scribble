@@ -10,9 +10,6 @@ public class PlayerVars : MonoBehaviour
     public Inventory inventory = null;
     public static Inventory lastSavedInventory = new();
     [SerializeField] private int maxEraserFuel = 500; // RF
-    public Pencil _pencil;
-    public Pen _pen;
-    public Eraser _eraser;
     public ToolType cur_tool = ToolType.None;
     private int curEraserFuel; // RF?
     public bool isDead = false;
@@ -92,6 +89,7 @@ public class PlayerVars : MonoBehaviour
         ReplenishTools();
         isDead = false;
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
+        Pencil _pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
         GetComponent<PlayerController>().ResizePlayer(_pencil.GetFuelRemaining());
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;

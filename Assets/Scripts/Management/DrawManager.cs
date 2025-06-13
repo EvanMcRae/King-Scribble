@@ -48,12 +48,12 @@ public class DrawManager : MonoBehaviour
         instance = this;
 
         // Yes, I know this is "not future-proof". Yes, each new tool we create will require one (1) extra line of code in here. I don't care nearly enough to actually write a better solution.
-        PlayerVars.instance._pencil._thicknessMult = _lineWidthMult;
-        PlayerVars.instance._pen._thicknessMult = _lineWidthMult;
+        ((Pencil)GetTool(ToolType.Pencil))._thicknessMult = _lineWidthMult;
+        ((Pen)GetTool(ToolType.Pen))._thicknessMult = _lineWidthMult;
 
         // TODO This is also not future-proof, will need to change!!
-        PlayerVars.instance._pencil._linesFolder = _pencilLinesFolder;
-        PlayerVars.instance._pen._linesFolder = _penLinesFolder;
+        ((Pencil)GetTool(ToolType.Pencil))._linesFolder = _pencilLinesFolder;
+        ((Pen)GetTool(ToolType.Pen))._linesFolder = _penLinesFolder;
 
         _currentTool = null;
         if (PlayerVars.instance.inventory._toolTypes.Count > 0)
@@ -323,6 +323,7 @@ public class DrawManager : MonoBehaviour
 
     public static Tool GetTool(ToolType toolType)
     {
+        Debug.Log(instance._toolDatabase.tools.Count + " " + ((int)toolType - 1));
         return instance._toolDatabase.tools[(int)toolType - 1];
     }
 }

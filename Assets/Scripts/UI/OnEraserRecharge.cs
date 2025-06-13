@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +8,6 @@ public class OnEraserRecharge : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.enabled = false;
-        PlayerVars.instance._eraser.Replenish();
+        ((Eraser)DrawManager.GetTool(ToolType.Eraser)).Replenish();
     }
 }

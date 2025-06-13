@@ -130,7 +130,7 @@ public class EraserBossAI : MonoBehaviour
     void Start()
     {
 
-        PlayerVars.instance._pen._updatePenAreaEvent += updatePenArea;
+        ((Pen)DrawManager.GetTool(ToolType.Pen))._updatePenAreaEvent += updatePenArea;
 
         if (_shockwaveCamera.targetTexture != null)
             _shockwaveCamera.targetTexture.Release();
@@ -524,7 +524,7 @@ public class EraserBossAI : MonoBehaviour
         {
             if (other == KSCollider)
             { // Deplete health from KS
-                PlayerVars.instance._pencil.SpendFuel(50);
+                DrawManager.GetTool(ToolType.Pencil).SpendFuel(50);
                 Vector3 distance = transform.position - KingScribble.transform.position;
                 if (distance.x < 0)
                 { // launch right
@@ -963,7 +963,7 @@ public class EraserBossAI : MonoBehaviour
             {
                 pencil.GetComponent<Line>().deleted = true;
                 Destroy(pencil.gameObject);
-                PlayerVars.instance._pencil.AddFuel(tempLine.positionCount); // Give player back their health
+                DrawManager.GetTool(ToolType.Pencil).AddFuel(tempLine.positionCount); // Give player back their health
             }
         }
     }
@@ -1082,7 +1082,7 @@ public class EraserBossAI : MonoBehaviour
     // unbinds delegate upon destroying the eraser boss -- this is good practice!! - evan
     private void OnDestroy()
     {
-        PlayerVars.instance._pen._updatePenAreaEvent -= updatePenArea;
+        ((Pen)DrawManager.GetTool(ToolType.Pen))._updatePenAreaEvent -= updatePenArea;
     }
 
     // Cut scene that shows EB roaring

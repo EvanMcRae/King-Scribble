@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,8 +14,8 @@ public class EraserMeter : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        PlayerVars.instance._eraser._fuelEvent += UpdateSprite;
-        PlayerVars.instance._eraser._releaseEraser += ReleaseCursor;
+        DrawManager.GetTool(ToolType.Eraser)._fuelEvent += UpdateSprite;
+        ((Eraser)DrawManager.GetTool(ToolType.Eraser))._releaseEraser += ReleaseCursor;
         UpdateSprite(1);
     }
 
@@ -41,8 +41,8 @@ public class EraserMeter : MonoBehaviour
 
     void OnDestroy()
     {
-        PlayerVars.instance._eraser._fuelEvent -= UpdateSprite;
-        PlayerVars.instance._eraser._releaseEraser -= ReleaseCursor;
+        DrawManager.GetTool(ToolType.Eraser)._fuelEvent -= UpdateSprite;
+        ((Eraser)DrawManager.GetTool(ToolType.Eraser))._releaseEraser -= ReleaseCursor;
     }
 
     private void Update()

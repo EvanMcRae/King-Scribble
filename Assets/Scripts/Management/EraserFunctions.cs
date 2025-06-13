@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class EraserFunctions : MonoBehaviour
@@ -36,8 +36,8 @@ public class EraserFunctions : MonoBehaviour
                     }
                     else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "destroying line with " + numPoints + " points");
-                        PlayerVars.instance._pencil.AddFuel(numPoints);
-                        PlayerVars.instance._eraser.SpendFuel(numPoints);
+                        DrawManager.GetTool(ToolType.Pencil).AddFuel(numPoints);
+                        DrawManager.GetTool(ToolType.Eraser).SpendFuel(numPoints);
                         Destroy(c.gameObject);
                         lineRenderer.GetComponent<Line>().deleted = true;
                         continue;
@@ -61,16 +61,16 @@ public class EraserFunctions : MonoBehaviour
                         Line newLine;
                         Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
                         if(parent != null) {
-                            newLine = Instantiate(PlayerVars.instance._pencil._linePref, transformPosition, Quaternion.identity, parent.transform);
+                            newLine = Instantiate(DrawManager.GetTool(ToolType.Pencil)._linePref, transformPosition, Quaternion.identity, parent.transform);
                         }
                         else {
-                            newLine = Instantiate(PlayerVars.instance._pencil._linePref, transformPosition, Quaternion.identity);
+                            newLine = Instantiate(DrawManager.GetTool(ToolType.Pencil)._linePref, transformPosition, Quaternion.identity);
                         }
-                        // Note - the constant referencing of PlayerVars.instance._pencil is really ugly and probably bad for performance
+                        // Note - the constant referencing of DrawManager.GetTool(ToolType.Pencil) is really ugly and probably bad for performance
                         // However, it is necessary - TEMPORARILY - for the assembly to compile, and for this file to work with the refactor.
                         // Rewriting these functions and incorporating them into the new refactored tools should be a TOP priority.
-                        PlayerVars.instance._pencil.SetPencilParams(newLine);
-                        PlayerVars.instance._pencil.SwapColors(newLine);
+                        ((Pencil)DrawManager.GetTool(ToolType.Pencil)).SetPencilParams(newLine);
+                        DrawManager.GetTool(ToolType.Pencil).SwapColors(newLine);
 
                         // Fill the new line and delete from the current line
                         int ct = 0;
@@ -101,8 +101,8 @@ public class EraserFunctions : MonoBehaviour
                     {
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "Destroying line with " + pointsList.Count + " points");
                         if (addFuel) {
-                            PlayerVars.instance._pencil.AddFuel(pointsList.Count);
-                            PlayerVars.instance._eraser.SpendFuel(pointsList.Count);
+                            DrawManager.GetTool(ToolType.Pencil).AddFuel(pointsList.Count);
+                            DrawManager.GetTool(ToolType.Eraser).SpendFuel(pointsList.Count);
                         }
                         lineRenderer.GetComponent<Line>().deleted = true;
                         Destroy(c.gameObject);
@@ -120,8 +120,8 @@ public class EraserFunctions : MonoBehaviour
 
         if (addFuel)
         {
-            PlayerVars.instance._pencil.AddFuel(1); // Add fuel
-            PlayerVars.instance._eraser.AddFuel(1); // Spend eraser
+            DrawManager.GetTool(ToolType.Pencil).AddFuel(1); // Add fuel
+            DrawManager.GetTool(ToolType.Eraser).AddFuel(1); // Spend eraser
         }
         return;
     }
