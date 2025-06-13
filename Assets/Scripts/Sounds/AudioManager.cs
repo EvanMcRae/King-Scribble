@@ -92,6 +92,10 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSettings.OnAudioConfigurationChanged += OnAudioConfigurationChanged;
+
+        sfxMixer.SetFloat("Volume", sfxVolume + masterVolume);
+        musicMixer.SetFloat("Volume", musicVolume + masterVolume);
+
     }
 
     // Update is called once per frame
