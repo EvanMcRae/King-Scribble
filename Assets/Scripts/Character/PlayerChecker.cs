@@ -11,6 +11,7 @@ public class PlayerChecker : MonoBehaviour
     public Inventory defaultInventory = new();
     public ToolType defaultTool = ToolType.None;
     public LevelStartBanner levelStartBanner;
+    public ToolDatabase toolDatabase;
 
     // Use this for initialization
     void Awake()

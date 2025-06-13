@@ -30,9 +30,10 @@ public class Checkpoint : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().sprite = with_flag;
         PlayerVars.instance.ReplenishTools();
-        foreach (Tool t in PlayerVars.instance.inventory._toolUnlocks)
+        foreach (ToolType t in PlayerVars.instance.inventory._toolTypes)
         {
-            t._fuelEvent(t.GetFuelRemaining());
+            Tool tool = DrawManager.GetTool(t);
+            tool._fuelEvent(tool.GetFuelRemaining());
         }
         PlayerVars.instance.SetSpawnPos(transform.position);
         PlayerVars.instance.SaveInventory();

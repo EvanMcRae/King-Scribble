@@ -26,17 +26,17 @@ public class PlayerVars : MonoBehaviour
 
     public void ReplenishTools()
     {
-        foreach (Tool tool in inventory._toolUnlocks)
+        foreach (ToolType tool in inventory._toolTypes)
         {
-            tool.MaxFuel();
+            DrawManager.GetTool(tool).MaxFuel();
         }
     }
 
     public void RefreshTools()
     {
-        foreach (Tool tool in inventory._toolUnlocks)
+        foreach (ToolType tool in inventory._toolTypes)
         {
-            tool.OnStart();
+            DrawManager.GetTool(tool).OnStart();
         }
     }
 

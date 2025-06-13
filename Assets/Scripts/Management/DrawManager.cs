@@ -38,14 +38,15 @@ public class DrawManager : MonoBehaviour
     [SerializeField] private GameObject _pencilLinesFolder;
     [SerializeField] private GameObject _penLinesFolder;
 
-    // This should be ordered EXACTLY CORRESPONDING TO ToolType enum entries, offset by 1 for the None type.
-    [SerializeField] private List<Tool> _toolDatabase;
+    [SerializeField] private ToolDatabase _toolDatabase;
 
     [Tooltip("Tool line width will be multiplied by this value for this stage.")]
     public float _lineWidthMult = 1;
 
     private void Awake()
     {
+        instance = this;
+
         // Yes, I know this is "not future-proof". Yes, each new tool we create will require one (1) extra line of code in here. I don't care nearly enough to actually write a better solution.
         PlayerVars.instance._pencil._thicknessMult = _lineWidthMult;
         PlayerVars.instance._pen._thicknessMult = _lineWidthMult;
@@ -54,11 +55,10 @@ public class DrawManager : MonoBehaviour
         PlayerVars.instance._pencil._linesFolder = _pencilLinesFolder;
         PlayerVars.instance._pen._linesFolder = _penLinesFolder;
 
-        // Sure, we could store another scriptable object that contains references to all tools and reference that. But I feel lazy today, so we're doing this instead. Cry about it.
         _currentTool = null;
         if (PlayerVars.instance.inventory._toolTypes.Count > 0)
-            _currentTool = PlayerVars.instance.inventory._toolUnlocks[(int)PlayerVars.instance.cur_tool - 1];
-        instance = this;
+            _currentTool = GetTool(PlayerVars.instance.cur_tool);
+        
         if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside && _currentTool != null)
             SwitchTool(PlayerVars.instance.cur_tool);
         else
@@ -307,7 +307,7 @@ public class DrawManager : MonoBehaviour
         
         LoadSubmeter(newTool);
         PlayerVars.instance.cur_tool = newTool;
-        _currentTool = _toolDatabase[(int)newTool-1];
+        _currentTool = GetTool(newTool);
         if (!HUDButtonCursorHandler.inside)
         {
             SetCursor();
@@ -321,9 +321,9 @@ public class DrawManager : MonoBehaviour
         return _currentTool._drawing || _currentTool._rmbActive;
     }
 
-    public Tool GetTool(ToolType toolType)
+    public static Tool GetTool(ToolType toolType)
     {
-        return _toolDatabase[(int)toolType - 1];
+        return instance._toolDatabase.tools[(int)toolType - 1];
     }
 }
 
