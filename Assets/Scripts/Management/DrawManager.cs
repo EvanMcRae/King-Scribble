@@ -323,7 +323,6 @@ public class DrawManager : MonoBehaviour
 
     public static Tool GetTool(ToolType toolType)
     {
-        Debug.Log(instance._toolDatabase.tools.Count + " " + ((int)toolType - 1));
         return instance._toolDatabase.tools[(int)toolType - 1];
     }
 }
