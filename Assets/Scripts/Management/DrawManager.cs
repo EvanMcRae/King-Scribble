@@ -56,7 +56,7 @@ public class DrawManager : MonoBehaviour
         ((Pen)GetTool(ToolType.Pen))._linesFolder = _penLinesFolder;
 
         _currentTool = null;
-        if (PlayerVars.instance.inventory._toolTypes.Count > 0)
+        if (PlayerVars.instance != null && PlayerVars.instance.inventory._toolTypes.Count > 0)
             _currentTool = GetTool(PlayerVars.instance.cur_tool);
         
         if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside && _currentTool != null)
