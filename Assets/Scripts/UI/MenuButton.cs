@@ -45,7 +45,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             hovered = true;
             HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
-            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance.IsUsingTool())
+            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
                 return;
             if (!soundOnPointerEnter)
                 noSound = true;
@@ -57,7 +57,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Update()
     {
         HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
-        if (handler != null && handler.disablesWhileDrawing && !DrawManager.instance.IsUsingTool() && GetComponent<Selectable>().interactable)
+        if (handler != null && handler.disablesWhileDrawing && (DrawManager.instance == null || !DrawManager.instance.IsUsingTool()) && GetComponent<Selectable>().interactable)
         {
             if (hovered && popupID == PopupPanel.numPopups)
             {
@@ -74,7 +74,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (eventData.hovered.Contains(gameObject) && EventSystem.current.currentSelectedGameObject != gameObject && popupID == PopupPanel.numPopups)
         {
             HUDButtonCursorHandler handler = GetComponent<HUDButtonCursorHandler>();
-            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance.IsUsingTool())
+            if (handler != null && handler.disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
                 return;
             if (!soundOnPointerEnter)
                 noSound = true;
