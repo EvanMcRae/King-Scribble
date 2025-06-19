@@ -33,7 +33,6 @@ public class EraserMeter : MonoBehaviour
 
     void ReleaseCursor()
     {
-        Debug.Log("hhuuh");
         if (isEmpty)
         {
             anim.SetBool("IsUsing", false);
