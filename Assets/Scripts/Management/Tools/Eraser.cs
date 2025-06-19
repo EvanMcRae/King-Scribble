@@ -7,9 +7,6 @@ using UnityEngine;
 public class Eraser : Tool
 {
     [SerializeField] private float _radius = 0.5f;
-    private Vector2 _lastMousePos;
-    public delegate void ReleaseEraser();
-    public ReleaseEraser _releaseEraser;
 
     public override void BeginDraw(Vector2 mousePos)
     {
@@ -25,18 +22,37 @@ public class Eraser : Tool
     {
         base.Draw(mousePos);
         if (_abort) return;
-        // TODO: Port eraser "draw" functionality here (rewrite to avoid using coroutine)
+
+        mousePos += new Vector2(0.5f, -0.5f);
+        if (_curFuel > 0)
+        {
+            // March along line from previous to current eraser pos if it's too far away
+            if (Vector2.Distance(mousePos, _lastMousePos) > _RESOLUTION)
+            {
+                // Unfortunate side effect of the refactor is needing to perform this inside of a
+                // singleton Monobehavior (i.e. DrawManager) since it requires a Coroutine.
+                // TODO in the future -- optimize erasing to the point where it no longer needs delay
+                DrawManager.StartMarchDrawing(mousePos);
+            }
+            else
+            {
+                EraserFunctions.Erase(mousePos, _radius, true);
+                ResyncMousePos(mousePos);
+            }
+        }
+
+        // EndDraw only happens when the user releases their cursor
+
+        return;
+    }
+
+    public override void MarchStepDraw(Vector2 marchPos)
+    {
+        EraserFunctions.Erase(marchPos, _radius, true);
     }
 
     public override void EndDraw()
     {
         base.EndDraw();
-        _releaseEraser();
-    }
-
-    public void Replenish()
-    {
-        _curFuel = _maxFuel;
-        _fuelEvent(1);
     }
 }

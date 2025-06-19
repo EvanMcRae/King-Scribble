@@ -26,8 +26,6 @@ public class DrawManager : MonoBehaviour
 
     public static DrawManager instance;
 
-    private Vector2 lastMousePos;
-
     public SoundPlayer toolSoundPlayer, drawSoundPlayer;
     public SoundPlayer penSoundPlayer;
 
@@ -89,9 +87,11 @@ public class DrawManager : MonoBehaviour
             // End all sounds
             if (currentSoundPause != null) { AudioManager.instance.StopCoroutine(currentSoundPause); }
             if (currentSoundUnpause != null) { AudioManager.instance.StopCoroutine(currentSoundUnpause); }
-            drawSoundPlayer.EndAllSounds();
-            // Stop drawing
-            _currentTool.EndDraw();
+            if (_currentTool._drawing)
+            {
+                drawSoundPlayer.EndAllSounds();
+                _currentTool.EndDraw();
+            }    
             return;
         }
 
@@ -99,6 +99,10 @@ public class DrawManager : MonoBehaviour
         if (_currentTool._drawCooldown > 0)
         {
             _currentTool._drawCooldown -= Time.deltaTime;
+            if (Input.GetMouseButtonUp(0))
+            {
+                _currentTool._releaseCursor?.Invoke();
+            }
             return;
         }
 
@@ -107,10 +111,6 @@ public class DrawManager : MonoBehaviour
         // Overlap player -> stop drawing
         if (_currentTool._drawing && PlayerController.instance.OverlapsPosition(mousePos))
         {
-            // End all sounds
-            if (currentSoundPause != null) { AudioManager.instance.StopCoroutine(currentSoundPause); }
-            if (currentSoundUnpause != null) { AudioManager.instance.StopCoroutine(currentSoundUnpause); }
-            drawSoundPlayer.EndAllSounds();
             // Stop drawing
             _currentTool.EndDraw();
         }
@@ -129,14 +129,14 @@ public class DrawManager : MonoBehaviour
         }
 
         // LMB released -> stop drawing
-        if (Input.GetMouseButtonUp(0) && _currentTool._beganDraw)
+        if (Input.GetMouseButtonUp(0))
         {
-            // End all sounds
-            if (currentSoundPause != null) { AudioManager.instance.StopCoroutine(currentSoundPause); }
-            if (currentSoundUnpause != null) { AudioManager.instance.StopCoroutine(currentSoundUnpause); }
-            drawSoundPlayer.EndAllSounds();
-            // Stop drawing
-            _currentTool.EndDraw();
+            if (_currentTool._drawing)
+            {
+                // Stop drawing
+                _currentTool.EndDraw();
+            }
+            _currentTool._releaseCursor?.Invoke();
         }
 
         // RMB down -> start rmb action
@@ -198,53 +198,9 @@ public class DrawManager : MonoBehaviour
         }
     }
 
-    // Kept for reference - will be removed upon move to Eraser.cs
-    private IEnumerator EraseMarch(Vector2 mouse_pos)
-    {
-        Vector2 marchPos = lastMousePos;
-        int ct = 0, interval = 3;
-        do
-        {
-            marchPos = Vector2.MoveTowards(marchPos, mouse_pos, RESOLUTION);
-            EraserFunctions.Erase(marchPos, eraserRadius, true);
-            ct++;
-            if (ct % interval == 0) yield return new WaitForEndOfFrame();
-        } while (Vector2.Distance(marchPos, mouse_pos) > RESOLUTION);
-        EraserFunctions.Erase(mouse_pos, eraserRadius, true);
-        lastMousePos = mouse_pos;
-    }
-
-    // Kept for reference - will be removed upon move to Eraser.cs
-    private void Draw(Vector2 mouse_pos)
-    {
-        // Handle eraser first so it's exempt from overlap checks
-        if (PlayerVars.instance.cur_tool == ToolType.Eraser)
-        {
-            mouse_pos += new Vector2(0.5f, -0.5f);
-            SoundPauseCheck(mouse_pos);
-            if (PlayerVars.instance.eraserFuelLeft() > 0)
-            {
-                // March along line from previous to current eraser pos if it's too far away
-                if (Vector2.Distance(mouse_pos, lastMousePos) > RESOLUTION)
-                {
-                    StartCoroutine(EraseMarch(mouse_pos));
-                }
-                else
-                {
-                    EraserFunctions.Erase(mouse_pos, eraserRadius, true);
-                    lastMousePos = mouse_pos;
-                }
-            }
-            // else EndDraw()
-            return;
-        }
-
-
-    }
-
     private void SoundPauseCheck(Vector2 mouse_pos)
     {
-        if (Vector2.Distance(lastMousePos, mouse_pos) < 0.01f)
+        if (Vector2.Distance(_currentTool.GetLastMousePos(), mouse_pos) < 0.01f)
         {
             if (currentSoundUnpause != null)
                 AudioManager.instance.StopCoroutine(currentSoundUnpause);
@@ -324,6 +280,33 @@ public class DrawManager : MonoBehaviour
     public static Tool GetTool(ToolType toolType)
     {
         return instance._toolDatabase.tools[(int)toolType - 1];
+    }
+
+    public static void StartMarchDrawing(Vector2 mousePos)
+    {
+        instance.StartCoroutine(instance.MarchDrawing(mousePos));
+    }
+
+    private IEnumerator MarchDrawing(Vector2 mousePos)
+    {
+        Vector2 marchPos = _currentTool.GetLastMousePos();
+        int ct = 0, interval = _currentTool._marchInterval;
+        do
+        {
+            marchPos = Vector2.MoveTowards(marchPos, mousePos, Tool._RESOLUTION);
+            _currentTool.MarchStepDraw(marchPos);
+            ct++;
+            if (ct % interval == 0) yield return new WaitForEndOfFrame();
+        } while (Vector2.Distance(marchPos, mousePos) > Tool._RESOLUTION);
+        _currentTool.MarchStepDraw(marchPos);
+        _currentTool.ResyncMousePos(mousePos);
+    }
+
+    public void StopDrawSounds()
+    {
+        if (currentSoundPause != null) { AudioManager.instance.StopCoroutine(currentSoundPause); }
+        if (currentSoundUnpause != null) { AudioManager.instance.StopCoroutine(currentSoundUnpause); }
+        drawSoundPlayer.EndAllSounds();
     }
 }
 

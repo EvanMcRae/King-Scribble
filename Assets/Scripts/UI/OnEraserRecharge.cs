@@ -8,6 +8,6 @@ public class OnEraserRecharge : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.enabled = false;
-        ((Eraser)DrawManager.GetTool(ToolType.Eraser)).Replenish();
+        DrawManager.GetTool(ToolType.Eraser).MaxFuel();
     }
 }

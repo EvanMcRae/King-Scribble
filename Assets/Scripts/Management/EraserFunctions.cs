@@ -121,7 +121,7 @@ public class EraserFunctions : MonoBehaviour
         if (addFuel)
         {
             DrawManager.GetTool(ToolType.Pencil).AddFuel(1); // Add fuel
-            DrawManager.GetTool(ToolType.Eraser).AddFuel(1); // Spend eraser
+            DrawManager.GetTool(ToolType.Eraser).SpendFuel(1); // Spend eraser
         }
         return;
     }

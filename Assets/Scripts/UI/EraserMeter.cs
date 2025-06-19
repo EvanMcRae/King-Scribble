@@ -15,7 +15,7 @@ public class EraserMeter : MonoBehaviour
     {
         image = GetComponent<Image>();
         DrawManager.GetTool(ToolType.Eraser)._fuelEvent += UpdateSprite;
-        ((Eraser)DrawManager.GetTool(ToolType.Eraser))._releaseEraser += ReleaseCursor;
+        DrawManager.GetTool(ToolType.Eraser)._releaseCursor += ReleaseCursor;
         UpdateSprite(1);
     }
 
@@ -33,6 +33,7 @@ public class EraserMeter : MonoBehaviour
 
     void ReleaseCursor()
     {
+        Debug.Log("hhuuh");
         if (isEmpty)
         {
             anim.SetBool("IsUsing", false);
@@ -42,7 +43,7 @@ public class EraserMeter : MonoBehaviour
     void OnDestroy()
     {
         DrawManager.GetTool(ToolType.Eraser)._fuelEvent -= UpdateSprite;
-        ((Eraser)DrawManager.GetTool(ToolType.Eraser))._releaseEraser -= ReleaseCursor;
+        DrawManager.GetTool(ToolType.Eraser)._releaseCursor -= ReleaseCursor;
     }
 
     private void Update()

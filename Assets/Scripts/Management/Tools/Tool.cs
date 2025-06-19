@@ -23,6 +23,9 @@ public class Tool : ScriptableObject
     public bool _beganDraw = false;
     public float _drawCooldown = 0f;
     public bool _rmbActive = false;
+    public int _marchInterval = 3;
+
+    protected Vector2 _lastMousePos;
 
     public const float _RESOLUTION = 0.1f;
     public const float _DRAW_CD = 0.5f;
@@ -39,9 +42,11 @@ public class Tool : ScriptableObject
     public bool GetTempEmpty() { return _tempFuel == 0; }
 
     public delegate void FuelEvent(float fuelPercent);
-    public delegate void TempFuelEvent(float tempFuelPercent);
     public FuelEvent _fuelEvent;
+    public delegate void TempFuelEvent(float tempFuelPercent);
     public TempFuelEvent _tempFuelEvent;
+    public delegate void ReleaseCursor();
+    public ReleaseCursor _releaseCursor;
 
     void OnEnable()
     {
@@ -139,11 +144,16 @@ public class Tool : ScriptableObject
         }
     }
 
+    // To be called during general march routine from DrawManager
+    public virtual void MarchStepDraw(Vector2 marchPos)
+    {
+    }
+
     public virtual void EndDraw()
     {
         _beganDraw = false;
         _drawing = false;
-        DrawManager.instance.drawSoundPlayer.EndAllSounds();
+        DrawManager.instance.StopDrawSounds();
     }
 
     public virtual void RightClick(Vector2 mousePos)
@@ -162,35 +172,37 @@ public class Tool : ScriptableObject
         if (PlayerVars.instance.cheatMode) return;
         _curFuel = (int)Mathf.Clamp(_curFuel - amount, 0f, _maxFuel);
         _tempFuel = _curFuel;
-        _fuelEvent(GetFuelRemaining());
+        _fuelEvent?.Invoke(GetFuelRemaining());
     }
 
     public virtual void AddFuel(int amount)
     {
         _curFuel = (int)Mathf.Clamp(_curFuel + amount, 0f, _maxFuel);
         _tempFuel = _curFuel;
-        _fuelEvent(GetFuelRemaining());
-        _tempFuelEvent(GetTempFuelRemaining());
+        _fuelEvent?.Invoke(GetFuelRemaining());
+        _tempFuelEvent?.Invoke(GetTempFuelRemaining());
     }
 
     public virtual void MaxFuel()
     {
         _curFuel = _maxFuel;
         _tempFuel = _curFuel;
+        _fuelEvent?.Invoke(GetFuelRemaining());
+        _tempFuelEvent?.Invoke(GetTempFuelRemaining());
     }
 
     public virtual void SpendTempFuel(int amount)
     {
         if (PlayerVars.instance.cheatMode) return;
         _tempFuel = (int)Mathf.Clamp(_tempFuel - amount, 0f, _maxFuel);
-        _tempFuelEvent(GetTempFuelRemaining());
+        _tempFuelEvent?.Invoke(GetTempFuelRemaining());
     }
 
     public virtual void ResetTempFuel()
     {
         if (PlayerVars.instance.cheatMode) return;
         _tempFuel = _curFuel;
-        _tempFuelEvent(GetTempFuelRemaining());
+        _tempFuelEvent?.Invoke(GetTempFuelRemaining());
     }
 
     public void SwapColors(Line line)
@@ -204,5 +216,15 @@ public class Tool : ScriptableObject
     {
         if (line == _currentLine)
             EndDraw();
+    }
+
+    public Vector2 GetLastMousePos()
+    {
+        return _lastMousePos;
+    }
+
+    public void ResyncMousePos(Vector2 mousePos)
+    {
+        _lastMousePos = mousePos;
     }
 }
