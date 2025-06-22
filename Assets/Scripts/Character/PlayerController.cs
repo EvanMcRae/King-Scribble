@@ -559,7 +559,7 @@ public class PlayerController : MonoBehaviour
             if (newSize != 0)
                 soundPlayer.PlaySound("Player.SizeDown");
         }
-        else if (newSize > currentSize && !vars.isDead)
+        else if (newSize > currentSize && !vars.isResetting)
         {
             soundPlayer.PlaySound("Player.SizeUp");
         }
