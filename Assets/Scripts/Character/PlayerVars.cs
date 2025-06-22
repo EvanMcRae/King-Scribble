@@ -13,7 +13,7 @@ public class PlayerVars : MonoBehaviour
     public ToolType cur_tool = ToolType.None;
     public ToolType last_tool = ToolType.None;
     private int curEraserFuel; // RF?
-    public bool isDead = false;
+    public bool isDead = false, isResetting = true;
     private Vector3 spawn_pos;
     public bool cheatMode = false;
     public float curCamZoom;
@@ -81,6 +81,7 @@ public class PlayerVars : MonoBehaviour
     // Runs on level reset/death/transition
     public void Reset(Vector3 spawnpoint)
     {
+        isResetting = true;
         inventory.copy(lastSavedInventory);
         if (!inventory.hasTool(cur_tool))
             cur_tool = last_tool;
@@ -97,6 +98,7 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().deadLanded = false;
         RefreshTools();
         isDead = false;
+        isResetting = false;
     }
 
     public void Dismount()
