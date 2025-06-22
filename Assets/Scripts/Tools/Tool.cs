@@ -11,8 +11,10 @@ public class Tool : ScriptableObject
 
     [Tooltip("Layers that will prevent drawing with this tool. Will take precedence over refill layers - be sure to exclude those here.")]
     [SerializeField] protected LayerMask _noDraw;
-    [Tooltip("Layers that will refill the tool's meter when interacted with. Will be overridden by noDraw layers - be sure to exclude these from noDraw.")]
+    [Tooltip("Layers that will refill the tool's meter when interacted with. Will be overridden by noRefill layers - be sure to exclude these from noRefill.")]
     [SerializeField] protected LayerMask _refill;
+    [Tooltip("Layers that will disable refilling the tool's meter when interacted with.")]
+    [SerializeField] protected LayerMask _noRefill;
     [Tooltip("The rate, per frame, at which the tool's meter will be refilled when interacting with refill layers.")]
     [SerializeField] protected int _refillRate = 10;
 
@@ -77,19 +79,21 @@ public class Tool : ScriptableObject
             return;
         }
 
-        // Check for noDraw layers
-        RaycastHit2D noDrawHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noDraw); // Note - _noDraw may be empty for tools that can be used anywhere
-        if (noDrawHit.collider != null)
+        // Check for refill layers
+        RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill);
+        RaycastHit2D noRefillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noRefill);
+        if (refillHit.collider != null && noRefillHit.collider == null)
         {
+            AddFuel(_refillRate);
+            EndDraw();
             _abort = true;
             return;
         }
 
-        // Check for refill layers
-        RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill); // Note - _refill may be empty for tools that do not have a refill functionality
-        if (refillHit.collider != null)
+        // Check for noDraw layers
+        RaycastHit2D noDrawHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noDraw); // Note - _noDraw may be empty for tools that can be used anywhere
+        if (noDrawHit.collider != null)
         {
-            AddFuel(_refillRate);
             _abort = true;
             return;
         }
@@ -119,6 +123,17 @@ public class Tool : ScriptableObject
             return;
         }
 
+        // Check for refill layers
+        RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill);
+        RaycastHit2D noRefillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noRefill);
+        if (refillHit.collider != null && noRefillHit.collider == null)
+        {
+            AddFuel(_refillRate);
+            EndDraw();
+            _abort = true;
+            return;
+        }
+
         // Check for noDraw layers
         RaycastHit2D noDrawHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _noDraw);
         if (noDrawHit.collider != null)
@@ -129,15 +144,6 @@ public class Tool : ScriptableObject
             return;
         }
 
-        // Check for refill layers
-        RaycastHit2D refillHit = Physics2D.CircleCast(mousePos, 0.1f, Vector2.zero, Mathf.Infinity, _refill);
-        if (refillHit.collider != null)
-        {
-            AddFuel(_refillRate);
-            EndDraw();
-            _abort = true;
-            return;
-        }
     }
 
     // To be called during general march routine from DrawManager

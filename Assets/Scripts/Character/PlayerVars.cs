@@ -11,6 +11,7 @@ public class PlayerVars : MonoBehaviour
     public static Inventory lastSavedInventory = new();
     [SerializeField] private int maxEraserFuel = 500; // RF
     public ToolType cur_tool = ToolType.None;
+    public ToolType last_tool = ToolType.None;
     private int curEraserFuel; // RF?
     public bool isDead = false;
     private Vector3 spawn_pos;
@@ -62,6 +63,7 @@ public class PlayerVars : MonoBehaviour
             lastSavedInventory = new Inventory();
         }
         ReplenishTools();
+        last_tool = cur_tool;
     }
 
     private void Update()
@@ -73,6 +75,7 @@ public class PlayerVars : MonoBehaviour
     public void SaveInventory()
     {
         lastSavedInventory.copy(inventory);
+        last_tool = cur_tool;
     }
 
     // Runs on level reset/death/transition
@@ -80,7 +83,7 @@ public class PlayerVars : MonoBehaviour
     {
         inventory.copy(lastSavedInventory);
         if (!inventory.hasTool(cur_tool))
-            cur_tool = ToolType.None;
+            cur_tool = last_tool;
 
         GetComponentInChildren<SpriteRenderer>().transform.localScale = Vector3.one * (PlayerController.instance.oldPlayer ? 0.7f : 0.15f);
         GetComponent<PlayerController>().facingRight = true;

@@ -17,7 +17,7 @@ public class PlayerSerialization
     public PlayerSerialization(PlayerVars player)
     {
         inventory = PlayerVars.lastSavedInventory;
-        currentTool = player.cur_tool;
+        currentTool = player.last_tool;
     }
 
     public void SetValues(GameObject playerObj)

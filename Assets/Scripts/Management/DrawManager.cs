@@ -51,9 +51,18 @@ public class DrawManager : MonoBehaviour
         }
 
         _currentTool = null;
-        if (PlayerVars.instance != null && PlayerVars.instance.inventory._toolTypes.Count > 0)
-            _currentTool = GetTool(PlayerVars.instance.cur_tool);
-        
+        if (PlayerVars.instance != null)
+        {
+            if (PlayerVars.instance.inventory.hasTool(PlayerVars.instance.cur_tool))
+            {
+                _currentTool = GetTool(PlayerVars.instance.cur_tool);
+            }
+            else
+            {
+                PlayerVars.instance.cur_tool = ToolType.None; // TODO fallback, shouldn't trigger
+            }
+        }    
+
         if (PlayerVars.instance != null && !HUDButtonCursorHandler.inside && _currentTool != null)
             SwitchTool(PlayerVars.instance.cur_tool);
         else
