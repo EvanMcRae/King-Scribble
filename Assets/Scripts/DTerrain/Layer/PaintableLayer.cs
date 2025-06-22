@@ -32,7 +32,7 @@ namespace DTerrain
         protected FilterMode filterMode;
 
         [field: SerializeField]
-        public int SortingLayerID { get; set; }
+        public string SortingLayerName { get; set; }
 
         public List<T> Chunks { get; private set; }
 
@@ -52,7 +52,7 @@ namespace DTerrain
             {
                 for (int j = 0; j < ChunkCountY; j++)
                 {
-                    Texture2D piece = new Texture2D(chunkSizeX, chunkSizeY);
+                    Texture2D piece = new(chunkSizeX, chunkSizeY);
                     piece.filterMode = filterMode; 
                     piece.SetPixels(0, 0, chunkSizeX, chunkSizeY, OriginalTexture.GetPixels(i * chunkSizeX, j * chunkSizeY, chunkSizeX, chunkSizeY));
                     piece.Apply();
@@ -61,6 +61,7 @@ namespace DTerrain
                     GameObject c = Instantiate(chunkTemplate);
 
                     c.name = $"Chunk{i * ChunkCountY + j}";
+                    c.layer = gameObject.layer;
 
                     PaintableChunk pc = c.GetComponent<PaintableChunk>();
                     if (pc == null)
@@ -76,6 +77,7 @@ namespace DTerrain
                     SpriteRenderer sr = c.GetComponent<SpriteRenderer>();
                     if(sr==null)
                         sr=c.AddComponent<SpriteRenderer>();
+                    sr.sortingLayerID = SortingLayer.NameToID(SortingLayerName);
 
                     c.transform.position = transform.position + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
                     c.transform.SetParent(transform);
@@ -89,7 +91,7 @@ namespace DTerrain
         {
             foreach(PaintableChunk t in Chunks)
             {
-                t.SortingLayerID = SortingLayerID;
+                t.SortingLayerID = SortingLayer.NameToID(SortingLayerName);
                 t.Init();
             }
         }
