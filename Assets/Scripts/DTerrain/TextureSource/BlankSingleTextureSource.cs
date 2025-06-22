@@ -11,7 +11,7 @@ namespace DTerrain
     public class BlankSingleTextureSource: SingleTextureSource
     {
         [SerializeField]
-        private Color startingColor;
+        private Color32 startingColor;
 
         public new Texture2D Texture
         {
@@ -22,10 +22,10 @@ namespace DTerrain
 
                 Texture = new Texture2D(Texture.width, Texture.height);
 
-                Color[] colors = new Color[Texture.width * Texture.height];
+                Color32[] colors = new Color32[Texture.width * Texture.height];
                 colors = colors.Select(c => startingColor).ToArray();
 
-                Texture.SetPixels(colors);
+                Texture.SetPixels32(colors);
                 Texture.Apply();
 
                 Graphics.CopyTexture(Texture, OriginalTexture);
