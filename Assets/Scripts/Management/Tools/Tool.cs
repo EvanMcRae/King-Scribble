@@ -5,9 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tool", menuName = "ScriptableObjects/Tool", order = 1)]
 public class Tool : ScriptableObject
 {
-    public Line _linePref;
-    [SerializeField] protected Color _startColor;
-    [SerializeField] protected Color _endColor;
     public Texture2D _cursor;
     [SerializeField] protected int _maxFuel = 1000;
     [SerializeField] protected SoundClip _sound;
@@ -30,7 +27,6 @@ public class Tool : ScriptableObject
     public const float _RESOLUTION = 0.1f;
     public const float _DRAW_CD = 0.5f;
 
-    protected Line _currentLine;
     protected int _curFuel;
     protected int _tempFuel;
     protected bool _abort;
@@ -203,19 +199,6 @@ public class Tool : ScriptableObject
         if (PlayerVars.instance.cheatMode) return;
         _tempFuel = _curFuel;
         _tempFuelEvent?.Invoke(GetTempFuelRemaining());
-    }
-
-    public void SwapColors(Line line)
-    {
-        Color temp = line.GetComponent<LineRenderer>().startColor;
-        line.GetComponent<LineRenderer>().startColor = _endColor;
-        line.GetComponent<LineRenderer>().endColor = temp;
-    }
-
-    public void CheckRefreshLine(Line line)
-    {
-        if (line == _currentLine)
-            EndDraw();
     }
 
     public Vector2 GetLastMousePos()

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Pencil", menuName = "ScriptableObjects/Pencil", order = 2)]
-public class Pencil : Tool
+public class Pencil : LineTool
 {
     [SerializeField] private float _lineThickness;
-    public float _thicknessMult = 1;
-    public GameObject _linesFolder;
+
     [Tooltip("The factor by which to smooth pencil lines once they are complete.")]
     [SerializeField] private int _smoothSeverity = 3;
 
@@ -22,17 +21,6 @@ public class Pencil : Tool
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
-        if (_abort) return;
-        if (_linesFolder != null)
-        {
-            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity, _linesFolder.transform);
-        }
-
-        else
-        {
-            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity);
-        }
-        SetPencilParams(_currentLine);
     }
 
     public override void Draw(Vector2 mousePos)
@@ -62,8 +50,9 @@ public class Pencil : Tool
 
         _currentLine = null;
     }
+
     // NOTE: SET TO PRIVATE ONCE ALL THE ERASER SHIT IS FIGURED OUT
-    public void SetPencilParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
+    public override void SetLineParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
     { // Also I know it sucks for this to be public - temporarily needed in order for EraserFunctions to work
         line.is_pen = false;
         line.SetThickness(_lineThicknessF);

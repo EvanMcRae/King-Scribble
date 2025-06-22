@@ -33,9 +33,6 @@ public class DrawManager : MonoBehaviour
     private float soundPauseCounter = 0, soundPauseThreshold = 0.5f;
     private bool soundPaused = false;
 
-    [SerializeField] private GameObject _pencilLinesFolder;
-    [SerializeField] private GameObject _penLinesFolder;
-
     [SerializeField] private ToolDatabase _toolDatabase;
 
     [Tooltip("Tool line width will be multiplied by this value for this stage.")]
@@ -45,13 +42,13 @@ public class DrawManager : MonoBehaviour
     {
         instance = this;
 
-        // Yes, I know this is "not future-proof". Yes, each new tool we create will require one (1) extra line of code in here. I don't care nearly enough to actually write a better solution.
-        ((Pencil)GetTool(ToolType.Pencil))._thicknessMult = _lineWidthMult;
-        ((Pen)GetTool(ToolType.Pen))._thicknessMult = _lineWidthMult;
-
-        // TODO This is also not future-proof, will need to change!!
-        ((Pencil)GetTool(ToolType.Pencil))._linesFolder = _pencilLinesFolder;
-        ((Pen)GetTool(ToolType.Pen))._linesFolder = _penLinesFolder;
+        foreach (Tool tool in _toolDatabase.tools)
+        {
+            if (tool is LineTool lineTool)
+            {
+                lineTool._thicknessMult = _lineWidthMult;
+            }
+        }
 
         _currentTool = null;
         if (PlayerVars.instance != null && PlayerVars.instance.inventory._toolTypes.Count > 0)

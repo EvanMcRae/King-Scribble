@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Pen", menuName = "ScriptableObjects/Pen", order = 3)]
-public class Pen : Tool
+public class Pen : LineTool
 {
     [Header("Line Thickness")]
     [Tooltip("The thickness of the drawn pen lines before they are completed.")]
     [SerializeField] private float _startThickness;
     [Tooltip("The thickness of the drawn pen lines after they are completed.")]
     [SerializeField] private float _endThickness;
-    public float _thicknessMult = 1;
 
     [Header("Object Fill")]
     [SerializeField] private Material _fillMat;
@@ -18,7 +17,6 @@ public class Pen : Tool
     [SerializeField] private Color _fillColor;
 
     [SerializeField] private GameObject _trailPref;
-    public GameObject _linesFolder;
 
     [Tooltip("The layer(s) used for cutting - note that simply adding a layer to this list will NOT automatically make all objects in that layer cuttable - a script on each object is needed.")]
     [SerializeField] private LayerMask _cutLayers;
@@ -43,18 +41,6 @@ public class Pen : Tool
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
-        if (_abort) return;
-        if (_linesFolder != null)
-        {
-            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity, _linesFolder.transform);
-        }
-
-        else
-        {
-            _currentLine = Instantiate(_linePref, mousePos, Quaternion.identity);
-        }
-
-        SetPenParams(_currentLine);
     }
 
     public override void Draw(Vector2 mousePos)
@@ -130,7 +116,7 @@ public class Pen : Tool
         }
     }
 
-    private void SetPenParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
+    public override void SetLineParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
     {
         line.is_pen = true;
         line.SetThickness(_startThicknessF);
@@ -145,7 +131,6 @@ public class Pen : Tool
     {
         if (!line.AddPolyCollider()) // Add polygon collider, returns false if collision within object found
         {
-            line = null;
             ResetTempFuel();
             return;
         }
@@ -167,6 +152,5 @@ public class Pen : Tool
         DrawManager.instance.toolSoundPlayer.PlaySound("Drawing.PenComplete");
 
         line.AddMesh(_fillMat, fillMatBlock); // Create a mesh from the polygon collider and assign the set material
-        line = null;
     }
 }

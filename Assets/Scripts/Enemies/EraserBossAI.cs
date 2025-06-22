@@ -40,8 +40,6 @@ public class EraserBossAI : MonoBehaviour
     }
     // serialized vars
     [SerializeField] private bool disable = false;
-    [SerializeField] private GameObject PencilLinesFolder; // Where pencil lines are stored in hierarchy
-    [SerializeField] private GameObject PenLinesFolder; // Where pen objs are stored in hierarchy
     [SerializeField] private Animator anim;
     [SerializeField] private GameObject platform;
     [SerializeField] private TextMeshProUGUI myText;
@@ -126,11 +124,16 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private Camera _shockwaveCamera;
     [SerializeField] private Material _shockwaveMat;
 
+    // -------------- TOOL STUFF ----------------
+    private Pencil PencilTool;
+    private Pen PenTool;
 
     void Start()
     {
+        PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));
+        PenTool = ((Pen)DrawManager.GetTool(ToolType.Pen));
 
-        ((Pen)DrawManager.GetTool(ToolType.Pen))._updatePenAreaEvent += updatePenArea;
+        PenTool._updatePenAreaEvent += updatePenArea;
 
         if (_shockwaveCamera.targetTexture != null)
             _shockwaveCamera.targetTexture.Release();
@@ -524,7 +527,7 @@ public class EraserBossAI : MonoBehaviour
         {
             if (other == KSCollider)
             { // Deplete health from KS
-                DrawManager.GetTool(ToolType.Pencil).SpendFuel(50);
+                PencilTool.SpendFuel(50);
                 Vector3 distance = transform.position - KingScribble.transform.position;
                 if (distance.x < 0)
                 { // launch right
@@ -614,10 +617,12 @@ public class EraserBossAI : MonoBehaviour
 
     void SearchForPosition()
     {
+        if (PencilTool.GetLinesFolder() == null) return;
+
         // If line renderer present, goes for the biggest one OR closest one?
         float closestDistance = 100f;
 
-        foreach (Transform childTransform in PencilLinesFolder.transform) // for each pencil line
+        foreach (Transform childTransform in PencilTool.GetLinesFolder()) // for each pencil line
         {
             LineRenderer tempLine = childTransform.GetComponent<LineRenderer>();
             if (tempLine.positionCount > minimumLinePoints)
@@ -681,9 +686,9 @@ public class EraserBossAI : MonoBehaviour
     // Takes into account EB's circlecast colliders
     void Erase()
     {
-        EraserFunctions.Erase(bounds1.transform.position, eraserRadius, true, PencilLinesFolder);
-        EraserFunctions.Erase(bounds2.transform.position, eraserRadius, true, PencilLinesFolder);
-        EraserFunctions.Erase(bounds3.transform.position, eraserRadius, true, PencilLinesFolder);
+        EraserFunctions.Erase(bounds1.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
+        EraserFunctions.Erase(bounds2.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
+        EraserFunctions.Erase(bounds3.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
     }
 
 
@@ -850,7 +855,8 @@ public class EraserBossAI : MonoBehaviour
     private void DespawnAllPenObj()
     {
         //Debug.Log("DESPAWNING PEN OBJS");
-        foreach (Transform childTransform in PenLinesFolder.transform)
+        if (PenTool.GetLinesFolder() == null) return;
+        foreach (Transform childTransform in PenTool.GetLinesFolder())
         {
             if (childTransform.gameObject.layer == 7) // Only runs on spawned pen objects
                 StartCoroutine(DespawnPenObj(childTransform));
@@ -916,7 +922,8 @@ public class EraserBossAI : MonoBehaviour
 
     private void DespawnAllPencilObj()
     {
-        foreach (Transform childTransform in PencilLinesFolder.transform)
+        if (PencilTool.GetLinesFolder() == null) return;
+        foreach (Transform childTransform in PencilTool.GetLinesFolder())
         {
             StartCoroutine(DespawnPencilObj(childTransform));
         }
@@ -963,7 +970,7 @@ public class EraserBossAI : MonoBehaviour
             {
                 pencil.GetComponent<Line>().deleted = true;
                 Destroy(pencil.gameObject);
-                DrawManager.GetTool(ToolType.Pencil).AddFuel(tempLine.positionCount); // Give player back their health
+                PencilTool.AddFuel(tempLine.positionCount); // Give player back their health
             }
         }
     }
@@ -1082,7 +1089,7 @@ public class EraserBossAI : MonoBehaviour
     // unbinds delegate upon destroying the eraser boss -- this is good practice!! - evan
     private void OnDestroy()
     {
-        ((Pen)DrawManager.GetTool(ToolType.Pen))._updatePenAreaEvent -= updatePenArea;
+        PenTool._updatePenAreaEvent -= updatePenArea;
     }
 
     // Cut scene that shows EB roaring

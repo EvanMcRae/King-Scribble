@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class EraserFunctions : MonoBehaviour
 {
-    public static void Erase(Vector2 pos, float radius, bool addFuel, GameObject parent = null) {
+    public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null) {
+        Pencil PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));
 
         RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius); // Raycast is in Utils.cs
 
@@ -16,7 +17,7 @@ public class EraserFunctions : MonoBehaviour
                 LineRenderer lineRenderer = c.gameObject.GetComponent<LineRenderer>();
 
                 if(lineRenderer != null) {
-                    DrawManager.instance._currentTool.CheckRefreshLine(c.GetComponent<Line>());
+                    PencilTool.CheckRefreshLine(c.GetComponent<Line>());
                     List<CircleCollider2D> collidersList = c.gameObject.GetComponent<Line>().colliders; // List of CircleCollider2D
                     int c_index = collidersList.IndexOf(c); // the collider's index in the list
                     int numPoints = lineRenderer.positionCount; // position count starts at 1 while c_index starts at 0
@@ -60,17 +61,13 @@ public class EraserFunctions : MonoBehaviour
                         //Debug.Log("Creating new line of size " + (numPoints - c_index - 1));
                         Line newLine;
                         Vector3 transformPosition = c.gameObject.GetComponent<Transform>().position;
-                        if(parent != null) {
-                            newLine = Instantiate(DrawManager.GetTool(ToolType.Pencil)._linePref, transformPosition, Quaternion.identity, parent.transform);
-                        }
-                        else {
-                            newLine = Instantiate(DrawManager.GetTool(ToolType.Pencil)._linePref, transformPosition, Quaternion.identity);
-                        }
-                        // Note - the constant referencing of DrawManager.GetTool(ToolType.Pencil) is really ugly and probably bad for performance
+                        newLine = Instantiate(PencilTool._linePref, transformPosition, Quaternion.identity, parent);
+
+                        // Note - the constant referencing of PencilTool is really ugly and probably bad for performance
                         // However, it is necessary - TEMPORARILY - for the assembly to compile, and for this file to work with the refactor.
                         // Rewriting these functions and incorporating them into the new refactored tools should be a TOP priority.
-                        ((Pencil)DrawManager.GetTool(ToolType.Pencil)).SetPencilParams(newLine);
-                        DrawManager.GetTool(ToolType.Pencil).SwapColors(newLine);
+                        PencilTool.SetLineParams(newLine);
+                        PencilTool.SwapColors(newLine);
 
                         // Fill the new line and delete from the current line
                         int ct = 0;
