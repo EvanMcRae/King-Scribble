@@ -1,9 +1,32 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using DTerrain;
 
 public class EraserFunctions : MonoBehaviour
 {
+    public static List<BasicPaintableLayer> PaintableLayers = new();
+
     public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null) {
+
+        // First handle paintable layers
+        int circleSize = (int)(36 * radius); // this is a hack for now because radius here is integers :(
+        Shape destroyCircle = Shape.GenerateShapeCircle(circleSize);
+        foreach (BasicPaintableLayer layer in PaintableLayers)
+        {
+            Vector3 p = new Vector3(pos.x, pos.y, 0) - layer.transform.position;
+
+            layer.Paint(new PaintingParameters()
+            {
+                Color = Color.clear,
+                Position = new Vector2Int((int)(p.x * layer.PPU) - circleSize, (int)(p.y * layer.PPU) - circleSize),
+                Shape = destroyCircle,
+                PaintingMode = PaintingMode.REPLACE_COLOR,
+                DestructionMode = DestructionMode.DESTROY
+            });
+
+            // TODO: need a call back for amount destroyed
+        }
+
         Pencil PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));
 
         RaycastHit2D[] hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius); // Raycast is in Utils.cs

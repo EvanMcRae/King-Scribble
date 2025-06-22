@@ -12,13 +12,18 @@ namespace DTerrain
         //CHUNK SIZE X!!!!
         public virtual void Start()
         {
+            EraserFunctions.PaintableLayers.Add(this);
             SpawnChunks();
             InitChunks();
-            
         }
 
         public virtual void Update()
         {
+        }
+
+        public virtual void OnDestroy()
+        {
+            EraserFunctions.PaintableLayers.Remove(this);
         }
     }
 }

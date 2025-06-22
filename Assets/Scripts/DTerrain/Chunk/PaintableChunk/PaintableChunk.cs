@@ -12,6 +12,7 @@ namespace DTerrain
 
         public ITextureSource TextureSource { get; set; }
         public int SortingLayerID { get; set; }
+        public int SortingOrder { get; set; }
 
         protected bool painted=false;
 
@@ -23,6 +24,7 @@ namespace DTerrain
             TextureSource.SetUpToRenderer(SpriteRenderer);
 
             SpriteRenderer.sortingLayerID = SortingLayerID;
+            SpriteRenderer.sortingOrder = SortingOrder;
         }
 
         public virtual bool Paint(RectInt r, PaintingParameters pp)
@@ -30,15 +32,14 @@ namespace DTerrain
             if (pp.PaintingMode == PaintingMode.NONE) return false;
 
             //Find common rect that will be applied on this texture rect
-            RectInt common;
-            r.Intersects(new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height), out common);
+            r.Intersects(new RectInt(0, 0, TextureSource.Texture.width, TextureSource.Texture.height), out RectInt common);
 
             //Generate color array...
             int len = common.width * common.height;
 
             if (len == 0) return false;
 
-            Color[] cs = new Color[len];
+            Color32[] cs = new Color32[len];
 
             //...using paiting method
             if (pp.PaintingMode == PaintingMode.REPLACE_COLOR)
@@ -56,7 +57,7 @@ namespace DTerrain
             }
 
             //Apply color
-            TextureSource.Texture.SetPixels(common.x, common.y, common.width, common.height, cs);
+            TextureSource.Texture.SetPixels32(common.x, common.y, common.width, common.height, cs);
 
             //Set up this chunk as ready to be updated on next Update()
             painted = true;

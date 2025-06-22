@@ -34,9 +34,10 @@ namespace DTerrain
         [field: SerializeField]
         public string SortingLayerName { get; set; }
 
+        [field: SerializeField]
+        public int SortingOrder { get; set; }
+
         public List<T> Chunks { get; private set; }
-
-
 
         /// <summary>
         /// Spawns all chunks that are required for full functionality and adds them to the list named 'Chunks'.
@@ -78,6 +79,7 @@ namespace DTerrain
                     if(sr==null)
                         sr=c.AddComponent<SpriteRenderer>();
                     sr.sortingLayerID = SortingLayer.NameToID(SortingLayerName);
+                    sr.sortingOrder = SortingOrder;
 
                     c.transform.position = transform.position + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
                     c.transform.SetParent(transform);
@@ -92,6 +94,7 @@ namespace DTerrain
             foreach(PaintableChunk t in Chunks)
             {
                 t.SortingLayerID = SortingLayer.NameToID(SortingLayerName);
+                t.SortingOrder = SortingOrder;
                 t.Init();
             }
         }

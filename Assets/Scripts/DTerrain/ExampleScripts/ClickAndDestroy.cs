@@ -35,15 +35,15 @@ namespace DTerrain
 
         public void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                OnLeftMouseButtonClick();
-            }
+            //if (Input.GetMouseButton(0))
+            //{
+            //    OnLeftMouseButtonClick();
+            //}
 
-            if(Input.GetMouseButton(1))
-            {
-                OnRightMouseButtonClick();
-            }
+            //if(Input.GetMouseButton(1))
+            //{
+            //    OnRightMouseButtonClick();
+            //}
 
             
         }
