@@ -87,13 +87,13 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
         ReplenishTools();
-        isDead = false;
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
         Pencil _pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
         GetComponent<PlayerController>().ResizePlayer(_pencil.GetFuelRemaining());
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
         RefreshTools();
+        isDead = false;
     }
 
     public void Dismount()
