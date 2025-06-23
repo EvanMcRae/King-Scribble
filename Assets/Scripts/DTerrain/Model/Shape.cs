@@ -30,23 +30,26 @@ namespace DTerrain
         }
 
         /// <summary>
-        /// Generates a Shape: circle.
+        /// Generates a Shape: oval.
         /// </summary>
-        /// <param name="r">Radius</param>
-        /// <returns>Shape: circle.</returns>
-        public static Shape GenerateShapeCircle(int r)
+        /// <param name="rx">X Radius</param>
+        /// <param name="ry">Y Radius</param>
+        /// <returns>Shape: oval.</returns>
+        public static Shape GenerateShapeOval(int rx, int ry)
         {
-            int centerX = r;
-            int centerY = r;
-            Shape s = new Shape(2 * r, 2 * r);
-            for (int i = 0; i <= 2 * r; i++)
+            int centerX = rx;
+            int centerY = ry;
+            Shape s = new(2 * rx, 2 * ry);
+            for (int i = 0; i <= 2 * rx; i++)
             {
                 bool down = false;
                 int min = 0;
                 int max = 0;
-                for (int j = 0; j <= 2 * r; j++)
+                for (int j = 0; j <= 2 * ry; j++)
                 {
-                    if (Mathf.Sqrt((centerX - i) * (centerX - i) + (centerY - j) * (centerY - j)) < r)
+                    float dx = (i - centerX) / (float)rx;
+                    float dy = (j - centerY) / (float)ry;
+                    if (dx * dx + dy * dy < 1f)
                     {
                         if (down == false)
                         {
@@ -76,6 +79,16 @@ namespace DTerrain
             }
 
             return s;
+        }
+
+        /// <summary>
+        /// Generates a Shape: circle.
+        /// </summary>
+        /// <param name="r">Radius</param>
+        /// <returns>Shape: circle.</returns>
+        public static Shape GenerateShapeCircle(int r)
+        {
+            return GenerateShapeOval(r, r);
         }
 
         public static Shape GenerateShapeRect(int w, int h)

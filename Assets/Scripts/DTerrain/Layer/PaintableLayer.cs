@@ -22,17 +22,14 @@ namespace DTerrain
         [SerializeField]
         protected GameObject chunkTemplate;
 
-        [field:SerializeField, HideInInspector]
-        public Sprite OriginalSprite { get; set; }
+        protected Sprite OriginalSprite { get; set; }
 
         [SerializeField]
         protected FilterMode filterMode;
 
-        [field: SerializeField, HideInInspector]
-        public int SortingLayer { get; set; }
+        protected int SortingLayer { get; set; }
 
-        [field: SerializeField, HideInInspector]
-        public int SortingOrder { get; set; }
+        protected int SortingOrder { get; set; }
 
         public List<T> Chunks { get; private set; }
 

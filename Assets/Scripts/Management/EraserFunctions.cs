@@ -10,21 +10,9 @@ public class EraserFunctions : MonoBehaviour
 
         // First handle paintable layers
         int circleSize = (int)(24 * radius); // this is a hack for now because radius here is integers :(
-        Shape destroyCircle = Shape.GenerateShapeCircle(circleSize);
         foreach (BasicPaintableLayer layer in PaintableLayers)
         {
-            Vector3 p = new Vector3(pos.x, pos.y, 0) - layer.transform.position + (Vector3)layer.OriginalSprite.pivot / layer.OriginalSprite.pixelsPerUnit;
-
-            layer.Paint(new PaintingParameters()
-            {
-                Color = Color.clear,
-                Position = new Vector2Int((int)(p.x * layer.OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * layer.OriginalSprite.pixelsPerUnit) - circleSize),
-                Shape = destroyCircle,
-                PaintingMode = PaintingMode.REPLACE_COLOR,
-                DestructionMode = DestructionMode.DESTROY
-            });
-
-            // TODO: need a call back for amount destroyed
+            layer.Paint(pos, circleSize); // TODO: need a callback for amount destroyed
         }
 
         Pencil PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));

@@ -11,6 +11,8 @@ namespace DTerrain
     public class BasicPaintableLayer : PaintableLayer<PaintableChunk>
     {
         private SpriteRenderer spriteRenderer;
+        private Quaternion rotation;
+        private Vector3 scale;
 
         public void OnEnable()
         {
@@ -25,8 +27,14 @@ namespace DTerrain
         {
             spriteRenderer.enabled = false;
             EraserFunctions.PaintableLayers.Add(this);
+            rotation = transform.rotation;
+            scale = transform.localScale;
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
             SpawnChunks();
             InitChunks();
+            transform.rotation = rotation;
+            transform.localScale = scale;
         }
 
         public virtual void Update()
@@ -36,6 +44,21 @@ namespace DTerrain
         public virtual void OnDestroy()
         {
             EraserFunctions.PaintableLayers.Remove(this);
+        }
+
+        public void Paint(Vector3 pos, int circleSize)
+        {
+            Vector3 p = transform.InverseTransformPoint(new Vector3(pos.x, pos.y, 0)) + (Vector3)OriginalSprite.pivot / OriginalSprite.pixelsPerUnit;
+            Shape destroyCircle = Shape.GenerateShapeOval((int)(circleSize / scale.x), (int)(circleSize / scale.y));
+
+            Paint(new PaintingParameters()
+            {
+                Color = Color.clear,
+                Position = new Vector2Int((int)(p.x * OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * OriginalSprite.pixelsPerUnit) - circleSize),
+                Shape = destroyCircle,
+                PaintingMode = PaintingMode.REPLACE_COLOR,
+                DestructionMode = DestructionMode.DESTROY
+            });
         }
     }
 }
