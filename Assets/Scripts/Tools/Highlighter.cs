@@ -6,6 +6,7 @@ using UnityEngine;
 public class Highlighter : LineTool
 {
     [SerializeField] private float _lineThickness;
+    [SerializeField] private Material _mat;
     private float _lineThicknessF;
 
     public override void OnStart()
@@ -23,7 +24,7 @@ public class Highlighter : LineTool
     {
         base.Draw(mousePos);
         if (_abort) return;
-        
+
         if (_currentLine.canDraw || !_currentLine.hasDrawn)
         {
             _currentLine.SetPosition(mousePos);
@@ -38,6 +39,7 @@ public class Highlighter : LineTool
     public override void EndDraw()
     {
         base.EndDraw();
+        _currentLine.HighlighterFade();
     }
 
     public override void RightClick(Vector2 mousePos)
@@ -49,5 +51,8 @@ public class Highlighter : LineTool
     {
         line._curTool = ToolType.Highlighter;
         line.SetThickness(_lineThicknessF);
+        line.collisionsActive = false;
+        line.SetHighlighterParams(_mat);
+        line.SetColor(_startColor);
     }
 }

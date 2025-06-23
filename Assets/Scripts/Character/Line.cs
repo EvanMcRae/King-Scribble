@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Splines.Interpolators;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 // NOTE: all lines marked with a star (*) will need to be rewritten to some extent to accomodate the tool refactor
@@ -46,6 +48,7 @@ public class Line : MonoBehaviour
             rigidBody.isKinematic = true;
             rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
         }
+        if (_curTool == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
         lineRenderer.widthMultiplier = thickness;
         edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
@@ -370,6 +373,35 @@ public class Line : MonoBehaviour
         {
             edgeCollider.points = points.ToArray();
         }
+    }
+
+    public void SetHighlighterParams(Material mat)
+    {
+        lineRenderer.numCapVertices = 0;
+        lineRenderer.material = mat;
+    }
+
+    public void HighlighterFade()
+    {
+        StartCoroutine(Fade(5));
+    }
+
+    private IEnumerator Fade(float duration)
+    {
+        float currentTime = 0f;
+        Color start = lineRenderer.startColor;
+        Color end = lineRenderer.endColor;
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(currentTime / duration);
+            start.a = Mathf.Lerp(1, 0, delta);
+            end.a = Mathf.Lerp(1, 0, delta);
+            lineRenderer.startColor = start;
+            lineRenderer.endColor = end;
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }
 
