@@ -296,6 +296,7 @@ public class DrawManager : MonoBehaviour
     private IEnumerator MarchDrawing(Vector2 mousePos)
     {
         Vector2 marchPos = _currentTool.GetLastMousePos();
+        _currentTool.ResyncMousePos(mousePos);
         int ct = 0, interval = _currentTool._marchInterval;
         do
         {
@@ -305,7 +306,6 @@ public class DrawManager : MonoBehaviour
             if (ct % interval == 0) yield return new WaitForEndOfFrame();
         } while (Vector2.Distance(marchPos, mousePos) > Tool._RESOLUTION);
         _currentTool.MarchStepDraw(marchPos);
-        _currentTool.ResyncMousePos(mousePos);
     }
 
     public void StopDrawSounds()
