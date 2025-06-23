@@ -118,7 +118,7 @@ public class Pen : LineTool
 
     public override void SetLineParams(Line line) // // Temporary - will be rewritten with eventual Line.cs refactor
     {
-        line.is_pen = true;
+        line._curTool = ToolType.Pen;
         line.SetThickness(_startThicknessF);
         line.collisionsActive = false;
         line.GetComponent<LineRenderer>().startColor = _startColor;

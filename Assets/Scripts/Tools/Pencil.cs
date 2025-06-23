@@ -54,7 +54,7 @@ public class Pencil : LineTool
     // NOTE: SET TO PRIVATE ONCE ALL THE ERASER SHIT IS FIGURED OUT
     public override void SetLineParams(Line line) // Temporary - will be rewritten with eventual Line.cs refactor
     { // Also I know it sucks for this to be public - temporarily needed in order for EraserFunctions to work
-        line.is_pen = false;
+        line._curTool = ToolType.Pencil;
         line.SetThickness(_lineThicknessF);
         line.collisionsActive = true;
         line.GetComponent<LineRenderer>().startColor = _startColor;

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92936f9cc3a14ec4998cee3955abb25a, type: 3}
+  m_Name: Highlighter
+  m_EditorClassIdentifier: 
+  _cursor: {fileID: 2800000, guid: bb927c21f667acc4f987dec4df364fe6, type: 3}
+  _maxFuel: 1000
+  _sound: {fileID: 11400000, guid: 2d88dac28d6fc46d1a1676320236c78e, type: 2}
+  _noDraw:
+    serializedVersion: 2
+    m_Bits: 83672
+  _refill:
+    serializedVersion: 2
+    m_Bits: 0
+  _noRefill:
+    serializedVersion: 2
+    m_Bits: 0
+  _refillRate: 10
+  _drawing: 0
+  _beganDraw: 0
+  _drawCooldown: 0
+  _rmbActive: 0
+  _marchInterval: 3
+  _linePref: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  _startColor: {r: 1, g: 0.90220904, b: 0.390566, a: 0}
+  _endColor: {r: 1, g: 0.9019608, b: 0.39215687, a: 0}
+  _thicknessMult: 1
+  _lineThickness: 3

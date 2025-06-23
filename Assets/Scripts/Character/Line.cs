@@ -20,11 +20,11 @@ public class Line : MonoBehaviour
     public const float MAX_DISTANCE = 50f;
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
-    public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
     public float area = 0;
     public SpriteRenderer startPoint;
+    public ToolType _curTool;
 
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
@@ -84,7 +84,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Add circle collider component for this point if using pencil
-        if (!is_pen)
+        if (_curTool == ToolType.Pencil)
         {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
@@ -366,7 +366,7 @@ public class Line : MonoBehaviour
 
     public void RefreshEdge()
     {
-        if (!is_pen)
+        if (_curTool == ToolType.Pencil)
         {
             edgeCollider.points = points.ToArray();
         }
