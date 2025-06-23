@@ -108,9 +108,11 @@ public class WaterFall : MonoBehaviour
             if (hit)
             {
                 // Waterfalls kill the player on collision - if raycast hits the player, kill them >:)
-                if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !GameManager.resetting && !PlayerVars.instance.cheatMode)
+                if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !PlayerVars.instance.cheatMode)
                 {
-                    GameManager.instance.Reset();
+                    if (!GameManager.resetting)
+                        GameManager.instance.Reset();
+                    hit = Physics2D.Raycast(start, Vector2.down, -3 * yBot, (_waterLayers | _colliders) & ~(1 << LayerMask.NameToLayer("Player")));
                 }
 
                 // Increase separate counter for particles
