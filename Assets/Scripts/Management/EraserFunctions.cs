@@ -9,7 +9,7 @@ public class EraserFunctions : MonoBehaviour
     public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null) {
 
         // First handle paintable layers
-        int circleSize = (int)(36 * radius); // this is a hack for now because radius here is integers :(
+        int circleSize = (int)(24 * radius); // this is a hack for now because radius here is integers :(
         Shape destroyCircle = Shape.GenerateShapeCircle(circleSize);
         foreach (BasicPaintableLayer layer in PaintableLayers)
         {
