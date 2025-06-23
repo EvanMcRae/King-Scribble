@@ -13,12 +13,12 @@ public class EraserFunctions : MonoBehaviour
         Shape destroyCircle = Shape.GenerateShapeCircle(circleSize);
         foreach (BasicPaintableLayer layer in PaintableLayers)
         {
-            Vector3 p = new Vector3(pos.x, pos.y, 0) - layer.transform.position;
+            Vector3 p = new Vector3(pos.x, pos.y, 0) - layer.transform.position + (Vector3)layer.OriginalSprite.pivot / layer.OriginalSprite.pixelsPerUnit;
 
             layer.Paint(new PaintingParameters()
             {
                 Color = Color.clear,
-                Position = new Vector2Int((int)(p.x * layer.PPU) - circleSize, (int)(p.y * layer.PPU) - circleSize),
+                Position = new Vector2Int((int)(p.x * layer.OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * layer.OriginalSprite.pixelsPerUnit) - circleSize),
                 Shape = destroyCircle,
                 PaintingMode = PaintingMode.REPLACE_COLOR,
                 DestructionMode = DestructionMode.DESTROY

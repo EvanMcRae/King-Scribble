@@ -22,19 +22,16 @@ namespace DTerrain
         [SerializeField]
         protected GameObject chunkTemplate;
 
-        [field:SerializeField]
-        public Texture2D OriginalTexture { get; set; }
-
-        [field:SerializeField]
-        public int PPU { get; protected set; }
+        [field:SerializeField, HideInInspector]
+        public Sprite OriginalSprite { get; set; }
 
         [SerializeField]
         protected FilterMode filterMode;
 
-        [field: SerializeField]
-        public string SortingLayerName { get; set; }
+        [field: SerializeField, HideInInspector]
+        public int SortingLayer { get; set; }
 
-        [field: SerializeField]
+        [field: SerializeField, HideInInspector]
         public int SortingOrder { get; set; }
 
         public List<T> Chunks { get; private set; }
@@ -44,18 +41,19 @@ namespace DTerrain
         /// </summary>
         public virtual void SpawnChunks()
         {
-
             Chunks = new List<T>();
-            chunkSizeX = OriginalTexture.width / ChunkCountX;
-            chunkSizeY = OriginalTexture.height / ChunkCountY;
+
+            chunkSizeX = OriginalSprite.texture.width / ChunkCountX;
+            chunkSizeY = OriginalSprite.texture.height / ChunkCountY;
 
             for (int i = 0; i < ChunkCountX; i++)
             {
                 for (int j = 0; j < ChunkCountY; j++)
                 {
                     Texture2D piece = new(chunkSizeX, chunkSizeY);
-                    piece.filterMode = filterMode; 
-                    piece.SetPixels(0, 0, chunkSizeX, chunkSizeY, OriginalTexture.GetPixels(i * chunkSizeX, j * chunkSizeY, chunkSizeX, chunkSizeY));
+                    piece.filterMode = filterMode;
+
+                    piece.SetPixels(0, 0, chunkSizeX, chunkSizeY, OriginalSprite.texture.GetPixels(i * chunkSizeX, j * chunkSizeY, chunkSizeX, chunkSizeY));
                     piece.Apply();
 
 
@@ -73,15 +71,15 @@ namespace DTerrain
                         pc.TextureSource = c.AddComponent<SingleTextureSource>();
 
                     pc.TextureSource.Texture = piece;
-                    pc.TextureSource.PPU = PPU;
+                    pc.TextureSource.PPU = (int)OriginalSprite.pixelsPerUnit;
 
                     SpriteRenderer sr = c.GetComponent<SpriteRenderer>();
                     if(sr==null)
                         sr=c.AddComponent<SpriteRenderer>();
-                    sr.sortingLayerID = SortingLayer.NameToID(SortingLayerName);
+                    sr.sortingLayerID = SortingLayer;
                     sr.sortingOrder = SortingOrder;
 
-                    c.transform.position = transform.position + new Vector3(i * (float)chunkSizeX / PPU, j * (float)chunkSizeY / PPU, 0);
+                    c.transform.position = transform.position + new Vector3(i * (float)chunkSizeX / OriginalSprite.pixelsPerUnit - OriginalSprite.pivot.x / OriginalSprite.pixelsPerUnit, j * (float)chunkSizeY / OriginalSprite.pixelsPerUnit - OriginalSprite.pivot.y / OriginalSprite.pixelsPerUnit, 0);
                     c.transform.SetParent(transform);
 
                     Chunks.Add(c.GetComponent<T>());
@@ -93,7 +91,7 @@ namespace DTerrain
         {
             foreach(PaintableChunk t in Chunks)
             {
-                t.SortingLayerID = SortingLayer.NameToID(SortingLayerName);
+                t.SortingLayerID = SortingLayer;
                 t.SortingOrder = SortingOrder;
                 t.Init();
             }

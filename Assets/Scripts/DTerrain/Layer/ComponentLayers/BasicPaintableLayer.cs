@@ -7,11 +7,23 @@ using UnityEngine;
 
 namespace DTerrain
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class BasicPaintableLayer : PaintableLayer<PaintableChunk>
     {
+        private SpriteRenderer spriteRenderer;
+
+        public void OnEnable()
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            OriginalSprite = spriteRenderer.sprite;
+            SortingLayer = spriteRenderer.sortingLayerID;
+            SortingOrder = spriteRenderer.sortingOrder;
+        }
+
         //CHUNK SIZE X!!!!
         public virtual void Start()
         {
+            spriteRenderer.enabled = false;
             EraserFunctions.PaintableLayers.Add(this);
             SpawnChunks();
             InitChunks();

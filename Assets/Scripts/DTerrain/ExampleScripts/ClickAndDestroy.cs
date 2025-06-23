@@ -56,7 +56,7 @@ namespace DTerrain
             primaryLayer?.Paint(new PaintingParameters() 
             { 
                 Color = Color.clear, 
-                Position = new Vector2Int((int)(p.x * primaryLayer.PPU) - circleSize, (int)(p.y * primaryLayer.PPU) - circleSize), 
+                Position = new Vector2Int((int)(p.x * primaryLayer.OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * primaryLayer.OriginalSprite.pixelsPerUnit) - circleSize), 
                 Shape = destroyCircle, 
                 PaintingMode=PaintingMode.REPLACE_COLOR,
                 DestructionMode = DestructionMode.DESTROY
@@ -65,7 +65,7 @@ namespace DTerrain
             secondaryLayer?.Paint(new PaintingParameters() 
             { 
                 Color = new Color(0.0f,0.0f,0.0f,0.75f), 
-                Position = new Vector2Int((int)(p.x * secondaryLayer.PPU) - circleSize-outlineSize, (int)(p.y * secondaryLayer.PPU) - circleSize-outlineSize), 
+                Position = new Vector2Int((int)(p.x * secondaryLayer.OriginalSprite.pixelsPerUnit) - circleSize-outlineSize, (int)(p.y * secondaryLayer.OriginalSprite.pixelsPerUnit) - circleSize-outlineSize), 
                 Shape = outlineCircle, 
                 PaintingMode=PaintingMode.REPLACE_COLOR,
                 DestructionMode = DestructionMode.NONE
@@ -79,7 +79,7 @@ namespace DTerrain
             primaryLayer?.Paint(new PaintingParameters()
             {
                 Color = Color.black,
-                Position = new Vector2Int((int)(p.x * primaryLayer.PPU) - circleSize, (int)(p.y * primaryLayer.PPU) - circleSize),
+                Position = new Vector2Int((int)(p.x * primaryLayer.OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * primaryLayer.OriginalSprite.pixelsPerUnit) - circleSize),
                 Shape = destroyCircle,
                 PaintingMode = PaintingMode.REPLACE_COLOR,
                 DestructionMode = DestructionMode.BUILD
