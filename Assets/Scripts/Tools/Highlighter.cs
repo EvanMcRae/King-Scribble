@@ -7,6 +7,7 @@ public class Highlighter : LineTool
 {
     [SerializeField] private float _lineThickness;
     [SerializeField] private Material _mat;
+
     private float _lineThicknessF;
 
     public override void OnStart()

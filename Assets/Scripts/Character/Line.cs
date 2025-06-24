@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Splines.Interpolators;
+using UnityEngine.Rendering.Universal;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 // NOTE: all lines marked with a star (*) will need to be rewritten to some extent to accomodate the tool refactor
@@ -85,7 +86,7 @@ public class Line : MonoBehaviour
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
-
+        
         // Add circle collider component for this point if using pencil
         if (_curTool == ToolType.Pencil)
         {
@@ -403,5 +404,7 @@ public class Line : MonoBehaviour
         }
         Destroy(gameObject);
     }
+
+    
 }
 
