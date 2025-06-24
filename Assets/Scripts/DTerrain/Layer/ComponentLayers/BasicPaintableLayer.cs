@@ -46,8 +46,9 @@ namespace DTerrain
             EraserFunctions.PaintableLayers.Remove(this);
         }
 
-        public void Paint(Vector3 pos, int circleSize)
+        public void Paint(Vector3 pos, float radius)
         {
+            int circleSize = (int)(OriginalSprite.pixelsPerUnit * radius);
             Vector3 p = transform.InverseTransformPoint(new Vector3(pos.x, pos.y, 0)) + (Vector3)OriginalSprite.pivot / OriginalSprite.pixelsPerUnit;
             Shape destroyCircle = Shape.GenerateShapeOval((int)(circleSize / scale.x), (int)(circleSize / scale.y));
 

@@ -7,12 +7,10 @@ public class EraserFunctions : MonoBehaviour
     public static List<BasicPaintableLayer> PaintableLayers = new();
 
     public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null) {
-
         // First handle paintable layers
-        int circleSize = (int)(24 * radius); // this is a hack for now because radius here is integers :(
         foreach (BasicPaintableLayer layer in PaintableLayers)
         {
-            layer.Paint(pos, circleSize); // TODO: need a callback for amount destroyed
+            layer.Paint(pos, radius); // TODO: need a callback for amount destroyed
         }
 
         Pencil PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));
