@@ -232,6 +232,14 @@ public class PlayerController : MonoBehaviour
             CollectTool();
             DrawManager.instance.TrySwitchTool(ToolType.Eraser);
         }
+
+        // unlock highlighter
+        if (Input.GetKeyDown(KeyCode.LeftBracket) && !PlayerVars.instance.inventory.hasTool(ToolType.Highlighter))
+        {
+            PlayerVars.instance.inventory.addTool(ToolType.Highlighter);
+            CollectTool();
+            DrawManager.instance.TrySwitchTool(ToolType.Highlighter);
+        }
     }
 
     void FixedUpdate()
