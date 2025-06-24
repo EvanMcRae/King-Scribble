@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class ToolIndicator : MonoBehaviour
 {
-    public Image PencilIcon, PenIcon, EraserIcon, PCIcon;
-    public Sprite PencilUnused, PencilUsed, PenUnused, PenUsed, EraserUnused, EraserUsed;
+    public Image PencilIcon, PenIcon, EraserIcon, HighlighterIcon, PCIcon;
+    public Sprite PencilUnused, PencilUsed, PenUnused, HighlighterUnused, PenUsed, EraserUnused, EraserUsed, HighlighterUsed;
     public List<Sprite> PencilCaseSprites = new();
     public List<Image> Slots = new();
     public static ToolIndicator instance;
@@ -44,6 +44,10 @@ public class ToolIndicator : MonoBehaviour
                 case ToolType.Eraser:
                     used = EraserUsed;
                     unused = EraserUnused;
+                    break;
+                case ToolType.Highlighter:
+                    used = HighlighterUsed;
+                    unused = HighlighterUnused;
                     break;
             }
 

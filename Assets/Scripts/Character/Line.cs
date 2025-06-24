@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Splines.Interpolators;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
 // NOTE: all lines marked with a star (*) will need to be rewritten to some extent to accomodate the tool refactor
@@ -20,11 +22,11 @@ public class Line : MonoBehaviour
     public const float MAX_DISTANCE = 50f;
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
-    public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
     public float area = 0;
     public SpriteRenderer startPoint;
+    public ToolType _curTool;
 
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
@@ -46,6 +48,7 @@ public class Line : MonoBehaviour
             rigidBody.isKinematic = true;
             rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
         }
+        if (_curTool == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
         lineRenderer.widthMultiplier = thickness;
         edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
@@ -84,7 +87,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
 
         // Add circle collider component for this point if using pencil
-        if (!is_pen)
+        if (_curTool == ToolType.Pencil)
         {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
@@ -366,10 +369,39 @@ public class Line : MonoBehaviour
 
     public void RefreshEdge()
     {
-        if (!is_pen)
+        if (_curTool == ToolType.Pencil)
         {
             edgeCollider.points = points.ToArray();
         }
+    }
+
+    public void SetHighlighterParams(Material mat)
+    {
+        lineRenderer.numCapVertices = 0;
+        lineRenderer.material = mat;
+    }
+
+    public void HighlighterFade()
+    {
+        StartCoroutine(Fade(5));
+    }
+
+    private IEnumerator Fade(float duration)
+    {
+        float currentTime = 0f;
+        Color start = lineRenderer.startColor;
+        Color end = lineRenderer.endColor;
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(currentTime / duration);
+            start.a = Mathf.Lerp(1, 0, delta);
+            end.a = Mathf.Lerp(1, 0, delta);
+            lineRenderer.startColor = start;
+            lineRenderer.endColor = end;
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 }
 

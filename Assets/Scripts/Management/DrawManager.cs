@@ -9,7 +9,8 @@ public enum ToolType
     None,
     Pencil,
     Pen,
-    Eraser
+    Eraser,
+    Highlighter
 }
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
@@ -182,9 +183,12 @@ public class DrawManager : MonoBehaviour
             {
                 SwitchTool(2);
             }
-
+            if (Input.GetKeyDown("4") || Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                SwitchTool(3);
+            }
             // Tool scrolling
-            float scrollDelta;
+                float scrollDelta;
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 scrollDelta = Input.mouseScrollDelta.x;
             else
