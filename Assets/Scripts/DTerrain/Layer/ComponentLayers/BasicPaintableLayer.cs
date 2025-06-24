@@ -54,7 +54,7 @@ namespace DTerrain
             Paint(new PaintingParameters()
             {
                 Color = Color.clear,
-                Position = new Vector2Int((int)(p.x * OriginalSprite.pixelsPerUnit) - circleSize, (int)(p.y * OriginalSprite.pixelsPerUnit) - circleSize),
+                Position = new Vector2Int((int)(p.x * OriginalSprite.pixelsPerUnit) - (int)(circleSize / scale.x), (int)(p.y * OriginalSprite.pixelsPerUnit) - (int)(circleSize / scale.y)),
                 Shape = destroyCircle,
                 PaintingMode = PaintingMode.REPLACE_COLOR,
                 DestructionMode = DestructionMode.DESTROY
