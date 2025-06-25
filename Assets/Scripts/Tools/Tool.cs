@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Tool", menuName = "ScriptableObjects/Tool", order = 1)]
 public class Tool : ScriptableObject
 {
+    public ToolType _type;
+
     public Texture2D _cursor;
     [SerializeField] protected int _maxFuel = 1000;
     [SerializeField] protected SoundClip _sound;
@@ -23,6 +25,7 @@ public class Tool : ScriptableObject
     public float _drawCooldown = 0f;
     public bool _rmbActive = false;
     public int _marchInterval = 3;
+    public bool _stopsOnPlayer = true;
 
     protected Vector2 _lastMousePos;
 

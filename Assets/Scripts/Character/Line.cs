@@ -27,7 +27,7 @@ public class Line : MonoBehaviour
     public bool deleted = false;
     public float area = 0;
     public SpriteRenderer startPoint;
-    public ToolType _curTool;
+    public Tool _curTool;
 
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
@@ -49,7 +49,7 @@ public class Line : MonoBehaviour
             rigidBody.isKinematic = true;
             rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
         }
-        if (_curTool == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
+        if (_curTool._type == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
         lineRenderer.widthMultiplier = thickness;
         edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
@@ -88,7 +88,7 @@ public class Line : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
         
         // Add circle collider component for this point if using pencil
-        if (_curTool == ToolType.Pencil)
+        if (_curTool._type == ToolType.Pencil)
         {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
@@ -98,7 +98,7 @@ public class Line : MonoBehaviour
             points.Add(position);
             edgeCollider.points = points.ToArray();
         }
-        else
+        else if (_curTool._type == ToolType.Pen)
             CheckOverlap();
 
         // Deduct doodle fuel if there's more than one point on this line and using pencil
@@ -113,7 +113,7 @@ public class Line : MonoBehaviour
     private bool CanAppend(Vector2 position)
     {
         // Unable to draw lines inside yourself
-        if (PlayerController.instance.OverlapsPosition(position))
+        if (_curTool._stopsOnPlayer && PlayerController.instance.OverlapsPosition(position))
         {
             canDraw = false;
             return false;
@@ -370,7 +370,7 @@ public class Line : MonoBehaviour
 
     public void RefreshEdge()
     {
-        if (_curTool == ToolType.Pencil)
+        if (_curTool._type == ToolType.Pencil)
         {
             edgeCollider.points = points.ToArray();
         }

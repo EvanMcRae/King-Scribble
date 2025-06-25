@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92936f9cc3a14ec4998cee3955abb25a, type: 3}
   m_Name: Highlighter
   m_EditorClassIdentifier: 
+  _type: 4
   _cursor: {fileID: 2800000, guid: 77ee153fcc6b1134280a89afbb03b4a1, type: 3}
   _maxFuel: 1000
   _sound: {fileID: 11400000, guid: 2d88dac28d6fc46d1a1676320236c78e, type: 2}
   _noDraw:
     serializedVersion: 2
-    m_Bits: 83672
+    m_Bits: 82648
   _refill:
     serializedVersion: 2
     m_Bits: 0
@@ -30,10 +31,10 @@ MonoBehaviour:
   _drawCooldown: 0
   _rmbActive: 0
   _marchInterval: 3
+  _stopsOnPlayer: 0
   _linePref: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
   _startColor: {r: 1, g: 0.9882353, b: 0, a: 1}
   _endColor: {r: 1, g: 0.9882353, b: 0, a: 1}
   _thicknessMult: 1
   _lineThickness: 1
   _mat: {fileID: 2100000, guid: 2bf41123c512c0642b1f6048dbae4b57, type: 2}
-  _lightPref: {fileID: 8447196253158870391, guid: 41825e909249a3345b2bb8a6920c9026, type: 3}

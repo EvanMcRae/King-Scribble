@@ -116,7 +116,7 @@ public class DrawManager : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Overlap player -> stop drawing
-        if (_currentTool._drawing && PlayerController.instance.OverlapsPosition(mousePos))
+        if (_currentTool._drawing && _currentTool._stopsOnPlayer && PlayerController.instance.OverlapsPosition(mousePos))
         {
             // Stop drawing
             _currentTool.EndDraw();

@@ -50,7 +50,7 @@ public class Highlighter : LineTool
 
     public override void SetLineParams(Line line)
     {
-        line._curTool = ToolType.Highlighter;
+        base.SetLineParams(line);
         line.SetThickness(_lineThicknessF);
         line.collisionsActive = false;
         line.SetHighlighterParams(_mat);

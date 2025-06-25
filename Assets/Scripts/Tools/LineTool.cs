@@ -24,6 +24,7 @@ public class LineTool : Tool
 
     public virtual void SetLineParams(Line line)
     {
+        line._curTool = this;
     }
 
     public Transform GetLinesFolder()
