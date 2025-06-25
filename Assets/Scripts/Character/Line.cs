@@ -28,7 +28,8 @@ public class Line : MonoBehaviour
     public float area = 0;
     public SpriteRenderer startPoint;
     public Tool _curTool;
-
+    private bool _hasLight = false;
+    private Light2D _light;
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
     Vector2[] ConvertArray(Vector3[] v3)
@@ -86,8 +87,8 @@ public class Line : MonoBehaviour
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
-        
         // Add circle collider component for this point if using pencil
+        if (_hasLight) UpdateLight(_light);
         if (_curTool._type == ToolType.Pencil)
         {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
@@ -405,6 +406,28 @@ public class Line : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void AddLight(GameObject pref)
+    {
+        _light = Instantiate(pref, gameObject.transform).GetComponent<Light2D>();
+        _hasLight = true;
+    }
+
+    private void UpdateLight(Light2D light)
+    {
+        if (lineRenderer.positionCount > 5)
+            lineRenderer.Simplify(0.01f);
+        Vector3[] lightPoints = new Vector3[2 * lineRenderer.positionCount];
+        Vector3[] points = new Vector3[lineRenderer.positionCount];
+        lineRenderer.GetPositions(points);
+        for (int i = 0; i < lineRenderer.positionCount; i++)
+        {
+            lightPoints[i] = new Vector3(points[i].x, points[i].y + 0.1f, points[i].z);
+            lightPoints[2 * lineRenderer.positionCount - 1 - i] = new Vector3(points[i].x, points[i].y - 0.1f, points[i].z);
+        }
+        lightPoints[2 * lineRenderer.positionCount - 1] = new Vector3(lightPoints[0].x, lightPoints[0].y - 0.01f, lightPoints[0].z);
+        lightPoints[lineRenderer.positionCount] = new Vector3(lightPoints[lineRenderer.positionCount - 1].x, lightPoints[lineRenderer.positionCount - 1].y - 0.01f, lightPoints[lineRenderer.positionCount - 1].z);
+        light.SetShapePath(lightPoints);
+    }
     
 }
 

@@ -7,7 +7,7 @@ public class Highlighter : LineTool
 {
     [SerializeField] private float _lineThickness;
     [SerializeField] private Material _mat;
-
+    [SerializeField] private GameObject _lightPref;
     private float _lineThicknessF;
 
     public override void OnStart()
@@ -40,7 +40,7 @@ public class Highlighter : LineTool
     public override void EndDraw()
     {
         base.EndDraw();
-        _currentLine.HighlighterFade();
+        // _currentLine.HighlighterFade();
     }
 
     public override void RightClick(Vector2 mousePos)
@@ -51,6 +51,7 @@ public class Highlighter : LineTool
     public override void SetLineParams(Line line)
     {
         base.SetLineParams(line);
+        line.AddLight(_lightPref);
         line.SetThickness(_lineThicknessF);
         line.collisionsActive = false;
         line.SetHighlighterParams(_mat);
