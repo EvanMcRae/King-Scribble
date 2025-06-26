@@ -419,6 +419,8 @@ public class Line : MonoBehaviour
         Vector3[] lightPoints = new Vector3[2 * lineRenderer.positionCount];
         Vector3[] points = new Vector3[lineRenderer.positionCount];
         lineRenderer.GetPositions(points);
+
+        /*
         for (int i = 0; i < lineRenderer.positionCount; i++)
         {
             lightPoints[i] = new Vector3(points[i].x, points[i].y + 0.1f, points[i].z);
@@ -426,6 +428,29 @@ public class Line : MonoBehaviour
         }
         lightPoints[2 * lineRenderer.positionCount - 1] = new Vector3(lightPoints[0].x, lightPoints[0].y - 0.01f, lightPoints[0].z);
         lightPoints[lineRenderer.positionCount] = new Vector3(lightPoints[lineRenderer.positionCount - 1].x, lightPoints[lineRenderer.positionCount - 1].y - 0.01f, lightPoints[lineRenderer.positionCount - 1].z);
+        light.SetShapePath(lightPoints);
+        */
+
+        lightPoints[2 * lineRenderer.positionCount - 1] = lightPoints[0] = points[0];
+        lightPoints[lineRenderer.positionCount] = lightPoints[lineRenderer.positionCount - 1] = points[lineRenderer.positionCount - 1];
+
+        for (int i = 1; i < lineRenderer.positionCount - 1; i++)
+        {
+            Vector3 prev = points[i - 1];
+            Vector3 cur = points[i];
+            // direction vector between previous and current point
+            Vector3 dir = new(cur.x - prev.x, cur.y - prev.y, 0);
+            // perpindicular vectors positive and negative
+            Vector3 perp_pos = new(-dir.y, dir.x, dir.z);
+            Vector3 perp_neg = new(dir.y, -dir.x, dir.z);
+            // normalize vectors, and multiply by distance
+            perp_pos = Vector3.Normalize(perp_pos) * 0.1f;
+            perp_neg = Vector3.Normalize(perp_neg) * 0.1f;
+            // Add vectors to line points to create light points
+            lightPoints[i] = new Vector3(points[i].x + perp_pos.x, points[i].y + perp_pos.y, 0f);
+            lightPoints[2 * lineRenderer.positionCount - 1 - i] = new Vector3(points[i].x + perp_neg.x, points[i].y + perp_neg.y, 0f);
+        }
+        
         light.SetShapePath(lightPoints);
     }
     
