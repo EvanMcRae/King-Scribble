@@ -88,7 +88,7 @@ public class Line : MonoBehaviour
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
         // Add circle collider component for this point if using pencil
-        if (_hasLight) UpdateLight(_light);
+        if (_hasLight && lineRenderer.positionCount >= 2) UpdateLight(_light);
         if (_curTool._type == ToolType.Pencil)
         {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
@@ -410,10 +410,12 @@ public class Line : MonoBehaviour
     {
         _light = Instantiate(pref, gameObject.transform).GetComponent<Light2D>();
         _hasLight = true;
+        _light.enabled = false;
     }
 
     private void UpdateLight(Light2D light)
     {
+        _light.enabled = true;
         if (lineRenderer.positionCount > 5)
             lineRenderer.Simplify(0.01f);
         Vector3[] lightPoints = new Vector3[2 * lineRenderer.positionCount];
@@ -430,19 +432,29 @@ public class Line : MonoBehaviour
         lightPoints[lineRenderer.positionCount] = new Vector3(lightPoints[lineRenderer.positionCount - 1].x, lightPoints[lineRenderer.positionCount - 1].y - 0.01f, lightPoints[lineRenderer.positionCount - 1].z);
         light.SetShapePath(lightPoints);
         */
-
+        /*
         lightPoints[2 * lineRenderer.positionCount - 1] = lightPoints[0] = points[0];
         lightPoints[lineRenderer.positionCount] = lightPoints[lineRenderer.positionCount - 1] = points[lineRenderer.positionCount - 1];
+        */
+        Vector3 prev, cur, dir, perp_pos, perp_neg;
 
-        for (int i = 1; i < lineRenderer.positionCount - 1; i++)
+        for (int i = 0; i < lineRenderer.positionCount; i++)
         {
-            Vector3 prev = points[i - 1];
-            Vector3 cur = points[i];
+            if (i == 0)
+            {
+                prev = points[i];
+                cur = points[i + 1];
+            }
+            else
+            { 
+                prev = points[i - 1];
+                cur = points[i];
+            }
             // direction vector between previous and current point
-            Vector3 dir = new(cur.x - prev.x, cur.y - prev.y, 0);
+            dir = new(cur.x - prev.x, cur.y - prev.y, 0);
             // perpindicular vectors positive and negative
-            Vector3 perp_pos = new(-dir.y, dir.x, dir.z);
-            Vector3 perp_neg = new(dir.y, -dir.x, dir.z);
+            perp_pos = new(-dir.y, dir.x, dir.z);
+            perp_neg = new(dir.y, -dir.x, dir.z);
             // normalize vectors, and multiply by distance
             perp_pos = Vector3.Normalize(perp_pos) * 0.1f;
             perp_neg = Vector3.Normalize(perp_neg) * 0.1f;
