@@ -40,7 +40,7 @@ public class Highlighter : LineTool
     public override void EndDraw()
     {
         base.EndDraw();
-        // _currentLine.HighlighterFade();
+        _currentLine.HighlighterFade();
     }
 
     public override void RightClick(Vector2 mousePos)
