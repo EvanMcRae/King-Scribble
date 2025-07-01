@@ -26,6 +26,7 @@ public class HighlighterRMBLight : MonoBehaviour
         if ((Vector2)gameObject.transform.position == _targetPos)
         {
             _moving = false;
+            gameObject.GetComponent<TrailRenderer>().time = 0.2f;
             StartCoroutine(Fade());
         }
     }
