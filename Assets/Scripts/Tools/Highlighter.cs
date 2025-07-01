@@ -7,13 +7,19 @@ public class Highlighter : LineTool
 {
     [SerializeField] private float _lineThickness;
     [SerializeField] private Material _mat;
-    [SerializeField] private GameObject _lightPref;
+    [SerializeField] private GameObject _LMBLightPref;
+    [SerializeField] private GameObject _RMBLightPref;
+    [SerializeField] private float _rmbLightSpeed = 1f;
+    [SerializeField] private float _rmbLightDuration = 5f;
+    [SerializeField] private float _duration = 5f;
     private float _lineThicknessF;
+    private bool _rmbSpawned;
 
     public override void OnStart()
     {
         base.OnStart();
         _lineThicknessF = _lineThickness * _thicknessMult;
+        _rmbSpawned = false;
     }
 
     public override void BeginDraw(Vector2 mousePos)
@@ -40,21 +46,37 @@ public class Highlighter : LineTool
     public override void EndDraw()
     {
         base.EndDraw();
-        _currentLine.HighlighterFade();
+        _currentLine.HighlighterFade(_duration);
     }
 
     public override void RightClick(Vector2 mousePos)
     {
         base.RightClick(mousePos);
+        if (_rmbActive && !_rmbSpawned)
+        {
+            _rmbSpawned = true;
+            GameObject temp = Instantiate(_RMBLightPref, PlayerVars.instance.transform.position, Quaternion.identity);
+            HighlighterRMBLight temp_l = temp.GetComponent<HighlighterRMBLight>();
+            temp_l._destroyEvent += RMBLightDestroy;
+            temp_l.SetSpeed(_rmbLightSpeed);
+            temp_l.SetTarget(mousePos);
+            temp_l.SetDuration(_rmbLightDuration);
+            temp_l.StartMove();
+        }
     }
 
     public override void SetLineParams(Line line)
     {
         base.SetLineParams(line);
-        line.AddLight(_lightPref);
+        line.AddLight(_LMBLightPref);
         line.SetThickness(_lineThicknessF);
         line.collisionsActive = false;
         line.SetHighlighterParams(_mat);
         line.SetColor(_startColor);
+    }
+
+    private void RMBLightDestroy()
+    {
+        _rmbSpawned = false;
     }
 }

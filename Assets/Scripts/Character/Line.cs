@@ -383,9 +383,9 @@ public class Line : MonoBehaviour
         lineRenderer.material = mat;
     }
 
-    public void HighlighterFade()
+    public void HighlighterFade(float time)
     {
-        StartCoroutine(Fade(5));
+        StartCoroutine(Fade(time));
     }
 
     private IEnumerator Fade(float duration)
@@ -422,20 +422,6 @@ public class Line : MonoBehaviour
         Vector3[] points = new Vector3[lineRenderer.positionCount];
         lineRenderer.GetPositions(points);
 
-        /*
-        for (int i = 0; i < lineRenderer.positionCount; i++)
-        {
-            lightPoints[i] = new Vector3(points[i].x, points[i].y + 0.1f, points[i].z);
-            lightPoints[2 * lineRenderer.positionCount - 1 - i] = new Vector3(points[i].x, points[i].y - 0.1f, points[i].z);
-        }
-        lightPoints[2 * lineRenderer.positionCount - 1] = new Vector3(lightPoints[0].x, lightPoints[0].y - 0.01f, lightPoints[0].z);
-        lightPoints[lineRenderer.positionCount] = new Vector3(lightPoints[lineRenderer.positionCount - 1].x, lightPoints[lineRenderer.positionCount - 1].y - 0.01f, lightPoints[lineRenderer.positionCount - 1].z);
-        light.SetShapePath(lightPoints);
-        */
-        /*
-        lightPoints[2 * lineRenderer.positionCount - 1] = lightPoints[0] = points[0];
-        lightPoints[lineRenderer.positionCount] = lightPoints[lineRenderer.positionCount - 1] = points[lineRenderer.positionCount - 1];
-        */
         Vector3 prev, cur, dir, perp_pos, perp_neg;
 
         for (int i = 0; i < lineRenderer.positionCount; i++)
