@@ -30,6 +30,9 @@ public class Line : MonoBehaviour
     public Tool _curTool;
     private bool _hasLight = false;
     private Light2D _light;
+    private float _lightRadius = 0.1f;
+    public void SetHLRadius(float radius) { _lightRadius = radius; }
+
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
     Vector2[] ConvertArray(Vector3[] v3)
@@ -393,12 +396,15 @@ public class Line : MonoBehaviour
         float currentTime = 0f;
         Color start = lineRenderer.startColor;
         Color end = lineRenderer.endColor;
+        float startIntensity = 1;
+        if (_hasLight) startIntensity = _light.intensity;
         while (currentTime < duration)
         {
             currentTime += Time.deltaTime;
             float delta = Mathf.Clamp01(currentTime / duration);
             start.a = Mathf.Lerp(1, 0, delta);
             end.a = Mathf.Lerp(1, 0, delta);
+            if (_hasLight) _light.intensity = Mathf.Lerp(startIntensity, 0, delta);
             lineRenderer.startColor = start;
             lineRenderer.endColor = end;
             yield return null;
@@ -423,6 +429,7 @@ public class Line : MonoBehaviour
         lineRenderer.GetPositions(points);
 
         Vector3 prev, cur, dir, perp_pos, perp_neg;
+        float curLightRadius;
 
         for (int i = 0; i < lineRenderer.positionCount; i++)
         {
@@ -430,11 +437,19 @@ public class Line : MonoBehaviour
             {
                 prev = points[i];
                 cur = points[i + 1];
+                curLightRadius = 0.005f;
             }
-            else
-            { 
+            else if (i == lineRenderer.positionCount - 1)
+            {
                 prev = points[i - 1];
                 cur = points[i];
+                curLightRadius = 0.005f;
+            }
+            else
+            {
+                prev = points[i - 1];
+                cur = points[i];
+                curLightRadius = _lightRadius;
             }
             // direction vector between previous and current point
             dir = new(cur.x - prev.x, cur.y - prev.y, 0);
@@ -442,8 +457,8 @@ public class Line : MonoBehaviour
             perp_pos = new(-dir.y, dir.x, dir.z);
             perp_neg = new(dir.y, -dir.x, dir.z);
             // normalize vectors, and multiply by distance
-            perp_pos = Vector3.Normalize(perp_pos) * 0.1f;
-            perp_neg = Vector3.Normalize(perp_neg) * 0.1f;
+            perp_pos = Vector3.Normalize(perp_pos) * curLightRadius;
+            perp_neg = Vector3.Normalize(perp_neg) * curLightRadius;
             // Add vectors to line points to create light points
             lightPoints[i] = new Vector3(points[i].x + perp_pos.x, points[i].y + perp_pos.y, 0f);
             lightPoints[2 * lineRenderer.positionCount - 1 - i] = new Vector3(points[i].x + perp_neg.x, points[i].y + perp_neg.y, 0f);

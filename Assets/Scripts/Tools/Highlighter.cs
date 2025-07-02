@@ -12,6 +12,7 @@ public class Highlighter : LineTool
     [SerializeField] private float _rmbLightSpeed = 1f;
     [SerializeField] private float _rmbLightDuration = 5f;
     [SerializeField] private float _duration = 5f;
+    [SerializeField] private float _LMBLightRadius = 0.1f;
     private float _lineThicknessF;
     private bool _rmbSpawned;
 
@@ -70,6 +71,7 @@ public class Highlighter : LineTool
         base.SetLineParams(line);
         line.AddLight(_LMBLightPref);
         line.SetThickness(_lineThicknessF);
+        line.SetHLRadius(_LMBLightRadius);
         line.collisionsActive = false;
         line.SetHighlighterParams(_mat);
         line.SetColor(_startColor);
