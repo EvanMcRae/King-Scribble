@@ -15,6 +15,7 @@ public class Highlighter : LineTool
     [SerializeField] private float _LMBLightRadius = 0.1f;
     private float _lineThicknessF;
     private bool _rmbSpawned;
+    [SerializeField] private int _lightThreshold;
 
     public override void OnStart()
     {
@@ -69,7 +70,8 @@ public class Highlighter : LineTool
     public override void SetLineParams(Line line)
     {
         base.SetLineParams(line);
-        line.AddLight(_LMBLightPref);
+        line.SetHLThreshold(_lightThreshold);
+        line.AddLight(_LMBLightPref, 0);
         line.SetThickness(_lineThicknessF);
         line.SetHLRadius(_LMBLightRadius);
         line.collisionsActive = false;
