@@ -115,7 +115,11 @@ public class Line : MonoBehaviour
         }
         else if (_curTool._type == ToolType.Pen)
             CheckOverlap();
-
+        else if (_curTool._type == ToolType.Highlighter)
+        {
+            points.Add(position);
+            edgeCollider.points = points.ToArray();
+        }
         // Deduct doodle fuel if there's more than one point on this line and using pencil
         if (lineRenderer.positionCount > 1 && addFuel)
         {
@@ -395,6 +399,8 @@ public class Line : MonoBehaviour
     {
         lineRenderer.numCapVertices = 0;
         lineRenderer.material = mat;
+        edgeCollider.gameObject.layer = LayerMask.NameToLayer("Highlighter");
+        gameObject.layer = LayerMask.NameToLayer("Highlighter");
     }
 
     public void HighlighterFade(float time)

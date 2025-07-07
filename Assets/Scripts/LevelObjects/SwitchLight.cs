@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class SwitchLight : MonoBehaviour
@@ -10,6 +11,7 @@ public class SwitchLight : MonoBehaviour
     [SerializeField] private float _finalIntensity;
     [Tooltip("A duration of 0 will cause the light to remain at full intensity permanently once activated.")]
     [SerializeField] private float _duration;
+    public UnityEvent _onActivate;
 
     void Start()
     {
@@ -20,6 +22,7 @@ public class SwitchLight : MonoBehaviour
     {
         if (col.gameObject.CompareTag("HighlighterRMB"))
         {
+            _onActivate?.Invoke();
             _light.intensity = _finalIntensity;
             col.gameObject.GetComponent<HighlighterRMBLight>()._destroyEvent?.Invoke();
             Destroy(col.gameObject);

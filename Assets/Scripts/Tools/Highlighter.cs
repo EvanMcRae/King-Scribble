@@ -11,6 +11,7 @@ public class Highlighter : LineTool
     [SerializeField] private GameObject _RMBLightPref;
     [SerializeField] private float _rmbLightSpeed = 1f;
     [SerializeField] private float _rmbLightDuration = 5f;
+    [SerializeField] private float _rmbLightForwardOffset = 1f;
     [SerializeField] private float _duration = 5f;
     [SerializeField] private float _LMBLightRadius = 0.1f;
     private float _lineThicknessF;
@@ -57,7 +58,8 @@ public class Highlighter : LineTool
         if (_rmbActive && !_rmbSpawned)
         {
             _rmbSpawned = true;
-            GameObject temp = Instantiate(_RMBLightPref, PlayerVars.instance.transform.position, Quaternion.identity);
+            Vector2 tempPos = new(PlayerVars.instance.transform.position.x + _rmbLightForwardOffset, PlayerVars.instance.transform.position.y);
+            GameObject temp = Instantiate(_RMBLightPref, tempPos, Quaternion.identity);
             HighlighterRMBLight temp_l = temp.GetComponent<HighlighterRMBLight>();
             temp_l._destroyEvent += RMBLightDestroy;
             temp_l.SetSpeed(_rmbLightSpeed);
