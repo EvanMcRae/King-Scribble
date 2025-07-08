@@ -28,7 +28,7 @@ public class Pen : LineTool
     private float _startThicknessF;
     private float _endThicknessF;
 
-    public delegate void UpdatePenAction(float mass);
+    public delegate void UpdatePenAction(float mass, GameObject gameObject);
     public UpdatePenAction _updatePenAreaEvent;
 
     public override void OnStart()
@@ -141,7 +141,7 @@ public class Pen : LineTool
         line.AddPhysics(); // This function also sets the weight of the object based on its area
         line.SetThickness(_endThicknessF); // Set the thickness of the line
         line.SetColor(_endColor); // Set the color of the line
-        _updatePenAreaEvent?.Invoke(line.area); // This does something
+        _updatePenAreaEvent?.Invoke(line.area, line.gameObject); // This is used for the Eraser Boss
 
         // Create material for pen object polygon mesh (texture selected by object area)
         int fillTexture = Mathf.FloorToInt(Mathf.Min(Line.MAX_WEIGHT, line.area) / Line.MAX_WEIGHT * (_fillTextures.Count - 1));

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Splines;
 using Unity.VisualScripting;
+using UnityEngine.AI;
 
 /*
 General notes:
@@ -128,8 +129,16 @@ public class EraserBossAI : MonoBehaviour
     private Pencil PencilTool;
     private Pen PenTool;
 
+
+    // -------------- NAVMESH STUFF ----------------
+    NavMeshAgent agent;
+
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+
         PencilTool = ((Pencil)DrawManager.GetTool(ToolType.Pencil));
         PenTool = ((Pen)DrawManager.GetTool(ToolType.Pen));
 
@@ -167,7 +176,6 @@ public class EraserBossAI : MonoBehaviour
         }
 
         ChangeState(State.Start);
-        //StartCoroutine(ActivateShield());
 
         /*
         //retrieves ShockwaveMan script from ShockFSTest object
@@ -211,20 +219,25 @@ public class EraserBossAI : MonoBehaviour
                 EBrb.drag = 10;
                 break;
             case State.Moving:
+                agent.enabled = false;
                 break;
             case State.ChargePrep:
                 break;
             case State.WindUp:
+                EBrb.gravityScale = 0;
+                agent.enabled = false;
                 break;
             case State.Charging:
                 break;
             case State.ChargeCooldown:
+                agent.enabled = true;
                 break;
             case State.SlamPrep:
                 EBrb.gravityScale = 0;
                 EBrb.drag = 10;
                 break;
             case State.Slamming:
+                agent.enabled = false;
                 EBrb.gravityScale = 1;
                 EBrb.drag = 0;
                 break;
@@ -232,6 +245,7 @@ public class EraserBossAI : MonoBehaviour
                 EBrb.sharedMaterial = friction;
                 break;
             case State.SlamCooldown:
+                agent.enabled = true;
                 EBrb.sharedMaterial = slippery;
                 break;
             case State.ShieldActivate:
@@ -333,7 +347,7 @@ public class EraserBossAI : MonoBehaviour
 
             case State.WindUp:
                 anim.Play("EB_WindUp");
-                Hover(transform.position, 1.0f);
+                // Hover(transform.position, 1.0f);
                 if (timer >= chargePrepTime)
                 {
                     timer = 0;
@@ -617,9 +631,18 @@ public class EraserBossAI : MonoBehaviour
 
     void SearchForPosition()
     {
-        if (PencilTool.GetLinesFolder() == null) return;
+        if (PencilTool.GetLinesFolder() == null) // Due to the folder being instantiated upon drawing the first line
+        {
+            if (timer >= searchTime)
+            {
+                Debug.LogWarning("Pencil Lines Folder not found");
+                timer = 0;
+                ChangeState(State.SlamPrep);
+            }
+            return;
+        }
 
-        // If line renderer present, goes for the biggest one OR closest one?
+        // If line renderer present, targets the closest first or last point in the line
         float closestDistance = 100f;
 
         foreach (Transform childTransform in PencilTool.GetLinesFolder()) // for each pencil line
@@ -630,7 +653,7 @@ public class EraserBossAI : MonoBehaviour
                 // for each first and last point in the pencil line find which is the closest to EB
                 float pointDistanceFirst = Vector3.Distance(transform.position, tempLine.GetPosition(0) + tempLine.transform.position); // first point in line
                 float pointDistanceLast = Vector3.Distance(transform.position, tempLine.GetPosition(tempLine.positionCount - 1) + tempLine.transform.position); // last point in line
-
+                Debug.Log("First: " + pointDistanceFirst + "\nLast: " + pointDistanceLast);
 
                 if (pointDistanceFirst < closestDistance)
                 {
@@ -667,10 +690,11 @@ public class EraserBossAI : MonoBehaviour
         }
     }
 
-    void Hover(Vector3 destination, float speed)
+    void Hover(Vector3 destination, float speed) // Movement function, change to Navmesh agent
     {
         float step = speed * Time.deltaTime; // Calculate the maxDistanceDelta based on the distance
-        EBrb.MovePosition(Vector2.MoveTowards(transform.position, destination, step));
+        //EBrb.MovePosition(Vector2.MoveTowards(transform.position, destination, step));
+        agent.SetDestination(destination);
     }
 
     void Slam()
@@ -841,8 +865,12 @@ public class EraserBossAI : MonoBehaviour
         isShielding = false;
     }
 
-    private void updatePenArea(float area)
+    private void updatePenArea(float area, GameObject line)
     {
+        // add navmesh to pen
+
+
+        // update total mass
         totalPenArea += area;
         Debug.Log("area: " + area);
         if (totalPenArea > maxPenArea)
