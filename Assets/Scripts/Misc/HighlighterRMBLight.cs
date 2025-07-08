@@ -7,6 +7,7 @@ using UnityEngine.Rendering.Universal;
 public class HighlighterRMBLight : MonoBehaviour
 {
     [SerializeField] private GameObject _targetPref;
+    [SerializeField] private ParticleSystem _destructionParticlePrefab;
     private Vector2 _targetPos;
     private float _gracePeriod = 0.05f;
     private float _duration = 5f;
@@ -85,5 +86,11 @@ public class HighlighterRMBLight : MonoBehaviour
         _rigidBody.bodyType = RigidbodyType2D.Static;
         gameObject.GetComponent<TrailRenderer>().time = 0.2f;
         StartCoroutine(Fade());
+    }
+
+    void OnDestroy()
+    {
+        if (gameObject.scene.isLoaded)
+            Instantiate(_destructionParticlePrefab, gameObject.transform.position, Quaternion.identity);
     }
 }

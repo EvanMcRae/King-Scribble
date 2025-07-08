@@ -12,6 +12,7 @@ public class Highlighter : LineTool
     [SerializeField] private float _rmbLightSpeed = 1f;
     [SerializeField] private float _rmbLightDuration = 5f;
     [SerializeField] private float _rmbLightForwardOffset = 1f;
+    [SerializeField] private float _rmbCooldown = 0.5f;
     [SerializeField] private float _duration = 5f;
     [SerializeField] private float _LMBLightRadius = 0.1f;
     private float _lineThicknessF;
@@ -58,6 +59,7 @@ public class Highlighter : LineTool
         if (_rmbActive && !_rmbSpawned)
         {
             _rmbSpawned = true;
+            _drawCooldown += _rmbCooldown;
             Vector2 tempPos = new(PlayerVars.instance.transform.position.x + _rmbLightForwardOffset, PlayerVars.instance.transform.position.y);
             GameObject temp = Instantiate(_RMBLightPref, tempPos, Quaternion.identity);
             HighlighterRMBLight temp_l = temp.GetComponent<HighlighterRMBLight>();
@@ -67,6 +69,7 @@ public class Highlighter : LineTool
             temp_l.SetDuration(_rmbLightDuration);
             temp_l.StartMove();
         }
+        _rmbActive = false;
     }
 
     public override void SetLineParams(Line line)

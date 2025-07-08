@@ -5,6 +5,7 @@ using UnityEngine;
 public class PenObjDestroyer : MonoBehaviour
 {
     [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private ParticleSystem _nonPenObjectDestroyParticlePrefab;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -20,6 +21,7 @@ public class PenObjDestroyer : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("TempObj"))
         {
+            Instantiate(_nonPenObjectDestroyParticlePrefab, collision.gameObject.transform.position, Quaternion.identity);
             Destroy(collision.gameObject);
         }
     }
