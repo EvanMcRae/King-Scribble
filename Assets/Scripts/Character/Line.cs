@@ -126,6 +126,7 @@ public class Line : MonoBehaviour
             int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
             if (PlayerVars.instance.cur_tool == ToolType.Pencil) DrawManager.GetTool(ToolType.Pencil).SpendFuel(cost); // * fuel moved to tool script - reference current tool
             else if (PlayerVars.instance.cur_tool == ToolType.Pen) DrawManager.GetTool(ToolType.Pen).SpendTempFuel(cost); // *
+            else if (PlayerVars.instance.cur_tool == ToolType.Highlighter) DrawManager.GetTool(ToolType.Highlighter).SpendFuel(cost);
         }
     }
 
