@@ -2,7 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 //holds functions of the main menu and sub menus
 public class MainMenuManager : MonoBehaviour
