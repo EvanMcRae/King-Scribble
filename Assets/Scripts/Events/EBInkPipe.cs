@@ -16,8 +16,7 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private SoundPlayer pipeSoundPlayer;
     [SerializeField] private EBInkPipe other;
     private Animator anim;
-    private bool is_enabled = true;
-    public bool is_active = false, is_busy = false;
+    public bool is_enabled = true, is_active = false, is_busy = false;
 
     void Start()
     {
@@ -91,6 +90,7 @@ public class EBInkPipe : MonoBehaviour
         physics.SetActive(false);
         if (is_active)
         {
+            is_active = false;
             // Deactivate, then end sound only if other pipe's ink is not flowing
             inkfall.transform.DOMoveY(end.position.y, 0.5f);
             yield return new WaitForSeconds(0.5f);
@@ -98,7 +98,6 @@ public class EBInkPipe : MonoBehaviour
                 sound_player.EndSound("Ink.Flood");
             inkfall.transform.position = start.transform.position;
         }
-        is_active = false;
         // gameObject.GetComponent<SpriteRenderer>().sprite = broken;
         ParticleSystem fart = Instantiate(break_particles, gameObject.transform.position, Quaternion.identity);
         var farte = fart.shape;
