@@ -17,19 +17,22 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private EBInkPipe other;
     private Animator anim;
     private bool is_enabled = true;
-    private bool is_active = false;
+    public bool is_active = false, is_busy = false;
 
     void Start()
     {
-        inkfall.transform.position = start.position;
         physics = inkfall.transform.GetChild(0).gameObject;
-        physics.SetActive(false);
+        if (!is_active)
+        {
+            inkfall.transform.position = start.position;
+            physics.SetActive(false);
+        }
         anim = GetComponent<Animator>();
     }
 
     public void Activate()
     {
-        if (is_enabled && !is_active)
+        if (is_enabled && !is_active && !is_busy && gameObject.activeInHierarchy)
         {   
             StartCoroutine(Activate_());
         }
@@ -37,6 +40,7 @@ public class EBInkPipe : MonoBehaviour
 
     private IEnumerator Activate_()
     {
+        is_busy = true;
         anim.Play("Pipe_Start");
         yield return new WaitForSeconds(1.0f);
         inkfall.transform.DOMoveY(active.position.y, 0.5f);
@@ -44,16 +48,18 @@ public class EBInkPipe : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         physics.SetActive(true);
         is_active = true;
+        is_busy = false;
     }
 
     public void Deactivate()
     {
-        if (is_active)
+        if (is_enabled && is_active && !is_busy && gameObject.activeInHierarchy)
             StartCoroutine(Deactivate_());
     }
 
     IEnumerator Deactivate_()
     {
+        is_busy = true;
         physics.SetActive(false);
         anim.Play("Pipe_Stop");
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
@@ -62,15 +68,21 @@ public class EBInkPipe : MonoBehaviour
         sound_player.EndSound("Ink.Flood");
         inkfall.transform.position = start.transform.position;
         is_active = false;
+        is_busy = false;
     }
 
     public void Break()
     {
-        StartCoroutine(Break_());
+        if (is_enabled)
+        {
+            StopAllCoroutines();
+            StartCoroutine(Break_());
+        }
     }
 
     IEnumerator Break_()
     {
+        is_enabled = false;
         physics.SetActive(false);
         if (is_active)
         {
@@ -88,6 +100,5 @@ public class EBInkPipe : MonoBehaviour
         farte.scale = 4f * Vector3.one;
         anim.Play("Pipe_Broken");
         pipeSoundPlayer.PlaySound("EraserBoss.PipeExplosion");
-        is_enabled = false;
     }
 }
