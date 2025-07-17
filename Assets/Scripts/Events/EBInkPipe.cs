@@ -22,12 +22,17 @@ public class EBInkPipe : MonoBehaviour
     void Start()
     {
         physics = inkfall.transform.GetChild(0).gameObject;
+        anim = GetComponent<Animator>();
         if (!is_active)
         {
             inkfall.transform.position = start.position;
             physics.SetActive(false);
         }
-        anim = GetComponent<Animator>();
+        else
+        {
+            anim.Play("Pipe_Start");
+            inkfall.transform.position = active.position;
+        }
     }
 
     public void Activate()

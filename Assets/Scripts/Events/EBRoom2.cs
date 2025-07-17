@@ -10,17 +10,14 @@ public class EBRoom2 : MonoBehaviour
     [SerializeField] private GameObject _right_inkfall;
     [SerializeField] private GameObject _water;
     [SerializeField] private PhysicsButton _button;
-    private Animator _leftAnim;
     private Material _waterMat;
     private BuoyancyEffector2D _waterBuoy;
 
     void Start()
     {
-        _leftAnim = _left_pipe.GetComponent<Animator>();
         _waterMat = _water.GetComponent<MeshRenderer>().material;
         _waterBuoy = _water.GetComponentInChildren<BuoyancyEffector2D>();
 
-        _leftAnim.Play("Pipe_Start");
         _left_inkfall.SetActive(true);
 
         _waterMat.SetFloat("_WaveSpeed", 4.88f);
