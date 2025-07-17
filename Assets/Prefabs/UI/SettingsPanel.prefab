@@ -687,6 +687,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &1847859595105113288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,7 +1079,7 @@ MonoBehaviour:
     m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 7112514461812532999}
-    m_SelectOnDown: {fileID: 5047842727953903837}
+    m_SelectOnDown: {fileID: 4436506436914266064}
     m_SelectOnLeft: {fileID: 5058466336318032130}
     m_SelectOnRight: {fileID: 5058466336318032130}
   m_Transition: 2
@@ -1157,6 +1158,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &1039359269897634628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1609,7 +1611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7927131643311095369
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1707,7 +1709,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 6780882710633682906}
   m_OnClick:
     m_PersistentCalls:
@@ -1759,6 +1761,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &1587762311198927981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2080,6 +2083,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &6819831242999075187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3912,6 +3916,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!61 &6586212108705445127
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4505,6 +4510,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &8933109397187748614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4892,6 +4898,7 @@ MonoBehaviour:
   select: {fileID: 0}
   press: {fileID: 0}
   soundOnPointerEnter: 0
+  noSound: 0
 --- !u!1 &8150786400812210549
 GameObject:
   m_ObjectHideFlags: 0
@@ -5022,6 +5029,7 @@ MonoBehaviour:
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
+  noSound: 0
 --- !u!114 &6120915075115621919
 MonoBehaviour:
   m_ObjectHideFlags: 0
