@@ -34,10 +34,17 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
         if (disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
         {
             if (disableOrigin == null)
-                GetComponent<Button>().interactable = false;
-            else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
             {
-                b.interactable = false;
+                GetComponent<Button>().transition = Selectable.Transition.ColorTint;
+                GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                {
+                    b.transition = Selectable.Transition.ColorTint;
+                    b.interactable = false;
+                }
             }
         }
         else
@@ -57,10 +64,17 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
             if (disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
             {
                 if (disableOrigin == null)
-                    GetComponent<Button>().interactable = true;
-                else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
                 {
-                    b.interactable = true;
+                    GetComponent<Button>().interactable = true;
+                    GetComponent<Button>().transition = Selectable.Transition.None;
+                }
+                else
+                {
+                    foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                    {
+                        b.interactable = true;
+                        b.transition = Selectable.Transition.None;
+                    }
                 }
             }
         }
