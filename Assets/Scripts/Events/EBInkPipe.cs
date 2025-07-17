@@ -17,6 +17,7 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private EBInkPipe other;
     private Animator anim;
     public bool is_enabled = true, is_active = false, is_busy = false;
+    private static int inkSoundPlayers = 0;
 
     void Start()
     {
@@ -31,7 +32,15 @@ public class EBInkPipe : MonoBehaviour
         {
             anim.Play("Pipe_Start");
             inkfall.transform.position = active.position;
+            if (inkSoundPlayers == 0)
+            {
+                if (!sound_player.sources[0].isPlaying)
+                    sound_player.PlaySound("Ink.Flood", 0, true);
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 1f, 1f, () => { }));
+            }
+            inkSoundPlayers++;
         }
+        GameManager.ResetAction += FadeOut;
     }
 
     public void Activate()
@@ -48,11 +57,17 @@ public class EBInkPipe : MonoBehaviour
         anim.Play("Pipe_Start");
         yield return new WaitForSeconds(1.0f);
         inkfall.transform.DOMoveY(active.position.y, 0.5f);
-        sound_player.PlaySound("Ink.Flood", 1, true);
+        if (inkSoundPlayers == 0)
+        {
+            if (!sound_player.sources[0].isPlaying)
+                sound_player.PlaySound("Ink.Flood", 0, true);
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 1f, () => { }));
+        }
         yield return new WaitForSeconds(0.5f);
         physics.SetActive(true);
         is_active = true;
         is_busy = false;
+        inkSoundPlayers++;
     }
 
     public void Deactivate()
@@ -69,7 +84,11 @@ public class EBInkPipe : MonoBehaviour
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
         anim.Play("Pipe_Idle");
-        sound_player.EndSound("Ink.Flood");
+        inkSoundPlayers--;
+        if (inkSoundPlayers == 0)
+        {
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 0f, () => { }));
+        }
         inkfall.transform.position = start.transform.position;
         is_active = false;
         is_busy = false;
@@ -94,8 +113,11 @@ public class EBInkPipe : MonoBehaviour
             // Deactivate, then end sound only if other pipe's ink is not flowing
             inkfall.transform.DOMoveY(end.position.y, 0.5f);
             yield return new WaitForSeconds(0.5f);
-            if (!other.is_active || !other.is_enabled)
-                sound_player.EndSound("Ink.Flood");
+            inkSoundPlayers--;
+            if (inkSoundPlayers == 0)
+            {
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 0f, () => { }));
+            }
             inkfall.transform.position = start.transform.position;
         }
         // gameObject.GetComponent<SpriteRenderer>().sprite = broken;
@@ -104,5 +126,16 @@ public class EBInkPipe : MonoBehaviour
         farte.scale = 4f * Vector3.one;
         anim.Play("Pipe_Broken");
         pipeSoundPlayer.PlaySound("EraserBoss.PipeExplosion");
+    }
+
+    public void FadeOut()
+    {
+        if (sound_player != null)
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 1f, 0f, () => { }));
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.ResetAction -= FadeOut;
     }
 }
