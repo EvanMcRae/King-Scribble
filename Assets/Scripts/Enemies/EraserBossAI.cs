@@ -323,7 +323,7 @@ public class EraserBossAI : MonoBehaviour
 
                 // when destination reached, start windup
                 // explain to me unity why the lowest distance you can get with your movement function is 2.0 like where is the ACCURACY??
-                if (Vector3.Distance(transform.position, destination) < 2.5)
+                if (DoesPositionMatch(transform.position, destination))
                 {
                     timer = 0;
                     if (faceRight)
@@ -340,6 +340,7 @@ public class EraserBossAI : MonoBehaviour
                 if (timer > 3)
                 {
                     Debug.LogError("EB could not reach chargePrep position.");
+                    Debug.LogWarning("EB position: " + transform.position + " chargePrep position: " + destination);
                     timer = 0;
                     ChangeState(State.WindUp);
                 }
@@ -366,7 +367,7 @@ public class EraserBossAI : MonoBehaviour
                 }
 
                 // Trying to solve stopping coroutine problem:
-                
+
                 // float distance = Vector3.Distance(transform.position, prevPosition);
                 // Debug.Log(distance);
                 // if (distance < 0.01f)
@@ -604,7 +605,7 @@ public class EraserBossAI : MonoBehaviour
             soundPlayer.PlaySound("EraserBoss.Thud");
             soundPlayer.PlaySound("EraserBoss.Chain");
         }
-        
+
         // a temporary fix that despawns pen objects until EB's dodge algorithm is implemented
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines"))
         {
@@ -760,10 +761,11 @@ public class EraserBossAI : MonoBehaviour
                 step = speed * Time.fixedDeltaTime;
 
                 EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
+                //agent.SetDestination(point);
 
                 //END POINT IS: " + Vector3.Distance(transform.position, point));
-                if (Vector3.Distance(transform.position, point) < 2.5f)
-                {  // was > 0.01f
+                if (DoesPositionMatch(transform.position, point))
+                {
                     i += mult;
                 }
                 yield return new WaitForSeconds(0.01f); // wait for a bit... i think
@@ -776,9 +778,8 @@ public class EraserBossAI : MonoBehaviour
                 Vector3 point = tempArray[i] + targetPosition; // the destination
                 step = speed * Time.fixedDeltaTime;
                 EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
-
-                //Debug.Log("END POINT IS: " + Vector3.Distance(transform.position, point));
-                if (Vector3.Distance(transform.position, point) < 2.5f)
+                //agent.SetDestination(point);
+                if (DoesPositionMatch(transform.position, point))
                 {  // was > 0.01f
                     //Debug.LogWarning("increment i = " + i);
                     i -= mult;
@@ -1041,11 +1042,13 @@ public class EraserBossAI : MonoBehaviour
 
         // SLOW THE TIMEEEE
         Debug.Log("BREAKING CHAIN");
-        
-        if (isRight) { // break chain
+
+        if (isRight)
+        { // break chain
             BreakRightChain();
         }
-        else {
+        else
+        {
             BreakLeftChain();
         }
 
@@ -1150,8 +1153,19 @@ public class EraserBossAI : MonoBehaviour
     }
     // returns a point in bounds of the arena
     // arena bounds 3 < x 72.3 AND -21.5 < y < 11
-    private Vector3 checkBounds(Vector3 point)
+    private Vector3 CheckBounds(Vector3 point)
     {
         return point;
+    }
+
+    // Avoids z axis when checking distance between two points: used for determining whether a destination has been reached
+    private bool DoesPositionMatch(Vector3 target, Vector3 destination)
+    {
+        if (Mathf.Abs(target.x - destination.x) < 0.1 && Mathf.Abs(target.y - destination.y) < 0.1)
+        {
+            return true;
+        }
+        //transform.position.Set(transform.position.x, transform.position.y, 0f);
+        return false;
     }
 }
