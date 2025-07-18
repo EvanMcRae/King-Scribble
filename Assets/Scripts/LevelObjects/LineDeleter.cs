@@ -28,11 +28,11 @@ public class LineDeleter : MonoBehaviour
 
     public void DeleteLines()
     {
-        for (int i = lines.Count - 1; i > 0; i--)
+        for (int i = lines.Count - 1; i >= 0; i--)
         {
             Destroy(lines[i].gameObject);
-            lines.Remove(lines[i]);
         }
+        lines.Clear();
     }
 
     public void DeleteLinesWithDelay(float delay)
