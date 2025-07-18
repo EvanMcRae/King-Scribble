@@ -98,7 +98,8 @@ public class EraserBossAI : MonoBehaviour
     private float rotateTweenTime = 0.65f;
     // booleans:
     //      for states that are not independent enough for the state machine
-    private bool isErasingLine = false; // assists with calling the coroutine
+    private bool isErasingLine = false; // assists with calling the erasing coroutine
+    private bool checkStopErasing = false; // assists with stopping the erasing coroutine
     private bool isSlamming = false; // assists with applying the slam force only once
     private bool isRotated = false; // assists with EB's animations
     private bool isInvulnerable = false; // whether EB is invulnerable (force field)
@@ -303,6 +304,8 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Searching:
                 anim.Play("EB_Idle");
+                // this is a test: hopefully he dodges stuff :]
+                Hover(transform.position, baseSpeed);
                 SearchForPosition();
                 Oscillate();
                 break;
@@ -366,15 +369,21 @@ public class EraserBossAI : MonoBehaviour
                     eraseLineSequence = StartCoroutine(EraseLineSequence(chargeSpeed)); // start coroutine
                 }
 
-                // Trying to solve stopping coroutine problem:
-
-                // float distance = Vector3.Distance(transform.position, prevPosition);
-                // Debug.Log(distance);
-                // if (distance < 0.01f)
-                // {
-                //     Debug.LogWarning("Stopping Coroutine: EB's velocity is too small.");
-                //     StopCoroutine(eraseLineSequence);
-                // }
+                if (checkStopErasing)
+                {
+                    // Trying to solve interrupting coroutine problem:
+                    float distance = Vector3.Distance(transform.position, prevPosition);
+                    Debug.Log(distance);
+                    if (distance < 0.001f)
+                    {
+                        Debug.LogWarning("Stopping Coroutine: EB's velocity is too small.");
+                        StopCoroutine(eraseLineSequence);
+                        isErasingLine = false;
+                        checkStopErasing = false;
+                        timer = 0;
+                        ChangeState(State.ChargeCooldown);
+                    }
+                }
                 break;
 
             case State.ChargeCooldown:
@@ -488,6 +497,8 @@ public class EraserBossAI : MonoBehaviour
                 //Hover(transform.position + new Vector3(1f,0f,0f), baseSpeed);
                 break;
         }
+        
+        prevPosition = transform.position;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -627,7 +638,7 @@ public class EraserBossAI : MonoBehaviour
             spriteRenderer.flipX = true; // face LEFT
         }
 
-        prevPosition = transform.position;
+        //prevPosition = transform.position;
     }
 
     void SearchForPosition()
@@ -751,7 +762,7 @@ public class EraserBossAI : MonoBehaviour
     {
         isErasingLine = true;
         float step; // calculate the maxDistanceDelta based on the distance
-        int mult = 3; // multipler if points need to be iterated not one by one
+        int mult = 6; // multipler if points need to be iterated not one by one
 
         if (firstIsClosest)
         {
@@ -761,36 +772,36 @@ public class EraserBossAI : MonoBehaviour
                 step = speed * Time.fixedDeltaTime;
 
                 EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
-                //agent.SetDestination(point);
 
                 //END POINT IS: " + Vector3.Distance(transform.position, point));
                 if (DoesPositionMatch(transform.position, point))
                 {
                     i += mult;
+                    checkStopErasing = true; // he's moving right?
                 }
-                yield return new WaitForSeconds(0.01f); // wait for a bit... i think
+                yield return new WaitForSeconds(0.001f); // wait for a bit... i think
             }
         }
-        else
+        else // iterate backwards
         {
             for (int i = numPoints - 1; i > -1;)
             { // for each point in the pencil line move
                 Vector3 point = tempArray[i] + targetPosition; // the destination
                 step = speed * Time.fixedDeltaTime;
                 EBrb.MovePosition(Vector2.MoveTowards(transform.position, point, step));
-                //agent.SetDestination(point);
                 if (DoesPositionMatch(transform.position, point))
-                {  // was > 0.01f
-                    //Debug.LogWarning("increment i = " + i);
+                {
                     i -= mult;
+                    checkStopErasing = true; // he's moving right?
                 }
-                yield return new WaitForSeconds(0.01f); // wait for a bit... i think
+                yield return new WaitForSeconds(0.001f); // wait for a bit... i think
             }
         }
 
         //Debug.Log("EXITED FOR LOOP " + Vector3.Distance(transform.position, tempArray[numPoints - 1] + targetPosition));
         //if(Vector3.Distance(transform.position, tempArray[numPoints - 1] + targetPosition) < 2 || timer > 5) {
         isErasingLine = false;
+        checkStopErasing = false;
         timer = 0;
         ChangeState(State.ChargeCooldown);
     }
@@ -1161,6 +1172,7 @@ public class EraserBossAI : MonoBehaviour
     // Avoids z axis when checking distance between two points: used for determining whether a destination has been reached
     private bool DoesPositionMatch(Vector3 target, Vector3 destination)
     {
+        Debug.Log("target: " + target + " destination: " + destination);
         if (Mathf.Abs(target.x - destination.x) < 0.1 && Mathf.Abs(target.y - destination.y) < 0.1)
         {
             return true;
