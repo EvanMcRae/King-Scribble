@@ -71,7 +71,7 @@ public class GameSaver : MonoBehaviour
         saveSystem.SaveData(dataToSave);
     }
 
-    public void SaveGame()
+    public void SaveGame(bool fromCheckpoint = false) // Sorry Tronster
     {
         if (!loading && PlayerVars.instance != null)
         {
@@ -94,13 +94,24 @@ public class GameSaver : MonoBehaviour
             try
             {
                 s = data.scenes.First(s => s.name == data.scene);
-                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
             }
             catch (Exception)
             {
                 s = new SceneSerialization(data.scene, PlayerVars.instance.GetSpawnPos());
                 data.scenes.Add(s);
-                s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+            }
+
+            
+            s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
+
+            if (fromCheckpoint)
+            {
+                // Specifically serialize ink objects in the current scene
+                s.inkPoints.Clear();
+                foreach (InkFlood ink in FindObjectsByType<InkFlood>(FindObjectsSortMode.None))
+                {
+                    s.inkPoints.Add(new InkSerialization(ink));
+                }
             }
 
             var dataToSave = JsonUtility.ToJson(data, true);

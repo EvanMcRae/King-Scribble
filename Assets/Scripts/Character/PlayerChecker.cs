@@ -48,9 +48,13 @@ public class PlayerChecker : MonoBehaviour
                 }
                 else
                 {
-                    if (GameSaver.GetScene(GameSaver.currData.scene) != null)
-                        vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
+                    SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
+                    if (scene != null)
+                    {
+                        vars.SetSpawnPos(scene.spawnpoint.GetValue());
+                    }
                 }
+
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
             }

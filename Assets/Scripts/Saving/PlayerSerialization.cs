@@ -55,10 +55,40 @@ public class SceneSerialization
     public string name;
     public Vector3Serialization spawnpoint;
     public List<string> unlockPoints;
+    public List<InkSerialization> inkPoints;
 
     public SceneSerialization(string sceneName, Vector3 spawnPos)
     {
         name = sceneName;
         spawnpoint = new Vector3Serialization(spawnPos);
+        inkPoints = new List<InkSerialization>();
+    }
+}
+
+[Serializable]
+public class InkSerialization
+{
+    public string name;
+    public float height;
+    public bool flooding;
+    public int destination;
+
+    public InkSerialization(InkFlood ink)
+    {
+        name = ink.gameObject.name;
+        height = ink.transform.position.y;
+        flooding = ink.flooding;
+        destination = ink.curDest;
+        Debug.Log("fucking why??");
+    }
+
+    public void SetValues(GameObject inkObj)
+    {
+        InkFlood ink = inkObj.GetComponent<InkFlood>();
+        Debug.Log(name + " " + height + " " + flooding + " " + destination);
+        ink.transform.position = new Vector3(inkObj.transform.position.x, height, inkObj.transform.position.z);
+        ink.flooding = flooding;
+        ink.curDest = destination;
+        Debug.Log(ink.curDest + " " + ink.flooding + " " + ink.transform.position.y);
     }
 }
