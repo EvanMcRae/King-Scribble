@@ -488,7 +488,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 26185319}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1774,6 +1774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundPlayer: {fileID: 1306858364}
+  _nonPenObjectDestroyParticlePrefab: {fileID: 4095448992611215335, guid: 9b8fb479bff3c274fa5ab41cf87ed89e, type: 3}
 --- !u!61 &68990191
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14967,9 +14968,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 651933378}
-  - component: {fileID: 651933380}
   - component: {fileID: 651933379}
   - component: {fileID: 651933381}
+  - component: {fileID: 651933382}
   m_Layer: 4
   m_Name: Buoyancy
   m_TagString: Untagged
@@ -15011,8 +15012,21 @@ BuoyancyEffector2D:
   m_FlowAngle: 0
   m_FlowMagnitude: 25
   m_FlowVariation: 0
---- !u!61 &651933380
-BoxCollider2D:
+--- !u!114 &651933381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 651933377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f3fe8f8319ec2d4a99c69c521befe4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killThreshold: 0.5
+--- !u!60 &651933382
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -15053,22 +15067,19 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 48.948166, y: 4.344243}
-  m_EdgeRadius: 0
---- !u!114 &651933381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 651933377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f3fe8f8319ec2d4a99c69c521befe4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  killThreshold: 0.5
+  m_Points:
+    m_Paths:
+    - - {x: -24.5, y: -2}
+      - {x: -24.5, y: 2.25}
+      - {x: 21.409317, y: 2.221186}
+      - {x: 22.262398, y: 1.9724674}
+      - {x: 23.162651, y: 1.5799022}
+      - {x: 23.768631, y: 1.0892696}
+      - {x: 24.138733, y: 0.37792444}
+      - {x: 24.356018, y: -0.39447498}
+      - {x: 24.43164, y: -0.9453182}
+      - {x: 24.5, y: -2}
+  m_UseDelaunayMesh: 0
 --- !u!1 &657048865
 GameObject:
   m_ObjectHideFlags: 0
@@ -21279,7 +21290,7 @@ MonoBehaviour:
   _colliders:
     serializedVersion: 2
     m_Bits: 263816
-  _colOffset: 0.2
+  _colOffset: 0.1
   _part: {fileID: 4185753103986646625, guid: b3a2abef0eff3e54bb4b001cadbd282a, type: 3}
   _castMult: 20
   _offset: 1
@@ -125063,6 +125074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundPlayer: {fileID: 1518966360}
+  _nonPenObjectDestroyParticlePrefab: {fileID: 4095448992611215335, guid: 9b8fb479bff3c274fa5ab41cf87ed89e, type: 3}
 --- !u!61 &1420100084
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -137284,9 +137296,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1844323783}
-  - component: {fileID: 1844323786}
   - component: {fileID: 1844323785}
   - component: {fileID: 1844323784}
+  - component: {fileID: 1844323786}
   m_Layer: 4
   m_Name: Buoyancy
   m_TagString: Untagged
@@ -137341,8 +137353,8 @@ BuoyancyEffector2D:
   m_FlowAngle: 0
   m_FlowMagnitude: -25
   m_FlowVariation: 0
---- !u!61 &1844323786
-BoxCollider2D:
+--- !u!60 &1844323786
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -137373,7 +137385,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 1
   m_UsedByComposite: 0
-  m_Offset: {x: -0.11703682, y: 0.018005371}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -137383,9 +137395,18 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 43.49239, y: 5.4245987}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 21.6, y: 2.7}
+      - {x: 21.6, y: -2.7}
+      - {x: -21.868, y: -2.6830018}
+      - {x: -21.844501, y: -0.025390625}
+      - {x: -21.677141, y: 0.61751175}
+      - {x: -21.416664, y: 1.3086777}
+      - {x: -20.817196, y: 2.0122604}
+      - {x: -20.093117, y: 2.4156876}
+      - {x: -19, y: 2.7}
+  m_UseDelaunayMesh: 0
 --- !u!1 &1844817179
 GameObject:
   m_ObjectHideFlags: 0

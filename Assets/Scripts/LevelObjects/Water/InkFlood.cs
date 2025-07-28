@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InkFlood : MonoBehaviour
@@ -16,7 +17,7 @@ public class InkFlood : MonoBehaviour
     private bool hasSped = false; // If the ink has reached the "speed up" point
     private bool catchUp = false; // If the ink is currently "catching up"
     public float maxDist = 10f; // How far the player can move away from the ink before it speeds up to catch him
-    private int curDest = 0;
+    public int curDest = 0;
 
     // OPTIONAL - if you want to wait X seconds before the flood starts
     public bool floodWait = false;
@@ -34,6 +35,17 @@ public class InkFlood : MonoBehaviour
     private void Start()
     {
         GameManager.ResetAction += FadeOut;
+
+        // Attempt to load from save data
+        try
+        {
+            SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
+            InkSerialization inkSave = scene.inkPoints.First(s => s.name == gameObject.name);
+            inkSave.SetValues(gameObject);
+        }
+        catch (System.Exception e) {
+            Debug.LogError(e.Message);
+        }
     }
 
     private void OnDestroy()

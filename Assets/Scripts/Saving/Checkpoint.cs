@@ -13,7 +13,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (PlayerVars.instance.GetSpawnPos() == transform.position)
         {
-            ActivateCheckpoint();
+            SetCheckpointTriggered();
         }
     }
 
@@ -26,7 +26,16 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    void ActivateCheckpoint()
+    void ActivateCheckpoint() // to also save the game
+    {
+        SetCheckpointTriggered();
+        PlayerVars.instance.SetSpawnPos(transform.position);
+        PlayerVars.instance.SaveInventory();
+        GameSaver.SaveStickers();
+        GameSaver.instance.SaveGame(true);
+    }
+
+    void SetCheckpointTriggered()
     {
         GetComponent<SpriteRenderer>().sprite = with_flag;
         PlayerVars.instance.ReplenishTools();
@@ -35,10 +44,6 @@ public class Checkpoint : MonoBehaviour
             Tool tool = DrawManager.GetTool(t);
             tool._fuelEvent(tool.GetFuelRemaining());
         }
-        PlayerVars.instance.SetSpawnPos(transform.position);
-        PlayerVars.instance.SaveInventory();
-        GameSaver.SaveStickers();
-        GameSaver.instance.SaveGame();
         has_triggered = true;
     }
 }

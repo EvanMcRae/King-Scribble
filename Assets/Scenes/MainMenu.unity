@@ -198,6 +198,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4203299758066432372, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4568270534107641647, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -218,6 +222,10 @@ PrefabInstance:
       propertyPath: ScreenDarkener
       value: 
       objectReference: {fileID: 603712827}
+    - target: {fileID: 5047842727953903837, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5287831565090695900, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -374,6 +382,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8579142388167895830, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 917065328}
     - target: {fileID: 8653925170679278551, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1298,7 +1310,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -271.99997, y: -45}
+  m_AnchoredPosition: {x: -271.99997, y: -18.78657}
   m_SizeDelta: {x: 1100, y: 212.0012}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &382174972
@@ -1328,7 +1340,7 @@ MonoBehaviour:
     Brian Lawser (Design
     Lead)
 
-    Colby Frashure (Arranger)
+    Colby Frashure (Audio Lead)
 
     Sormeh Jaribion
 
@@ -1657,7 +1669,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 251, y: -351}
+  m_AnchoredPosition: {x: -61.635582, y: -357.05078}
   m_SizeDelta: {x: 1100, y: 212.0012}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &460944879
@@ -3093,6 +3105,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846064971}
   m_CullTransparentMesh: 1
+--- !u!114 &917065328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5047842727953903837, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
+  m_PrefabInstance: {fileID: 27346413}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &954521124
 GameObject:
   m_ObjectHideFlags: 0
@@ -5122,7 +5145,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 131, y: -45}
+  m_AnchoredPosition: {x: 131, y: -18.78657}
   m_SizeDelta: {x: 1100, y: 212.0012}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2040406494
@@ -5145,16 +5168,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Justin Gaylord (Art Lead)
+  m_text: 'Ginger Sealy (Art Lead)
 
     Rowan Barr
 
     Anthony Bonilla Duron
 
-    Ginger
-    Sealy
+    Justin
+    Gaylord
 
-    Steven Nguyen'
+    Steven Nguyen
+
+    Halle Onyeador'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a2ddeb0e32aba35499be993c28aa1f60, type: 2}
   m_sharedMaterial: {fileID: 3276259269083883855, guid: a2ddeb0e32aba35499be993c28aa1f60, type: 2}

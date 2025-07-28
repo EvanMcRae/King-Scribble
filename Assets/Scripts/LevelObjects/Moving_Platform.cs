@@ -74,24 +74,30 @@ public class Moving_Platform : MonoBehaviour
 
     public void MoveToDest()
     {
-        returning = false;
-        curSpeed = moveSpeed;
-        if (dir == direction.Right)
-            dest.x += moveDist;
-        else
-            dest.y += moveDist;
-        moving = true;
+        if (!moving)
+        {
+            returning = false;
+            curSpeed = moveSpeed;
+            if (dir == direction.Right)
+                dest.x = start.x + moveDist;
+            else
+                dest.y = start.y + moveDist;
+            moving = true;
+        }
     }
 
     public void ReturnToStart()
     {
-        moving = false;
-        if (fastReturn) curSpeed = moveSpeed * 2;
-        if (dir == direction.Right)
-            dest.x -= moveDist;
-        else
-            dest.y -= moveDist;
-        returning = true;   
+        if (!returning)
+        {
+            moving = false;
+            if (fastReturn) curSpeed = moveSpeed * 2;
+            if (dir == direction.Right)
+                dest.x = start.x;
+            else
+                dest.y = start.y;
+            returning = true;
+        }
     }
 
     public void PanCamera() // Optional - pans the camera temporarily to better show all platforms affected by the player's current action

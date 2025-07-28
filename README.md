@@ -4,12 +4,14 @@ King Scribble is a 2D puzzle platformer game where you draw the platforms! Play 
 Developed in Unity 2022.3.39f1 for UMBC CMSC493 Capstone Games Group Project (Spring 2025).
 
 # Credits
-- **Lead Designer:** Evan McRae
-- **Producer:** Rowan Barr
-- **Lead Programmer:** Jay Cina
-- **Lead Artist:** Justin Gaylord
-- **Programmers:** Brian Lawser, Evan McRae, Jay Cina
-- **Artists:** Anthony Bonilla Duron, Ginger Sealy, Justin Gaylord, Rowan Barr, Steven Nguyen
+- **Creator:** Evan McRae
+- **Producer:** Jay Cina
+- **Design Lead:** Brian Lawser
+- **Art Lead:** Ginger Sealy
+- **Audio Lead:** Colby Frashure
+- **Programming:** Brian Lawser, Evan McRae, Jay Cina, Sormeh Jaribion, Scott Serafin
+- **Art:** Anthony Bonilla Duron, Ginger Sealy, Justin Gaylord, Rowan Barr, Steven Nguyen, Halle Onyeador
+- **Audio:** Colby Frashure, Evan McRae, Justin Gaylord
 
 # Resources
 - [Sloped Platformer Movement](https://www.youtube.com/watch?v=QPiZSTEuZnw)
