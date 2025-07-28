@@ -79,16 +79,13 @@ public class InkSerialization
         height = ink.transform.position.y;
         flooding = ink.flooding;
         destination = ink.curDest;
-        Debug.Log("fucking why??");
     }
 
     public void SetValues(GameObject inkObj)
     {
         InkFlood ink = inkObj.GetComponent<InkFlood>();
-        Debug.Log(name + " " + height + " " + flooding + " " + destination);
         ink.transform.position = new Vector3(inkObj.transform.position.x, height, inkObj.transform.position.z);
         ink.flooding = flooding;
         ink.curDest = destination;
-        Debug.Log(ink.curDest + " " + ink.flooding + " " + ink.transform.position.y);
     }
 }
