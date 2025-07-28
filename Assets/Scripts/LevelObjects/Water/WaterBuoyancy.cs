@@ -11,7 +11,7 @@ public class WaterBuoyancy : MonoBehaviour
         if (!GameManager.resetting && collision.gameObject.CompareTag("Player") && collision.gameObject.name != "LandCheck")
         {
             PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 10f;
-            Debug.Log(transform.position.y - collision.transform.position.y + GetComponent<BuoyancyEffector2D>().surfaceLevel);
+            //Debug.Log(transform.position.y - collision.transform.position.y + GetComponent<BuoyancyEffector2D>().surfaceLevel);
             if (transform.position.y - collision.transform.position.y + GetComponent<BuoyancyEffector2D>().surfaceLevel > killThreshold && !PlayerVars.instance.cheatMode)
             {
                 GetComponent<BuoyancyEffector2D>().density = 0.1f;

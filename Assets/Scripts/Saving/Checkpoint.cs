@@ -11,7 +11,7 @@ public class Checkpoint : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerVars.instance.GetSpawnPos() == transform.position)
+        if (Vector2.Distance(PlayerVars.instance.GetSpawnPos(), GetCheckpointPosition()) < 0.01f)
         {
             SetCheckpointTriggered();
         }
@@ -29,7 +29,7 @@ public class Checkpoint : MonoBehaviour
     void ActivateCheckpoint() // to also save the game
     {
         SetCheckpointTriggered();
-        PlayerVars.instance.SetSpawnPos(transform.position);
+        PlayerVars.instance.SetSpawnPos(GetCheckpointPosition());
         PlayerVars.instance.SaveInventory();
         GameSaver.SaveStickers();
         GameSaver.instance.SaveGame(true);
@@ -45,5 +45,10 @@ public class Checkpoint : MonoBehaviour
             tool._fuelEvent(tool.GetFuelRemaining());
         }
         has_triggered = true;
+    }
+
+    Vector3 GetCheckpointPosition()
+    {
+        return transform.position - Vector3.up * GetComponent<SpriteRenderer>().sprite.bounds.extents.y;
     }
 }

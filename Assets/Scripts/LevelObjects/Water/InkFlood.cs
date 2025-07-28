@@ -43,9 +43,7 @@ public class InkFlood : MonoBehaviour
             InkSerialization inkSave = scene.inkPoints.First(s => s.name == gameObject.name);
             inkSave.SetValues(gameObject);
         }
-        catch (System.Exception e) {
-            Debug.LogError(e.Message);
-        }
+        catch (System.Exception) { }
     }
 
     private void OnDestroy()

@@ -15,6 +15,7 @@ public class GameSaver : MonoBehaviour
 
     public static SaveData currData = SaveData.EmptySave();
     public static List<Sticker.StickerType> tempStickers = new();
+    public Dictionary<string, List<string>> unlockPoints = new();
 
     public static Action StartingSave;
     public static Action<SaveData> loadedNewData;
@@ -25,6 +26,11 @@ public class GameSaver : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(this);
         Refresh();
+        if (PlayerChecker.loadedFromScene)
+        {
+            GetScene(currData.scene).WipeData();
+            PlayerChecker.loadedFromScene = false;
+        }
     }
 
     public void WipeSave()
@@ -101,7 +107,6 @@ public class GameSaver : MonoBehaviour
                 data.scenes.Add(s);
             }
 
-            
             s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
 
             if (fromCheckpoint)
@@ -111,6 +116,14 @@ public class GameSaver : MonoBehaviour
                 foreach (InkFlood ink in FindObjectsByType<InkFlood>(FindObjectsSortMode.None))
                 {
                     s.inkPoints.Add(new InkSerialization(ink));
+                }
+                try
+                {
+                    s.unlockPoints = new List<string>(unlockPoints[data.scene]);
+                }
+                catch (Exception)
+                {
+                    s.unlockPoints = new();
                 }
             }
 
@@ -197,5 +210,37 @@ public class GameSaver : MonoBehaviour
     public static void ResetStickers()
     {
         tempStickers = new(currData.stickers);
+        try
+        {
+            instance.unlockPoints[currData.scene] = new List<string>(GetScene(currData.scene).unlockPoints);
+        }
+        catch (Exception)
+        {
+            instance.unlockPoints[currData.scene] = new List<string>();
+        }
+    }
+
+    public static void UnlockPoint(string scene, string point)
+    {
+        try
+        {
+            instance.unlockPoints[scene].Contains(point);
+        }
+        catch (Exception)
+        {
+            try
+            {
+                instance.unlockPoints[scene] = new List<string>(GetScene(scene).unlockPoints);
+            }
+            catch (Exception)
+            {
+                instance.unlockPoints[scene] = new List<string>();
+            }
+        }
+        finally
+        {
+            if (!instance.unlockPoints[scene].Contains(point))
+                instance.unlockPoints[scene].Add(point);
+        }
     }
 }

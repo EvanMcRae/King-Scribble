@@ -63,6 +63,12 @@ public class SceneSerialization
         spawnpoint = new Vector3Serialization(spawnPos);
         inkPoints = new List<InkSerialization>();
     }
+
+    public void WipeData()
+    {
+        unlockPoints = new();
+        inkPoints = new();
+    }
 }
 
 [Serializable]

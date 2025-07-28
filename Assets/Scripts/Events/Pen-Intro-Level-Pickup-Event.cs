@@ -18,6 +18,35 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public GameObject skipButton;
     [SerializeField] Animator anim_L;
     [SerializeField] Animator anim_R;
+    private static bool lateStart = false;
+
+    public void Start()
+    {
+        // Attempt to load from save data
+        try
+        {
+            SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
+            if (scene.unlockPoints.Contains("inkRises"))
+            {
+                isAnimating = true;
+                SkipCutscene();
+                isAnimating = false;
+                lateStart = true;
+            }
+        }
+        catch (System.Exception) { }
+    }
+
+    public void LateUpdate()
+    {
+        if (lateStart)
+        {
+            followCam.gameObject.SetActive(true);
+            followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
+            Camera.main.transform.position = PlayerVars.instance.transform.position;
+            lateStart = false;
+        }
+    }
 
     public void StartEvent()
     {
@@ -75,10 +104,13 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             s.unlockPoints = new();
             GameSaver.currData.scenes.Add(s);
         }
-        s.unlockPoints.Add("cutsceneWatched");
+        GameSaver.UnlockPoint("Level5", "cutsceneWatched");
+        if (!s.unlockPoints.Contains("cutsceneWatched"))
+            s.unlockPoints.Add("cutsceneWatched");
         GameSaver.instance.SaveGame();
         skipButton.GetComponent<HUDButtonCursorHandler>().OnPointerExit(null);
         skipButton.SetActive(false);
+        GameSaver.UnlockPoint("Level5", "inkRises");
     }
 
     public void SkipCutscene()
@@ -103,6 +135,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             isAnimating = false;
             skipButton.GetComponent<HUDButtonCursorHandler>().OnPointerExit(null);
             skipButton.SetActive(false);
+            GameSaver.UnlockPoint("Level5", "inkRises");
         }
     }
 }

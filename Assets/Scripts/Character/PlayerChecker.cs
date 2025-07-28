@@ -12,6 +12,7 @@ public class PlayerChecker : MonoBehaviour
     public ToolType defaultTool = ToolType.None;
     public LevelStartBanner levelStartBanner;
     public ToolDatabase toolDatabase;
+    public static bool loadedFromScene = false;
 
     // Use this for initialization
     void Awake()
@@ -64,6 +65,7 @@ public class PlayerChecker : MonoBehaviour
                 vars.inventory.copy(defaultInventory);
                 vars.cur_tool = defaultTool;
                 vars.SaveInventory();
+                loadedFromScene = true;
             }
 
             firstSpawned = true;
