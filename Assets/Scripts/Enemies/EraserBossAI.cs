@@ -59,6 +59,7 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private GameObject _leftInk;
     [SerializeField] private GameObject _rightInk;
     [SerializeField] private Moving_Platform movingWall;
+    [SerializeField] private GameObject followMe;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -196,7 +197,6 @@ public class EraserBossAI : MonoBehaviour
     }
 
     // Called only upon entering a state. Good for setting variables and calling functions that do not require FixedUpdate
-    // This will be reworked after the semester and will be how states change
     private void ChangeState(State tempState)
     {
         // End the dizzy sound if it's leaving the dizzy state -- TODO rework this, feels bad, sorry - evan
@@ -290,6 +290,8 @@ public class EraserBossAI : MonoBehaviour
     void FixedUpdate()
     {
         myText.text = state.ToString();
+        agent.SetDestination(followMe.transform.position);
+        return;
 
         if (disable) return;
 
@@ -1172,7 +1174,7 @@ public class EraserBossAI : MonoBehaviour
     // Avoids z axis when checking distance between two points: used for determining whether a destination has been reached
     private bool DoesPositionMatch(Vector3 target, Vector3 destination)
     {
-        Debug.Log("target: " + target + " destination: " + destination);
+        //Debug.Log("target: " + target + " destination: " + destination);
         if (Mathf.Abs(target.x - destination.x) < 0.1 && Mathf.Abs(target.y - destination.y) < 0.1)
         {
             return true;
