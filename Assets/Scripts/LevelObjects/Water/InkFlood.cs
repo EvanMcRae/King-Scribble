@@ -40,8 +40,11 @@ public class InkFlood : MonoBehaviour
         try
         {
             SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
-            InkSerialization inkSave = scene.inkPoints.First(s => s.name == gameObject.name);
-            inkSave.SetValues(gameObject);
+            if (scene.inkPoints.Count > 1)
+            {
+                InkSerialization inkSave = scene.inkPoints.First(s => s.name == gameObject.name);
+                inkSave.SetValues(gameObject);
+            }
         }
         catch (System.Exception) { }
     }
