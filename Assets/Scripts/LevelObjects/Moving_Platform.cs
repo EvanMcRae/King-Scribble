@@ -36,6 +36,7 @@ public class Moving_Platform : MonoBehaviour
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private SoundClip sound;
     private static bool fadedOut = false;
+    [SerializeField] private bool _canMoveMultiple = false;
 
     private void Awake()
     {
@@ -79,9 +80,9 @@ public class Moving_Platform : MonoBehaviour
             returning = false;
             curSpeed = moveSpeed;
             if (dir == direction.Right)
-                dest.x = start.x + moveDist;
+                dest.x = (_canMoveMultiple ? dest.x : start.x) + moveDist;
             else
-                dest.y = start.y + moveDist;
+                dest.y = (_canMoveMultiple ? dest.y : start.y) + moveDist;
             moving = true;
         }
     }
@@ -93,9 +94,9 @@ public class Moving_Platform : MonoBehaviour
             moving = false;
             if (fastReturn) curSpeed = moveSpeed * 2;
             if (dir == direction.Right)
-                dest.x = start.x;
+                dest.x = _canMoveMultiple ? (dest.x - moveDist) : start.x;
             else
-                dest.y = start.y;
+                dest.y = _canMoveMultiple ? (dest.y - moveDist) : start.y;
             returning = true;
         }
     }

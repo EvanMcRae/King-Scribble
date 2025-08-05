@@ -12165,6 +12165,14 @@ PrefabInstance:
       propertyPath: soundPlayer
       value: 
       objectReference: {fileID: 6652482066997626213}
+    - target: {fileID: 8846766452625618430, guid: 9af24dc5030554a74862897381f042cb, type: 3}
+      propertyPath: canMoveMultiple
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8846766452625618430, guid: 9af24dc5030554a74862897381f042cb, type: 3}
+      propertyPath: _canMoveMultiple
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
