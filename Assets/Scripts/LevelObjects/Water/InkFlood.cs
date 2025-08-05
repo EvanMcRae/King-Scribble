@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InkFlood : MonoBehaviour
 {
@@ -39,8 +40,8 @@ public class InkFlood : MonoBehaviour
         // Attempt to load from save data
         try
         {
-            SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
-            if (scene.inkPoints.Count > 1)
+            SceneSerialization scene = GameSaver.GetScene(SceneManager.GetActiveScene().name);
+            if (scene.inkPoints.Count > 0)
             {
                 InkSerialization inkSave = scene.inkPoints.First(s => s.name == gameObject.name);
                 inkSave.SetValues(gameObject);
