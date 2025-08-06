@@ -82,6 +82,7 @@ public class PlayerVars : MonoBehaviour
     public void Reset(Vector3 spawnpoint)
     {
         isResetting = true;
+        ReplenishTools();
         inventory.copy(lastSavedInventory);
         if (!inventory.hasTool(cur_tool))
             cur_tool = last_tool;
@@ -90,7 +91,6 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().facingRight = true;
         GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
-        ReplenishTools();
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
         GetComponent<PlayerController>().ResizePlayer(1);
         GetComponent<PlayerController>().SetFriction(false);

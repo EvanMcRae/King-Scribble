@@ -28,7 +28,7 @@ public class GameSaver : MonoBehaviour
         Refresh();
         if (PlayerChecker.loadedFromScene)
         {
-            GetScene(currData.scene).WipeData();
+            WipeScene(currData.scene);
             PlayerChecker.loadedFromScene = false;
         }
     }
@@ -199,6 +199,18 @@ public class GameSaver : MonoBehaviour
         catch (Exception)
         {
             return null;
+        }
+    }
+
+    public static void WipeScene(string scene)
+    {
+        try
+        {
+            currData.scenes.First(s => s.name == scene).WipeData();
+        }
+        catch (Exception)
+        {
+            return;
         }
     }
 
