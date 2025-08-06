@@ -92,8 +92,7 @@ public class PlayerVars : MonoBehaviour
         transform.position = spawnpoint;
         ReplenishTools();
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
-        Pencil _pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
-        GetComponent<PlayerController>().ResizePlayer(_pencil.GetFuelRemaining());
+        GetComponent<PlayerController>().ResizePlayer(1);
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
         RefreshTools();
