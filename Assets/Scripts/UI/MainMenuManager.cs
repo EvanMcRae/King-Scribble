@@ -11,7 +11,7 @@ using UnityEditor;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private Button PlayButton;
-    [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel;
+    [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel, SavePanel;
     private GameObject currentSelection;
     public static bool firstopen = false, quitting = false, playing = false, loadingAnimatic = false;
     public Texture2D defaultCursor;
