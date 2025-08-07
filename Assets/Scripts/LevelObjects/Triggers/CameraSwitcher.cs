@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine.Events;
 
 public class CameraSwitcher : MonoBehaviour
 {
-    public CinemachineVirtualCamera prev_cam;
-    public CinemachineVirtualCamera next_cam;
+    public CinemachineCamera prev_cam;
+    public CinemachineCamera next_cam;
     public GameObject p_cam_bounds_l;
     public GameObject p_cam_bounds_r;
     public GameObject n_cam_bounds_l;
@@ -38,7 +38,7 @@ public class CameraSwitcher : MonoBehaviour
             if (newLensSize != 0)
             {
                 if (next_cam != PlayerController.instance.virtualCamera)
-                    next_cam.m_Lens.OrthographicSize = newLensSize;
+                    next_cam.Lens.OrthographicSize = newLensSize;
                 else
                     PlayerController.instance.levelZoom = newLensSize;
             }

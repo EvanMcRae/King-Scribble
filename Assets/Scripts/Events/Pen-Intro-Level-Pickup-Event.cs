@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class PenIntroLevelPickupEvent : MonoBehaviour
 {
-    public CinemachineVirtualCamera cam, followCam, sourceCam;
+    public CinemachineCamera cam, followCam, sourceCam;
     public GameObject inkFlow_L;
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
@@ -75,9 +75,9 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         cam.gameObject.SetActive(true);
         rumblePlayer.PlaySound("Ink.Rumble", 1, false);
-        var noise = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        noise.m_AmplitudeGain = 0.125f;
-        DOTween.To(() => noise.m_AmplitudeGain, x => noise.m_AmplitudeGain = x, 0.5f, 4f);
+        cam.TryGetComponent(out CinemachineBasicMultiChannelPerlin noise);
+        noise.AmplitudeGain = 0.125f;
+        DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0.5f, 4f);
         yield return new WaitForSeconds(3);
         anim_L.Play("Pipe_Start");
         anim_R.Play("Pipe_Start");
@@ -85,8 +85,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         inkFlow_L.transform.DOLocalMoveY(-118, 2.5f);
         inkFlow_R.transform.DOLocalMoveY(-118, 2.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
-        noise.m_AmplitudeGain = 0.25f;
-        DOTween.To(() => noise.m_AmplitudeGain, x => noise.m_AmplitudeGain = x, 0f, 3f);
+        noise.AmplitudeGain = 0.25f;
+        DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
         yield return new WaitForSeconds(3);
         cam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);

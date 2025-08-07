@@ -63,7 +63,7 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
             PlayerController.instance.KillTweens();
             Destroy(PlayerVars.instance.gameObject);
         }
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         SceneHelper.LoadScene("MainMenu");
         ScreenWipe.PostWipe -= GoToMainMenu;

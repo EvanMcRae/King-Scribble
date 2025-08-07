@@ -61,7 +61,7 @@ public class Line : MonoBehaviour
     {
         if (rigidBody != null)
         {
-            rigidBody.isKinematic = true;
+            rigidBody.bodyType = RigidbodyType2D.Kinematic;
             rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
         }
         if (_curTool._type == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
@@ -175,7 +175,7 @@ public class Line : MonoBehaviour
         gameObject.tag = "Pen";
         lineRenderer.SetPosition(GetPointsCount() - 1, GetFirstPoint());
         // Apply physics behavior
-        GetComponent<Rigidbody2D>().isKinematic = false;
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
         DrawManager.GetTool(ToolType.Pen).SpendFuel(lineRenderer.positionCount); // *
         // Set weight based on area
@@ -245,7 +245,7 @@ public class Line : MonoBehaviour
             useLayerMask = true,
             layerMask = ~LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
         };
-        if (polyCollider.OverlapCollider(def, results) != 0)
+        if (polyCollider.Overlap(def, results) != 0)
         {
             // Attempt to filter for colliders that could actually do this
             foreach (var result in results)

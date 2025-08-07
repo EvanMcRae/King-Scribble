@@ -146,7 +146,7 @@ public class GameSaver : MonoBehaviour
                 SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
                 player = data.player;
                 currData = data;
-                EventSystem eventSystem = FindObjectOfType<EventSystem>();
+                EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
                 Destroy(eventSystem?.gameObject);
                 PlayerChecker.firstSpawned = false;
                 SceneHelper.LoadScene(data.scene);

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
@@ -75,31 +75,31 @@ public class GameManager : MonoBehaviour
         resetPrompt.SetFill(resetTime);
     }
 
-    public void SetCamera(CinemachineVirtualCamera cam)
+    public void SetCamera(CinemachineCamera cam)
     {
         cam.gameObject.SetActive(true);
-        PlayerVars.instance.curCamZoom = cam.m_Lens.OrthographicSize;
+        PlayerVars.instance.curCamZoom = cam.Lens.OrthographicSize;
     }
 
-    public void DeactivateCamera(CinemachineVirtualCamera cam)
+    public void DeactivateCamera(CinemachineCamera cam)
     {
         cam.gameObject.SetActive(false);
     }
     
-    public void SwitchCameras(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    public void SwitchCameras(CinemachineCamera cam1, CinemachineCamera cam2, float time)
     {
         StartCoroutine(CameraSwitch(cam1,cam2, time));
     }
 
-    IEnumerator CameraSwitch(CinemachineVirtualCamera cam1, CinemachineVirtualCamera cam2, float time)
+    IEnumerator CameraSwitch(CinemachineCamera cam1, CinemachineCamera cam2, float time)
     {
         canMove = false;
         // cam1.gameObject.SetActive(false);
         cam2.gameObject.SetActive(true);
-        PlayerVars.instance.curCamZoom = cam2.m_Lens.OrthographicSize;
+        PlayerVars.instance.curCamZoom = cam2.Lens.OrthographicSize;
         yield return new WaitForSeconds(time);
         cam2.gameObject.SetActive(false);
-        PlayerVars.instance.curCamZoom = cam1.m_Lens.OrthographicSize;
+        PlayerVars.instance.curCamZoom = cam1.Lens.OrthographicSize;
         // cam1.gameObject.SetActive(true);
         canMove = true;
     }
@@ -120,9 +120,9 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
-        Light2D[] Lights = FindObjectsOfType<Light2D>();
+        Light2D[] Lights = FindObjectsByType<Light2D>(FindObjectsSortMode.None);
         foreach (Light2D light in Lights)
         {
             Destroy(light?.gameObject);
