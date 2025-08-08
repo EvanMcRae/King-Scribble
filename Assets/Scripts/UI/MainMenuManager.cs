@@ -11,7 +11,7 @@ using UnityEditor;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private Button PlayButton;
-    [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel, SavePanel;
+    [SerializeField] private PopupPanel InstructionsPanel, SettingsPanel, CreditsPanel, SavesPanel;
     private GameObject currentSelection;
     public static bool firstopen = false, quitting = false, playing = false, loadingAnimatic = false;
     public Texture2D defaultCursor;
@@ -39,6 +39,22 @@ public class MainMenuManager : MonoBehaviour
                 MenuButton.globalNoSound = false;
             }
         }
+    }
+
+    public void OpenSaves()
+    {
+        // pulls up save screen
+        if (!ScreenWipe.over && !playing && !quitting)
+        {
+            Utils.SetExclusiveAction(ref ScreenWipe.PostUnwipe, OpenSaves);
+            return;
+        }
+        ScreenWipe.PostUnwipe -= OpenSaves;
+        if (ScreenWipe.over && !PopupPanel.open && !playing && !quitting)
+        {
+            SavesPanel.gameObject.SetActive(true);
+        }
+
     }
 
     public void PlayGame()
