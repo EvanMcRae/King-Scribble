@@ -31,7 +31,7 @@ public class ChangeScene : MonoBehaviour
         soundPlayer.PlaySound("Player.Portal");
         PlayerVars.instance.transform.DOMove(transform.position, 1f);
         PlayerVars.instance.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-        PlayerVars.instance.GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        PlayerVars.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector3.zero;
         Vector3 ogScale = PlayerVars.instance.transform.localScale; // Bandaid fix for scale not resetting otherwise
         PlayerVars.instance.transform.DOScale(Vector3.zero, 1f);
         yield return new WaitForSeconds(1f);
@@ -42,9 +42,9 @@ public class ChangeScene : MonoBehaviour
 
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
-        Light2D[] Lights = FindObjectsOfType<Light2D>();
+        Light2D[] Lights = FindObjectsByType<Light2D>(FindObjectsSortMode.None);
         foreach (Light2D light in Lights)
         {
             Destroy(light?.gameObject);

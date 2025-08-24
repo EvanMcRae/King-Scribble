@@ -6,22 +6,28 @@ using UnityEngine;
 [Serializable]
 public class Inventory
 {
-    public List<ToolType> toolUnlocks;
+    public List<ToolType> _toolTypes;
+
     public Inventory() // By default, the player starts with no tools
     {
-        toolUnlocks = new List<ToolType>();
+        _toolTypes = new List<ToolType>();
     }
+
     public bool hasTool(ToolType tool) // Checks if the player has a given tool
     {
-        return toolUnlocks.Contains(tool);
+        return _toolTypes.Contains(tool);
     }
-    public void addTool(ToolType tool) // Adds a given tool to the player's tool inventory
+
+    public void addTool(ToolType toolType) // Adds a given tool to the player's tool inventory
     {
-        if (!toolUnlocks.Contains(tool))
-            toolUnlocks.Add(tool);
+        if (!_toolTypes.Contains(toolType))
+        {
+            _toolTypes.Add(toolType);
+        }
     }
+    
     public void copy(Inventory other)
     {
-        toolUnlocks = new List<ToolType>(other.toolUnlocks);
+        _toolTypes = new List<ToolType>(other._toolTypes);
     }
 }

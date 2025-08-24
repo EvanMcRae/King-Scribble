@@ -1,21 +1,23 @@
 ﻿using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 using System.Linq;
 
 public class PlayerChecker : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public CinemachineVirtualCamera cam;
+    public CinemachineCamera cam;
     public static PlayerChecker instance;
     public static bool firstSpawned = false;
     public Inventory defaultInventory = new();
     public ToolType defaultTool = ToolType.None;
     public LevelStartBanner levelStartBanner;
+    public ToolDatabase toolDatabase;
+    public static bool loadedFromScene = false;
 
     // Use this for initialization
     void Awake()
     {
-        var cams = transform.parent.GetComponentsInChildren<CinemachineVirtualCamera>();
+        var cams = transform.parent.GetComponentsInChildren<CinemachineCamera>();
         instance = this;
 
         // Banner with level name DOTween
@@ -27,7 +29,7 @@ public class PlayerChecker : MonoBehaviour
         if (PlayerVars.instance == null)
         {
             // Disable all secondary cameras in scene
-            foreach (CinemachineVirtualCamera cam in cams)
+            foreach (CinemachineCamera cam in cams)
             {
                 cam.gameObject.SetActive(false);
             }
@@ -47,9 +49,13 @@ public class PlayerChecker : MonoBehaviour
                 }
                 else
                 {
-                    if (GameSaver.GetScene(GameSaver.currData.scene) != null)
-                        vars.SetSpawnPos(GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue());
+                    SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
+                    if (scene != null)
+                    {
+                        vars.SetSpawnPos(scene.spawnpoint.GetValue());
+                    }
                 }
+
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
             }
@@ -59,18 +65,19 @@ public class PlayerChecker : MonoBehaviour
                 vars.inventory.copy(defaultInventory);
                 vars.cur_tool = defaultTool;
                 vars.SaveInventory();
+                loadedFromScene = true;
             }
 
             firstSpawned = true;
             cam.Follow = player.transform;
             player.GetComponent<PlayerController>().virtualCamera = cam;
-            player.GetComponent<PlayerController>().levelZoom = cam.m_Lens.OrthographicSize;
-            vars.curCamZoom = cam.m_Lens.OrthographicSize; 
+            player.GetComponent<PlayerController>().levelZoom = cam.Lens.OrthographicSize;
+            vars.curCamZoom = cam.Lens.OrthographicSize; 
         }
         else
         {
             // Disable all secondary cameras in the scene
-            foreach (CinemachineVirtualCamera cam in cams)
+            foreach (CinemachineCamera cam in cams)
             {
                 cam.gameObject.SetActive(false);
             }
@@ -84,7 +91,7 @@ public class PlayerChecker : MonoBehaviour
             // Re-enable the main camera
             cam.gameObject.SetActive(true);
             cam.Follow = PlayerVars.instance.transform;
-            PlayerController.instance.levelZoom = cam.m_Lens.OrthographicSize;
+            PlayerController.instance.levelZoom = cam.Lens.OrthographicSize;
         }
     }
 }

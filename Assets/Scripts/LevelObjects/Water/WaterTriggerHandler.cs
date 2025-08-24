@@ -24,15 +24,15 @@ public class WaterTriggerHandler : MonoBehaviour
 
             if (((1 << 10) & (1 << collision.gameObject.layer)) > 0) // For player, collider is not on the same object as rigidbody
                 rb = collision.transform.root.GetComponent<Rigidbody2D>();
-            
+
             if (rb != null)
             {
                 // Clamp splash point to a MAX velocity
                 int multiplier;
-                if (rb.velocity.y < 0) { multiplier = -1; }
+                if (rb.linearVelocity.y < 0) { multiplier = -1; }
                 else { multiplier = 1; }
 
-                float vel = rb.velocity.y * _water.ForceMultiplier;
+                float vel = rb.linearVelocity.y * _water.ForceMultiplier;
                 vel = Mathf.Clamp(Mathf.Abs(vel), 0f, _water.MaxForce);
                 vel *= multiplier;
 

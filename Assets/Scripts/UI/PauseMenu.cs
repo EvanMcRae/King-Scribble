@@ -61,7 +61,7 @@ public class PauseMenu : MonoBehaviour
         skipButton.enabled = false;
         prevTimeScale = Time.timeScale;
         Time.timeScale = 0;
-        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        foreach (AudioSource _ in FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
         {
             if (!AudioManager.instance.OwnsSource(_))
                 _.Pause();
@@ -70,7 +70,7 @@ public class PauseMenu : MonoBehaviour
         AudioManager.instance.PauseEffect(true);
 
         if (DrawManager.instance != null)
-            DrawManager.instance.SetCursor(ToolType.None);
+            DrawManager.instance.SetCursor(_override:true);
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
@@ -86,7 +86,7 @@ public class PauseMenu : MonoBehaviour
         skipButton.enabled = true;
         if (Input.GetKeyDown(KeyCode.Space)) unpausedWithSpace = true;
         Time.timeScale = prevTimeScale;
-        foreach (AudioSource _ in FindObjectsOfType<AudioSource>(true))
+        foreach (AudioSource _ in FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
         {
             if (!AudioManager.instance.OwnsSource(_))
                 _.UnPause();
@@ -95,7 +95,7 @@ public class PauseMenu : MonoBehaviour
         pauseScreen.SetActive(false);
 
         if (DrawManager.instance != null && !HUDButtonCursorHandler.inside && PlayerVars.instance != null)
-            DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
+            DrawManager.instance.SetCursor();
         if (previousButton != null)
         {
             MenuButton prevButton = previousButton.GetComponent<MenuButton>();
@@ -138,7 +138,7 @@ public class PauseMenu : MonoBehaviour
             PlayerController.instance.KillTweens();
             Destroy(PlayerVars.instance.gameObject);
         }
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         GameSaver.ResetStickers();
         SceneHelper.LoadScene("MainMenu");

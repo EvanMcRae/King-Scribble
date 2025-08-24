@@ -12,6 +12,7 @@ TagManager:
   - Spring
   - Left
   - Right
+  - HighlighterRMB
   layers:
   - Default
   - TransparentFX
@@ -32,9 +33,9 @@ TagManager:
   - Tilemap
   - Chain
   - PencilEdge
-  - 
-  - 
-  - 
+  - Shockwave
+  - DTerrain
+  - Highlighter
   - 
   - 
   - 
@@ -69,4 +70,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 1986731877
+    locked: 0
+  - name: CameraSortingLayer
+    uniqueID: 2638591827
     locked: 0

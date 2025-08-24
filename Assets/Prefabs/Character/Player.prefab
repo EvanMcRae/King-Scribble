@@ -949,7 +949,7 @@ MonoBehaviour:
   movementSmoothing: 0.05
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 459400
+    m_Bits: 1507976
   bodyCollider: {fileID: 5108078074794873328}
   roofCheck: {fileID: 0}
   landCheck: {fileID: 3419832881364647439}
@@ -978,6 +978,7 @@ MonoBehaviour:
   - {fileID: 8302332686444052352}
   oldPlayer: 0
   popAnim: {fileID: 6941622220661579508}
+  deadLanded: 0
 --- !u!114 &7087994594828487266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,12 +992,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory:
-    toolUnlocks: 
-  maxDoodleFuel: 750
-  maxPenFuel: 1000
+    _toolTypes: 
   maxEraserFuel: 500
   cur_tool: 0
+  last_tool: 0
   isDead: 0
+  isResetting: 1
   cheatMode: 0
   curCamZoom: 0
 --- !u!1 &6070948386907103934

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PolygonCollider2D bodyCollider, roofCheck, landCheck, wallCheck;
     [SerializeField] private Collider2D groundCheck;
     [SerializeField] private float groundedRadius, roofedRadius;
-    public CinemachineVirtualCamera virtualCamera;
+    public CinemachineCamera virtualCamera;
     private float realVelocity;
     private Vector3 lastPosition;
     [SerializeField] private Transform checkPos;
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
             JumpCutCheck();
             if (isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
+                DOTween.To(() => virtualCamera.Lens.OrthographicSize, x => virtualCamera.Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
             isSprinting = false;
@@ -152,12 +152,12 @@ public class PlayerController : MonoBehaviour
             sprintSpeedMultiplier = maxSprintSpeedMultiplier;
             if (moveX != 0 && Mathf.Abs(realVelocity) >= 0.01f && !isSprintMoving && !ChangeScene.changingScene && virtualCamera != null)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
+                DOTween.To(() => virtualCamera.Lens.OrthographicSize, x => virtualCamera.Lens.OrthographicSize = x, levelZoom + 0.5f, 1f);
                 isSprintMoving = true;
             }
             else if ((moveX == 0 || Mathf.Abs(realVelocity) < 0.01f || ChangeScene.changingScene) && isSprintMoving && virtualCamera != null)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
+                DOTween.To(() => virtualCamera.Lens.OrthographicSize, x => virtualCamera.Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
         }
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
         {
             if (isSprintMoving)
             {
-                DOTween.To(() => virtualCamera.m_Lens.OrthographicSize, x => virtualCamera.m_Lens.OrthographicSize = x, levelZoom, 1f);
+                DOTween.To(() => virtualCamera.Lens.OrthographicSize, x => virtualCamera.Lens.OrthographicSize = x, levelZoom, 1f);
                 isSprintMoving = false;
             }
             isSprinting = false;
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerVars.instance.cheatMode = !PlayerVars.instance.cheatMode;
         Debug.Log((PlayerVars.instance.cheatMode ? "ACTIVATED" : "DEACTIVATED") + " CHEAT MODE");
-        rb.isKinematic = PlayerVars.instance.cheatMode;
+        rb.bodyType = PlayerVars.instance.cheatMode ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
         //bodyCollider.enabled = !PlayerVars.instance.cheatMode;
     }
 
@@ -234,6 +234,14 @@ public class PlayerController : MonoBehaviour
             CollectTool();
             DrawManager.instance.TrySwitchTool(ToolType.Eraser);
         }
+
+        // unlock highlighter
+        if (Input.GetKeyDown(KeyCode.LeftBracket) && !PlayerVars.instance.inventory.hasTool(ToolType.Highlighter))
+        {
+            PlayerVars.instance.inventory.addTool(ToolType.Highlighter);
+            CollectTool();
+            DrawManager.instance.TrySwitchTool(ToolType.Highlighter);
+        }
     }
 
     void FixedUpdate()
@@ -255,7 +263,7 @@ public class PlayerController : MonoBehaviour
         // RoofCheck();
 
         // calculate target velocity
-        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.velocity.y);
+        Vector3 targetVelocity = new Vector2(vars.isDead ? 0 : moveX * calculatedSpeed, rb.linearVelocity.y);
 
         // sloped movement
         SlopeCheck();
@@ -266,24 +274,24 @@ public class PlayerController : MonoBehaviour
         // apply velocity, dampening between current and target
         if (!PlayerVars.instance.cheatMode)
         {
-            if (moveX == 0.0 && rb.velocity.x != 0.0f)
+            if (moveX == 0.0 && rb.linearVelocity.x != 0.0f)
             {
                 if (canWalkOnSlope || !isOnSlope)
                 {
                     bodyCollider.sharedMaterial = friction;
                 }
-                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing * 5f);
+                rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, targetVelocity, ref velocity, movementSmoothing * 5f);
             }
             else
             {
                 if (!frictionOverride) bodyCollider.sharedMaterial = slippery;
-                rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
+                rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, targetVelocity, ref velocity, movementSmoothing);
             }
         }
         else
         {
             targetVelocity.Set(vars.isDead ? 0 : moveX * (calculatedSpeed + cheatSpeed), moveY * (calculatedSpeed + cheatSpeed), 0.0f);
-            rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velocity, movementSmoothing);
+            rb.linearVelocity = Vector3.SmoothDamp(rb.linearVelocity, targetVelocity, ref velocity, movementSmoothing);
         }
 
         // fall detection
@@ -317,7 +325,7 @@ public class PlayerController : MonoBehaviour
         {
             if (beenOnLand < 5f)
                 beenOnLand += Time.fixedDeltaTime;
-            if (isJumping && timeSinceJump > 0.1f && (rb.velocity.y <= 0.001f || beenOnLand > 0.1f))
+            if (isJumping && timeSinceJump > 0.1f && (rb.linearVelocity.y <= 0.001f || beenOnLand > 0.1f))
             {
                 jumpSpeedMultiplier = 1f;
                 isJumping = false;
@@ -384,7 +392,7 @@ public class PlayerController : MonoBehaviour
             // Add a vertical force to the player
             isGrounded = false;
             isJumping = true;
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             rb.AddForce(new Vector2(0f, jumpForce * rb.mass * (holdingJump ? 1 : 0.7f))); // force added during a jump
             timeSinceJump = 0.0f;
             timeSinceJumpPressed = 0.3f;
@@ -394,9 +402,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (needToCutJump && rb.velocity.y > 0)
+        if (needToCutJump && rb.linearVelocity.y > 0)
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y / 2);
             needToCutJump = false;
         }
 
@@ -407,11 +415,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonUp("Jump"))
         {
-            if (holdingJump && isJumping && rb.velocity.y >= 0)
+            if (holdingJump && isJumping && rb.linearVelocity.y >= 0)
             {
-                if (rb.velocity.y > 0)
+                if (rb.linearVelocity.y > 0)
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, 0.75f * rb.velocity.y);
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0.75f * rb.linearVelocity.y);
                 }
                 else
                 {
@@ -460,7 +468,7 @@ public class PlayerController : MonoBehaviour
                 //moveX *= 0.5f;
             }
         }
-        else if (rb.velocity.y < 0)
+        else if (rb.linearVelocity.y < 0)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
             if (landCheck.IsTouchingLayers(whatIsGround))
@@ -564,7 +572,7 @@ public class PlayerController : MonoBehaviour
             if (newSize != 0)
                 soundPlayer.PlaySound("Player.SizeDown");
         }
-        if (fuel_left > oldFuelLeft)
+        else if (newSize > currentSize && !vars.isResetting)
         {
             growing = true;
             if (newSize > currentSize)
@@ -647,7 +655,7 @@ public class PlayerController : MonoBehaviour
 
         // Get a sample of what is being overlapped
         Collider2D[] results = new Collider2D[10];
-        int overlapCount = sizeChecker.OverlapCollider(filter, results);
+        int overlapCount = sizeChecker.Overlap(filter, results);
 
         // If touching anything that is ground, don't grow
         if (overlapCount > 0)

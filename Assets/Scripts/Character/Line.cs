@@ -1,8 +1,18 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Splines.Interpolators;
+using UnityEngine.Rendering.Universal;
 
 // Referenced: https://www.youtube.com/watch?v=SmAwege_im8
+// NOTE: all lines marked with a star (*) will need to be rewritten to some extent to accomodate the tool refactor
+public struct HLLight
+{
+    public Light2D _light;
+    public int _firstIndex;
+};
+
 public class Line : MonoBehaviour
 {
     [SerializeField] private LineRenderer lineRenderer;
@@ -19,15 +29,28 @@ public class Line : MonoBehaviour
     public const float MAX_DISTANCE = 50f;
     public float thickness = 0.1f; // How wide the line will be drawn
     public bool collisionsActive = true; // If collisions are active while drawing (for pen - initially false, set to true on finish)
-    public bool is_pen = false;
     public bool hasOverlapped = false;
     public bool deleted = false;
     public float area = 0;
     public SpriteRenderer startPoint;
+    public Tool _curTool;
+    private bool _hasLight = false;
+    private Light2D _light;
+    private float _lightRadius = 0.1f;
+    public void SetHLRadius(float radius) { _lightRadius = radius; }
+    private List<HLLight> _lights;
+    private HLLight _curLight;
+    private int _lightThreshold;
+    public void SetHLThreshold(int threshold) { _lightThreshold = threshold; }
+    private GameObject _HLLightPrefab;
 
-    Vector2[] ConvertArray(Vector3[] v3){
-        Vector2 [] v2 = new Vector2[v3.Length];
-        for(int i = 0; i <  v3.Length; i++){
+    // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
+
+    Vector2[] ConvertArray(Vector3[] v3)
+    {
+        Vector2[] v2 = new Vector2[v3.Length];
+        for (int i = 0; i < v3.Length; i++)
+        {
             v2[i] = v3[i];
         }
         return v2;
@@ -38,9 +61,10 @@ public class Line : MonoBehaviour
     {
         if (rigidBody != null)
         {
-            rigidBody.isKinematic = true;
+            rigidBody.bodyType = RigidbodyType2D.Kinematic;
             rigidBody.sleepMode = RigidbodySleepMode2D.NeverSleep;
         }
+        if (_curTool._type == ToolType.Highlighter) lineRenderer.numCapVertices = 0;
         lineRenderer.widthMultiplier = thickness;
         edgeCollider.edgeRadius = thickness / 2;
         startPoint.transform.localScale += 2 * thickness * Vector3.one;
@@ -57,14 +81,14 @@ public class Line : MonoBehaviour
             colliders[0].enabled = true;
 
         // If this point is too far away, march along it and add extra points
-        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > DrawManager.RESOLUTION)
+        if (!forced && lineRenderer.positionCount > 0 && Vector2.Distance(GetLastPoint(), position) > Tool._RESOLUTION)
         {
             Vector2 marchPos = GetLastPoint();
             do
             {
-                marchPos = Vector2.MoveTowards(marchPos, position, DrawManager.RESOLUTION);
+                marchPos = Vector2.MoveTowards(marchPos, position, Tool._RESOLUTION); // *
                 AppendPos(marchPos, addFuel);
-            } while (Vector2.Distance(marchPos, position) > DrawManager.RESOLUTION);
+            } while (Vector2.Distance(marchPos, position) > Tool._RESOLUTION); // *
         }
 
         AppendPos(position, addFuel);
@@ -77,9 +101,10 @@ public class Line : MonoBehaviour
         // Add line renderer position for this point
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, position);
-
         // Add circle collider component for this point if using pencil
-        if (!is_pen) {
+        if (_hasLight && (lineRenderer.positionCount - _curLight._firstIndex) > 2) UpdateLight();
+        if (_curTool._type == ToolType.Pencil)
+        {
             CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.offset = position;
             circleCollider.radius = thickness / 2;
@@ -88,22 +113,27 @@ public class Line : MonoBehaviour
             points.Add(position);
             edgeCollider.points = points.ToArray();
         }
-        else
+        else if (_curTool._type == ToolType.Pen)
             CheckOverlap();
-
+        else if (_curTool._type == ToolType.Highlighter)
+        {
+            points.Add(position);
+            edgeCollider.points = points.ToArray();
+        }
         // Deduct doodle fuel if there's more than one point on this line and using pencil
         if (lineRenderer.positionCount > 1 && addFuel)
         {
             int cost = lineRenderer.positionCount == 2 ? 2 : 1; // accounts for missing the first point
-            if (PlayerVars.instance.cur_tool == ToolType.Pencil) PlayerVars.instance.SpendDoodleFuel(cost);
-            else if (PlayerVars.instance.cur_tool == ToolType.Pen) PlayerVars.instance.SpendTempPenFuel(cost);
+            if (PlayerVars.instance.cur_tool == ToolType.Pencil) DrawManager.GetTool(ToolType.Pencil).SpendFuel(cost); // * fuel moved to tool script - reference current tool
+            else if (PlayerVars.instance.cur_tool == ToolType.Pen) DrawManager.GetTool(ToolType.Pen).SpendTempFuel(cost); // *
+            else if (PlayerVars.instance.cur_tool == ToolType.Highlighter) DrawManager.GetTool(ToolType.Highlighter).SpendFuel(cost);
         }
     }
 
     private bool CanAppend(Vector2 position)
     {
         // Unable to draw lines inside yourself
-        if (PlayerController.instance.OverlapsPosition(position))
+        if (_curTool._stopsOnPlayer && PlayerController.instance.OverlapsPosition(position))
         {
             canDraw = false;
             return false;
@@ -115,8 +145,8 @@ public class Line : MonoBehaviour
 
         // Then check for minimum distance between points with local space-transformed position
         float distance = Vector2.Distance(GetLastPoint(), transform.InverseTransformPoint(position));
-        if (distance > MAX_DISTANCE) DrawManager.instance.EndDraw();
-        return distance > DrawManager.RESOLUTION && distance < MAX_DISTANCE;
+        if (distance > MAX_DISTANCE) DrawManager.instance._currentTool.EndDraw(); // * call EndDraw() from tool instead
+        return distance > Tool._RESOLUTION && distance < MAX_DISTANCE;
     }
 
     public int GetPointsCount()
@@ -143,13 +173,13 @@ public class Line : MonoBehaviour
     {
         gameObject.layer = 7; // Pen line layer
         gameObject.tag = "Pen";
-        lineRenderer.SetPosition(GetPointsCount()-1, GetFirstPoint());
+        lineRenderer.SetPosition(GetPointsCount() - 1, GetFirstPoint());
         // Apply physics behavior
-        GetComponent<Rigidbody2D>().isKinematic = false;
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
         // Subtract pen fuel for each point in the finished object (since this will always be called when a pen object is finished drawing)
-        PlayerVars.instance.SpendPenFuel(lineRenderer.positionCount);
+        DrawManager.GetTool(ToolType.Pen).SpendFuel(lineRenderer.positionCount); // *
         // Set weight based on area
-        Vector3[] points = new Vector3[GetPointsCount()]; 
+        Vector3[] points = new Vector3[GetPointsCount()];
         lineRenderer.GetPositions(points); // Get an array containing all points in the line
         // Note: This is ugly. I know this is ugly. It works. (from https://stackoverflow.com/questions/2034540/calculating-area-of-irregular-polygon-in-c-sharp)
         area = Mathf.Abs(points.Take(GetPointsCount() - 1).Select((p, i) => (points[i + 1].x - p.x) * (points[i + 1].y + p.y)).Sum() / 2);
@@ -175,7 +205,7 @@ public class Line : MonoBehaviour
         foreach (CircleCollider2D c in colliders)
             c.enabled = true;
     }
-    
+
     // TODO Could be used in the future for other tools
     public void SetThickness(float newThickness)
     {
@@ -213,9 +243,9 @@ public class Line : MonoBehaviour
         ContactFilter2D def = new()
         {
             useLayerMask = true,
-            layerMask =~ LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
+            layerMask = ~LayerMask.GetMask("NoDraw-Pencil") // Ignore collisions with the NoDraw-Pencil layer
         };
-        if (polyCollider.OverlapCollider(def, results) != 0)
+        if (polyCollider.Overlap(def, results) != 0)
         {
             // Attempt to filter for colliders that could actually do this
             foreach (var result in results)
@@ -263,22 +293,24 @@ public class Line : MonoBehaviour
     void OnDestroy()
     {
         // Create the pen object destruction particle effect
-        if (gameObject.scene.isLoaded) { // Only call if the destruction is not a result of a scene change/exit
+        if (gameObject.scene.isLoaded)
+        { // Only call if the destruction is not a result of a scene change/exit
             if (!gameObject.GetComponent<PolygonCollider2D>() || !gameObject.GetComponentInChildren<MeshFilter>()) return; // Only run on pen objects
             ParticleSystem part = Instantiate(penObjDestroy, gameObject.GetComponent<PolygonCollider2D>().bounds.center, Quaternion.identity);
             // Set the mesh of the particle system to the mesh of the pen object
             var shape = part.shape;
             shape.mesh = gameObject.GetComponentInChildren<MeshFilter>().mesh;
-            
-            if(area != 0) {
+
+            if (area != 0)
+            {
                 // Set the number of particles based on the object's area
                 var burst = part.emission.GetBurst(0);
                 burst.count = 20 * area;
                 part.emission.SetBurst(0, burst);
                 // Play the effect (and then destroy)
                 part.Play();
-                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy");
-            } 
+                DrawManager.instance.penSoundPlayer.PlaySound("EraserBoss.PenDestroy"); // *?
+            }
         }
     }
 
@@ -340,7 +372,7 @@ public class Line : MonoBehaviour
         int iter = 0;
         while (numRemoved != 0 && GetPointsCount() > minSize)
         {
-            iter ++;
+            iter++;
             numRemoved = 0;
             List<Vector2> path = new(polyCollider.GetPath(0));
             for (int i = 1; i < path.Count - 1; i++)
@@ -348,8 +380,8 @@ public class Line : MonoBehaviour
                 if (Vector2.Distance(path[i - 1], path[i]) < threshold || Vector2.Distance(path[i], path[i + 1]) < threshold)
                 {
                     path.RemoveAt(i);
-                    numRemoved ++;
-                }  
+                    numRemoved++;
+                }
             }
             polyCollider.SetPath(0, path);
         }
@@ -358,10 +390,135 @@ public class Line : MonoBehaviour
 
     public void RefreshEdge()
     {
-        if (!is_pen)
+        if (_curTool._type == ToolType.Pencil)
         {
             edgeCollider.points = points.ToArray();
         }
     }
+
+    public void SetHighlighterParams(Material mat)
+    {
+        lineRenderer.numCapVertices = 0;
+        lineRenderer.material = mat;
+        edgeCollider.gameObject.layer = LayerMask.NameToLayer("Highlighter");
+        gameObject.layer = LayerMask.NameToLayer("Highlighter");
+    }
+
+    public void HighlighterFade(float time)
+    {
+        foreach (HLLight l in _lights)
+        {
+            StartCoroutine(FadeLight(time, l));
+        }
+        StartCoroutine(Fade(time));
+    }
+
+    private IEnumerator Fade(float duration)
+    {
+        float currentTime = 0f;
+        Color start = lineRenderer.startColor;
+        Color end = lineRenderer.endColor;
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(currentTime / duration);
+            start.a = Mathf.Lerp(1, 0, delta);
+            end.a = Mathf.Lerp(1, 0, delta);
+            lineRenderer.startColor = start;
+            lineRenderer.endColor = end;
+            yield return null;
+        }
+        Destroy(gameObject);
+    }
+
+    private IEnumerator FadeLight(float duration, HLLight light)
+    {
+        float currentTime = 0f;
+        float startIntensity = light._light.intensity;
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            float delta = Mathf.Clamp01(currentTime / duration);
+            light._light.intensity = Mathf.Lerp(startIntensity, 0, delta);
+            yield return null;
+        }
+    }
+
+    public void AddLight(GameObject pref, int start)
+    {
+        _lights ??= new(); // if the _lights list is not initialized, initialize it =) (don't ask about the syntax - vscode recommended it and apparently it works the same as checking for null and initializing)
+        _curLight = new()
+        {
+            _light = Instantiate(pref, gameObject.transform).GetComponent<Light2D>(),
+            _firstIndex = start
+        };
+        if (start == 0) // if start = 0, this is being called from Highlighter.cs with the prefab, so save that prefab for later use
+            _HLLightPrefab = pref;
+        _lights.Add(_curLight);
+        _hasLight = true;
+        _curLight._light.enabled = false;
+    }
+
+    private void UpdateLight()
+    {
+        // Check if we need a new light
+        if ((lineRenderer.positionCount - _curLight._firstIndex) > _lightThreshold)
+        {
+            // If so, add a new light - all remaining operations will be performed on this light (AddLight will update _curLight)
+            AddLight(_HLLightPrefab, lineRenderer.positionCount - 1); // The new light will start from the end of the old light
+        }
+
+        if (lineRenderer.positionCount > 5) // This does cause some overlap between the lights, but it is minimal - and simplifying is necessary for performance and visual cleanliness
+            lineRenderer.Simplify(0.01f); // Even a factor of 0.01 is more than enough - anything higher and it likes to start visibly flattening
+
+        if (lineRenderer.positionCount - _curLight._firstIndex < 2) return; // The loop below requires at least two points to work with
+
+        Vector3[] lightPoints = new Vector3[2 * (lineRenderer.positionCount - _curLight._firstIndex)]; // The lightPoints array will only contain the points on the current light (starting at _firstIndex)
+        Vector3[] points = new Vector3[lineRenderer.positionCount]; // The points array will always contain the whole line
+        lineRenderer.GetPositions(points);
+
+        Vector3 prev, cur, dir, perp_pos, perp_neg;
+        float curLightRadius;
+
+        for (int i = _curLight._firstIndex; i < lineRenderer.positionCount; i++)
+        {
+            if (i == _curLight._firstIndex)
+            {
+                prev = points[i];
+                cur = points[i + 1];
+                curLightRadius = 0.005f;
+            }
+            else if (i == lineRenderer.positionCount - 1)
+            {
+                prev = points[i - 1];
+                cur = points[i];
+                curLightRadius = 0.005f;
+            }
+            else
+            {
+                prev = points[i - 1];
+                cur = points[i];
+                curLightRadius = _lightRadius;
+            }
+            // direction vector between previous and current point
+            dir = new(cur.x - prev.x, cur.y - prev.y, 0);
+            // perpindicular vectors positive and negative
+            perp_pos = new(-dir.y, dir.x, dir.z);
+            perp_neg = new(dir.y, -dir.x, dir.z);
+            // normalize vectors, and multiply by distance
+            perp_pos = Vector3.Normalize(perp_pos) * curLightRadius;
+            perp_neg = Vector3.Normalize(perp_neg) * curLightRadius;
+            // Add vectors to line points to create light points
+            lightPoints[i - _curLight._firstIndex] = new Vector3(points[i].x + perp_pos.x, points[i].y + perp_pos.y, 0f);
+            lightPoints[(2 * (lineRenderer.positionCount - _curLight._firstIndex)) - (i - _curLight._firstIndex) - 1] = new Vector3(points[i].x + perp_neg.x, points[i].y + perp_neg.y, 0f); // it just works :)
+        }
+
+        _curLight._light.SetShapePath(lightPoints);
+        _curLight._light.enabled = true; // do this as late as possible to prevent the light being "turned on" before its path has been set - this would cause a "flashing" effect at the start of the line --
+        // -- while it is being drawn
+    }
+
 }
 

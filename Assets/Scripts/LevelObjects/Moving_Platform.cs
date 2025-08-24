@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine.Events;
 public class Moving_Platform : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class Moving_Platform : MonoBehaviour
     private bool ret_stopped = false;
     private bool moving = false;
     private bool returning = false;
-    public CinemachineVirtualCamera tempView; // The secondary virtual camera positioned to briefly show the entirety of the affected area (optional)
+    public CinemachineCamera tempView; // The secondary virtual camera positioned to briefly show the entirety of the affected area (optional)
     public float viewTime = 2.5f; // The time the camera will linger on the secondary position before returning to the player (optional)
     public UnityEvent onFinishMove;
     public UnityEvent onFinishReturn;
@@ -36,6 +36,7 @@ public class Moving_Platform : MonoBehaviour
     [SerializeField] private SoundPlayer soundPlayer;
     [SerializeField] private SoundClip sound;
     private static bool fadedOut = false;
+    [SerializeField] private bool _canMoveMultiple = false;
 
     private void Awake()
     {
@@ -74,24 +75,30 @@ public class Moving_Platform : MonoBehaviour
 
     public void MoveToDest()
     {
-        returning = false;
-        curSpeed = moveSpeed;
-        if (dir == direction.Right)
-            dest.x += moveDist;
-        else
-            dest.y += moveDist;
-        moving = true;
+        if (!moving)
+        {
+            returning = false;
+            curSpeed = moveSpeed;
+            if (dir == direction.Right)
+                dest.x = (_canMoveMultiple ? dest.x : start.x) + moveDist;
+            else
+                dest.y = (_canMoveMultiple ? dest.y : start.y) + moveDist;
+            moving = true;
+        }
     }
 
     public void ReturnToStart()
     {
-        moving = false;
-        if (fastReturn) curSpeed = moveSpeed * 2;
-        if (dir == direction.Right)
-            dest.x -= moveDist;
-        else
-            dest.y -= moveDist;
-        returning = true;   
+        if (!returning)
+        {
+            moving = false;
+            if (fastReturn) curSpeed = moveSpeed * 2;
+            if (dir == direction.Right)
+                dest.x = _canMoveMultiple ? (dest.x - moveDist) : start.x;
+            else
+                dest.y = _canMoveMultiple ? (dest.y - moveDist) : start.y;
+            returning = true;
+        }
     }
 
     public void PanCamera() // Optional - pans the camera temporarily to better show all platforms affected by the player's current action

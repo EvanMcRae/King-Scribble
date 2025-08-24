@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92936f9cc3a14ec4998cee3955abb25a, type: 3}
+  m_Name: Highlighter
+  m_EditorClassIdentifier: 
+  _type: 4
+  _cursor: {fileID: 2800000, guid: 77ee153fcc6b1134280a89afbb03b4a1, type: 3}
+  _maxFuel: 1000
+  _sound: {fileID: 11400000, guid: 2d88dac28d6fc46d1a1676320236c78e, type: 2}
+  _noDraw:
+    serializedVersion: 2
+    m_Bits: 82648
+  _refill:
+    serializedVersion: 2
+    m_Bits: 0
+  _noRefill:
+    serializedVersion: 2
+    m_Bits: 0
+  _refillRate: 10
+  _drawing: 0
+  _beganDraw: 0
+  _drawCooldown: 0
+  _rmbActive: 0
+  _marchInterval: 3
+  _stopsOnPlayer: 0
+  _linePref: {fileID: 6271448572089666186, guid: 71f233da0c08b234c8bc06fd6b184e7d, type: 3}
+  _startColor: {r: 1, g: 0.9882353, b: 0, a: 1}
+  _endColor: {r: 1, g: 0.9882353, b: 0, a: 1}
+  _thicknessMult: 1
+  _lineThickness: 1
+  _mat: {fileID: 2100000, guid: 2bf41123c512c0642b1f6048dbae4b57, type: 2}
+  _LMBLightPref: {fileID: 6738354470593868514, guid: 2b42ea4ab24fc524191c8b4bd6fb2259, type: 3}
+  _RMBLightPref: {fileID: 1209400975632100972, guid: 390af375af1441841a6d5210348cb359, type: 3}
+  _rmbLightSpeed: 25
+  _rmbLightDuration: 2
+  _rmbLightForwardOffset: 0.5
+  _duration: 5
+  _LMBLightRadius: 0.1
+  _lightThreshold: 15

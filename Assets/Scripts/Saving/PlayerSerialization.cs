@@ -17,7 +17,7 @@ public class PlayerSerialization
     public PlayerSerialization(PlayerVars player)
     {
         inventory = PlayerVars.lastSavedInventory;
-        currentTool = player.cur_tool;
+        currentTool = player.last_tool;
     }
 
     public void SetValues(GameObject playerObj)
@@ -55,10 +55,43 @@ public class SceneSerialization
     public string name;
     public Vector3Serialization spawnpoint;
     public List<string> unlockPoints;
+    public List<InkSerialization> inkPoints;
 
     public SceneSerialization(string sceneName, Vector3 spawnPos)
     {
         name = sceneName;
         spawnpoint = new Vector3Serialization(spawnPos);
+        inkPoints = new List<InkSerialization>();
+    }
+
+    public void WipeData()
+    {
+        unlockPoints = new();
+        inkPoints = new();
+    }
+}
+
+[Serializable]
+public class InkSerialization
+{
+    public string name;
+    public float height;
+    public bool flooding;
+    public int destination;
+
+    public InkSerialization(InkFlood ink)
+    {
+        name = ink.gameObject.name;
+        height = ink.transform.position.y;
+        flooding = ink.flooding;
+        destination = ink.curDest;
+    }
+
+    public void SetValues(GameObject inkObj)
+    {
+        InkFlood ink = inkObj.GetComponent<InkFlood>();
+        ink.transform.position = new Vector3(inkObj.transform.position.x, height, inkObj.transform.position.z);
+        ink.flooding = flooding;
+        ink.curDest = destination;
     }
 }

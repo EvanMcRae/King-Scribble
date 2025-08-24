@@ -9,77 +9,133 @@ public class EBInkPipe : MonoBehaviour
     [SerializeField] private Transform active;
     [SerializeField] private Transform end;
     [SerializeField] private GameObject inkfall;
+    private GameObject physics;
     [SerializeField] private Sprite broken;
     [SerializeField] private ParticleSystem break_particles;
     [SerializeField] private SoundPlayer sound_player;
     [SerializeField] private SoundPlayer pipeSoundPlayer;
     [SerializeField] private EBInkPipe other;
     private Animator anim;
-    private bool is_enabled = true;
-    private bool is_active = false;
+    public bool is_enabled = true, is_active = false, is_busy = false;
+    private static int inkSoundPlayers = 0;
 
     void Start()
     {
-        inkfall.transform.position = start.position;
+        physics = inkfall.transform.GetChild(0).gameObject;
         anim = GetComponent<Animator>();
+        if (!is_active)
+        {
+            inkfall.transform.position = start.position;
+            physics.SetActive(false);
+        }
+        else
+        {
+            anim.Play("Pipe_Start");
+            inkfall.transform.position = active.position;
+            if (inkSoundPlayers == 0)
+            {
+                if (!sound_player.sources[0].isPlaying)
+                    sound_player.PlaySound("Ink.Flood", 0, true);
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 1f, 1f, () => { }));
+            }
+            inkSoundPlayers++;
+        }
+        GameManager.ResetAction += FadeOut;
     }
 
     public void Activate()
     {
-        if (is_enabled && !is_active)
+        if (is_enabled && !is_active && !is_busy && gameObject.activeInHierarchy)
         {   
             StartCoroutine(Activate_());
         }
     }
 
-    private IEnumerator Activate_() {
+    private IEnumerator Activate_()
+    {
+        is_busy = true;
         anim.Play("Pipe_Start");
         yield return new WaitForSeconds(1.0f);
         inkfall.transform.DOMoveY(active.position.y, 0.5f);
+        if (inkSoundPlayers == 0)
+        {
+            if (!sound_player.sources[0].isPlaying)
+                sound_player.PlaySound("Ink.Flood", 0, true);
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 1f, () => { }));
+        }
+        yield return new WaitForSeconds(0.5f);
+        physics.SetActive(true);
         is_active = true;
-        sound_player.PlaySound("Ink.Flood", 1, true);
+        is_busy = false;
+        inkSoundPlayers++;
     }
 
     public void Deactivate()
     {
-        if (is_active)
+        if (is_enabled && is_active && !is_busy && gameObject.activeInHierarchy)
             StartCoroutine(Deactivate_());
     }
 
     IEnumerator Deactivate_()
     {
+        is_busy = true;
+        physics.SetActive(false);
         anim.Play("Pipe_Stop");
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
         yield return new WaitForSeconds(0.5f);
         anim.Play("Pipe_Idle");
-        sound_player.EndSound("Ink.Flood");
+        inkSoundPlayers--;
+        if (inkSoundPlayers == 0)
+        {
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 0f, () => { }));
+        }
         inkfall.transform.position = start.transform.position;
         is_active = false;
+        is_busy = false;
     }
 
     public void Break()
     {
-        StartCoroutine(Break_());
+        if (is_enabled)
+        {
+            StopAllCoroutines();
+            StartCoroutine(Break_());
+        }
     }
 
     IEnumerator Break_()
     {
+        is_enabled = false;
+        physics.SetActive(false);
         if (is_active)
         {
+            is_active = false;
             // Deactivate, then end sound only if other pipe's ink is not flowing
             inkfall.transform.DOMoveY(end.position.y, 0.5f);
             yield return new WaitForSeconds(0.5f);
-            if (!other.is_active || !other.is_enabled)
-                sound_player.EndSound("Ink.Flood");
+            inkSoundPlayers--;
+            if (inkSoundPlayers == 0)
+            {
+                AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 0f, () => { }));
+            }
             inkfall.transform.position = start.transform.position;
         }
-        is_active = false;
         // gameObject.GetComponent<SpriteRenderer>().sprite = broken;
         ParticleSystem fart = Instantiate(break_particles, gameObject.transform.position, Quaternion.identity);
         var farte = fart.shape;
         farte.scale = 4f * Vector3.one;
         anim.Play("Pipe_Broken");
         pipeSoundPlayer.PlaySound("EraserBoss.PipeExplosion");
-        is_enabled = false;
+    }
+
+    public void FadeOut()
+    {
+        if (sound_player != null)
+            AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 1f, 0f, () => { }));
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.ResetAction -= FadeOut;
     }
 }

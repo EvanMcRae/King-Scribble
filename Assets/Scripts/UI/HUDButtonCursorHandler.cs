@@ -15,7 +15,7 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
     {
         if (!GameManager.paused && !GameManager.resetting && hovering)
         {
-            if (!DrawManager.instance.IsUsingTool() && disablesWhileDrawing && !inside)
+            if (!(DrawManager.instance != null && DrawManager.instance.IsUsingTool()) && disablesWhileDrawing && !inside)
             {
                 if (disableOrigin == null)
                     GetComponent<Button>().interactable = true;
@@ -24,26 +24,33 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
                     b.interactable = true;
                 }
                 inside = true;
-                DrawManager.instance.SetCursor(ToolType.None);
+                DrawManager.instance?.SetCursor(_override:true);
             }
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (disablesWhileDrawing && DrawManager.instance.IsUsingTool())
+        if (disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
         {
             if (disableOrigin == null)
-                GetComponent<Button>().interactable = false;
-            else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
             {
-                b.interactable = false;
+                GetComponent<Button>().transition = Selectable.Transition.ColorTint;
+                GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                {
+                    b.transition = Selectable.Transition.ColorTint;
+                    b.interactable = false;
+                }
             }
         }
         else
         {
             inside = true;
-            DrawManager.instance.SetCursor(ToolType.None);
+            DrawManager.instance?.SetCursor(_override:true);
         }
         hovering = true;
     }
@@ -53,14 +60,21 @@ public class HUDButtonCursorHandler : MonoBehaviour, IPointerEnterHandler, IPoin
         if (!GameManager.paused && !GameManager.resetting)
         {
             if (PlayerVars.instance != null)
-                DrawManager.instance.SetCursor(PlayerVars.instance.cur_tool);
-            if (disablesWhileDrawing && DrawManager.instance.IsUsingTool())
+                DrawManager.instance?.SetCursor();
+            if (disablesWhileDrawing && DrawManager.instance != null && DrawManager.instance.IsUsingTool())
             {
                 if (disableOrigin == null)
-                    GetComponent<Button>().interactable = true;
-                else foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
                 {
-                    b.interactable = true;
+                    GetComponent<Button>().interactable = true;
+                    GetComponent<Button>().transition = Selectable.Transition.None;
+                }
+                else
+                {
+                    foreach (Button b in disableOrigin.GetComponentsInChildren<Button>())
+                    {
+                        b.interactable = true;
+                        b.transition = Selectable.Transition.None;
+                    }
                 }
             }
         }

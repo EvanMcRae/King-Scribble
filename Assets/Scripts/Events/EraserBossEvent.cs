@@ -43,6 +43,10 @@ public class EraserBossEvent : MonoBehaviour
             Deactivate();
         }
         isButtonActive = false;
+        if (left.is_active && left.is_enabled)
+            left.Deactivate();
+        else if (right.is_active && right.is_enabled)
+            right.Deactivate();
     }
 
     public void Activate() {

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class ToolIndicator : MonoBehaviour
 {
-    public Image PencilIcon, PenIcon, EraserIcon, PCIcon;
-    public Sprite PencilUnused, PencilUsed, PenUnused, PenUsed, EraserUnused, EraserUsed;
+    public Image PencilIcon, PenIcon, EraserIcon, HighlighterIcon, PCIcon;
+    public Sprite PencilUnused, PencilUsed, PenUnused, HighlighterUnused, PenUsed, EraserUnused, EraserUsed, HighlighterUsed;
     public List<Sprite> PencilCaseSprites = new();
     public List<Image> Slots = new();
     public static ToolIndicator instance;
@@ -25,9 +25,9 @@ public class ToolIndicator : MonoBehaviour
                 slot.gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < PlayerVars.instance.inventory.toolUnlocks.Count; i++)
+        for (int i = 0; i < PlayerVars.instance.inventory._toolTypes.Count; i++)
         {
-            ToolType currTool = PlayerVars.instance.inventory.toolUnlocks[i];
+            ToolType currTool = PlayerVars.instance.inventory._toolTypes[i];
 
             // TODO this feels really bad but interim solutions :,)
             Sprite used = null, unused = null;
@@ -45,6 +45,10 @@ public class ToolIndicator : MonoBehaviour
                     used = EraserUsed;
                     unused = EraserUnused;
                     break;
+                case ToolType.Highlighter:
+                    used = HighlighterUsed;
+                    unused = HighlighterUnused;
+                    break;
             }
 
             // Set slot sprite
@@ -55,7 +59,7 @@ public class ToolIndicator : MonoBehaviour
             }
         }
 
-        PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory.toolUnlocks.Count];
+        PCIcon.sprite = PencilCaseSprites[PlayerVars.instance.inventory._toolTypes.Count];
     }
 
     public void SelectTool(int index)

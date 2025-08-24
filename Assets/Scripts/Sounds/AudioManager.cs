@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -29,6 +30,8 @@ public class AudioManager : MonoBehaviour
     public MusicCategory musicDatabase;
 
     private int currentTime = 0;
+
+    private float lowPass = 22000.00f;
 
     /// <summary>
     /// List of all different game areas that may have different sets of music
@@ -92,6 +95,10 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioSettings.OnAudioConfigurationChanged += OnAudioConfigurationChanged;
+
+        sfxMixer.SetFloat("Volume", sfxVolume + masterVolume);
+        musicMixer.SetFloat("Volume", musicVolume + masterVolume);
+
     }
 
     // Update is called once per frame
@@ -101,6 +108,9 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
         }
+
+        // Sync low pass value
+        musicMixer.SetFloat("LowPass", lowPass);
 
         // Check for desyncing during crossfades
         if ((fader[0] != null || fader[1] != null) && BGM2[activePlayer].isPlaying && BGM1[activePlayer].isPlaying)
@@ -488,7 +498,12 @@ public class AudioManager : MonoBehaviour
 
     public void PauseEffect(bool active)
     {
-        musicMixer.SetFloat("LowPass", active ? 1815.00f : 22000.00f);
+        DOTween.To(() => lowPass, x => lowPass = x, active ? 1815.00f : 22000.00f, 0.5f).SetUpdate(true);
+    }
+
+    public void OnDestroy()
+    {
+        DOTween.KillAll();
     }
 
     private void OnAudioConfigurationChanged(bool deviceWasChanged)
