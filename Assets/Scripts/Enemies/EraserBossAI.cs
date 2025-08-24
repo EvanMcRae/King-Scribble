@@ -4,7 +4,6 @@ using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Splines;
-using Unity.VisualScripting;
 
 /*
 General notes:
@@ -203,12 +202,12 @@ public class EraserBossAI : MonoBehaviour
             case State.Start:
                 StartCoroutine(StartUp());
                 EBrb.gravityScale = 0;
-                EBrb.drag = 10;
+                EBrb.linearDamping = 10;
                 break;
             case State.Searching:
                 timer = 0;
                 EBrb.gravityScale = 0; // these values are needed for oscillation
-                EBrb.drag = 10;
+                EBrb.linearDamping = 10;
                 break;
             case State.Moving:
                 break;
@@ -222,11 +221,11 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.SlamPrep:
                 EBrb.gravityScale = 0;
-                EBrb.drag = 10;
+                EBrb.linearDamping = 10;
                 break;
             case State.Slamming:
                 EBrb.gravityScale = 1;
-                EBrb.drag = 0;
+                EBrb.linearDamping = 0;
                 break;
             case State.SlamImpact:
                 EBrb.sharedMaterial = friction;
@@ -236,12 +235,12 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.ShieldActivate:
                 EBrb.gravityScale = 0;
-                EBrb.drag = 10;
+                EBrb.linearDamping = 10;
                 break;
             case State.ShieldRemove:
                 timer = 0;
                 EBrb.gravityScale = 1;  // these values are needed for gravity and forces
-                EBrb.drag = 0;
+                EBrb.linearDamping = 0;
                 break;
             case State.Roar:
                 Invoke(nameof(RoarSound), 10 / 12f); // the time accounts for the delay in the animation
@@ -256,11 +255,11 @@ public class EraserBossAI : MonoBehaviour
                 break;
             case State.Idle:
                 EBrb.gravityScale = 0; // these values are needed for oscillation
-                EBrb.drag = 10;
+                EBrb.linearDamping = 10;
                 break;
             case State.EndScene:
                 EBrb.gravityScale = 0;
-                EBrb.drag = 0;
+                EBrb.linearDamping = 0;
                 movingWall.ReturnToStart();
                 StartCoroutine(EndScene());
                 break;

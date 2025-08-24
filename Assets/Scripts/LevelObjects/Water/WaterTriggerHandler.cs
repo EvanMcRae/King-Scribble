@@ -29,10 +29,10 @@ public class WaterTriggerHandler : MonoBehaviour
             {
                 // Clamp splash point to a MAX velocity
                 int multiplier;
-                if (rb.velocity.y < 0) { multiplier = -1; }
+                if (rb.linearVelocity.y < 0) { multiplier = -1; }
                 else { multiplier = 1; }
 
-                float vel = rb.velocity.y * _water.ForceMultiplier;
+                float vel = rb.linearVelocity.y * _water.ForceMultiplier;
                 vel = Mathf.Clamp(Mathf.Abs(vel), 0f, _water.MaxForce);
                 vel *= multiplier;
 

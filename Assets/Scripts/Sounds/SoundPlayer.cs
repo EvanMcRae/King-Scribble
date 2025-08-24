@@ -196,9 +196,13 @@ public class SoundPlayer : MonoBehaviour
     {
         foreach (AudioSource source in sources)
         {
-            source.time = 0;
-            source.Stop();
-            source.clip = null;
+            if (source.clip != null)
+            {
+                source.time = 0;
+                source.Stop();
+                source.clip = null;
+            }
+            
         }
     }
 
@@ -206,7 +210,7 @@ public class SoundPlayer : MonoBehaviour
     {
         foreach (AudioSource source in sources)
         {
-            if (!source.isPlaying)
+            if (!source.isPlaying && source.clip != null)
             {
                 source.time = 0;
                 source.Stop();

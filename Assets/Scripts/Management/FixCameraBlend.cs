@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class FixCameraBlend : MonoBehaviour
@@ -16,6 +16,6 @@ public class FixCameraBlend : MonoBehaviour
     IEnumerator SetCameraBlend()
     {
         yield return new WaitForSeconds(0.2f);
-        GetComponent<CinemachineBrain>().m_DefaultBlend.m_Time = blendTime;
+        GetComponent<CinemachineBrain>().DefaultBlend.Time = blendTime;
     }
 }

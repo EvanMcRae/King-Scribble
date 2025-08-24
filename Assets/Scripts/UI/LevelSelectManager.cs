@@ -132,7 +132,7 @@ public class LevelSelectManager : MonoBehaviour
             PlayerController.instance.KillTweens();
             Destroy(PlayerVars.instance.gameObject);
         }
-        EventSystem eventSystem = FindObjectOfType<EventSystem>();
+        EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
         player.transform.DOKill();
         SceneHelper.LoadScene("MainMenu");
