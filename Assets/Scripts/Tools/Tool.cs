@@ -188,6 +188,25 @@ public class Tool : ScriptableObject
         _tempFuelEvent?.Invoke(GetTempFuelRemaining());
     }
 
+    public virtual void SetFuel(int amount)
+    {
+        if (amount > _curFuel)
+        {
+            AddFuel(amount - _curFuel);
+            Debug.Log(amount - _curFuel + " add");
+        }
+        else if (amount < _curFuel)
+        {
+            Debug.Log(_curFuel - amount + " subtract " + _curFuel + " " + amount);
+            SpendFuel(_curFuel - amount);
+        }
+    }
+
+    public virtual int GetMaxFuel()
+    {
+        return _maxFuel;
+    }
+
     public virtual void MaxFuel()
     {
         _curFuel = _maxFuel;

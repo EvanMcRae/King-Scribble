@@ -13,7 +13,7 @@ public class PlayerVars : MonoBehaviour
     public ToolType cur_tool = ToolType.None;
     public ToolType last_tool = ToolType.None;
     private int curEraserFuel; // RF?
-    public bool isDead = false, isResetting = true;
+    public bool isDead = false, isResetting = false;
     private Vector3 spawn_pos;
     public bool cheatMode = false;
     public float curCamZoom;

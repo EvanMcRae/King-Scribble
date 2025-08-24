@@ -564,6 +564,7 @@ public class PlayerController : MonoBehaviour
 
         if (newSize < currentSize)
         {
+            Debug.Log(newSize + " " + currentSize);
             if (popAnim != null)
             {
                 popAnim.gameObject.SetActive(true);
@@ -583,7 +584,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        oldFuelLeft = fuel_left;
         fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
 
         if (oldPlayer)
@@ -592,9 +592,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // TODO: The value of growing is only true as soon as the player resizes and is then immediately false, so even when the player is erasing, growing is false.
-            // Potential fix Scott just thought of: maybe comparing the value of fuel_left to what it was in the previous call of ResizePlayer and setting growing based on the sign of the difference?
-
             // Always change size if player is shrinking, only change size if the new collider allows for it
             if ((growing && (sizeUpAllowed || forceGrow)) || (!growing))
             {
@@ -608,18 +605,26 @@ public class PlayerController : MonoBehaviour
                     {
                         Debug.Log("Growing...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
                     }
+
+                    anim.SetFloat("size", fuel_left);
+                    bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
+                    // Debug.Log("Body size is now using " + sizeColliders[(int)(fuel_left * SIZE_STAGES)].name);
+                    // Written this way to allow the old player prefab to work
+                    groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
+                    groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
                 }
 
-                anim.SetFloat("size", fuel_left);
-                bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
-                // Debug.Log("Body size is now using " + sizeColliders[(int)(fuel_left * SIZE_STAGES)].name);
-                // Written this way to allow the old player prefab to work
-                groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
-                groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
+                currentSize = newSize;
+                oldFuelLeft = fuel_left;
+            }
+            else if (growing && !sizeUpAllowed)
+            {
+                Hurt();
+                Pencil pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
+                Debug.Log(oldFuelLeft + " " + pencil.GetMaxFuel());
+                pencil.SetFuel((int)(oldFuelLeft * pencil.GetMaxFuel()));
             }
         }
-
-        currentSize = newSize;
     }
 
     // TODO: This detects ground when King Scribble is on the ground (no way) but what this means is that you can only grow in size if you're mid-air
@@ -649,7 +654,7 @@ public class PlayerController : MonoBehaviour
         sizeChecker.points = sizeColliders[newSize].points;
 
         // Set up contact filter
-        ContactFilter2D filter = new ContactFilter2D();
+        ContactFilter2D filter = new();
         filter.SetLayerMask(whatIsGround);
         filter.useTriggers = false;
 
@@ -666,6 +671,7 @@ public class PlayerController : MonoBehaviour
         }
 
         Destroy(sizeChecker);
+        Debug.Log("??");
         Debug.Log("No ground detected");
         // Otherwise, the player is free to grow
         return true;
