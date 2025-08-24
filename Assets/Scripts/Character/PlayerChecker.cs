@@ -86,7 +86,7 @@ public class PlayerChecker : MonoBehaviour
                 PlayerVars.instance.SetSpawnPos(transform.position);
                 firstSpawned = true;
             }
-            PlayerVars.instance.Reset(PlayerVars.instance.GetSpawnPos());
+            PlayerVars.instance.ResetPlayer(PlayerVars.instance.GetSpawnPos());
             PlayerController.instance.virtualCamera = cam;
             // Re-enable the main camera
             cam.gameObject.SetActive(true);

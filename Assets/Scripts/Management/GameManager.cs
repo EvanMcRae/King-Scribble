@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         canMove = true;
     }
 
-    public void Reset()
+    public void ResetGame()
     {
         if (!resetting)
             StartCoroutine(ResetLevel());

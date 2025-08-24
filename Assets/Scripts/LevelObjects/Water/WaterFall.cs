@@ -111,7 +111,7 @@ public class WaterFall : MonoBehaviour
                 if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !PlayerVars.instance.cheatMode)
                 {
                     if (!GameManager.resetting)
-                        GameManager.instance.Reset();
+                        GameManager.instance.ResetGame();
                     hit = Physics2D.Raycast(start, Vector2.down, -3 * yBot, (_waterLayers | _colliders) & ~(1 << LayerMask.NameToLayer("Player")));
                 }
 

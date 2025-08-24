@@ -145,7 +145,7 @@ public class InkFlood : MonoBehaviour
             if (transform.position.y - collision.transform.position.y > killThreshold && !PlayerVars.instance.cheatMode)
             {
                 GetComponent<BuoyancyEffector2D>().density = 0.1f;
-                GameManager.instance.Reset();
+                GameManager.instance.ResetGame();
                 PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
             }
         }
