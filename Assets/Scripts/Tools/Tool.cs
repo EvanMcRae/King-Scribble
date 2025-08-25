@@ -193,11 +193,9 @@ public class Tool : ScriptableObject
         if (amount > _curFuel)
         {
             AddFuel(amount - _curFuel);
-            Debug.Log(amount - _curFuel + " add");
         }
         else if (amount < _curFuel)
         {
-            Debug.Log(_curFuel - amount + " subtract " + _curFuel + " " + amount);
             SpendFuel(_curFuel - amount);
         }
     }

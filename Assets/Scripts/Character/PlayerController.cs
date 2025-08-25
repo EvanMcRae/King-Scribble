@@ -621,7 +621,6 @@ public class PlayerController : MonoBehaviour
             {
                 Hurt();
                 Pencil pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
-                Debug.Log(oldFuelLeft + " " + pencil.GetMaxFuel());
                 pencil.SetFuel((int)(oldFuelLeft * pencil.GetMaxFuel()));
             }
         }
@@ -648,9 +647,13 @@ public class PlayerController : MonoBehaviour
 
         // Set up trigger to check if the player can resize
         // This trigger will be the same size as what the player would grow into
+        BoxCollider2D groundChecker = gameObject.AddComponent<BoxCollider2D>();
+        groundChecker.isTrigger = true;
+        groundChecker.offset = ((BoxCollider2D)groundCheckers[newSize]).offset;
+        groundChecker.size = ((BoxCollider2D)groundCheckers[newSize]).size;
+
         PolygonCollider2D sizeChecker = gameObject.AddComponent<PolygonCollider2D>();
         sizeChecker.isTrigger = true;
-        // Debug.Log("Trigger's points are about to be mapped to " + sizeColliders[newSize].name);
         sizeChecker.points = sizeColliders[newSize].points;
 
         // Set up contact filter
@@ -665,15 +668,28 @@ public class PlayerController : MonoBehaviour
         // If touching anything that is ground, don't grow
         if (overlapCount > 0)
         {
-            Debug.Log("Ground detected");
-            Destroy(sizeChecker);
-            return false;
+            Collider2D[] groundResults = new Collider2D[10];
+            int groundCount = groundChecker.Overlap(filter, groundResults);
+            if (groundCount > 0)
+            {
+                foreach (Collider2D sizeCollider in results)
+                {
+                    foreach (Collider2D groundCollider in groundResults)
+                    {
+                        if (groundCollider != null && sizeCollider != null && sizeCollider != groundCollider)
+                        {
+                            Destroy(sizeChecker);
+                            Destroy(groundChecker);
+                            return false;
+                        }
+                    }
+                }
+            }
         }
 
-        Destroy(sizeChecker);
-        Debug.Log("??");
-        Debug.Log("No ground detected");
         // Otherwise, the player is free to grow
+        Destroy(sizeChecker);
+        Destroy(groundChecker);
         return true;
     }
 
