@@ -5,6 +5,7 @@ using Unity.Cinemachine;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -670,18 +671,16 @@ public class PlayerController : MonoBehaviour
         {
             Collider2D[] groundResults = new Collider2D[10];
             int groundCount = groundChecker.Overlap(filter, groundResults);
+            
             if (groundCount > 0)
             {
                 foreach (Collider2D sizeCollider in results)
                 {
-                    foreach (Collider2D groundCollider in groundResults)
+                    if (sizeCollider != null && !groundResults.Contains(sizeCollider))
                     {
-                        if (groundCollider != null && sizeCollider != null && sizeCollider != groundCollider)
-                        {
-                            Destroy(sizeChecker);
-                            Destroy(groundChecker);
-                            return false;
-                        }
+                        Destroy(sizeChecker);
+                        Destroy(groundChecker);
+                        return false;
                     }
                 }
             }
