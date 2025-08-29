@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
                 resetPrompt.SetVisibility(true);
                 if (resetTime >= maxResetTime)
                 {
-                    Reset();
+                    ResetGame();
                 }
                 else
                 {
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
 
         if (PlayerVars.instance.transform.position.y < voidDeath && !resetting)
         {
-            Reset();
+            ResetGame();
         }
     }
 
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         canMove = true;
     }
 
-    public void Reset()
+    public void ResetGame()
     {
         if (!resetting)
             StartCoroutine(ResetLevel());

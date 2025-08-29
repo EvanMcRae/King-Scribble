@@ -13,7 +13,7 @@ public class PlayerVars : MonoBehaviour
     public ToolType cur_tool = ToolType.None;
     public ToolType last_tool = ToolType.None;
     private int curEraserFuel; // RF?
-    public bool isDead = false, isResetting = true;
+    public bool isDead = false, isResetting = false;
     private Vector3 spawn_pos;
     public bool cheatMode = false;
     public float curCamZoom;
@@ -45,7 +45,7 @@ public class PlayerVars : MonoBehaviour
 
     public void Die()
     {
-        GameManager.instance.Reset();
+        GameManager.instance.ResetGame();
     }
 
     private void Awake()
@@ -79,7 +79,7 @@ public class PlayerVars : MonoBehaviour
     }
 
     // Runs on level reset/death/transition
-    public void Reset(Vector3 spawnpoint)
+    public void ResetPlayer(Vector3 spawnpoint)
     {
         isResetting = true;
         ReplenishTools();
@@ -92,7 +92,7 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().softFall = true;
         transform.position = spawnpoint;
         GetComponent<PlayerController>().currentSize = PlayerController.SIZE_STAGES;
-        GetComponent<PlayerController>().ResizePlayer(1);
+        GetComponent<PlayerController>().ResizePlayer(1, true);
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
         RefreshTools();

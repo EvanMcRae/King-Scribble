@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AI;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -69,6 +71,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator popAnim;
     private float timeSinceSprint;
     public bool deadLanded = false;
+    private float oldFuelLeft = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -554,11 +557,15 @@ public class PlayerController : MonoBehaviour
         canWalkOnSlope = !(slopeDownAngle > maxSlopeAngle || slopeSideAngle > maxSlopeAngle);
     }
     
-    public void ResizePlayer(float fuel_left)
+    public void ResizePlayer(float fuel_left, bool forceGrow = false) // sorry tronster :(
     {
         int newSize = (int)Mathf.Ceil(fuel_left * SIZE_STAGES);
+        bool sizeUpAllowed = false;
+        bool growing = false;
+
         if (newSize < currentSize)
         {
+            Debug.Log(newSize + " " + currentSize);
             if (popAnim != null)
             {
                 popAnim.gameObject.SetActive(true);
@@ -569,21 +576,120 @@ public class PlayerController : MonoBehaviour
         }
         else if (newSize > currentSize && !vars.isResetting)
         {
-            soundPlayer.PlaySound("Player.SizeUp");
+            growing = true;
+            if (newSize > currentSize)
+            {
+                sizeUpAllowed = CanIncreaseSize(currentSize, newSize);
+                if (sizeUpAllowed && !forceGrow)
+                    soundPlayer.PlaySound("Player.SizeUp");
+            }
         }
-        currentSize = newSize;
 
         fuel_left = Mathf.Ceil(fuel_left * SIZE_STAGES) / SIZE_STAGES;
+
         if (oldPlayer)
+        {
             mainBody.transform.localScale = Vector3.one * fuel_left;
+        }
         else
         {
-            anim.SetFloat("size", fuel_left);
-            bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
-            // Written this way to allow the old player prefab to work
-            groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
-            groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
+            // Always change size if player is shrinking, only change size if the new collider allows for it
+            if ((growing && (sizeUpAllowed || forceGrow)) || (!growing))
+            {
+                if (newSize != currentSize)
+                {
+                    if (!growing)
+                    {
+                        Debug.Log("Shrinking...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                    }
+                    else
+                    {
+                        Debug.Log("Growing...\ngrowing = " + growing + ", sizeUpAllowed = " + sizeUpAllowed);
+                    }
+
+                    anim.SetFloat("size", fuel_left);
+                    bodyCollider.points = sizeColliders[(int)(fuel_left * SIZE_STAGES)].points;
+                    // Debug.Log("Body size is now using " + sizeColliders[(int)(fuel_left * SIZE_STAGES)].name);
+                    // Written this way to allow the old player prefab to work
+                    groundCheck.gameObject.GetComponent<BoxCollider2D>().size = groundCheckers[(int)(fuel_left * SIZE_STAGES)].GetComponent<BoxCollider2D>().size;
+                    groundCheck.offset = groundCheckers[(int)(fuel_left * SIZE_STAGES)].offset;
+                }
+
+                currentSize = newSize;
+                oldFuelLeft = fuel_left;
+            }
+            else if (growing && !sizeUpAllowed)
+            {
+                Hurt();
+                Pencil pencil = (Pencil)DrawManager.GetTool(ToolType.Pencil);
+                pencil.SetFuel((int)(oldFuelLeft * pencil.GetMaxFuel()));
+            }
         }
+    }
+
+    // TODO: This detects ground when King Scribble is on the ground (no way) but what this means is that you can only grow in size if you're mid-air
+    //       so if the way it's implemented right now isn't a problem you can leave it as is, and otherwise, this is something we gotta work around
+    private bool CanIncreaseSize(int currentSize, int newSize)
+    {
+        // Defensive checks, make sure this function is being used correctly
+        if (newSize < currentSize)
+        {
+            // You're shrinking
+            Debug.LogWarning("Calling CanIncreaseSize() with arguments that imply a size decrease, which will always return true");
+            return true;
+        }
+
+        if (newSize == currentSize)
+        {
+            // You're the same size
+            Debug.LogWarning("Calling CanIncreaseSize() with arguments that imply no change in size, which will always return true");
+            return true;
+        }
+
+        // Set up trigger to check if the player can resize
+        // This trigger will be the same size as what the player would grow into
+        BoxCollider2D groundChecker = gameObject.AddComponent<BoxCollider2D>();
+        groundChecker.isTrigger = true;
+        groundChecker.offset = ((BoxCollider2D)groundCheckers[newSize]).offset;
+        groundChecker.size = ((BoxCollider2D)groundCheckers[newSize]).size;
+
+        PolygonCollider2D sizeChecker = gameObject.AddComponent<PolygonCollider2D>();
+        sizeChecker.isTrigger = true;
+        sizeChecker.points = sizeColliders[newSize].points;
+
+        // Set up contact filter
+        ContactFilter2D filter = new();
+        filter.SetLayerMask(whatIsGround);
+        filter.useTriggers = false;
+
+        // Get a sample of what is being overlapped
+        Collider2D[] results = new Collider2D[10];
+        int overlapCount = sizeChecker.Overlap(filter, results);
+
+        // If touching anything that is ground, don't grow
+        if (overlapCount > 0)
+        {
+            Collider2D[] groundResults = new Collider2D[10];
+            int groundCount = groundChecker.Overlap(filter, groundResults);
+            
+            if (groundCount > 0)
+            {
+                foreach (Collider2D sizeCollider in results)
+                {
+                    if (sizeCollider != null && !groundResults.Contains(sizeCollider))
+                    {
+                        Destroy(sizeChecker);
+                        Destroy(groundChecker);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Otherwise, the player is free to grow
+        Destroy(sizeChecker);
+        Destroy(groundChecker);
+        return true;
     }
 
     public bool OverlapsPosition(Vector2 position)

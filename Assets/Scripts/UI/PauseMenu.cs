@@ -109,7 +109,7 @@ public class PauseMenu : MonoBehaviour
     {
         Unpause();
         pauseButton.enabled = false;
-        GameManager.instance.Reset();
+        GameManager.instance.ResetGame();
     }
 
     public void Settings()

@@ -15,7 +15,7 @@ public class WaterBuoyancy : MonoBehaviour
             if (transform.position.y - collision.transform.position.y + GetComponent<BuoyancyEffector2D>().surfaceLevel > killThreshold && !PlayerVars.instance.cheatMode)
             {
                 GetComponent<BuoyancyEffector2D>().density = 0.1f;
-                GameManager.instance.Reset();
+                GameManager.instance.ResetGame();
                 PlayerVars.instance.GetComponent<Rigidbody2D>().mass = 1f;
             }
         }
