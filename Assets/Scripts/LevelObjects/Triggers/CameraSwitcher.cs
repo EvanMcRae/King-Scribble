@@ -18,7 +18,7 @@ public class CameraSwitcher : MonoBehaviour
     public int newLensSize = 0;
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other.GetComponent<PolygonCollider2D>() != null)
         {
             if (prev_cam) GameManager.instance.DeactivateCamera(prev_cam);
             if (p_cam_bounds_l) p_cam_bounds_l.SetActive(false);

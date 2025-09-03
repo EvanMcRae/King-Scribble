@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class PenIntroLevelPickupEvent : MonoBehaviour
 {
     public CinemachineCamera cam, followCam, sourceCam;
+    public PolygonCollider2D followCamBounds;
     public GameObject inkFlow_L;
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
@@ -44,6 +45,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             followCam.gameObject.SetActive(true);
             followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
             Camera.main.transform.position = PlayerVars.instance.transform.position;
+            FixFollowCamBounds();
             lateStart = false;
         }
     }
@@ -86,6 +88,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         inkFlow_R.transform.DOLocalMoveY(-118, 2.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.AmplitudeGain = 0.25f;
+        FixFollowCamBounds();
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
         yield return new WaitForSeconds(3);
         cam.gameObject.SetActive(false);
@@ -119,6 +122,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         {
             StopAllCoroutines();
             rumblePlayer.EndAllSounds();
+            FixFollowCamBounds();
             cam.gameObject.SetActive(false);
             followCam.Follow = sourceCam.transform;
             anim_L.Play("Pipe_Flowing");
@@ -137,5 +141,15 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             skipButton.SetActive(false);
             GameSaver.UnlockPoint("Level5", "inkRises");
         }
+    }
+
+    public void FixFollowCamBounds()
+    {
+        // Extremely hacky fix to cam bounds issue in builds
+        Vector2[] points = followCamBounds.points;
+        points[0].y = 48.06342f;
+        points[1].y = 48.06342f;
+        followCamBounds.points = points;
+        followCam.GetComponent<CinemachineConfiner2D>().InvalidateBoundingShapeCache();
     }
 }

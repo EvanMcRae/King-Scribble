@@ -386,6 +386,9 @@
         },
         {
             "m_Id": "aa2f4da49dbb4631b07da8ba8bce6445"
+        },
+        {
+            "m_Id": "419cb9cf5d874abc9e629f44e29e4e3e"
         }
     ],
     "m_GroupDatas": [
@@ -771,6 +774,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "419cb9cf5d874abc9e629f44e29e4e3e"
+                },
+                "m_SlotId": 1
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "eec9178548d04aea94746d984ecf4abd"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "45b9badc7768470ea5745aaf69003a2a"
                 },
                 "m_SlotId": 0
@@ -1071,7 +1088,7 @@
             },
             "m_InputSlot": {
                 "m_Node": {
-                    "m_Id": "eec9178548d04aea94746d984ecf4abd"
+                    "m_Id": "419cb9cf5d874abc9e629f44e29e4e3e"
                 },
                 "m_SlotId": 0
             }
@@ -2985,8 +3002,8 @@
     "m_ObjectId": "1cb4ca97e0c8468eae31b0d177efebad",
     "m_Title": "Caustics",
     "m_Position": {
-        "x": -3192.7998046875,
-        "y": 143.99986267089845
+        "x": -3192.00048828125,
+        "y": 145.5
     }
 }
 
@@ -4206,11 +4223,12 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
     "useTilingAndOffset": false,
+    "useTexelSize": true,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -4435,7 +4453,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -5013,6 +5031,44 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.AbsoluteNode",
+    "m_ObjectId": "419cb9cf5d874abc9e629f44e29e4e3e",
+    "m_Group": {
+        "m_Id": "1cb4ca97e0c8468eae31b0d177efebad"
+    },
+    "m_Name": "Absolute",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -2203.500244140625,
+            "y": 247.50003051757813,
+            "width": 127.5,
+            "height": 94.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "4e7238617bbe4036bd72565f58079b87"
+        },
+        {
+            "m_Id": "83688b030d424dc9ab8fc57b3cd4161e"
+        }
+    ],
+    "synonyms": [
+        "positive"
+    ],
+    "m_Precision": 0,
+    "m_PreviewExpanded": false,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicValueMaterialSlot",
     "m_ObjectId": "434c74e8250e485c9c0248a7a13aa7ca",
     "m_Id": 2,
@@ -5175,8 +5231,8 @@
         "y": 1.0
     },
     "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.0,
+        "y": 1.0
     },
     "m_Labels": []
 }
@@ -5285,6 +5341,30 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "4e7238617bbe4036bd72565f58079b87",
+    "m_Id": 0,
+    "m_DisplayName": "In",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "In",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
 }
 
 {
@@ -7151,8 +7231,32 @@
     "m_ObjectId": "8345e54078a8429ebae74fed6429975d",
     "m_Title": "Sine Wave for Vertex Displacement",
     "m_Position": {
-        "x": -323.1999816894531,
-        "y": -2103.199951171875
+        "x": -322.5,
+        "y": -2101.5
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "83688b030d424dc9ab8fc57b3cd4161e",
+    "m_Id": 1,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
     }
 }
 
@@ -7510,11 +7614,12 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
     "useTilingAndOffset": false,
+    "useTexelSize": true,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -8616,8 +8721,8 @@
         "y": 1.0
     },
     "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.0,
+        "y": 1.0
     },
     "m_Labels": []
 }
@@ -9732,6 +9837,7 @@
     "m_SourceType": 0,
     "m_FunctionName": "ObjCroppingOld",
     "m_FunctionSource": "285a7dc385b64af45953eab3485f7069",
+    "m_FunctionSourceUsePragmas": true,
     "m_FunctionBody": "Enter function body here..."
 }
 
@@ -10011,7 +10117,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -10187,6 +10293,9 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
@@ -10538,7 +10647,7 @@
     "m_StageCapability": 3,
     "m_BareResource": true,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -10806,11 +10915,12 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
     "useTilingAndOffset": false,
+    "useTexelSize": true,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -10888,6 +10998,7 @@
     "m_SourceType": 0,
     "m_FunctionName": "ObjCropping",
     "m_FunctionSource": "285a7dc385b64af45953eab3485f7069",
+    "m_FunctionSourceUsePragmas": true,
     "m_FunctionBody": "Enter function body here..."
 }
 
@@ -11879,8 +11990,8 @@
     "m_ObjectId": "f52d9e7bb4fa4de5a99c4e01b0ff3740",
     "m_Title": "Distortion",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -2850.5,
+        "y": -2096.0
     }
 }
 
@@ -12124,8 +12235,8 @@
     "m_ObjectId": "fd401b21c3e94f679a126f559a5f83ae",
     "m_Title": "Line",
     "m_Position": {
-        "x": -2476.800537109375,
-        "y": -1169.5999755859375
+        "x": -2476.0,
+        "y": -1168.0
     }
 }
 
