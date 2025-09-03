@@ -31,7 +31,6 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             if (scene.unlockPoints.Contains("inkRises"))
             {
                 lateStart = true;
-                sourceCam.gameObject.SetActive(false);
                 followCam.gameObject.SetActive(true);
                 followCam.Follow = PlayerVars.instance.transform;
                 followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
