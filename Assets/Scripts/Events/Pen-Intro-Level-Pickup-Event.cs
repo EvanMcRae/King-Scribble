@@ -13,6 +13,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
     public UnityEvent closeDoor;
+    public UnityEvent onLoadCheckpoint;
     private bool doorClosed;
     private bool isAnimating;
     public SoundPlayer rumblePlayer, soundPlayer;
@@ -21,7 +22,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     [SerializeField] Animator anim_R;
     private static bool lateStart = false;
 
-    public void Start()
+    public void Awake()
     {
         // Attempt to load from save data
         try
@@ -29,23 +30,26 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
             if (scene.unlockPoints.Contains("inkRises"))
             {
-                isAnimating = true;
-                SkipCutscene();
-                isAnimating = false;
                 lateStart = true;
+                sourceCam.gameObject.SetActive(false);
+                followCam.gameObject.SetActive(true);
+                followCam.Follow = PlayerVars.instance.transform;
+                followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
+                Camera.main.transform.position = PlayerVars.instance.transform.position;
             }
         }
-        catch (System.Exception) { }
+        catch (System.Exception) {}
     }
 
     public void LateUpdate()
     {
         if (lateStart)
         {
-            followCam.gameObject.SetActive(true);
-            followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
-            Camera.main.transform.position = PlayerVars.instance.transform.position;
-            FixFollowCamBounds();
+            isAnimating = true;
+            doorClosed = true;
+            SkipCutscene();
+            onLoadCheckpoint.Invoke();
+            isAnimating = false;
             lateStart = false;
         }
     }
@@ -88,7 +92,6 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         inkFlow_R.transform.DOLocalMoveY(-118, 2.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.AmplitudeGain = 0.25f;
-        FixFollowCamBounds();
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
         yield return new WaitForSeconds(3);
         cam.gameObject.SetActive(false);
@@ -96,15 +99,18 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         closeDoor.Invoke();
         doorClosed = true;
         startFlood.Invoke();
-        followCam.Follow = sourceCam.transform;
+        followCam.gameObject.SetActive(true);
+        followCam.Follow = PlayerVars.instance.transform;
         GameManager.canMove = true;
         isAnimating = false;
         SceneSerialization s = GameSaver.GetScene("Level5");
         if (s == null)
         {
-            s = new("Level5", PlayerVars.instance.GetSpawnPos());
-            s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
-            s.unlockPoints = new();
+            s = new("Level5", PlayerVars.instance.GetSpawnPos())
+            {
+                spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos()),
+                unlockPoints = new()
+            };
             GameSaver.currData.scenes.Add(s);
         }
         GameSaver.UnlockPoint("Level5", "cutsceneWatched");
@@ -122,9 +128,9 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         {
             StopAllCoroutines();
             rumblePlayer.EndAllSounds();
-            FixFollowCamBounds();
             cam.gameObject.SetActive(false);
-            followCam.Follow = sourceCam.transform;
+            followCam.gameObject.SetActive(true);
+            followCam.Follow = PlayerVars.instance.transform;
             anim_L.Play("Pipe_Flowing");
             anim_R.Play("Pipe_Flowing");
             inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -118f, 0f);
@@ -141,15 +147,5 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             skipButton.SetActive(false);
             GameSaver.UnlockPoint("Level5", "inkRises");
         }
-    }
-
-    public void FixFollowCamBounds()
-    {
-        // Extremely hacky fix to cam bounds issue in builds
-        Vector2[] points = followCamBounds.points;
-        points[0].y = 48.06342f;
-        points[1].y = 48.06342f;
-        followCamBounds.points = points;
-        followCam.GetComponent<CinemachineConfiner2D>().InvalidateBoundingShapeCache();
     }
 }

@@ -87,6 +87,17 @@ public class Moving_Platform : MonoBehaviour
         }
     }
 
+    public void InstantMoveToDest()
+    {
+        moving = false;
+        returning = false;
+        if (dir == direction.Right)
+            dest.x = (_canMoveMultiple ? dest.x : start.x) + moveDist;
+        else
+            dest.y = (_canMoveMultiple ? dest.y : start.y) + moveDist;
+        transform.position = dest;
+    }
+
     public void ReturnToStart()
     {
         if (!returning)
