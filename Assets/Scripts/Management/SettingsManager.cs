@@ -1,4 +1,3 @@
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +5,8 @@ using UnityEngine.UI;
 public class SettingsManager : MonoBehaviour
 {
     public static Settings currentSettings = null;
-    public const string fileName = "Settings.txt";
+    public const string settingsKey = "SettingsData";
+
     [SerializeField] private Slider musicSlider, soundSlider, masterSlider;
     [SerializeField] private TextMeshProUGUI musicValue, soundValue, masterValue;
     [SerializeField] private Toggle fullScreenToggle, vSyncToggle;
@@ -31,9 +31,14 @@ public class SettingsManager : MonoBehaviour
 
     public void LoadSettings()
     {
-        if (File.Exists(Application.persistentDataPath + "/" + fileName))
-            currentSettings = JsonUtility.FromJson<Settings>(File.ReadAllText(Application.persistentDataPath + "/" + fileName));
+        if (PlayerPrefs.HasKey(settingsKey))
+        {
+            string json = PlayerPrefs.GetString(settingsKey);
+            currentSettings = JsonUtility.FromJson<Settings>(json);
+        }
+
         currentSettings ??= new Settings();
+
         UpdateFullScreen(false);
         UpdateVSync(false);
         UpdateMusic(false);
@@ -43,11 +48,10 @@ public class SettingsManager : MonoBehaviour
 
     public static void SaveSettings()
     {
-        string path = Application.persistentDataPath + "/" + fileName;
         string settingsJSON = JsonUtility.ToJson(currentSettings, true);
-
-        File.WriteAllText(path, settingsJSON);
-        Debug.Log("Saved settings to: " + path);
+        PlayerPrefs.SetString(settingsKey, settingsJSON);
+        PlayerPrefs.Save();
+        Debug.Log("Saved settings to PlayerPrefs");
     }
 
     public void UpdateMusic(bool user)
@@ -58,7 +62,7 @@ public class SettingsManager : MonoBehaviour
             musicSlider.value = currentSettings.musicVolume;
 
         musicSliderFill.fillAmount = musicSlider.value / 100;
-        musicValue.text = (int)musicSlider.value + "";
+        musicValue.text = ((int)musicSlider.value).ToString();
     }
 
     public void UpdateSound(bool user)
@@ -69,7 +73,7 @@ public class SettingsManager : MonoBehaviour
             soundSlider.value = currentSettings.sfxVolume;
 
         soundSliderFill.fillAmount = soundSlider.value / 100;
-        soundValue.text = (int)soundSlider.value + "";
+        soundValue.text = ((int)soundSlider.value).ToString();
     }
 
     public void UpdateMaster(bool user)
@@ -80,7 +84,7 @@ public class SettingsManager : MonoBehaviour
             masterSlider.value = currentSettings.masterVolume;
 
         masterSliderFill.fillAmount = masterSlider.value / 100;
-        masterValue.text = (int)masterSlider.value + "";
+        masterValue.text = ((int)masterSlider.value).ToString();
     }
 
     public void UpdateFullScreen(bool user)
@@ -93,7 +97,8 @@ public class SettingsManager : MonoBehaviour
         {
             fullScreenToggle.isOn = currentSettings.fullScreen;
         }
-        Screen.SetResolution(Display.main.systemWidth, (int)(9/16f * Display.main.systemWidth), currentSettings.fullScreen);
+
+        Screen.SetResolution(Display.main.systemWidth, (int)(9 / 16f * Display.main.systemWidth), currentSettings.fullScreen);
     }
 
     public void ToggleFullScreen()
@@ -106,16 +111,11 @@ public class SettingsManager : MonoBehaviour
     public void UpdateVSync(bool user)
     {
         if (user)
-        {
             currentSettings.vSync = vSyncToggle.isOn;
-        }
         else
             vSyncToggle.isOn = currentSettings.vSync;
 
-        if (currentSettings.vSync)
-            QualitySettings.vSyncCount = 1;
-        else
-            QualitySettings.vSyncCount = 0;
+        QualitySettings.vSyncCount = currentSettings.vSync ? 1 : 0;
     }
 
     // TODO: Temp implementation
