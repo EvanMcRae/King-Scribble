@@ -52,6 +52,7 @@ public class ChangeScene : MonoBehaviour
         changingScene = false;
         nextScene = "";
         SceneHelper.LoadScene(scene);
+        PlayerController.instance.softFall = true;
         PlayerVars.instance.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }
