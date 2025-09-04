@@ -140,7 +140,7 @@ public class PauseMenu : MonoBehaviour
         }
         EventSystem eventSystem = FindFirstObjectByType<EventSystem>();
         Destroy(eventSystem?.gameObject);
-        GameSaver.ResetStickers();
+        GameSaver.ResetData();
         SceneHelper.LoadScene("MainMenu");
         GameManager.resetting = false;
         ScreenWipe.PostWipe -= GoToMainMenu;
