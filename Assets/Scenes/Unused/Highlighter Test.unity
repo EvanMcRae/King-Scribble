@@ -73242,6 +73242,17 @@ MonoBehaviour:
     MaxWindowSize: 0
     Padding: 0
   m_LegacyMaxWindowSize: -2
+--- !u!114 &1528913306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4037687072201985797, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 1822385893}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528913300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1539025616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73562,8 +73573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0329bd756a04e74cb26e9bfe5ebbbae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prev_cam: {fileID: 0}
-  next_cam: {fileID: 0}
+  prev_cam: {fileID: 1528913306}
+  next_cam: {fileID: 1728082992}
   p_cam_bounds_l: {fileID: 0}
   p_cam_bounds_r: {fileID: 0}
   n_cam_bounds_l: {fileID: 0}
