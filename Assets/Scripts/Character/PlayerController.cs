@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
         anim.SetBool("isDead", PlayerVars.instance.isDead);
         anim.SetBool("isJumping", isJumping);
-        anim.SetBool("isFalling", isFalling);
+        anim.SetBool("isFalling", isFalling && !softFall);
         anim.SetBool("isSprinting", isSprinting || timeSinceSprint < 0.1f);
         anim.SetBool("isGrounded", isGrounded);
 

@@ -46,7 +46,8 @@ public class DoorScript : ChangeScene // Inherit from ChangeScene as a more spec
                 if (keepTools) PlayerVars.instance.SaveInventory();
                 // TODO This is terrible code but it will do
                 PlayerVars.instance.SetSpawnPos(FindFirstObjectByType<PlayerChecker>().transform.position);
-                GameSaver.instance.SaveGame(true);
+                GameSaver.WipeScene(GameSaver.currData.scene);
+                GameSaver.instance.SaveGame(false);
                 StartCoroutine(LoadNextScene());
             }
         }

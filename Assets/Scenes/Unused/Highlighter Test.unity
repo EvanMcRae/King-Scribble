@@ -72135,7 +72135,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 11
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -72160,7 +72160,7 @@ Transform:
   m_GameObject: {fileID: 1011828200}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.18784, y: 10.38105, z: -10}
+  m_LocalPosition: {x: 53.78983, y: 10.381054, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72183,7 +72183,7 @@ MonoBehaviour:
   IgnoreTimeScale: 0
   WorldUpOverride: {fileID: 0}
   ChannelMask: -1
-  UpdateMethod: 2
+  UpdateMethod: 1
   BlendUpdateMethod: 1
   LensModeOverride:
     Enabled: 0
@@ -73242,6 +73242,17 @@ MonoBehaviour:
     MaxWindowSize: 0
     Padding: 0
   m_LegacyMaxWindowSize: -2
+--- !u!114 &1528913306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4037687072201985797, guid: d543b05aee12690479007aa93e26909d, type: 3}
+  m_PrefabInstance: {fileID: 1822385893}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528913300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1539025616
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73562,8 +73573,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0329bd756a04e74cb26e9bfe5ebbbae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prev_cam: {fileID: 0}
-  next_cam: {fileID: 0}
+  prev_cam: {fileID: 1528913306}
+  next_cam: {fileID: 1728082992}
   p_cam_bounds_l: {fileID: 0}
   p_cam_bounds_r: {fileID: 0}
   n_cam_bounds_l: {fileID: 0}
@@ -74128,12 +74139,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Priority:
-    Enabled: 0
-    m_Value: 0
+    Enabled: 1
+    m_Value: 10
   OutputChannel: 1
   StandbyUpdate: 2
-  m_StreamingVersion: 20170927
-  m_LegacyPriority: 10
+  m_StreamingVersion: 20241001
+  m_LegacyPriority: 0
   Target:
     TrackingTarget: {fileID: 0}
     LookAtTarget: {fileID: 0}

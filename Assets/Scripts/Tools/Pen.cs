@@ -38,6 +38,13 @@ public class Pen : LineTool
         _endThicknessF = _endThickness * _thicknessMult;
     }
 
+    public override void SetThicknessMult(float newThicknessMult)
+    {
+        base.SetThicknessMult(newThicknessMult);
+        _startThicknessF = _startThickness * newThicknessMult;
+        _endThicknessF = _endThickness * newThicknessMult;
+    }
+
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);

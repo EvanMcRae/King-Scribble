@@ -311,6 +311,9 @@
         },
         {
             "m_Id": "c5db9cc830f64aefa9e6c64273035d0c"
+        },
+        {
+            "m_Id": "8d3284f912364ce0bcfd92007c2a489f"
         }
     ],
     "m_GroupDatas": [
@@ -892,13 +895,27 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "8d3284f912364ce0bcfd92007c2a489f"
+                },
+                "m_SlotId": 1
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "eec9178548d04aea94746d984ecf4abd"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "91e5b192fddc44179a8472e35592f16c"
                 },
                 "m_SlotId": 3
             },
             "m_InputSlot": {
                 "m_Node": {
-                    "m_Id": "eec9178548d04aea94746d984ecf4abd"
+                    "m_Id": "8d3284f912364ce0bcfd92007c2a489f"
                 },
                 "m_SlotId": 0
             }
@@ -2512,8 +2529,8 @@
     "m_ObjectId": "1cb4ca97e0c8468eae31b0d177efebad",
     "m_Title": "Caustics",
     "m_Position": {
-        "x": -3192.7998046875,
-        "y": 143.99986267089845
+        "x": -3192.000244140625,
+        "y": 145.5
     }
 }
 
@@ -3580,11 +3597,12 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
     "useTilingAndOffset": false,
+    "useTexelSize": true,
     "m_Modifiable": true,
     "m_DefaultType": 0
 }
@@ -3779,7 +3797,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -4326,8 +4344,8 @@
         "y": 1.0
     },
     "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.0,
+        "y": 1.0
     },
     "m_Labels": []
 }
@@ -6011,8 +6029,8 @@
     "m_ObjectId": "8345e54078a8429ebae74fed6429975d",
     "m_Title": "Sine Wave for Vertex Displacement",
     "m_Position": {
-        "x": -323.1999816894531,
-        "y": -2103.199951171875
+        "x": -322.5001525878906,
+        "y": -2101.500244140625
     }
 }
 
@@ -6271,13 +6289,38 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
     "useTilingAndOffset": false,
+    "useTexelSize": true,
     "m_Modifiable": true,
     "m_DefaultType": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "8a517ac68cc84c75ba56c886cbb69d0f",
+    "m_Id": 0,
+    "m_DisplayName": "In",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "In",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
 }
 
 {
@@ -6356,6 +6399,44 @@
     "m_RangeValues": {
         "x": 0.0,
         "y": 50.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.AbsoluteNode",
+    "m_ObjectId": "8d3284f912364ce0bcfd92007c2a489f",
+    "m_Group": {
+        "m_Id": "1cb4ca97e0c8468eae31b0d177efebad"
+    },
+    "m_Name": "Absolute",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -2209.0,
+            "y": 210.00001525878907,
+            "width": 127.499755859375,
+            "height": 93.99998474121094
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "8a517ac68cc84c75ba56c886cbb69d0f"
+        },
+        {
+            "m_Id": "b108569c66da45d79d760f0c8f6660b4"
+        }
+    ],
+    "synonyms": [
+        "positive"
+    ],
+    "m_Precision": 0,
+    "m_PreviewExpanded": false,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
     }
 }
 
@@ -7223,8 +7304,8 @@
         "y": 1.0
     },
     "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 1.0,
+        "y": 1.0
     },
     "m_Labels": []
 }
@@ -7684,6 +7765,30 @@
     },
     "m_Labels": [],
     "m_Space": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
+    "m_ObjectId": "b108569c66da45d79d760f0c8f6660b4",
+    "m_Id": 1,
+    "m_DisplayName": "Out",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
 }
 
 {
@@ -8259,7 +8364,7 @@
     "m_StageCapability": 3,
     "m_BareResource": false,
     "m_Texture": {
-        "m_SerializedTexture": "{\"texture\":{\"instanceID\":0}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "m_DefaultType": 0
@@ -8432,6 +8537,9 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
@@ -9953,8 +10061,8 @@
     "m_ObjectId": "f52d9e7bb4fa4de5a99c4e01b0ff3740",
     "m_Title": "Distortion",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -2850.500244140625,
+        "y": -2096.000244140625
     }
 }
 
@@ -10174,8 +10282,8 @@
     "m_ObjectId": "fd401b21c3e94f679a126f559a5f83ae",
     "m_Title": "Line",
     "m_Position": {
-        "x": -2476.800537109375,
-        "y": -1169.5999755859375
+        "x": -2476.000244140625,
+        "y": -1168.0001220703125
     }
 }
 

@@ -27,6 +27,11 @@ public class LineTool : Tool
         line._curTool = this;
     }
 
+    public virtual void SetThicknessMult(float newThicknessMult)
+    {
+        _thicknessMult = newThicknessMult;
+    }
+
     public Transform GetLinesFolder()
     {
         return _linesFolder;

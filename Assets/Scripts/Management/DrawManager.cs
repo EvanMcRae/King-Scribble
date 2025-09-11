@@ -47,7 +47,7 @@ public class DrawManager : MonoBehaviour
         {
             if (tool is LineTool lineTool)
             {
-                lineTool._thicknessMult = _lineWidthMult;
+                lineTool.SetThicknessMult(_lineWidthMult);
             }
         }
 

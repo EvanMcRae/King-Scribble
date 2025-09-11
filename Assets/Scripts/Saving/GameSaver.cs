@@ -16,6 +16,7 @@ public class GameSaver : MonoBehaviour
     public static SaveData currData = SaveData.EmptySave();
     public static List<Sticker.StickerType> tempStickers = new();
     public Dictionary<string, List<string>> unlockPoints = new();
+    public Dictionary<string, List<string>> permaUnlockPoints = new();
 
     public static Action StartingSave;
     public static Action<SaveData> loadedNewData;
@@ -206,7 +207,10 @@ public class GameSaver : MonoBehaviour
     {
         try
         {
-            currData.scenes.First(s => s.name == scene).WipeData();
+            int index = currData.scenes.FindIndex(s => s.name == scene);
+            SceneSerialization theScene = currData.scenes[index];
+            theScene.WipeData();
+            currData.scenes[index] = theScene;
         }
         catch (Exception)
         {
@@ -219,7 +223,7 @@ public class GameSaver : MonoBehaviour
         currData.stickers = new(tempStickers);
     }
 
-    public static void ResetStickers()
+    public static void ResetData()
     {
         tempStickers = new(currData.stickers);
         try
@@ -253,6 +257,30 @@ public class GameSaver : MonoBehaviour
         {
             if (!instance.unlockPoints[scene].Contains(point))
                 instance.unlockPoints[scene].Add(point);
+        }
+    }
+
+    public static void UnlockPointPermanent(string scene, string point)
+    {
+        try
+        {
+            instance.permaUnlockPoints[scene].Contains(point);
+        }
+        catch (Exception)
+        {
+            try
+            {
+                instance.permaUnlockPoints[scene] = new List<string>(GetScene(scene).permaUnlockPoints);
+            }
+            catch (Exception)
+            {
+                instance.permaUnlockPoints[scene] = new List<string>();
+            }
+        }
+        finally
+        {
+            if (!instance.permaUnlockPoints[scene].Contains(point))
+                instance.permaUnlockPoints[scene].Add(point);
         }
     }
 }

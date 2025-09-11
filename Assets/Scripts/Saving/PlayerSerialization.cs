@@ -55,6 +55,7 @@ public class SceneSerialization
     public string name;
     public Vector3Serialization spawnpoint;
     public List<string> unlockPoints;
+    public List<string> permaUnlockPoints;
     public List<InkSerialization> inkPoints;
 
     public SceneSerialization(string sceneName, Vector3 spawnPos)

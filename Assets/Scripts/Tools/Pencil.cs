@@ -18,6 +18,12 @@ public class Pencil : LineTool
         _lineThicknessF  = _lineThickness * _thicknessMult;
     }
 
+    public override void SetThicknessMult(float newThicknessMult)
+    {
+        base.SetThicknessMult(newThicknessMult);
+        _lineThicknessF = _lineThickness * newThicknessMult;
+    }
+
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);

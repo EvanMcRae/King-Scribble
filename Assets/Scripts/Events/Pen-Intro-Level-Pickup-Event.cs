@@ -7,11 +7,18 @@ using UnityEngine.Events;
 
 public class PenIntroLevelPickupEvent : MonoBehaviour
 {
-    public CinemachineCamera cam, followCam, sourceCam;
+    private static WaitForSeconds _waitForSeconds1 = new(1);
+    private static WaitForSeconds _waitForSeconds3 = new(3);
+    private static WaitForSeconds _waitForSeconds2 = new(2f);
+    private static WaitForSeconds _waitForSeconds0_5 = new(0.5f);
+
+    public CinemachineCamera cam, followCam, initialFollowCam, sourceCam;
+    public PolygonCollider2D followCamBounds;
     public GameObject inkFlow_L;
     public GameObject inkFlow_R;
     public UnityEvent startFlood;
     public UnityEvent closeDoor;
+    public UnityEvent onLoadCheckpoint;
     private bool doorClosed;
     private bool isAnimating;
     public SoundPlayer rumblePlayer, soundPlayer;
@@ -20,7 +27,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     [SerializeField] Animator anim_R;
     private static bool lateStart = false;
 
-    public void Start()
+    public void Awake()
     {
         // Attempt to load from save data
         try
@@ -28,10 +35,12 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
             if (scene.unlockPoints.Contains("inkRises"))
             {
-                isAnimating = true;
-                SkipCutscene();
-                isAnimating = false;
                 lateStart = true;
+                initialFollowCam.gameObject.SetActive(false);
+                followCam.gameObject.SetActive(true);
+                followCam.Follow = PlayerVars.instance.transform;
+                followCam.ForceCameraPosition(PlayerVars.instance.transform.position + Vector3.forward * -10f, Quaternion.identity);
+                Camera.main.transform.position = PlayerVars.instance.transform.position + Vector3.forward * -10f;
             }
         }
         catch (System.Exception) { }
@@ -41,9 +50,11 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     {
         if (lateStart)
         {
-            followCam.gameObject.SetActive(true);
-            followCam.ForceCameraPosition(PlayerVars.instance.transform.position, Quaternion.identity);
-            Camera.main.transform.position = PlayerVars.instance.transform.position;
+            isAnimating = true;
+            doorClosed = true;
+            SkipCutscene();
+            onLoadCheckpoint.Invoke();
+            isAnimating = false;
             lateStart = false;
         }
     }
@@ -52,7 +63,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     {
         StartCoroutine(Start_Event());
 
-        if (GameSaver.GetScene("Level5") != null && GameSaver.GetScene("Level5").unlockPoints.Contains("cutsceneWatched"))
+        if (GameSaver.GetScene("Level5") != null && GameSaver.GetScene("Level5").permaUnlockPoints.Contains("cutsceneWatched"))
         {
             skipButton.SetActive(true);
         }
@@ -72,45 +83,51 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     {
         isAnimating = true;
         GameManager.canMove = false;
-        yield return new WaitForSeconds(0.5f);
+        yield return _waitForSeconds0_5;
         cam.gameObject.SetActive(true);
         rumblePlayer.PlaySound("Ink.Rumble", 1, false);
         cam.TryGetComponent(out CinemachineBasicMultiChannelPerlin noise);
         noise.AmplitudeGain = 0.125f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0.5f, 4f);
-        yield return new WaitForSeconds(3);
+        yield return _waitForSeconds3;
         anim_L.Play("Pipe_Start");
         anim_R.Play("Pipe_Start");
-        yield return new WaitForSeconds(1); // For the Pipe animation to transition from start to flowing
+        yield return _waitForSeconds1; // For the Pipe animation to transition from start to flowing
         inkFlow_L.transform.DOLocalMoveY(-118, 2.5f);
         inkFlow_R.transform.DOLocalMoveY(-118, 2.5f);
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.AmplitudeGain = 0.25f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
-        yield return new WaitForSeconds(3);
+        yield return _waitForSeconds3;
         cam.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.5f);
+        yield return _waitForSeconds0_5;
         closeDoor.Invoke();
         doorClosed = true;
         startFlood.Invoke();
-        followCam.Follow = sourceCam.transform;
+        followCam.gameObject.SetActive(true);
+        followCam.Follow = PlayerVars.instance.transform;
         GameManager.canMove = true;
         isAnimating = false;
         SceneSerialization s = GameSaver.GetScene("Level5");
         if (s == null)
         {
-            s = new("Level5", PlayerVars.instance.GetSpawnPos());
-            s.spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos());
-            s.unlockPoints = new();
+            s = new("Level5", PlayerVars.instance.GetSpawnPos())
+            {
+                spawnpoint = new Vector3Serialization(PlayerVars.instance.GetSpawnPos()),
+                unlockPoints = new(),
+                permaUnlockPoints = new()
+            };
             GameSaver.currData.scenes.Add(s);
         }
-        GameSaver.UnlockPoint("Level5", "cutsceneWatched");
-        if (!s.unlockPoints.Contains("cutsceneWatched"))
-            s.unlockPoints.Add("cutsceneWatched");
+        GameSaver.UnlockPointPermanent("Level5", "cutsceneWatched");
+        if (!s.permaUnlockPoints.Contains("cutsceneWatched"))
+            s.permaUnlockPoints.Add("cutsceneWatched");
         GameSaver.instance.SaveGame();
         skipButton.GetComponent<HUDButtonCursorHandler>().OnPointerExit(null);
         skipButton.SetActive(false);
         GameSaver.UnlockPoint("Level5", "inkRises");
+        yield return _waitForSeconds2;
+        initialFollowCam.gameObject.SetActive(false);
     }
 
     public void SkipCutscene()
@@ -118,9 +135,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         if (isAnimating)
         {
             StopAllCoroutines();
+            StartCoroutine(SkipCutsceneRoutine());
             rumblePlayer.EndAllSounds();
-            cam.gameObject.SetActive(false);
-            followCam.Follow = sourceCam.transform;
             anim_L.Play("Pipe_Flowing");
             anim_R.Play("Pipe_Flowing");
             inkFlow_L.transform.localPosition = new Vector3(inkFlow_L.transform.localPosition.x, -118f, 0f);
@@ -137,5 +153,22 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             skipButton.SetActive(false);
             GameSaver.UnlockPoint("Level5", "inkRises");
         }
+    }
+
+    IEnumerator SkipCutsceneRoutine()
+    {
+        cam.ForceCameraPosition(PlayerVars.instance.transform.position + Vector3.up * 10f + Vector3.forward * -10f, Quaternion.identity);
+        initialFollowCam.ForceCameraPosition(PlayerVars.instance.transform.position + Vector3.up * 10f + Vector3.forward * -10f, Quaternion.identity);
+        Camera.main.transform.position = PlayerVars.instance.transform.position + Vector3.up * 10f + Vector3.forward * -10f;
+        Camera.main.GetComponent<CinemachineBrain>().DefaultBlend.Time = 0;
+        yield return new WaitForEndOfFrame();
+        cam.gameObject.SetActive(false);
+        initialFollowCam.gameObject.SetActive(false);
+        followCam.gameObject.SetActive(true);
+        followCam.ForceCameraPosition(PlayerVars.instance.transform.position + Vector3.up * 10f + Vector3.forward * -10f, Quaternion.identity);
+        Camera.main.transform.position = PlayerVars.instance.transform.position + Vector3.up * 10f + Vector3.forward * -10f;
+        yield return new WaitForEndOfFrame();
+        Camera.main.GetComponent<CinemachineBrain>().DefaultBlend.Time = 2;
+        followCam.Follow = PlayerVars.instance.transform;
     }
 }

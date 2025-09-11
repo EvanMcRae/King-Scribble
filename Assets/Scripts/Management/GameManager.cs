@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
         resetting = true;
         ClearResetPrompt();
         ScreenWipe.instance.WipeIn();
-        GameSaver.ResetStickers();
+        GameSaver.ResetData();
         ResetAction.Invoke();
         yield return new WaitForSeconds(1f);
         PlayerVars.instance.Dismount();
