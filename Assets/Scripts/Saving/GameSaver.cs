@@ -30,6 +30,7 @@ public class GameSaver : MonoBehaviour
         if (PlayerChecker.loadedFromScene)
         {
             WipeScene(currData.scene);
+            currData.stickers = new();
             PlayerChecker.loadedFromScene = false;
         }
     }
@@ -50,6 +51,7 @@ public class GameSaver : MonoBehaviour
         {
             SaveData data = JsonUtility.FromJson<SaveData>(dataToLoad);
             currData = data;
+
             // Failsafe
             try
             {
