@@ -46,16 +46,6 @@ public class Line : MonoBehaviour
 
     // Potentially - add a variable referencing the current tool being used to draw the line - assigned on instantiation from tool script
 
-    Vector2[] ConvertArray(Vector3[] v3)
-    {
-        Vector2[] v2 = new Vector2[v3.Length];
-        for (int i = 0; i < v3.Length; i++)
-        {
-            v2[i] = v3[i];
-        }
-        return v2;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -235,7 +225,7 @@ public class Line : MonoBehaviour
         // Get the list of points in the lineRenderer and convert to Vector2
         Vector3[] points3 = new Vector3[GetPointsCount()];
         lineRenderer.GetPositions(points3);
-        Vector2[] points2 = ConvertArray(points3);
+        Vector2[] points2 = Utils.ConvertArray(points3);
         // Create a polygon collider and set its path to the Vector2 list of points
         PolygonCollider2D polyCollider = gameObject.AddComponent<PolygonCollider2D>();
         polyCollider.SetPath(0, points2);
@@ -318,7 +308,7 @@ public class Line : MonoBehaviour
     {
         Vector3[] points3 = new Vector3[GetPointsCount()];
         lineRenderer.GetPositions(points3);
-        Vector2[] points2 = ConvertArray(points3);
+        Vector2[] points2 = Utils.ConvertArray(points3);
 
         for (int i = 1; i < GetPointsCount(); i++)
         {

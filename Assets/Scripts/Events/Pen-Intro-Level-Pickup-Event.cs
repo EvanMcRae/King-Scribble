@@ -69,6 +69,14 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (isAnimating && PlayerVars.instance.cheatMode)
+        {
+            skipButton.SetActive(true);
+        }
+    }
+
     public void StopEvent()
     {
         // DOTween Ink flows

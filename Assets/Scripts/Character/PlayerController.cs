@@ -119,8 +119,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isSprinting", isSprinting || timeSinceSprint < 0.1f);
         anim.SetBool("isGrounded", isGrounded);
 
-        // TODO: TEMPORARY CHEAT MODE KEYBIND
-        if (Input.GetKeyDown(KeyCode.Backslash))
+        if (Utils.CHEATS_ENABLED && Input.GetKeyDown(KeyCode.Backslash))
         {
             ToggleCheatMode();
         }
