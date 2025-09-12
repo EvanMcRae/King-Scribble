@@ -8,7 +8,6 @@ public class FlowMask : MonoBehaviour
 {
     [SerializeField] private InteractableWater water;
     private SpriteMask spriteMask;
-    private SpriteRenderer spriteRenderer;
     private Sprite sprite;
     public Vector2Int fudgeFactor = new(5, 3);
     private bool queueComputeGeometry = false;
@@ -59,7 +58,7 @@ public class FlowMask : MonoBehaviour
 
             // Scale to sprite rect size in pixels
             vertices[i] = new(
-                normalized.x * ((int)water.Width), // TODO this will do
+                normalized.x * ((int)water.Width),
                 normalized.y * ((int)water.Height)
             );
         }
