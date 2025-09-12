@@ -13,6 +13,11 @@ public class Sticker : Collectible
         {
             deleted = true;
             Destroy(gameObject);
+            StickerIcon.instance.Collect();
+        }
+        else
+        {
+            StickerIcon.instance.Show();
         }
     }
     public override void OnPickup(Collider2D player)
@@ -21,6 +26,7 @@ public class Sticker : Collectible
         {
             GameSaver.tempStickers.Add(type);
             PlayerController.instance.CollectSticker();
+            StickerIcon.instance.Collect();
         }
     }
 
