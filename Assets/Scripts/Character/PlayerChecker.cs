@@ -59,7 +59,7 @@ public class PlayerChecker : MonoBehaviour
                 player.transform.position = vars.GetSpawnPos();
                 GameSaver.loading = false;
             }
-            else
+            else // Loading from unity editor
             {
                 vars.SetSpawnPos(transform.position);
                 vars.inventory.copy(defaultInventory);

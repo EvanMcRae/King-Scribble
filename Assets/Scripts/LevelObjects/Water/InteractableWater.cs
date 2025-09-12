@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using UnityEngine.Rendering;
+
 
 #if (UNITY_EDITOR)
 using UnityEditor;
@@ -40,7 +42,7 @@ public class InteractableWater : MonoBehaviour
     [Header("Gizmo")]
     public Color GizmoColor = Color.white;
 
-    private Mesh _mesh;
+    public Mesh WaterMesh { get; private set; }
     private MeshRenderer _meshRenderer;
     private MeshFilter _meshFilter;
     private Vector3[] _vertices;
@@ -53,12 +55,14 @@ public class InteractableWater : MonoBehaviour
         public float velocity, position, targetHeight;
     }
     private List<WaterPoint> _waterPoints = new List<WaterPoint>();
+    public Action MaskUpdateAction;
 
     private void Start()
     {
         _coll = GetComponent<EdgeCollider2D>();
         GenerateMesh();
         CreateWaterPoints();
+        MaskUpdateAction?.Invoke();
     }
 
     private void Reset()
@@ -69,6 +73,7 @@ public class InteractableWater : MonoBehaviour
 
     private void FixedUpdate()
     {
+        bool updateMask = false;
         // Update all spring positions
         for (int i = 1; i < _waterPoints.Count - 1; i++) // exclude first and last
         {
@@ -77,6 +82,10 @@ public class InteractableWater : MonoBehaviour
             float dist = point.position - point.targetHeight;
             float acc = -_springConstant * dist - _damping * point.velocity;
             point.position += point.velocity * _speedMult * Time.fixedDeltaTime;
+            if (_vertices[_topVerticesIndex[i]].y != point.position)
+            {
+                updateMask = true;
+            }
             _vertices[_topVerticesIndex[i]].y = point.position;
             point.velocity += acc * _speedMult * Time.fixedDeltaTime;
         }
@@ -95,7 +104,11 @@ public class InteractableWater : MonoBehaviour
         }
 
         // Update mesh
-        _mesh.vertices = _vertices;
+        WaterMesh.vertices = _vertices;
+        if (updateMask)
+        {
+            MaskUpdateAction?.Invoke();
+        }
     }
 
     public void Splash(Collider2D collision, float force)
@@ -144,7 +157,7 @@ public class InteractableWater : MonoBehaviour
 
     public void GenerateMesh()
     {
-        _mesh = new Mesh();
+        WaterMesh = new Mesh();
 
         // Add vertices
         _vertices = new Vector3[NumOfXVertices * NUM_OF_Y_VERTICES];
@@ -205,14 +218,14 @@ public class InteractableWater : MonoBehaviour
 
         _meshRenderer.material = WaterMaterial;
 
-        _mesh.vertices = _vertices;
-        _mesh.triangles = triangles;
-        _mesh.uv = uvs;
+        WaterMesh.vertices = _vertices;
+        WaterMesh.triangles = triangles;
+        WaterMesh.uv = uvs;
 
-        _mesh.RecalculateNormals();
-        _mesh.RecalculateBounds();
+        WaterMesh.RecalculateNormals();
+        WaterMesh.RecalculateBounds();
 
-        _meshFilter.mesh = _mesh;
+        _meshFilter.mesh = WaterMesh;
     }
 
     private void CreateWaterPoints()

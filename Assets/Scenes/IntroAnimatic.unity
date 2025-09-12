@@ -975,6 +975,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1816498821}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Skip
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VideoEvent, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228170515379443829, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6362390935575434949, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1142,6 +1170,11 @@ PrefabInstance:
 --- !u!1 &776002420 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2451790977883974578, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 776002419}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &776002421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1991143575721409671, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 776002419}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1077922242
@@ -1452,6 +1485,7 @@ MonoBehaviour:
   dependencies:
   - {fileID: 776002420}
   - {fileID: 1745462129}
+  skipButton: {fileID: 776002421}
 --- !u!82 &1816498822
 AudioSource:
   m_ObjectHideFlags: 0

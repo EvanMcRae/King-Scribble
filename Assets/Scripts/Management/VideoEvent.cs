@@ -11,6 +11,7 @@ public class VideoEvent : MonoBehaviour
     [SerializeField] private float startAt = 0;
     [SerializeField] private string fileName;
     [SerializeField] private List<GameObject> dependencies;
+    [SerializeField] private GameObject skipButton;
     private VideoPlayer videoPlayer;
 
     // Start is called before the first frame update
@@ -27,6 +28,14 @@ public class VideoEvent : MonoBehaviour
         else
         {
             MenuUnloaded(new Scene());
+        }
+    }
+
+    void Update()
+    {
+        if (Utils.CHEATS_ENABLED && Input.GetKeyDown(KeyCode.Backslash))
+        {
+            skipButton.SetActive(true);
         }
     }
 
@@ -57,6 +66,18 @@ public class VideoEvent : MonoBehaviour
 
     void EndReached(VideoPlayer vp)
     {
+        LoadScene();
+    }
+
+    public void Skip()
+    {
+        ScreenWipe.instance.WipeIn();
+        ScreenWipe.PostWipe += LoadScene;
+    }
+
+    void LoadScene()
+    {
+        ScreenWipe.PostWipe -= LoadScene;
         GameSaver.currData.scenes.Add(new SceneSerialization(scene, Vector3.zero));
         ScreenWipe.over = false;
         SceneManager.LoadScene(scene);

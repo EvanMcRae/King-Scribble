@@ -242,7 +242,7 @@ public class AudioManager : MonoBehaviour
 
             // Fade-in the new clip
             BGM2[activePlayer].clip = music.GetClip();
-            if (carryOn && BGM1[activePlayer].isPlaying)
+            if (carryOn && BGM1[activePlayer].isPlaying && BGM1[activePlayer].clip != null)
             {
                 BGM2[activePlayer].timeSamples = BGM1[activePlayer].timeSamples; // syncs up time
             }
@@ -251,6 +251,7 @@ public class AudioManager : MonoBehaviour
                 BGM2[activePlayer].timeSamples = 0;
             }
             BGM2[activePlayer].Play();
+
             if (firstSongPlayed)
             {
                 fader[1] = FadeAudioSource(BGM2[activePlayer], duration, 1.0f, () => { fader[1] = null; });
