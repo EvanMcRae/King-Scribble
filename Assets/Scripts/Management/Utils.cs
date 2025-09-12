@@ -3,6 +3,9 @@ using UnityEngine;
 
 public static class Utils
 {
+    // TODO: Disable this for actual builds!!!
+    public const bool CHEATS_ENABLED = true;
+
     // Functions in this class are accessible by all scripts in the current folder
     public static RaycastHit2D[] RaycastAll(Camera maincamera, Vector2 screenPosition, int layermask, float radius)
     {

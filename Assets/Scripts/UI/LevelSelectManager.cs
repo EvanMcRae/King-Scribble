@@ -32,6 +32,7 @@ public class LevelSelectManager : MonoBehaviour
     [SerializeField] private int sampleCount = 50;
 
     [SerializeField] private SoundPlayer soundPlayer;
+    [SerializeField] private GameObject skipButton;
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +71,20 @@ public class LevelSelectManager : MonoBehaviour
             MainMenu();
         }
 
+        // TODO: DEBUG KEY
+        if (Utils.CHEATS_ENABLED && Input.GetKeyDown(KeyCode.Backslash))
+        {
+            skipButton.SetActive(true);
+        }
+    }
+
+    public void UnlockAll()
+    {
+        // Try to unlock all other buttons
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].GetComponent<LevelSelectButton>().SetButtonActive(true);
+        }
     }
 
     public void LateUpdate()

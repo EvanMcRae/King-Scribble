@@ -33,8 +33,7 @@ public class VideoEvent : MonoBehaviour
 
     void Update()
     {
-        // TODO: TEMPORARY CHEAT MODE KEYBIND
-        if (Input.GetKeyDown(KeyCode.Backslash))
+        if (Utils.CHEATS_ENABLED && Input.GetKeyDown(KeyCode.Backslash))
         {
             skipButton.SetActive(true);
         }
