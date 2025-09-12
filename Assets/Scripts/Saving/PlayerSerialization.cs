@@ -65,10 +65,12 @@ public class SceneSerialization
         inkPoints = new List<InkSerialization>();
     }
 
-    public void WipeData()
+    public void WipeData(bool includePerma)
     {
         unlockPoints = new();
         inkPoints = new();
+        if (includePerma)
+            permaUnlockPoints = new();
     }
 }
 

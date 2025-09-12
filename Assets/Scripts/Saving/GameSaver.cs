@@ -27,9 +27,9 @@ public class GameSaver : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(this);
         Refresh();
-        if (PlayerChecker.loadedFromScene)
+        if (PlayerChecker.loadedFromScene) // purely for testing
         {
-            WipeScene(currData.scene);
+            WipeScene(currData.scene, true);
             currData.stickers = new();
             PlayerChecker.loadedFromScene = false;
         }
@@ -205,13 +205,13 @@ public class GameSaver : MonoBehaviour
         }
     }
 
-    public static void WipeScene(string scene)
+    public static void WipeScene(string scene, bool includePerma = false)
     {
         try
         {
             int index = currData.scenes.FindIndex(s => s.name == scene);
             SceneSerialization theScene = currData.scenes[index];
-            theScene.WipeData();
+            theScene.WipeData(includePerma);
             currData.scenes[index] = theScene;
         }
         catch (Exception)
