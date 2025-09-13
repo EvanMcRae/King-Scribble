@@ -26,7 +26,7 @@ public class Sticker : Collectible
         {
             GameSaver.tempStickers.Add(type);
             PlayerController.instance.CollectSticker();
-            StickerIcon.instance.Collect();
+            StickerIcon.instance.Collect(true);
         }
     }
 
