@@ -92,13 +92,12 @@ public class DrawManager : MonoBehaviour
         if (PlayerVars.instance.isDead)
         {
             // End all sounds
-            if (currentSoundPause != null) { AudioManager.instance.StopCoroutine(currentSoundPause); }
-            if (currentSoundUnpause != null) { AudioManager.instance.StopCoroutine(currentSoundUnpause); }
+            ResetDrawSoundPause();
             if (_currentTool._drawing)
             {
                 drawSoundPlayer.EndAllSounds();
                 _currentTool.EndDraw();
-            }    
+            }
             return;
         }
 
@@ -120,6 +119,7 @@ public class DrawManager : MonoBehaviour
         {
             // Stop drawing
             _currentTool.EndDraw();
+            ResetDrawSoundPause();
         }
 
         // LMB down -> start drawing
@@ -143,6 +143,7 @@ public class DrawManager : MonoBehaviour
                 // Stop drawing
                 _currentTool.EndDraw();
             }
+            ResetDrawSoundPause();
             _currentTool._releaseCursor?.Invoke();
         }
 
@@ -210,13 +211,17 @@ public class DrawManager : MonoBehaviour
 
     private void SoundPauseCheck(Vector2 mouse_pos)
     {
+        Debug.Log(_currentTool.GetLastMousePos() + " " + mouse_pos);  
         if (Vector2.Distance(_currentTool.GetLastMousePos(), mouse_pos) < 0.01f)
         {
-            if (currentSoundUnpause != null)
-                AudioManager.instance.StopCoroutine(currentSoundUnpause);
             soundPauseCounter += Time.deltaTime;
             if (soundPauseCounter >= soundPauseThreshold && !soundPaused)
             {
+                if (currentSoundPause != null)
+                    AudioManager.instance.StopCoroutine(currentSoundPause);
+                if (currentSoundUnpause != null)
+                    AudioManager.instance.StopCoroutine(currentSoundUnpause);
+
                 currentSoundPause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(drawSoundPlayer.sources[0], 0.2f, 0f, () => { }));
                 soundPaused = true;
             }
@@ -225,10 +230,26 @@ public class DrawManager : MonoBehaviour
         {
             if (currentSoundPause != null)
                 AudioManager.instance.StopCoroutine(currentSoundPause);
+            if (currentSoundUnpause != null)
+                AudioManager.instance.StopCoroutine(currentSoundUnpause);
             soundPauseCounter = 0;
             soundPaused = false;
             currentSoundUnpause = AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(drawSoundPlayer.sources[0], 0.2f, 1f, () => { }));
         }
+
+        _currentTool.ResyncMousePos(mouse_pos);
+    }
+
+    public void ResetDrawSoundPause()
+    {
+        soundPaused = false;
+        if (drawSoundPlayer.sources.Length > 1 && drawSoundPlayer.sources[0] != null)
+            drawSoundPlayer.sources[0].volume = 1;
+        if (currentSoundPause != null)
+            AudioManager.instance.StopCoroutine(currentSoundPause);
+        if (currentSoundUnpause != null)
+            AudioManager.instance.StopCoroutine(currentSoundUnpause);
+        soundPauseCounter = 0;
     }
 
     public void SetCursor(bool _override = false)
@@ -265,7 +286,11 @@ public class DrawManager : MonoBehaviour
         {
             // If LMB held, stop
             if (_currentTool._drawing)
+            {
                 _currentTool.EndDraw();
+                _currentTool._releaseCursor?.Invoke(); // kinda needs to be done, unfortunately
+            }
+            ResetDrawSoundPause();
             // If RMB held, stop
             if (_currentTool._rmbActive)
                 _currentTool.EndRightClick();

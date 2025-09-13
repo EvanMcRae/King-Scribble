@@ -1151,6 +1151,14 @@ PrefabInstance:
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
+    - target: {fileID: 358046967484059020, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 358046967484059020, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 412550512064859232, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_SizeDelta.x
       value: -876.61694
@@ -1179,6 +1187,10 @@ PrefabInstance:
       propertyPath: m_FontData.m_Alignment
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 496397809176826471, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: pulseAnim
+      value: 
+      objectReference: {fileID: 5100368920578745558}
     - target: {fileID: 618773918787917544, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_fontColor.b
       value: 0
@@ -1197,6 +1209,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 618773918787917544, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 839026573884065133, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 859153862831928906, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
@@ -1383,6 +1399,10 @@ PrefabInstance:
       propertyPath: _toolType
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2096560881485552786, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2234695916467819151, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_fontColor.b
       value: 0
@@ -1495,6 +1515,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3834371209238842102, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3873525206380259178, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1582,6 +1606,14 @@ PrefabInstance:
     - target: {fileID: 5036242846462119449, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5313155409990837853, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5313155409990837853, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5596158986869316415, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_fontColor.b
@@ -1925,6 +1957,11 @@ GameObject:
 --- !u!1 &2257417964739641019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 298621836182011744, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+  m_PrefabInstance: {fileID: 1979085023703826907}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5100368920578745558 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6755181554355430669, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 1979085023703826907}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6599255148635206349 stripped

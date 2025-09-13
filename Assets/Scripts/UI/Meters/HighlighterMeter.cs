@@ -11,8 +11,11 @@ public class HighlighterMeter : ToolMeter
     }
 
     const int NUM_SPRITES = 10;
-    [SerializeField] private Sprite[] sprites = new Sprite[NUM_SPRITES + 1];
+    [SerializeField] private Image pulse1, pulse2;
     private bool isEmpty;
+    private bool pulsing;
+    [SerializeField] private GameObject barParent;
+    [SerializeField] private float minX, maxX;
 
     protected override void Start()
     {
@@ -22,21 +25,40 @@ public class HighlighterMeter : ToolMeter
 
     protected override void UpdateMeter(float percent)
     {
-        meter.sprite = sprites[Mathf.FloorToInt(percent * NUM_SPRITES)];
-        if (percent <= 0)
+        if (!isEmpty)
         {
-            isEmpty = true;
-            anim.enabled = true;
-            anim.SetTrigger("IsEmpty");
-            anim.SetBool("IsUsing", true);
+            Vector3 pos = barParent.transform.localPosition;
+            pos.x = Mathf.Lerp(maxX, minX, percent);
+            barParent.transform.localPosition = pos;
+
+            if (percent < 1 && !pulsing)
+            {
+                anim.SetFloat("Pulse", 1);
+                pulse1.enabled = true;
+                pulse2.enabled = true;
+                pulsing = true;
+            }
+
+            if (percent <= 0)
+            {
+                isEmpty = true;
+            }
         }
     }
 
     protected override void ReleaseCursor()
     {
+        if (pulsing)
+        {
+            anim.SetFloat("Pulse", 0);
+            pulse1.enabled = false;
+            pulse2.enabled = false;
+            pulsing = false;
+        }
+        
         if (isEmpty)
         {
-            anim.SetBool("IsUsing", false);
+            Debug.Log("replenish the meter here!!");
         }
     }
 }
