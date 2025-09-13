@@ -211,7 +211,6 @@ public class DrawManager : MonoBehaviour
 
     private void SoundPauseCheck(Vector2 mouse_pos)
     {
-        Debug.Log(_currentTool.GetLastMousePos() + " " + mouse_pos);  
         if (Vector2.Distance(_currentTool.GetLastMousePos(), mouse_pos) < 0.01f)
         {
             soundPauseCounter += Time.deltaTime;
