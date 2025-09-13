@@ -1190,7 +1190,7 @@ PrefabInstance:
     - target: {fileID: 496397809176826471, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: pulseAnim
       value: 
-      objectReference: {fileID: 5100368920578745558}
+      objectReference: {fileID: 3119399445099215196}
     - target: {fileID: 618773918787917544, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_fontColor.b
       value: 0
@@ -1959,9 +1959,9 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 298621836182011744, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 1979085023703826907}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5100368920578745558 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6755181554355430669, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
+--- !u!95 &3119399445099215196 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3476015934871304327, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
   m_PrefabInstance: {fileID: 1979085023703826907}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6599255148635206349 stripped

@@ -15,6 +15,7 @@ public class HighlighterMeter : ToolMeter
     private bool isEmpty;
     private bool pulsing;
     [SerializeField] private GameObject barParent;
+    [SerializeField] private Animator pulseAnim;
     [SerializeField] private float minX, maxX;
 
     protected override void Start()
@@ -34,6 +35,7 @@ public class HighlighterMeter : ToolMeter
             if (percent < 1 && !pulsing)
             {
                 anim.SetFloat("Pulse", 1);
+                pulseAnim.Play("Pulse", 0, 0);
                 pulse1.enabled = true;
                 pulse2.enabled = true;
                 pulsing = true;
