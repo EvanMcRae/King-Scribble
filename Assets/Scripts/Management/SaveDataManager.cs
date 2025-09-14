@@ -14,6 +14,7 @@ public class SaveDataManager : MonoBehaviour
     [SerializeField] private GameObject pen1, pen2, pen3;
     [SerializeField] private GameObject eraser1, eraser2, eraser3;
     [SerializeField] private GameObject highlighter1, highlighter2, highlighter3;
+    [SerializeField] private ScriptableObject mainMenuManager;
 
     void Awake()
     {
@@ -33,12 +34,18 @@ public class SaveDataManager : MonoBehaviour
 
     public void LoadSaves()
     {
-        // Fills the GUI with proper data
+        // Fills the GUI with proper data upon enabled!
+    }
+
+    public void LoadSave(int save)
+    {
+        // starts the game with said save slot
+        //MainMenuManager.instance.PlayGame();
     }
 
     public void DeleteSave(int save)
     {
-        
+
     }
 
     public void UnlockLevels()

@@ -15,6 +15,7 @@ public class MainMenuManager : MonoBehaviour
     private GameObject currentSelection;
     public static bool firstopen = false, quitting = false, playing = false, loadingAnimatic = false;
     public Texture2D defaultCursor;
+    public static MainMenuManager instance; // I hope this doesn't break everything qwq
 
     // Start is called before the first frame update
     void Start()

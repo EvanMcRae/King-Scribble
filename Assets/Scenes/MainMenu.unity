@@ -3303,7 +3303,7 @@ GameObject:
   - component: {fileID: 475714818}
   - component: {fileID: 475714817}
   m_Layer: 5
-  m_Name: SaveUI1
+  m_Name: SaveUI2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4680,6 +4680,7 @@ GameObject:
   - component: {fileID: 610385766}
   - component: {fileID: 610385765}
   - component: {fileID: 610385770}
+  - component: {fileID: 610385771}
   m_Layer: 5
   m_Name: Arrow3
   m_TagString: Untagged
@@ -4827,7 +4828,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
   m_Colors:
-    m_NormalColor: {r: 0.21960784, g: 0.21960784, b: 0.21960784, a: 0}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.09803922}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4846,10 +4847,58 @@ MonoBehaviour:
     m_SelectedTrigger: Active
     m_DisabledTrigger: Inactive
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 610385768}
+  m_TargetGraphic: {fileID: 1554746011}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8272054411730838551}
+        m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
+        m_MethodName: LoadSave
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1554746014}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &610385771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 610385763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6e600672ddf4692a8568517dbaa1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normal: {fileID: 0}
+  selected: {fileID: 0}
+  mainMenu: 0
+  pauseMenu: 0
+  image: {fileID: 0}
+  popupID: 0
+  deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
+  soundOnPointerEnter: 1
+  noSound: 0
 --- !u!1 &622754182
 GameObject:
   m_ObjectHideFlags: 0
@@ -6177,6 +6226,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846064971}
   m_CullTransparentMesh: 1
+--- !u!4 &868457501 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 1311815904}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &868457502 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 886362805277679126, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+  m_PrefabInstance: {fileID: 1311815904}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &917065328 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5047842727953903837, guid: 32a42ee55445fda4897b2463a88fc08b, type: 3}
@@ -7046,6 +7111,7 @@ GameObject:
   - component: {fileID: 1054925949}
   - component: {fileID: 1054925948}
   - component: {fileID: 1054925953}
+  - component: {fileID: 1054925954}
   m_Layer: 5
   m_Name: Arrow2
   m_TagString: Untagged
@@ -7193,7 +7259,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 3
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.09803922}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -7212,10 +7278,58 @@ MonoBehaviour:
     m_SelectedTrigger: Active
     m_DisabledTrigger: Inactive
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 1054925951}
+  m_TargetGraphic: {fileID: 1554746011}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8272054411730838551}
+        m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
+        m_MethodName: LoadSave
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1554746014}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1054925954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054925946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6e600672ddf4692a8568517dbaa1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normal: {fileID: 0}
+  selected: {fileID: 0}
+  mainMenu: 0
+  pauseMenu: 0
+  image: {fileID: 0}
+  popupID: 0
+  deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
+  soundOnPointerEnter: 1
+  noSound: 0
 --- !u!1 &1063481315
 GameObject:
   m_ObjectHideFlags: 0
@@ -7658,7 +7772,7 @@ GameObject:
   - component: {fileID: 1125071260}
   - component: {fileID: 1125071265}
   m_Layer: 5
-  m_Name: DeleteButton
+  m_Name: DeleteButton1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7848,9 +7962,9 @@ MonoBehaviour:
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 0}
-  select: {fileID: 0}
-  press: {fileID: 0}
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
   noSound: 0
 --- !u!1 &1147791712
@@ -8734,6 +8848,63 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1001 &1311815904
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4467408186637566856}
+    m_Modifications:
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 603017179443076867, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106051775409183644, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
+      propertyPath: m_Name
+      value: SoundPlayer
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 31f61b2904bb9a741aa14e2b2976413a, type: 3}
 --- !u!1 &1338380605
 GameObject:
   m_ObjectHideFlags: 0
@@ -8867,7 +9038,7 @@ GameObject:
   - component: {fileID: 1382628944}
   - component: {fileID: 1382628943}
   m_Layer: 5
-  m_Name: DeleteButton
+  m_Name: DeleteButton2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8911,9 +9082,9 @@ MonoBehaviour:
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 0}
-  select: {fileID: 0}
-  press: {fileID: 0}
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
   noSound: 0
 --- !u!114 &1382628944
@@ -9651,6 +9822,7 @@ GameObject:
   - component: {fileID: 1554746009}
   - component: {fileID: 1554746008}
   - component: {fileID: 1554746013}
+  - component: {fileID: 1554746014}
   m_Layer: 5
   m_Name: Arrow1
   m_TagString: Untagged
@@ -9820,7 +9992,55 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1554746011}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8272054411730838551}
+        m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
+        m_MethodName: LoadSave
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1554746014}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1554746014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554746006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6e600672ddf4692a8568517dbaa1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normal: {fileID: 0}
+  selected: {fileID: 0}
+  mainMenu: 0
+  pauseMenu: 0
+  image: {fileID: 0}
+  popupID: 0
+  deselectsOnPointerLeave: 0
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
+  soundOnPointerEnter: 1
+  noSound: 0
 --- !u!1 &1555260841
 GameObject:
   m_ObjectHideFlags: 0
@@ -10231,7 +10451,7 @@ GameObject:
   - component: {fileID: 1705398857}
   - component: {fileID: 1705398856}
   m_Layer: 5
-  m_Name: DeleteButton
+  m_Name: DeleteButton3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10275,9 +10495,9 @@ MonoBehaviour:
   image: {fileID: 0}
   popupID: 0
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 0}
-  select: {fileID: 0}
-  press: {fileID: 0}
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
   noSound: 0
 --- !u!114 &1705398857
@@ -12147,7 +12367,7 @@ MonoBehaviour:
   image: {fileID: 3685034895064077343}
   popupID: 1
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 3137280128221003894}
+  soundPlayer: {fileID: 0}
   select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
   press: {fileID: 11400000, guid: ca0f3096928524fd3baf5ebb1332201c, type: 2}
   soundOnPointerEnter: 1
@@ -12675,19 +12895,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &3137280128221003894
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251141928783496700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13c645889cf1ca84b8b4eca6f2938f51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sources: []
 --- !u!222 &3308186897112810203
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12704,21 +12911,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2868869258513994937}
   m_CullTransparentMesh: 1
---- !u!4 &3430473048360812899
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4251141928783496700}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4467408186637566856}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3440122322380023799
 GameObject:
   m_ObjectHideFlags: 0
@@ -12792,6 +12984,7 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 50
   m_TargetDisplay: 0
+<<<<<<< Updated upstream
 --- !u!82 &3539539891327419793
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12889,6 +13082,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+=======
+>>>>>>> Stashed changes
 --- !u!114 &3685034895064077343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12919,6 +13114,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+<<<<<<< Updated upstream
 --- !u!82 &3721617397931396268
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13113,6 +13309,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+=======
+>>>>>>> Stashed changes
 --- !u!1 &3885382166199741732
 GameObject:
   m_ObjectHideFlags: 0
@@ -13150,27 +13348,6 @@ GameObject:
   - component: {fileID: 975998553502421853}
   m_Layer: 5
   m_Name: Close Button
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &4251141928783496700
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3430473048360812899}
-  - component: {fileID: 3780019253519332841}
-  - component: {fileID: 3721617397931396268}
-  - component: {fileID: 5994160085016690590}
-  - component: {fileID: 3539539891327419793}
-  - component: {fileID: 3137280128221003894}
-  m_Layer: 0
-  m_Name: SoundPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13235,7 +13412,7 @@ RectTransform:
   - {fileID: 4712584048276871595}
   - {fileID: 9198441140604593535}
   - {fileID: 1625166546728020627}
-  - {fileID: 3430473048360812899}
+  - {fileID: 868457501}
   m_Father: {fileID: 1596888176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -13456,6 +13633,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4594359879827130210}
   m_CullTransparentMesh: 1
+<<<<<<< Updated upstream
 --- !u!82 &5994160085016690590
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13553,6 +13731,8 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+=======
+>>>>>>> Stashed changes
 --- !u!223 &6063233051860359773
 Canvas:
   m_ObjectHideFlags: 0
@@ -13891,6 +14071,7 @@ MonoBehaviour:
   highlighter1: {fileID: 0}
   highlighter2: {fileID: 0}
   highlighter3: {fileID: 0}
+  mainMenuManager: {fileID: 0}
 --- !u!222 &8400333133230008665
 CanvasRenderer:
   m_ObjectHideFlags: 0
