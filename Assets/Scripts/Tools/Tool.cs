@@ -36,6 +36,8 @@ public class Tool : ScriptableObject
     protected int _tempFuel;
     protected bool _abort;
 
+    protected bool _isPlayingSound = false;
+
     public int GetCurFuel() { return _curFuel; }
     public float GetFuelRemaining() { return (float)_curFuel / _maxFuel; }
     public float GetTempFuelRemaining() { return (float)_tempFuel / _maxFuel; }
@@ -103,7 +105,7 @@ public class Tool : ScriptableObject
 
         _beganDraw = true;
         _drawing = true;
-        DrawManager.instance.drawSoundPlayer.PlaySound(_sound, 1, true);
+        _lastMousePos = mousePos;
     }
 
     public virtual void Draw(Vector2 mousePos)
@@ -147,6 +149,11 @@ public class Tool : ScriptableObject
             return;
         }
 
+        if (!_isPlayingSound && Vector2.Distance(GetLastMousePos(), mousePos) > 0.01f)
+        {
+            DrawManager.instance.drawSoundPlayer.PlaySound(_sound, 1, true);
+            _isPlayingSound = true;
+        }
     }
 
     // To be called during general march routine from DrawManager
@@ -158,6 +165,7 @@ public class Tool : ScriptableObject
     {
         _beganDraw = false;
         _drawing = false;
+        _isPlayingSound = false;
         DrawManager.instance.StopDrawSounds();
     }
 

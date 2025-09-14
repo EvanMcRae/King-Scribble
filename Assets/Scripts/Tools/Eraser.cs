@@ -7,14 +7,18 @@ using UnityEngine;
 public class Eraser : Tool
 {
     [SerializeField] private float _radius = 0.5f;
+    private Vector2 offset = new(0.5f, -0.5f);
 
     public override void BeginDraw(Vector2 mousePos)
     {
         base.BeginDraw(mousePos);
         if (_abort) return;
-        mousePos += new Vector2(0.5f, -0.5f);
-        _lastMousePos = mousePos;
-        EraserFunctions.Erase(mousePos, _radius, true);
+        EraserFunctions.Erase(mousePos + offset, _radius, true);
+
+        // Since we're erasing now, we also want the sound to play instantly.
+        // TODO: make this behavior less hardcoded and handled exclusively by tool
+        DrawManager.instance.drawSoundPlayer.PlaySound(_sound, 1, true);
+        _isPlayingSound = true;
         return;
     }
 
@@ -23,7 +27,6 @@ public class Eraser : Tool
         base.Draw(mousePos);
         if (_abort) return;
 
-        mousePos += new Vector2(0.5f, -0.5f);
         if (_curFuel > 0)
         {
             // March along line from previous to current eraser pos if it's too far away
@@ -36,8 +39,7 @@ public class Eraser : Tool
             }
             else
             {
-                EraserFunctions.Erase(mousePos, _radius, true);
-                ResyncMousePos(mousePos);
+                EraserFunctions.Erase(mousePos + offset, _radius, true);
             }
         }
 
@@ -48,7 +50,7 @@ public class Eraser : Tool
 
     public override void MarchStepDraw(Vector2 marchPos)
     {
-        EraserFunctions.Erase(marchPos, _radius, true);
+        EraserFunctions.Erase(marchPos + offset, _radius, true);
     }
 
     public override void EndDraw()

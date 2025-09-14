@@ -6,6 +6,7 @@ public class ResetPrompt : MonoBehaviour
 {
     [SerializeField] private Image outline;
     [SerializeField] private Image fill;
+    [SerializeField] private GameObject text;
 
     // Use this for initialization
     void Start()
@@ -27,5 +28,6 @@ public class ResetPrompt : MonoBehaviour
     {
         outline.enabled = visibility;
         fill.enabled = visibility;
+        text.SetActive(visibility);
     }
 }
