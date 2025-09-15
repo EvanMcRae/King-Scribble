@@ -9,7 +9,8 @@ public class PopupPanel : MonoBehaviour
     public float animProgress;
     private GameObject PreviousButton;
     public static bool open = false;
-    public static int numPopups = 0;
+    public static int numPopups = 1;
+    public int popupID = 0;
     public bool visible = false;
     public static int mouseNeverMoved = 0;
     private Animator anim;
@@ -46,7 +47,7 @@ public class PopupPanel : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(PreviousButton);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && Closable)
+        if (Input.GetKeyDown(KeyCode.Escape) && Closable && !closedThisFrame)
         {
             if (ClosableOverride)
                 ClosableOverride = false;
@@ -69,6 +70,18 @@ public class PopupPanel : MonoBehaviour
             Color c = ScreenDarkener.color;
             c.a = animProgress * 0.5f;
             ScreenDarkener.color = c;
+        }
+
+        Debug.Log(numPopups);
+    }
+
+    private void LateUpdate()
+    {
+        if (closedThisFrame)
+        {
+            numPopups--;
+            if (numPopups < 0) numPopups = 0;
+            closedThisFrame = false;
         }
     }
 
@@ -100,20 +113,19 @@ public class PopupPanel : MonoBehaviour
 
     public void Close()
     {
+        Debug.Log(numPopups + " " + popupID);
+        if (numPopups != popupID) return; // only affect topmost popup
         if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.93)
             anim.SetFloat("Speed", -2);
         else
             anim.SetFloat("Speed", -10);
         if (darkensScreen)
             ScreenDarkener.raycastTarget = false;
-        numPopups--;
-        if (numPopups < 0) numPopups = 0;
         visible = false;
+        closedThisFrame = true;
         if (selectsPrevious)
         {
-            closedThisFrame = true;
             EventSystem.current.SetSelectedGameObject(PreviousButton);
-            closedThisFrame = false;
         }
     }
 

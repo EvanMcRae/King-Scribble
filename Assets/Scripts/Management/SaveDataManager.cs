@@ -14,11 +14,14 @@ public class SaveDataManager : MonoBehaviour
     [SerializeField] private GameObject pen1, pen2, pen3;
     [SerializeField] private GameObject eraser1, eraser2, eraser3;
     [SerializeField] private GameObject highlighter1, highlighter2, highlighter3;
-    [SerializeField] private ScriptableObject mainMenuManager;
+    [SerializeField] private GameObject deletePanel;
+    [SerializeField] private GameObject mainMenuManager;
 
     void Awake()
     {
         LoadSaves();
+        PopupPanel.numPopups--;
+        if (PopupPanel.numPopups < 0) PopupPanel.numPopups = 0;
         gameObject.SetActive(false);
     }
 
@@ -45,7 +48,8 @@ public class SaveDataManager : MonoBehaviour
 
     public void DeleteSave(int save)
     {
-
+        deletePanel.SetActive(true);
+        // TODO: provide save to this somehow!
     }
 
     public void UnlockLevels()

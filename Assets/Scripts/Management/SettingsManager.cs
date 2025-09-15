@@ -15,6 +15,8 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         LoadSettings();
+        PopupPanel.numPopups--;
+        if (PopupPanel.numPopups < 0) PopupPanel.numPopups = 0;
         gameObject.SetActive(false);
         ScreenshotManager.ToggleFullScreen += ToggleFullScreen;
     }
