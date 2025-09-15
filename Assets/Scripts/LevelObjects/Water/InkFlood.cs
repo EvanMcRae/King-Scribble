@@ -19,7 +19,8 @@ public class InkFlood : MonoBehaviour
     private bool catchUp = false; // If the ink is currently "catching up"
     public float maxDist = 10f; // How far the player can move away from the ink before it speeds up to catch him
     public int curDest = 0;
-
+    private bool penSpedUp = false; // Ink will speed up when player has drawn 2 or more pen objects, but only once
+    private Pen _pen = null;
     // OPTIONAL - if you want to wait X seconds before the flood starts
     public bool floodWait = false;
     public float waitTime = 0f;
@@ -59,12 +60,8 @@ public class InkFlood : MonoBehaviour
     {
 
         flooding = true;
-        // Possibly add: if not first time in the level (must implement into save functionality)
-        /*
-        if (speedUp_enabled)
-            floodSpeed /= speedUp_factor;
-        */
-        if (floodWait) 
+        
+        if (floodWait)
         {
             waiting = true;
             StartCoroutine(WaitTime(waitTime));
@@ -112,6 +109,10 @@ public class InkFlood : MonoBehaviour
     {
         if (flooding && !waiting)
         {
+            if (_pen == null)
+            {
+                _pen ??= (Pen)DrawManager.GetTool(ToolType.Pen);
+            }
             // If the "speed up point" has been reached, speed up permanently
             if (speedUp_enabled && !hasSped && transform.position.y >= speedUpPoint)
             {
@@ -129,8 +130,13 @@ public class InkFlood : MonoBehaviour
             {
                 floodSpeed /= catchUp_factor;
                 catchUp = false;
-            } 
-
+            }
+            // If the player has drawn at least two pen objects, permanently speed up
+            if (_pen != null && !penSpedUp && _pen.GetLinesFolder() != null && _pen.GetLinesFolder().childCount >= 2)
+            {
+                floodSpeed *= speedUp_factor;
+                penSpedUp = true;
+            }
             transform.position = Vector2.MoveTowards(transform.position, destinations[curDest].position, floodSpeed * Time.fixedDeltaTime);
         }
 
