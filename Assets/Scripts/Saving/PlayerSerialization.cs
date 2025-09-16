@@ -81,6 +81,7 @@ public class InkSerialization
     public float height;
     public bool flooding;
     public int destination;
+    public bool couldSoftlock;
 
     public InkSerialization(InkFlood ink)
     {
@@ -88,6 +89,7 @@ public class InkSerialization
         height = ink.transform.position.y;
         flooding = ink.flooding;
         destination = ink.curDest;
+        couldSoftlock = ink.couldSoftlock;
     }
 
     public void SetValues(GameObject inkObj)
@@ -96,7 +98,7 @@ public class InkSerialization
 
         // Make sure that the ink doesn't load too close to the player, or else you can softlock yourself
         float bound = height;
-        if (flooding)
+        if (flooding && couldSoftlock)
         {
             bound = GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue().y - 10f;
             bound -= ink.GetComponent<MeshRenderer>().bounds.extents.y;
@@ -105,5 +107,6 @@ public class InkSerialization
         ink.transform.position = new Vector3(inkObj.transform.position.x, Mathf.Min(bound, height), inkObj.transform.position.z);
         ink.flooding = flooding;
         ink.curDest = destination;
+        ink.couldSoftlock = couldSoftlock;
     }
 }

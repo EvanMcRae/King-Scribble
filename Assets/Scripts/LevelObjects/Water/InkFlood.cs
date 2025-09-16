@@ -19,6 +19,7 @@ public class InkFlood : MonoBehaviour
     private bool catchUp = false; // If the ink is currently "catching up"
     public float maxDist = 10f; // How far the player can move away from the ink before it speeds up to catch him
     public int curDest = 0;
+    public bool couldSoftlock = false; // If the ink needs to account for player spawn height for checkpoints
     private bool penSpedUp = false; // Ink will speed up when player has drawn 2 or more pen objects, but only once
     private Pen _pen = null;
     // OPTIONAL - if you want to wait X seconds before the flood starts
