@@ -52,10 +52,17 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateMusic(bool user)
     {
-        if (user)
-            currentSettings.musicVolume = musicSlider.value;
-        else
-            musicSlider.value = currentSettings.musicVolume;
+        if (musicSlider != null)
+        {
+            if (user)
+            {
+                currentSettings.musicVolume = musicSlider.value;
+            }
+            else
+            {
+                musicSlider.value = currentSettings.musicVolume;
+            }
+        }
 
         musicSliderFill.fillAmount = musicSlider.value / 100;
         musicValue.text = (int)musicSlider.value + "";
@@ -63,10 +70,17 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateSound(bool user)
     {
-        if (user)
-            currentSettings.sfxVolume = soundSlider.value;
-        else
-            soundSlider.value = currentSettings.sfxVolume;
+        if (soundSlider != null)
+        {
+            if (user)
+            {
+                currentSettings.sfxVolume = soundSlider.value;
+            }
+            else
+            {
+                soundSlider.value = currentSettings.sfxVolume;
+            }
+        }
 
         soundSliderFill.fillAmount = soundSlider.value / 100;
         soundValue.text = (int)soundSlider.value + "";
@@ -74,24 +88,34 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateMaster(bool user)
     {
-        if (user)
-            currentSettings.masterVolume = masterSlider.value;
-        else
-            masterSlider.value = currentSettings.masterVolume;
-
+        if (masterSlider != null)
+        {
+            if (user)
+            {
+                currentSettings.masterVolume = masterSlider.value;
+            }
+            else
+            {
+                masterSlider.value = currentSettings.masterVolume;
+            }
+        }
+        
         masterSliderFill.fillAmount = masterSlider.value / 100;
         masterValue.text = (int)masterSlider.value + "";
     }
 
     public void UpdateFullScreen(bool user)
     {
-        if (user)
+        if (fullScreenToggle != null)
         {
-            currentSettings.fullScreen = fullScreenToggle.isOn;
-        }
-        else
-        {
-            fullScreenToggle.isOn = currentSettings.fullScreen;
+            if (user)
+            {
+                currentSettings.fullScreen = fullScreenToggle.isOn;
+            }
+            else
+            {
+                fullScreenToggle.isOn = currentSettings.fullScreen;
+            }
         }
         Screen.SetResolution(Display.main.systemWidth, (int)(9/16f * Display.main.systemWidth), currentSettings.fullScreen);
     }
@@ -105,12 +129,17 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateVSync(bool user)
     {
-        if (user)
+        if (vSyncToggle != null)
         {
-            currentSettings.vSync = vSyncToggle.isOn;
+            if (user)
+            {
+                currentSettings.vSync = vSyncToggle.isOn;
+            }
+            else
+            {
+                vSyncToggle.isOn = currentSettings.vSync;
+            }
         }
-        else
-            vSyncToggle.isOn = currentSettings.vSync;
 
         if (currentSettings.vSync)
             QualitySettings.vSyncCount = 1;

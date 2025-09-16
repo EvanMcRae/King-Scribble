@@ -25,6 +25,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     public GameObject skipButton;
     [SerializeField] Animator anim_L;
     [SerializeField] Animator anim_R;
+    [SerializeField] public SwitchMusicOnLoad introMusic, crazyMusic;
     private static bool lateStart = false;
 
     public void Awake()
@@ -42,8 +43,46 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
                 followCam.ForceCameraPosition(PlayerVars.instance.transform.position + Vector3.forward * -10f, Quaternion.identity);
                 Camera.main.transform.position = PlayerVars.instance.transform.position + Vector3.forward * -10f;
             }
+            else
+            {
+                if (AudioManager.instance.currentArea == AudioManager.GameArea.TEMPLE)
+                {
+                    introMusic.duration = 1.0f;
+                }
+                introMusic.enabled = true;
+                GameManager.ResetAction += ResetLevel;
+                Checkpoint.ActivatedAction += CheckpointHit;
+            }
         }
-        catch (System.Exception) { }
+        catch (System.Exception)
+        {
+            introMusic.enabled = true;
+            GameManager.ResetAction += ResetLevel;
+            Checkpoint.ActivatedAction += CheckpointHit;
+        }
+    }
+
+    void CheckpointHit()
+    {
+        Checkpoint.ActivatedAction -= CheckpointHit;
+        GameManager.ResetAction -= ResetLevel;
+    }
+
+    void ResetLevel()
+    {
+        GameManager.ResetAction -= ResetLevel;
+        try
+        {
+            SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
+            if (!scene.unlockPoints.Contains("inkRises"))
+            {
+                AudioManager.instance.FadeOutCurrent();
+            }
+        }
+        catch (System.Exception)
+        {
+            AudioManager.instance.FadeOutCurrent();
+        }
     }
 
     public void LateUpdate()
@@ -90,6 +129,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     IEnumerator Start_Event()
     {
         isAnimating = true;
+        AudioManager.instance.FadeOutCurrent();
         GameManager.canMove = false;
         yield return _waitForSeconds0_5;
         cam.gameObject.SetActive(true);
@@ -98,6 +138,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         noise.AmplitudeGain = 0.125f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0.5f, 4f);
         yield return _waitForSeconds3;
+        AudioManager.instance.Stop();
         anim_L.Play("Pipe_Start");
         anim_R.Play("Pipe_Start");
         yield return _waitForSeconds1; // For the Pipe animation to transition from start to flowing
@@ -106,6 +147,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.AmplitudeGain = 0.25f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
+        crazyMusic.enabled = true;
         yield return _waitForSeconds3;
         cam.gameObject.SetActive(false);
         yield return _waitForSeconds0_5;
@@ -142,6 +184,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     {
         if (isAnimating)
         {
+            crazyMusic.enabled = true;
             StopAllCoroutines();
             StartCoroutine(SkipCutsceneRoutine());
             rumblePlayer.EndAllSounds();

@@ -127,6 +127,10 @@ public class PauseMenu : MonoBehaviour
         GameManager.resetting = true;
         GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();
+        if (AudioManager.instance.currentArea != AudioManager.GameArea.LEVEL) // TODO this is a hackfix since menu music uses level music, will need to fade regardless in the future
+        {
+            AudioManager.instance.FadeOutCurrent();
+        }
         ScreenWipe.PostWipe += GoToMainMenu;
     }
 

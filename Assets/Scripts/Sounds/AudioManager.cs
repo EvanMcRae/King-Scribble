@@ -25,6 +25,7 @@ public class AudioManager : MonoBehaviour
     private bool firstSet = true;
     private bool firstSongPlayed = false;
     public bool paused = false;
+    public bool carryOn = true;
 
     public SoundCategory soundDatabase;
     public MusicCategory musicDatabase;
@@ -38,7 +39,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public enum GameArea
     {
-        CURRENT, MENU, LEVEL
+        CURRENT, MENU, LEVEL, TEMPLE_INTRO, TEMPLE, ERASER_BOSS, MINES
     }
 
     /// <summary>
@@ -113,7 +114,7 @@ public class AudioManager : MonoBehaviour
         musicMixer.SetFloat("LowPass", lowPass);
 
         // Check for desyncing during crossfades
-        if ((fader[0] != null || fader[1] != null) && BGM2[activePlayer].isPlaying && BGM1[activePlayer].isPlaying)
+        if (carryOn && (fader[0] != null || fader[1] != null) && BGM2[activePlayer].isPlaying && BGM1[activePlayer].isPlaying)
         {
             if (firstSet && BGM2[activePlayer].timeSamples != BGM1[activePlayer].timeSamples)
             {
@@ -137,7 +138,8 @@ public class AudioManager : MonoBehaviour
                 BGM1[activePlayer].time = 0;
                 BGM1[activePlayer].Play();
             }
-            currentTime = BGM1[activePlayer].timeSamples;
+            if (BGM1[activePlayer] != null && BGM1[activePlayer].isPlaying)
+                currentTime = BGM1[activePlayer].timeSamples;
         }
         else
         {
@@ -150,7 +152,8 @@ public class AudioManager : MonoBehaviour
                 BGM2[activePlayer].time = 0;
                 BGM2[activePlayer].Play();
             }
-            currentTime = BGM2[activePlayer].timeSamples;
+            if (BGM2[activePlayer] != null && BGM2[activePlayer].isPlaying)
+                currentTime = BGM2[activePlayer].timeSamples;
         }
 
         if (SettingsManager.currentSettings == null)
@@ -211,7 +214,7 @@ public class AudioManager : MonoBehaviour
         if (newArea == GameArea.CURRENT) newArea = currentArea;
 
         // Carry on music if area has not changed
-        bool carryOn = newArea == currentArea;
+        carryOn = newArea == currentArea;
         currentArea = newArea;
 
         // Calculate loop point
@@ -252,7 +255,7 @@ public class AudioManager : MonoBehaviour
             }
             BGM2[activePlayer].Play();
 
-            if (firstSongPlayed)
+            if (firstSongPlayed && duration > 0)
             {
                 fader[1] = FadeAudioSource(BGM2[activePlayer], duration, 1.0f, () => { fader[1] = null; });
                 StartCoroutine(fader[1]);
@@ -283,7 +286,7 @@ public class AudioManager : MonoBehaviour
                 BGM1[activePlayer].timeSamples = 0;
             }
             BGM1[activePlayer].Play();
-            if (firstSongPlayed)
+            if (firstSongPlayed && duration > 0)
             {
                 fader[1] = FadeAudioSource(BGM1[activePlayer], duration, 1.0f, () => { fader[1] = null; });
                 StartCoroutine(fader[1]);
