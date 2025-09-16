@@ -66,8 +66,15 @@ public class SettingsManager : MonoBehaviour
             }
         }
 
-        musicSliderFill.fillAmount = musicSlider.value / 100;
-        musicValue.text = (int)musicSlider.value + "";
+        if (musicSliderFill != null)
+        {
+            musicSliderFill.fillAmount = musicSlider.value / 100;
+        }
+
+        if (musicValue != null)
+        {
+            musicValue.text = (int)musicSlider.value + "";
+        }
     }
 
     public void UpdateSound(bool user)
@@ -84,8 +91,14 @@ public class SettingsManager : MonoBehaviour
             }
         }
 
-        soundSliderFill.fillAmount = soundSlider.value / 100;
-        soundValue.text = (int)soundSlider.value + "";
+        if (soundSliderFill != null)
+        {
+            soundSliderFill.fillAmount = soundSlider.value / 100;
+        }
+        if (soundValue != null)
+        {
+            soundValue.text = (int)soundSlider.value + "";
+        }
     }
 
     public void UpdateMaster(bool user)
@@ -101,9 +114,15 @@ public class SettingsManager : MonoBehaviour
                 masterSlider.value = currentSettings.masterVolume;
             }
         }
-        
-        masterSliderFill.fillAmount = masterSlider.value / 100;
-        masterValue.text = (int)masterSlider.value + "";
+
+        if (masterSliderFill != null)
+        {
+            masterSliderFill.fillAmount = masterSlider.value / 100;
+        }
+        if (masterValue != null)
+        {
+            masterValue.text = (int)masterSlider.value + "";
+        }
     }
 
     public void UpdateFullScreen(bool user)
