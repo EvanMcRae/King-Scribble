@@ -127,6 +127,11 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         anim_R.Play("Pipe_Stop");
     }
 
+    void PlayCrazyMusic()
+    {
+        crazyMusic.enabled = true;
+    }
+
     IEnumerator Start_Event()
     {
         isAnimating = true;
@@ -138,8 +143,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         cam.TryGetComponent(out CinemachineBasicMultiChannelPerlin noise);
         noise.AmplitudeGain = 0.125f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0.5f, 4f);
+        Invoke(nameof(PlayCrazyMusic), 2.97f);
         yield return _waitForSeconds3;
-        AudioManager.instance.Stop();
         anim_L.Play("Pipe_Start");
         anim_R.Play("Pipe_Start");
         yield return _waitForSeconds1; // For the Pipe animation to transition from start to flowing
@@ -148,7 +153,6 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         soundPlayer.PlaySound("Ink.Flood", 1, true);
         noise.AmplitudeGain = 0.25f;
         DOTween.To(() => noise.AmplitudeGain, x => noise.AmplitudeGain = x, 0f, 3f);
-        crazyMusic.enabled = true;
         yield return _waitForSeconds3;
         cam.gameObject.SetActive(false);
         yield return _waitForSeconds0_5;
@@ -185,6 +189,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     {
         if (isAnimating)
         {
+            CancelInvoke();
             crazyMusic.enabled = true;
             StopAllCoroutines();
             StartCoroutine(SkipCutsceneRoutine());
