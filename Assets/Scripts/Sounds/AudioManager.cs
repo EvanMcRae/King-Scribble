@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
     private readonly int volumeChangesPerSecond = 15;
 
     public float fadeDuration = 1.0f;
-    private float loopPointSeconds;
+    private float loopPointSeconds, preEntryPointSeconds;
     private bool firstSet = true;
     private bool firstSongPlayed = false;
     public bool paused = false;
@@ -129,13 +129,13 @@ public class AudioManager : MonoBehaviour
         // Manages looping tracks
         if (firstSet)
         {
-            if (BGM1[activePlayer].clip != null && BGM1[activePlayer].time >= loopPointSeconds)
+            if (BGM1[activePlayer].clip != null && BGM1[activePlayer].time >= loopPointSeconds + preEntryPointSeconds)
             {
                 activePlayer = 1 - activePlayer;
                 if (currentSong != null)
                     BGM1[activePlayer].clip = currentSong.GetClip();
                 BGM1[activePlayer].volume = 1.0f;
-                BGM1[activePlayer].time = 0;
+                BGM1[activePlayer].time = preEntryPointSeconds;
                 BGM1[activePlayer].Play();
             }
             if (BGM1[activePlayer] != null && BGM1[activePlayer].isPlaying)
@@ -143,13 +143,13 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            if (BGM2[activePlayer].clip != null && BGM2[activePlayer].time >= loopPointSeconds)
+            if (BGM2[activePlayer].clip != null && BGM2[activePlayer].time >= loopPointSeconds + preEntryPointSeconds)
             {
                 activePlayer = 1 - activePlayer;
                 if (currentSong != null)
                     BGM2[activePlayer].clip = currentSong.GetClip();
                 BGM2[activePlayer].volume = 1.0f;
-                BGM2[activePlayer].time = 0;
+                BGM2[activePlayer].time = preEntryPointSeconds;
                 BGM2[activePlayer].Play();
             }
             if (BGM2[activePlayer] != null && BGM2[activePlayer].isPlaying)
@@ -219,6 +219,7 @@ public class AudioManager : MonoBehaviour
 
         // Calculate loop point
         loopPointSeconds = 60.0f * (music.barsLength * 4 * music.timeSignature / music.timeSignatureBottom) / music.BPM;
+        preEntryPointSeconds = 60.0f * (music.preEntryBars * 4 * music.timeSignature / music.timeSignatureBottom) / music.BPM;
 
         // Prevent fading the same clip on both players
         if (music == currentSong)
