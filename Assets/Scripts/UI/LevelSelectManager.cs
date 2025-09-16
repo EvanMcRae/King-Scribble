@@ -27,6 +27,7 @@ public class LevelSelectManager : MonoBehaviour
     public bool firstOpen = false;
     public int currLevel;
     public Tween currTween;
+    public bool fadeOutMusic = false;
 
     [SerializeField] private SplineContainer splineContainer;
     [SerializeField] private int sampleCount = 50;
@@ -113,6 +114,14 @@ public class LevelSelectManager : MonoBehaviour
         ScreenWipe.PostUnwipe -= EnterLevel;
 
         playing = true;
+
+        Debug.Log(currLevel);
+        if (currLevel >= 4) // TODO: remove, this is a hack :(
+        {
+            AudioManager.instance.carryOn = false;
+            AudioManager.instance.FadeOutCurrent(0.5f);
+        }
+
         ScreenWipe.instance.WipeIn();
         ScreenWipe.PostWipe += () =>
         {
