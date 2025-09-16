@@ -21,7 +21,7 @@ public class Checkpoint : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !has_triggered && !PlayerVars.instance.isResetting && !PlayerVars.instance.isDead)
+        if (other.CompareTag("Player") && !has_triggered && !PlayerVars.instance.isDead && !GameManager.resetting)
         {
             ActivateCheckpoint();
             soundPlayer.PlaySound("Level.Checkpoint");
