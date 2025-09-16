@@ -72,7 +72,7 @@ public class PopupPanel : MonoBehaviour
             ScreenDarkener.color = c;
         }
 
-        Debug.Log(numPopups);
+        // Debug.Log(numPopups);
     }
 
     private void LateUpdate()

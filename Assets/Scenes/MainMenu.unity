@@ -2561,6 +2561,8 @@ GameObject:
   - component: {fileID: 399928134}
   - component: {fileID: 399928133}
   - component: {fileID: 399928132}
+  - component: {fileID: 399928137}
+  - component: {fileID: 399928138}
   m_Layer: 5
   m_Name: YesBtn
   m_TagString: Untagged
@@ -2607,9 +2609,9 @@ MonoBehaviour:
   image: {fileID: 0}
   popupID: 2
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 0}
-  select: {fileID: 0}
-  press: {fileID: 0}
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
   soundOnPointerEnter: 1
   noSound: 0
 --- !u!114 &399928133
@@ -2625,12 +2627,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 435038071}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.78431374}
@@ -2655,7 +2657,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 399928135}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8272054411730838551}
+        m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
+        m_MethodName: DeleteSave
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!223 &399928134
 Canvas:
   m_ObjectHideFlags: 0
@@ -2701,7 +2715,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 3500503586127475d92788039e60762e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2717,6 +2731,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399928130}
   m_CullTransparentMesh: 1
+--- !u!114 &399928137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399928130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffd82fd682792409d81bc8dd1266aabf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetText: {fileID: 1989033519}
+  hoverAlpha: 1
+--- !u!114 &399928138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399928130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &410112994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2806,6 +2851,8 @@ GameObject:
   - component: {fileID: 435038072}
   - component: {fileID: 435038071}
   - component: {fileID: 435038070}
+  - component: {fileID: 435038075}
+  - component: {fileID: 435038076}
   m_Layer: 5
   m_Name: NoBtn
   m_TagString: Untagged
@@ -2852,9 +2899,9 @@ MonoBehaviour:
   image: {fileID: 0}
   popupID: 2
   deselectsOnPointerLeave: 0
-  soundPlayer: {fileID: 0}
-  select: {fileID: 0}
-  press: {fileID: 0}
+  soundPlayer: {fileID: 868457502}
+  select: {fileID: 11400000, guid: b515fac6f368743cbb9526137c8bd98f, type: 2}
+  press: {fileID: 11400000, guid: e886e54d07586465cbe114f60cf57b6e, type: 2}
   soundOnPointerEnter: 1
   noSound: 0
 --- !u!114 &435038071
@@ -2870,11 +2917,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 399928133}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -2900,7 +2947,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 435038073}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8272054411730838551}
+        m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
+        m_MethodName: CancelDeleteSave
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!223 &435038072
 Canvas:
   m_ObjectHideFlags: 0
@@ -2946,7 +3005,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: b18711ac9230442babcf31aa44ae814e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -2962,6 +3021,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 435038068}
   m_CullTransparentMesh: 1
+--- !u!114 &435038075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435038068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffd82fd682792409d81bc8dd1266aabf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetText: {fileID: 460424727}
+  hoverAlpha: 1
+--- !u!114 &435038076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435038068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &436396723
 GameObject:
   m_ObjectHideFlags: 0
@@ -3407,7 +3497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -8726,7 +8816,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8272054411730838551}
         m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
-        m_MethodName: DeleteSave
+        m_MethodName: PromptDeleteSave
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10016,7 +10106,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8272054411730838551}
         m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
-        m_MethodName: DeleteSave
+        m_MethodName: PromptDeleteSave
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11273,7 +11363,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8272054411730838551}
         m_TargetAssemblyTypeName: SaveDataManager, Assembly-CSharp
-        m_MethodName: DeleteSave
+        m_MethodName: PromptDeleteSave
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12084,7 +12174,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1895210908
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12105,7 +12195,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5, y: -82}
+  m_AnchoredPosition: {x: -5, y: 4}
   m_SizeDelta: {x: -1875.332, y: -1051.668}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1895210909
@@ -13136,7 +13226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

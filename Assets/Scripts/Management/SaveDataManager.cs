@@ -17,6 +17,8 @@ public class SaveDataManager : MonoBehaviour
     [SerializeField] private GameObject deletePanel;
     [SerializeField] private GameObject mainMenuManager;
 
+    private int toDelete = 0; // 0 means it is deselected
+
     void Awake()
     {
         LoadSaves();
@@ -46,10 +48,23 @@ public class SaveDataManager : MonoBehaviour
         //MainMenuManager.instance.PlayGame();
     }
 
-    public void DeleteSave(int save)
+    public void PromptDeleteSave(int save)
     {
         deletePanel.SetActive(true);
-        // TODO: provide save to this somehow!
+        toDelete = save;
+    }
+
+    public void CancelDeleteSave()
+    {
+        Debug.Log("Keeping Save " + toDelete);
+        toDelete = 0;
+    }
+
+    public void DeleteSave()
+    {
+        // delete(toDelete);
+        // toDelete is the integer 1-3
+        Debug.LogWarning("Deleting Save " + toDelete);
     }
 
     public void UnlockLevels()
