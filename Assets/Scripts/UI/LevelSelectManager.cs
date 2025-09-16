@@ -115,7 +115,6 @@ public class LevelSelectManager : MonoBehaviour
 
         playing = true;
 
-        Debug.Log(currLevel);
         if (currLevel >= 4) // TODO: remove, this is a hack :(
         {
             AudioManager.instance.carryOn = false;
