@@ -99,7 +99,7 @@ public class InkFlood : MonoBehaviour
         }
     }
 
-    public void FadeOut()
+    public void FadeOut(bool _)
     {
         if (soundPlayer != null)
             AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 0f, () => { }));

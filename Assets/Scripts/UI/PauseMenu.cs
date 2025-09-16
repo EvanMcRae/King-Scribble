@@ -74,6 +74,12 @@ public class PauseMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
+    // TODO: super hacky, sorry
+    public void Unpause(bool _)
+    {
+        Unpause();
+    }
+
     public void Unpause()
     {
         if (!GameManager.paused) return;
@@ -122,7 +128,7 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        GameManager.ResetAction.Invoke();
+        GameManager.ResetAction.Invoke(true);
         pauseButton.enabled = false;
         GameManager.resetting = true;
         GameSaver.instance.SaveGame();

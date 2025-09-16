@@ -68,20 +68,21 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         GameManager.ResetAction -= ResetLevel;
     }
 
-    void ResetLevel()
+    void ResetLevel(bool shouldFade)
     {
         GameManager.ResetAction -= ResetLevel;
         try
         {
             SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
-            if (!scene.unlockPoints.Contains("inkRises"))
+            if (shouldFade && !scene.unlockPoints.Contains("inkRises"))
             {
                 AudioManager.instance.FadeOutCurrent();
             }
         }
         catch (System.Exception)
         {
-            AudioManager.instance.FadeOutCurrent();
+            if (shouldFade)
+                AudioManager.instance.FadeOutCurrent();
         }
     }
 

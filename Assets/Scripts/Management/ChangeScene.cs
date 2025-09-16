@@ -41,7 +41,7 @@ public class ChangeScene : MonoBehaviour
         PlayerVars.instance.transform.DOScale(Vector3.zero, 1f);
         yield return new WaitForSeconds(1f);
         ScreenWipe.instance.WipeIn();
-        GameManager.ResetAction.Invoke();
+        GameManager.ResetAction.Invoke(false);
         yield return new WaitForSeconds(1f);
         PlayerVars.instance.transform.localScale = ogScale;
 

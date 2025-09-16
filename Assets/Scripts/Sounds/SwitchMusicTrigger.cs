@@ -7,6 +7,7 @@ public class SwitchMusicTrigger : MonoBehaviour
     public MusicClip newTrack;
     private MusicClip oldTrack;
     private AudioManager theAM;
+    [SerializeField] private bool setsOld = false;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -20,7 +21,7 @@ public class SwitchMusicTrigger : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && oldTrack != null)
+        if (setsOld && other.CompareTag("Player") && oldTrack != null)
         {
             theAM = FindFirstObjectByType<AudioManager>();
             theAM.ChangeBGM(oldTrack, theAM.currentArea);
