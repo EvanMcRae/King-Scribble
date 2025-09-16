@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Transform spawnpoint;
     public float voidDeath = -50;
     public Texture2D defaultCursor, previousCursor;
-    public static Action ResetAction;
+    public static Action<bool> ResetAction;
     public ResetPrompt resetPrompt;
     public float resetTime;
     public const float maxResetTime = 1.5f;
@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
         ClearResetPrompt();
         ScreenWipe.instance.WipeIn();
         GameSaver.ResetData();
-        ResetAction.Invoke();
+        ResetAction.Invoke(true);
         yield return new WaitForSeconds(1f);
         PlayerVars.instance.Dismount();
         PlayerController.instance.KillTweens();

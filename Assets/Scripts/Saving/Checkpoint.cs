@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class Checkpoint : MonoBehaviour
     public Sprite with_flag; // Temp - will rewrite to animate raising/lowering later
     private bool has_triggered = false;
     public SoundPlayer soundPlayer;
+    public static Action ActivatedAction;
 
     private void Start()
     {
@@ -33,6 +35,7 @@ public class Checkpoint : MonoBehaviour
         PlayerVars.instance.SaveInventory();
         GameSaver.SaveStickers();
         GameSaver.instance.SaveGame(true);
+        ActivatedAction?.Invoke();
     }
 
     void SetCheckpointTriggered()

@@ -10,6 +10,7 @@ public class ChangeScene : MonoBehaviour
     public string scene; // Name of the scene to change to
     public static string nextScene;
     [SerializeField] protected SoundPlayer soundPlayer;
+    public AudioManager.GameArea newArea = AudioManager.GameArea.CURRENT;
 
     public virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -29,6 +30,10 @@ public class ChangeScene : MonoBehaviour
         // Shrink sequence
         // TODO: A lot of how this is happening is really bad and MUST be changed in the future!! This is for demo sake only.
         soundPlayer.PlaySound("Player.Portal");
+        if (newArea != AudioManager.instance.currentArea && newArea != AudioManager.GameArea.CURRENT)
+        {
+            AudioManager.instance.FadeOutCurrent();
+        }
         PlayerVars.instance.transform.DOMove(transform.position, 1f);
         PlayerVars.instance.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
         PlayerVars.instance.GetComponent<Rigidbody2D>().linearVelocity = Vector3.zero;
@@ -36,7 +41,7 @@ public class ChangeScene : MonoBehaviour
         PlayerVars.instance.transform.DOScale(Vector3.zero, 1f);
         yield return new WaitForSeconds(1f);
         ScreenWipe.instance.WipeIn();
-        GameManager.ResetAction.Invoke();
+        GameManager.ResetAction.Invoke(false);
         yield return new WaitForSeconds(1f);
         PlayerVars.instance.transform.localScale = ogScale;
 

@@ -74,6 +74,13 @@ public class PauseMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(resumeButton);
     }
 
+    // TODO: super hacky, sorry
+    public void Unpause(bool _)
+    {
+        GameManager.ResetAction -= Unpause;
+        Unpause();
+    }
+
     public void Unpause()
     {
         if (!GameManager.paused) return;
@@ -122,11 +129,15 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        GameManager.ResetAction.Invoke();
+        GameManager.ResetAction.Invoke(true);
         pauseButton.enabled = false;
         GameManager.resetting = true;
         GameSaver.instance.SaveGame();
         ScreenWipe.instance.WipeIn();
+        if (AudioManager.instance.currentArea != AudioManager.GameArea.LEVEL) // TODO this is a hackfix since menu music uses level music, will need to fade regardless in the future
+        {
+            AudioManager.instance.FadeOutCurrent();
+        }
         ScreenWipe.PostWipe += GoToMainMenu;
     }
 

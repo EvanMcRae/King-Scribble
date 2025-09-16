@@ -7,6 +7,7 @@ public class SwitchMusicOnLoad : MonoBehaviour
     public MusicClip newTrack;
     public AudioManager.GameArea newArea;
     private AudioManager theAM;
+    public float duration = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +20,7 @@ public class SwitchMusicOnLoad : MonoBehaviour
         if (newTrack != null)
         {
             theAM = FindFirstObjectByType<AudioManager>();
-            theAM.ChangeBGM(newTrack, newArea);
+            theAM.ChangeBGM(newTrack, newArea, duration);
         }
     }
 }
