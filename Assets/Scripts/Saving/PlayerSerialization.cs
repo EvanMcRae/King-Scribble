@@ -93,7 +93,16 @@ public class InkSerialization
     public void SetValues(GameObject inkObj)
     {
         InkFlood ink = inkObj.GetComponent<InkFlood>();
-        ink.transform.position = new Vector3(inkObj.transform.position.x, height, inkObj.transform.position.z);
+
+        // Make sure that the ink doesn't load too close to the player, or else you can softlock yourself
+        float bound = height;
+        if (flooding)
+        {
+            bound = GameSaver.GetScene(GameSaver.currData.scene).spawnpoint.GetValue().y - 10f;
+            bound -= ink.GetComponent<MeshRenderer>().bounds.extents.y;
+        }
+
+        ink.transform.position = new Vector3(inkObj.transform.position.x, Mathf.Min(bound, height), inkObj.transform.position.z);
         ink.flooding = flooding;
         ink.curDest = destination;
     }
