@@ -273,10 +273,6 @@ public class EraserBossAI : MonoBehaviour
     void RoarSound()
     {
         soundPlayer.PlaySound("EraserBoss.Roar");
-
-        // TODO: this is lowkey hacked in but it works ig
-        if (AudioManager.instance.currentArea != AudioManager.GameArea.ERASER_BOSS)
-            AudioManager.instance.ChangeBGM(fightMusic, 0);
     }
 
     void FixedUpdate()
@@ -1104,8 +1100,18 @@ public class EraserBossAI : MonoBehaviour
     // Cut scene that shows EB roaring
     private IEnumerator StartUp()
     {
+        // TODO: this is lowkey hacked in but it works ig
+        if (AudioManager.instance.currentArea != AudioManager.GameArea.ERASER_BOSS)
+        {
+            AudioManager.instance.ChangeBGM(fightMusic, 0);
+            yield return new WaitForSeconds(1.64f - 10/12f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
+
         // despawn existing pencil and pen objects outside the arena
-        yield return new WaitForSeconds(1.0f);
         ChangeState(State.Roar);
         yield return new WaitForSeconds(0.5f);
         DespawnAllPencilObj();
