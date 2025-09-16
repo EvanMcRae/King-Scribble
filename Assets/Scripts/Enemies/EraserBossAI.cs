@@ -57,6 +57,7 @@ public class EraserBossAI : MonoBehaviour
     [SerializeField] private GameObject _leftInk;
     [SerializeField] private GameObject _rightInk;
     [SerializeField] private Moving_Platform movingWall;
+    [SerializeField] private MusicClip fightMusic;
     // behavior vars:
     private float baseSpeed = 30f; // Movement speed
     private float chargeSpeed = 50f;
@@ -165,6 +166,9 @@ public class EraserBossAI : MonoBehaviour
             }
         }
 
+        GameManager.ResetAction += ResetFight;
+        AudioManager.instance.FadeOutCurrent();
+
         ChangeState(State.Start);
         //StartCoroutine(ActivateShield());
 
@@ -269,6 +273,10 @@ public class EraserBossAI : MonoBehaviour
     void RoarSound()
     {
         soundPlayer.PlaySound("EraserBoss.Roar");
+
+        // TODO: this is lowkey hacked in but it works ig
+        if (AudioManager.instance.currentArea != AudioManager.GameArea.ERASER_BOSS)
+            AudioManager.instance.ChangeBGM(fightMusic, 0);
     }
 
     void FixedUpdate()
@@ -351,7 +359,7 @@ public class EraserBossAI : MonoBehaviour
                 }
 
                 // Trying to solve stopping coroutine problem:
-                
+
                 // float distance = Vector3.Distance(transform.position, prevPosition);
                 // Debug.Log(distance);
                 // if (distance < 0.01f)
@@ -589,7 +597,7 @@ public class EraserBossAI : MonoBehaviour
             soundPlayer.PlaySound("EraserBoss.Thud");
             soundPlayer.PlaySound("EraserBoss.Chain");
         }
-        
+
         // a temporary fix that despawns pen objects until EB's dodge algorithm is implemented
         if (other.gameObject.layer == LayerMask.NameToLayer("PenLines"))
         {
@@ -1012,11 +1020,13 @@ public class EraserBossAI : MonoBehaviour
 
         // SLOW THE TIMEEEE
         Debug.Log("BREAKING CHAIN");
-        
-        if (isRight) { // break chain
+
+        if (isRight)
+        { // break chain
             BreakRightChain();
         }
-        else {
+        else
+        {
             BreakLeftChain();
         }
 
@@ -1124,5 +1134,14 @@ public class EraserBossAI : MonoBehaviour
     private Vector3 checkBounds(Vector3 point)
     {
         return point;
+    }
+
+    private void ResetFight(bool shouldFadeMusic)
+    {
+        GameManager.ResetAction -= ResetFight;
+        if (shouldFadeMusic)
+        {
+            AudioManager.instance.FadeOutCurrent();
+        }
     }
 }

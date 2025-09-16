@@ -128,14 +128,11 @@ public class EBInkPipe : MonoBehaviour
         pipeSoundPlayer.PlaySound("EraserBoss.PipeExplosion");
     }
 
-    public void FadeOut(bool shouldFadeMusic)
+    public void FadeOut(bool _)
     {
+        GameManager.ResetAction -= FadeOut;
         if (sound_player != null)
             AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 1f, 0f, () => { }));
-        if (shouldFadeMusic)
-        {
-            AudioManager.instance.FadeOutCurrent();
-        }
     }
 
     private void OnDestroy()

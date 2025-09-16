@@ -60,6 +60,7 @@ public class Moving_Platform : MonoBehaviour
 
     private void FadeOut(bool _)
     {
+        GameManager.ResetAction -= FadeOut;
         if (fadedOut) return;
         foreach (AudioSource source in soundPlayer.sources)
         {

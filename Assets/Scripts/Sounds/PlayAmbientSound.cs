@@ -24,6 +24,7 @@ public class PlayAmbientSound : MonoBehaviour
 
     void FadeOut(bool _)
     {
+        GameManager.ResetAction -= FadeOut;
         AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(soundPlayer.sources[0], 1f, 0f, () => { }));
     }
 

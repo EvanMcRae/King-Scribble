@@ -77,6 +77,7 @@ public class PauseMenu : MonoBehaviour
     // TODO: super hacky, sorry
     public void Unpause(bool _)
     {
+        GameManager.ResetAction -= Unpause;
         Unpause();
     }
 
