@@ -36,6 +36,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             SceneSerialization scene = GameSaver.GetScene(GameSaver.currData.scene);
             if (scene.unlockPoints.Contains("inkRises"))
             {
+                crazyMusic.duration = 1.0f;
                 lateStart = true;
                 initialFollowCam.gameObject.SetActive(false);
                 followCam.gameObject.SetActive(true);
