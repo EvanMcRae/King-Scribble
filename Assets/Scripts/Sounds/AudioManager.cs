@@ -129,7 +129,7 @@ public class AudioManager : MonoBehaviour
         // Manages looping tracks
         if (firstSet)
         {
-            if (BGM1[activePlayer].clip != null && BGM1[activePlayer].time >= loopPointSeconds + preEntryPointSeconds)
+            if (BGM1[activePlayer].clip != null && BGM1[activePlayer].time >= loopPointSeconds)
             {
                 activePlayer = 1 - activePlayer;
                 if (currentSong != null)
@@ -143,7 +143,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            if (BGM2[activePlayer].clip != null && BGM2[activePlayer].time >= loopPointSeconds + preEntryPointSeconds)
+            if (BGM2[activePlayer].clip != null && BGM2[activePlayer].time >= loopPointSeconds)
             {
                 activePlayer = 1 - activePlayer;
                 if (currentSong != null)
@@ -218,8 +218,15 @@ public class AudioManager : MonoBehaviour
         currentArea = newArea;
 
         // Calculate loop point
-        loopPointSeconds = 60.0f * (music.barsLength * 4 * music.timeSignature / music.timeSignatureBottom) / music.BPM;
-        preEntryPointSeconds = 60.0f * (music.preEntryBars * 4 * music.timeSignature / music.timeSignatureBottom) / music.BPM;
+        loopPointSeconds = 60.0f * ((music.barsLength + music.preEntryBars) * 4.0f * music.timeSignature / music.timeSignatureBottom) / music.BPM;
+        preEntryPointSeconds = 60.0f * (music.preEntryBars * 4.0f * music.timeSignature / music.timeSignatureBottom) / music.BPM;
+
+        if (loopPointSeconds > music.length())
+        {
+            Debug.LogWarning($"{music} is too short to loop! True length = {music.length()} seconds, loop point = {loopPointSeconds} seconds. Using true length.");
+            loopPointSeconds = music.length();
+        }
+        Debug.Log(loopPointSeconds);
 
         // Prevent fading the same clip on both players
         if (music == currentSong)
