@@ -226,7 +226,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning($"{music} is too short to loop! True length = {music.length()} seconds, loop point = {loopPointSeconds} seconds. Using true length.");
             loopPointSeconds = music.length();
         }
-        Debug.Log(loopPointSeconds);
 
         // Prevent fading the same clip on both players
         if (music == currentSong)
