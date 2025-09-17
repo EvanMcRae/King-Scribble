@@ -20,12 +20,10 @@ public class LevelStartBanner : MonoBehaviour
     }
 
     public void setStartPosition() {
-        Debug.Log("setting banner pos");
         needsStartPos = true;
     }
 
     public void PlayLevelStartAnimation() {
-        Debug.Log("playing banner animation!");
         StartCoroutine(StartAnimation());
         ScreenWipe.PostUnwipe -= PlayLevelStartAnimation;
     }

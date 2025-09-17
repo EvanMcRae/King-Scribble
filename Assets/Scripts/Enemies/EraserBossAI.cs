@@ -1103,8 +1103,9 @@ public class EraserBossAI : MonoBehaviour
         // TODO: this is lowkey hacked in but it works ig
         if (AudioManager.instance.currentArea != AudioManager.GameArea.ERASER_BOSS)
         {
+            AudioManager.instance.inCutscene = true;
             AudioManager.instance.ChangeBGM(fightMusic, 0.25f);
-            yield return new WaitForSeconds(1.64f - 10/12f);
+            yield return new WaitForSeconds(1.64f - 10 / 12f);
         }
         else
         {
@@ -1117,6 +1118,7 @@ public class EraserBossAI : MonoBehaviour
         DespawnAllPencilObj();
         DespawnAllPenObj();
         yield return new WaitForSeconds(2.5f);
+        AudioManager.instance.inCutscene = false;
         ChangeState(State.Searching);
     }
 
@@ -1149,5 +1151,6 @@ public class EraserBossAI : MonoBehaviour
         {
             AudioManager.instance.FadeOutCurrent();
         }
+        AudioManager.instance.inCutscene = false;
     }
 }
