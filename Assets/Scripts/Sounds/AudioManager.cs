@@ -520,17 +520,18 @@ public class AudioManager : MonoBehaviour
 
     private void OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-        if (firstSet)
-        {
-            BGM1[activePlayer].timeSamples = currentTime;
-            if (!paused)
-                BGM2[activePlayer].Play();
-        }
-        else
-        {
-            BGM2[activePlayer].timeSamples = currentTime;
-            if (!paused)
-                BGM2[activePlayer].Play();
-        }
+        // TODO: did we ever need to do anything like this? like... this seems to hurt more than it helps
+        // if (firstSet)
+        // {
+        //     BGM1[activePlayer].timeSamples = currentTime;
+        //     if (!paused)
+        //         BGM2[activePlayer].Play();
+        // }
+        // else
+        // {
+        //     BGM2[activePlayer].timeSamples = currentTime;
+        //     if (!paused)
+        //         BGM2[activePlayer].Play();
+        // }
     }
 }
