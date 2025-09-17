@@ -1103,7 +1103,7 @@ public class EraserBossAI : MonoBehaviour
         // TODO: this is lowkey hacked in but it works ig
         if (AudioManager.instance.currentArea != AudioManager.GameArea.ERASER_BOSS)
         {
-            AudioManager.instance.ChangeBGM(fightMusic, 0);
+            AudioManager.instance.ChangeBGM(fightMusic, 0.25f);
             yield return new WaitForSeconds(1.64f - 10/12f);
         }
         else
