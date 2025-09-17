@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
     private bool firstSongPlayed = false;
     public bool paused = false;
     public bool carryOn = true;
+    public bool inCutscene = false;
 
     public SoundCategory soundDatabase;
     public MusicCategory musicDatabase;
@@ -226,7 +227,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning($"{music} is too short to loop! True length = {music.length()} seconds, loop point = {loopPointSeconds} seconds. Using true length.");
             loopPointSeconds = music.length();
         }
-        Debug.Log(loopPointSeconds);
 
         // Prevent fading the same clip on both players
         if (music == currentSong)
@@ -246,13 +246,21 @@ public class AudioManager : MonoBehaviour
             // Fade-out the active play, if it is not silent (eg: first start)
             if (BGM1[activePlayer].volume > 0)
             {
-                fader[0] = FadeAudioSource(BGM1[activePlayer], duration, 0.0f, () => { fader[0] = null; });
-                StartCoroutine(fader[0]);
+                if (duration > 0)
+                {
+                    fader[0] = FadeAudioSource(BGM1[activePlayer], duration, 0.0f, () => { fader[0] = null; });
+                    StartCoroutine(fader[0]);
+                }
+                else
+                {
+                    BGM1[activePlayer].volume = 0;
+                }
             }
             BGM1[1 - activePlayer].Stop();
 
             // Fade-in the new clip
             BGM2[activePlayer].clip = music.GetClip();
+            BGM2[activePlayer].Play();
             if (carryOn && BGM1[activePlayer].isPlaying && BGM1[activePlayer].clip != null)
             {
                 BGM2[activePlayer].timeSamples = BGM1[activePlayer].timeSamples; // syncs up time
@@ -261,7 +269,6 @@ public class AudioManager : MonoBehaviour
             {
                 BGM2[activePlayer].timeSamples = 0;
             }
-            BGM2[activePlayer].Play();
 
             if (firstSongPlayed && duration > 0)
             {
@@ -278,14 +285,22 @@ public class AudioManager : MonoBehaviour
             // Fade-out the active play, if it is not silent (eg: first start)
             if (BGM2[activePlayer].volume > 0)
             {
-                fader[0] = FadeAudioSource(BGM2[activePlayer], duration, 0.0f, () => { fader[0] = null; });
-                StartCoroutine(fader[0]);
+                if (duration > 0)
+                {
+                    fader[0] = FadeAudioSource(BGM2[activePlayer], duration, 0.0f, () => { fader[0] = null; });
+                    StartCoroutine(fader[0]);
+                }
+                else
+                {
+                    BGM2[activePlayer].volume = 0;
+                }
             }
             BGM2[1 - activePlayer].Stop();
 
             // Fade-in the new clip
             BGM1[activePlayer].clip = music.GetClip();
-            if (carryOn && BGM2[activePlayer].isPlaying)
+            BGM1[activePlayer].Play();
+            if (carryOn && BGM2[activePlayer].isPlaying && BGM2[activePlayer].clip != null)
             {
                 BGM1[activePlayer].timeSamples = BGM2[activePlayer].timeSamples; // Syncs up time
             }
@@ -293,7 +308,7 @@ public class AudioManager : MonoBehaviour
             {
                 BGM1[activePlayer].timeSamples = 0;
             }
-            BGM1[activePlayer].Play();
+            
             if (firstSongPlayed && duration > 0)
             {
                 fader[1] = FadeAudioSource(BGM1[activePlayer], duration, 1.0f, () => { fader[1] = null; });
@@ -510,6 +525,13 @@ public class AudioManager : MonoBehaviour
 
     public void PauseEffect(bool active)
     {
+        if (inCutscene)
+        {
+            if (active) PauseCurrent();
+            else UnPauseCurrent();
+            return;
+        }
+        
         DOTween.To(() => lowPass, x => lowPass = x, active ? 1815.00f : 22000.00f, 0.5f).SetUpdate(true);
     }
 
@@ -520,17 +542,18 @@ public class AudioManager : MonoBehaviour
 
     private void OnAudioConfigurationChanged(bool deviceWasChanged)
     {
-        if (firstSet)
-        {
-            BGM1[activePlayer].timeSamples = currentTime;
-            if (!paused)
-                BGM2[activePlayer].Play();
-        }
-        else
-        {
-            BGM2[activePlayer].timeSamples = currentTime;
-            if (!paused)
-                BGM2[activePlayer].Play();
-        }
+        // TODO: did we ever need to do anything like this? like... this seems to hurt more than it helps
+        // if (firstSet)
+        // {
+        //     BGM1[activePlayer].timeSamples = currentTime;
+        //     if (!paused)
+        //         BGM2[activePlayer].Play();
+        // }
+        // else
+        // {
+        //     BGM2[activePlayer].timeSamples = currentTime;
+        //     if (!paused)
+        //         BGM2[activePlayer].Play();
+        // }
     }
 }
