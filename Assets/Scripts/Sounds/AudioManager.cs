@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
     private bool firstSongPlayed = false;
     public bool paused = false;
     public bool carryOn = true;
+    public bool inCutscene = false;
 
     public SoundCategory soundDatabase;
     public MusicCategory musicDatabase;
@@ -524,6 +525,13 @@ public class AudioManager : MonoBehaviour
 
     public void PauseEffect(bool active)
     {
+        if (inCutscene)
+        {
+            if (active) PauseCurrent();
+            else UnPauseCurrent();
+            return;
+        }
+        
         DOTween.To(() => lowPass, x => lowPass = x, active ? 1815.00f : 22000.00f, 0.5f).SetUpdate(true);
     }
 

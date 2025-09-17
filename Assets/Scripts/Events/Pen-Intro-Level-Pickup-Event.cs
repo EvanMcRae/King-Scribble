@@ -136,6 +136,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
     IEnumerator Start_Event()
     {
         isAnimating = true;
+        AudioManager.instance.inCutscene = true;
         AudioManager.instance.FadeOutCurrent();
         GameManager.canMove = false;
         yield return _waitForSeconds0_5;
@@ -175,6 +176,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             };
             GameSaver.currData.scenes.Add(s);
         }
+        AudioManager.instance.inCutscene = false;
         GameSaver.UnlockPointPermanent("Level5", "cutsceneWatched");
         if (!s.permaUnlockPoints.Contains("cutsceneWatched"))
             s.permaUnlockPoints.Add("cutsceneWatched");
@@ -192,6 +194,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         {
             CancelInvoke();
             crazyMusic.enabled = true;
+            AudioManager.instance.inCutscene = false;
             StopAllCoroutines();
             StartCoroutine(SkipCutsceneRoutine());
             rumblePlayer.EndAllSounds();
@@ -228,5 +231,13 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         yield return new WaitForEndOfFrame();
         Camera.main.GetComponent<CinemachineBrain>().DefaultBlend.Time = 2;
         followCam.Follow = PlayerVars.instance.transform;
+    }
+
+    public void OnDestroy()
+    {
+        if (isAnimating)
+        {
+            AudioManager.instance.inCutscene = false;
+        }
     }
 }
