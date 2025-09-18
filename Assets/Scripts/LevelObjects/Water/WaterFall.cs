@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -36,6 +37,10 @@ public class WaterFall : MonoBehaviour
     [SerializeField] private bool _smooths = true;
     [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
     [SerializeField] private bool _clipsInParticles = true;
+
+    [Header("Miscellaneous")]
+    [Tooltip("Threshold for when the player should be killed - increase to allow more liquid to hit the player without killing them")]
+    [SerializeField] private int _killThreshold = 5;
 
     private Collider2D _col;
     private float _timer;
@@ -97,20 +102,21 @@ public class WaterFall : MonoBehaviour
 
         // Define texture for water crop data
         Texture2D objects = new(width: Mathf.Max(1,_numCasts+3), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
-
+        
+        int hitCounter = 0;
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
         for (int i = 0, p = 0; i < _numCasts + 3; i++)
         {
             // Raycast downward from the current point on the top
             Vector2 start = new(startX + interval * i, yTop);
-            
             RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
             if (hit)
             {
                 // Waterfalls kill the player on collision - if raycast hits the player, kill them >:)
                 if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !PlayerVars.instance.cheatMode)
                 {
-                    if (!GameManager.resetting)
+                    hitCounter++;
+                    if (hitCounter >= _killThreshold && !GameManager.resetting)
                         GameManager.instance.ResetGame();
                     hit = Physics2D.Raycast(start, Vector2.down, -3 * yBot, (_waterLayers | _colliders) & ~(1 << LayerMask.NameToLayer("Player")));
                 }
