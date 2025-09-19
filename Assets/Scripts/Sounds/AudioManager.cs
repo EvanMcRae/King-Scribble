@@ -382,6 +382,7 @@ public class AudioManager : MonoBehaviour
 
     public void FadeOutCurrent(float duration = 1f)
     {
+        carryOn = false;
         if (firstSet)
         {
             if (fader[0] != null)
@@ -400,6 +401,7 @@ public class AudioManager : MonoBehaviour
 
     public void FadeInCurrent(float duration = 1f)
     {
+        carryOn = false;
         if (firstSet)
         {
             if (fader[0] != null)
