@@ -689,9 +689,9 @@ public class EraserBossAI : MonoBehaviour
     // Takes into account EB's circlecast colliders
     void Erase()
     {
-        EraserFunctions.Erase(bounds1.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
-        EraserFunctions.Erase(bounds2.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
-        EraserFunctions.Erase(bounds3.transform.position, eraserRadius, true, PencilTool.GetLinesFolder());
+        EraserFunctions.Erase(bounds1.transform.position, eraserRadius, true, PencilTool.GetLinesFolder(), false);
+        EraserFunctions.Erase(bounds2.transform.position, eraserRadius, true, PencilTool.GetLinesFolder(), false);
+        EraserFunctions.Erase(bounds3.transform.position, eraserRadius, true, PencilTool.GetLinesFolder(), false);
     }
 
 
