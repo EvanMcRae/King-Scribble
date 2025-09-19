@@ -384,11 +384,15 @@ public class AudioManager : MonoBehaviour
     {
         if (firstSet)
         {
+            if (fader[0] != null)
+                StopCoroutine(fader[0]);
             fader[0] = FadeAudioSource(BGM1[activePlayer], duration, 0.0f, () => { fader[0] = null; });
             StartCoroutine(fader[0]);
         }
         else
         {
+            if (fader[0] != null)
+                StopCoroutine(fader[0]);
             fader[0] = FadeAudioSource(BGM2[activePlayer], duration, 0.0f, () => { fader[0] = null; });
             StartCoroutine(fader[0]);
         }
@@ -398,11 +402,15 @@ public class AudioManager : MonoBehaviour
     {
         if (firstSet)
         {
+            if (fader[0] != null)
+                StopCoroutine(fader[0]);
             fader[0] = FadeAudioSource(BGM1[activePlayer], duration, 1.0f, () => { fader[0] = null; });
             StartCoroutine(fader[0]);
         }
         else
         {
+            if (fader[0] != null)
+                StopCoroutine(fader[0]);
             fader[0] = FadeAudioSource(BGM2[activePlayer], duration, 1.0f, () => { fader[0] = null; });
             StartCoroutine(fader[0]);
         }
