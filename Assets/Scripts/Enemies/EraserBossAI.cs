@@ -1124,6 +1124,7 @@ public class EraserBossAI : MonoBehaviour
 
     private IEnumerator EndScene()
     {
+        AudioManager.instance.FadeOutCurrent(3);
         baseSpeed = 25f;
         anim.Play("EB_Stun");
         yield return new WaitForSeconds(2.0f);

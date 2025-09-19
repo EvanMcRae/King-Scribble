@@ -20,7 +20,7 @@ public class SwitchMusicTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && other.GetComponent<PolygonCollider2D>() != null)
         {
             oldTrack = AudioManager.instance.currentSong;
             if (newTrack != null)
@@ -36,7 +36,7 @@ public class SwitchMusicTrigger : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (setsOld && other.CompareTag("Player"))
+        if (setsOld && other.CompareTag("Player") && other.GetComponent<PolygonCollider2D>() != null)
         {
             if (newTrack != null)
             {
