@@ -40,7 +40,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public enum GameArea
     {
-        CURRENT, MENU, LEVEL, TEMPLE_INTRO, TEMPLE, ERASER_BOSS, MINES
+        CURRENT, MENU, LEVEL, TEMPLE_CALM, TEMPLE_TENSE, ERASER_BOSS, MINES
     }
 
     /// <summary>
@@ -190,6 +190,15 @@ public class AudioManager : MonoBehaviour
                 break;
             case "LEVEL":
                 theArea = GameArea.LEVEL;
+                break;
+            case "TEMPLE_CALM":
+                theArea = GameArea.TEMPLE_CALM;
+                break;
+            case "TEMPLE_TENSE":
+                theArea = GameArea.TEMPLE_TENSE;
+                break;
+            case "ERASER_BOSS":
+                theArea = GameArea.ERASER_BOSS;
                 break;
             default:
                 Debug.LogWarning("Invalid area provided! Using current");

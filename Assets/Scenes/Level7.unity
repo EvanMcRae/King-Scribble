@@ -7969,8 +7969,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2625dd5de6172439ab6cc98292415b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newTrack: {fileID: 11400000, guid: 61cffee221ee64f68bc75e430b379fe4, type: 2}
-  newArea: 4
+  newTrack: {fileID: 11400000, guid: 8e0387b61fd8f42378fd91c8d4533ccb, type: 2}
+  newArea: 3
   duration: 1
 --- !u!4 &326429913
 Transform:
@@ -11184,6 +11184,7 @@ MonoBehaviour:
   _tickTime: 0.1
   _smooths: 1
   _clipsInParticles: 1
+  _killThreshold: 5
 --- !u!61 &498644190
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -22012,6 +22013,7 @@ MonoBehaviour:
   _tickTime: 0.1
   _smooths: 1
   _clipsInParticles: 1
+  _killThreshold: 5
 --- !u!61 &936230945
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -121174,6 +121176,7 @@ MonoBehaviour:
   _tickTime: 0.1
   _smooths: 1
   _clipsInParticles: 1
+  _killThreshold: 5
 --- !u!61 &1186286191
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -134356,6 +134359,7 @@ MonoBehaviour:
   _tickTime: 0.1
   _smooths: 1
   _clipsInParticles: 1
+  _killThreshold: 5
 --- !u!61 &1656145202
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -46,7 +46,7 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
             }
             else
             {
-                if (AudioManager.instance.currentArea == AudioManager.GameArea.TEMPLE)
+                if (AudioManager.instance.currentArea == AudioManager.GameArea.TEMPLE_TENSE)
                 {
                     introMusic.duration = 1.0f;
                 }
@@ -126,6 +126,8 @@ public class PenIntroLevelPickupEvent : MonoBehaviour
         // Stop anim
         anim_L.Play("Pipe_Stop");
         anim_R.Play("Pipe_Stop");
+        // New music
+        AudioManager.instance.ChangeBGM("Level.PrimordialPink1", 1);
     }
 
     void PlayCrazyMusic()
