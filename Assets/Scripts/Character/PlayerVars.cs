@@ -95,6 +95,7 @@ public class PlayerVars : MonoBehaviour
         GetComponent<PlayerController>().ResizePlayer(1, true);
         GetComponent<PlayerController>().SetFriction(false);
         GetComponent<PlayerController>().deadLanded = false;
+        GetComponent<PlayerController>().needToCutJump = false;
         GetComponentInChildren<Animator>().SetTrigger("reset");
         RefreshTools();
         isDead = false;

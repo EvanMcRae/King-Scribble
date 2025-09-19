@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false, isSprinting = false, isRoofed = false, isFalling = false;
     public float levelZoom;
     private bool isSprintMoving = false;
-    private bool releasedJumpSinceJump = false, needToCutJump = false;
+    private bool releasedJumpSinceJump = false;
+    public bool needToCutJump = false;
     public bool facingRight
     {
         get
