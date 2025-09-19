@@ -10,6 +10,14 @@ public class SwitchMusicTrigger : MonoBehaviour
     [SerializeField] private bool sameArea = true;
     [SerializeField] private float duration = 1;
 
+    void Awake()
+    {
+        if (setsOld)
+        {
+            GameManager.ResetAction += OnReset;
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -42,6 +50,12 @@ public class SwitchMusicTrigger : MonoBehaviour
                 AudioManager.instance.FadeInCurrent(duration);
             }
         }
+    }
+
+    public void OnReset(bool _)
+    {
+        GameManager.ResetAction -= OnReset;
+        DisableSettingOldMusic();
     }
 
     public void DisableSettingOldMusic()
