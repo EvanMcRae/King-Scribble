@@ -76,6 +76,7 @@ public class AudioManager : MonoBehaviour
             s.volume = 0.0f;
             s.pitch = 1;
             s.outputAudioMixerGroup = musicMixerGroup;
+            s.dopplerLevel = 0;
         }
 
         foreach (AudioSource s in BGM2)
@@ -85,6 +86,7 @@ public class AudioManager : MonoBehaviour
             s.volume = 0.0f;
             s.pitch = 1;
             s.outputAudioMixerGroup = musicMixerGroup;
+            s.dopplerLevel = 0;
         }
 
         // Singleton pattern
