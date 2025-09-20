@@ -67,7 +67,7 @@ public class LevelSelectManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !goingToMenu && ScreenWipe.over && !playing)
+        if (Input.GetKeyDown(KeyCode.Tab) && !goingToMenu && ScreenWipe.over && !playing)
         {
             MainMenu();
         }

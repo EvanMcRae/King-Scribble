@@ -46,7 +46,7 @@ public class PopupPanel : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(PreviousButton);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && Closable)
+        if (Input.GetKeyDown(KeyCode.Tab) && Closable)
         {
             if (ClosableOverride)
                 ClosableOverride = false;

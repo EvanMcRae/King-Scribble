@@ -39,7 +39,7 @@ public class SettingsManager : MonoBehaviour
 
         currentSettings ??= new Settings();
 
-        UpdateFullScreen(false);
+        // UpdateFullScreen(false);
         UpdateVSync(false);
         UpdateMusic(false);
         UpdateSound(false);

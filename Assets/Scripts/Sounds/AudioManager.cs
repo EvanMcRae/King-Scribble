@@ -366,20 +366,6 @@ public class AudioManager : MonoBehaviour
         finishedCallback?.Invoke();
     }
 
-    public void SetPitch(float pitch)
-    {
-        musicMixer.SetFloat("Pitch", pitch);
-    }
-
-    public IEnumerator PitchDown()
-    {
-        for (float i = 0; i <= 1; i += 0.05f)
-        {
-            SetPitch(Mathf.Lerp(1f, 0f, i));
-            yield return new WaitForSeconds(0.04f);
-        }
-    }
-
     public void FadeOutCurrent(float duration = 1f)
     {
         carryOn = false;
