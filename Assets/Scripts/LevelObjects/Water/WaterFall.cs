@@ -37,6 +37,10 @@ public class WaterFall : MonoBehaviour
     [Tooltip("Determines whether the water cutoff mask attempts to clip itself halfway inside particles")]
     [SerializeField] private bool _clipsInParticles = true;
 
+    [Header("Miscellaneous")]
+    [Tooltip("Threshold for when the player should be killed - increase to allow more liquid to hit the player without killing them")]
+    [SerializeField] private int _killThreshold = 5;
+
     private Collider2D _col;
     private float _timer;
     private InteractableWater _water;
@@ -44,6 +48,8 @@ public class WaterFall : MonoBehaviour
     private int _numCasts; // How many raycasts we will use to determine particle spawn positions - determined by waterfall width and _castMult
     private ParticleSystem[] _parts;
     private Vector2 _offsetVector; // To prevent repeatedly assigning memory for the same vector
+    public bool isAnimating = false;
+    public float minHeight = float.NegativeInfinity;
 
     private void Start()
     {
@@ -86,6 +92,8 @@ public class WaterFall : MonoBehaviour
         float interval = _col.bounds.extents.x * 2 / _numCasts;
         float startX = _col.bounds.center.x - _col.bounds.extents.x - interval;
         float yTop = _col.bounds.center.y + _col.bounds.extents.y;
+        if (isAnimating)
+            yTop = Mathf.Max(minHeight, yTop);
         float yBot = _col.bounds.center.y - _col.bounds.extents.y;
 
         _numCasts = (int)(_castMult * _col.bounds.extents.x);
@@ -97,20 +105,21 @@ public class WaterFall : MonoBehaviour
 
         // Define texture for water crop data
         Texture2D objects = new(width: Mathf.Max(1,_numCasts+3), height: 2, textureFormat: TextureFormat.RGBAFloat, mipCount: 0, false);
-
+        
+        int hitCounter = 0;
         // Raycast _numCasts times, evenly distributed among the top of the waterfall, and spawn the particle system at each hit
         for (int i = 0, p = 0; i < _numCasts + 3; i++)
         {
             // Raycast downward from the current point on the top
             Vector2 start = new(startX + interval * i, yTop);
-            
-            RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3*yBot, _waterLayers | _colliders);
+            RaycastHit2D hit = Physics2D.Raycast(start, Vector2.down, -3 * yBot, _waterLayers | _colliders);
             if (hit)
             {
                 // Waterfalls kill the player on collision - if raycast hits the player, kill them >:)
                 if (hit.collider.gameObject.CompareTag("Player") && hit.collider.gameObject.name != "LandCheck" && !PlayerVars.instance.cheatMode)
                 {
-                    if (!GameManager.resetting)
+                    hitCounter++;
+                    if (hitCounter >= _killThreshold && !GameManager.resetting)
                         GameManager.instance.ResetGame();
                     hit = Physics2D.Raycast(start, Vector2.down, -3 * yBot, (_waterLayers | _colliders) & ~(1 << LayerMask.NameToLayer("Player")));
                 }
@@ -121,7 +130,7 @@ public class WaterFall : MonoBehaviour
                     // Only spawn if the previous particle has died and it's below the offset point
                     if (p < _parts.Length && _parts[p] == null && hit.point.y < yTop - _offset)
                     {
-                        _parts[p] = Instantiate(_part, hit.point, Quaternion.identity, gameObject.transform);
+                        _parts[p] = Instantiate(_part, hit.point, Quaternion.identity);
                         ParticleSystem.MainModule main = _parts[p].GetComponent<ParticleSystem>().main;
                         main.startSizeMultiplier = _particleRadius * 2;
                         if ((_waterLayers & (1 << hit.collider.gameObject.layer)) == 0) // Only offset if not in water layer
@@ -138,6 +147,11 @@ public class WaterFall : MonoBehaviour
                 // Encode y position as color channels in pixels of a Texture2D
                 // R = integer, G = decimal, B = sign
                 Color obj_info = new(Mathf.Floor(Mathf.Abs(yPos.y)) / 255, Mathf.Abs(yPos.y) % 1, Mathf.Clamp01(Mathf.Sign((yPos.y) / 255f)));
+                objects.SetPixel(i, 0, obj_info);
+            }
+            else if (isAnimating)
+            {
+                Color obj_info = new(Mathf.Floor(Mathf.Abs(yBot)) / 255, Mathf.Abs(yBot) % 1, Mathf.Clamp01(Mathf.Sign((yBot) / 255f)));
                 objects.SetPixel(i, 0, obj_info);
             }
         }

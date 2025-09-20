@@ -6,7 +6,7 @@ public class EraserFunctions : MonoBehaviour
 {
     public static List<BasicPaintableLayer> PaintableLayers = new();
 
-    public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null) {
+    public static void Erase(Vector2 pos, float radius, bool addFuel, Transform parent = null, bool fromPlayer = true) {
         // First handle paintable layers
         foreach (BasicPaintableLayer layer in PaintableLayers)
         {
@@ -47,24 +47,25 @@ public class EraserFunctions : MonoBehaviour
                     else if( (numPoints <= 2) || (numPoints == 3 && c_index == 1)) { // Destroy the line!
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "destroying line with " + numPoints + " points");
                         DrawManager.GetTool(ToolType.Pencil).AddFuel(numPoints);
-                        DrawManager.GetTool(ToolType.Eraser).SpendFuel(numPoints);
+                        if (fromPlayer)
+                            DrawManager.GetTool(ToolType.Eraser).SpendFuel(numPoints);
                         Destroy(c.gameObject);
                         lineRenderer.GetComponent<Line>().deleted = true;
                         continue;
                     }
                     else if(c_index == numPoints - 1 || c_index == 0) { // we are at the edge, delete the first/last point only
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "edge detected! removing 1 point");
-                        removePoint(c_index, c, pointsList, collidersList, addFuel);
+                        removePoint(c_index, c, pointsList, collidersList, addFuel, fromPlayer);
                     }
                     else if(c_index == 1) {
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "2nd to start detected!");
-                        removePoint(1, c, pointsList, collidersList, addFuel);
-                        removePoint(0, collidersList[0], pointsList, collidersList, addFuel);
+                        removePoint(1, c, pointsList, collidersList, addFuel, fromPlayer);
+                        removePoint(0, collidersList[0], pointsList, collidersList, addFuel, fromPlayer);
                     }
                     else if(c_index == numPoints - 2) { // we are at the 2nd to last point, delete the last two point only
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "2nd to edge detected!");
-                        removePoint(c_index + 1, collidersList[c_index+1], pointsList, collidersList, addFuel); // Destroy (c+1) first
-                        removePoint(c_index, c, pointsList, collidersList, addFuel);
+                        removePoint(c_index + 1, collidersList[c_index+1], pointsList, collidersList, addFuel, fromPlayer); // Destroy (c+1) first
+                        removePoint(c_index, c, pointsList, collidersList, addFuel, fromPlayer);
                     }
                     else { // Create a new Line to fill with the remainder of the points
                         //Debug.Log("Creating new line of size " + (numPoints - c_index - 1));
@@ -83,12 +84,12 @@ public class EraserFunctions : MonoBehaviour
                         for(int i = numPoints - 1; i >= c_index + 1; i--) {
                             ct++;
                             newLine.SetPosition(pointsList[i] + transformPosition, true, false); // Copy point into a newLine
-                            removePoint(i, collidersList[i], pointsList, collidersList, false);
+                            removePoint(i, collidersList[i], pointsList, collidersList, false, fromPlayer);
                             //Debug.Log(newLine.GetInstanceID() + " size " + ct + " == " + newLine.GetComponent<LineRenderer>().positionCount); ;
                         }
                         //Debug.Log(newLine.GetInstanceID() + " new line of size " + ct); ;
 
-                        removePoint(c_index, c, pointsList, collidersList, addFuel); // Delete the current collider
+                        removePoint(c_index, c, pointsList, collidersList, addFuel, fromPlayer); // Delete the current collider
 
                         hit2D = Utils.RaycastAll(Camera.main, pos, LayerMask.GetMask("Lines"), radius);
                         h = 0;
@@ -108,7 +109,8 @@ public class EraserFunctions : MonoBehaviour
                         //Debug.Log(lineRenderer.gameObject.GetInstanceID() + ": " + "Destroying line with " + pointsList.Count + " points");
                         if (addFuel) {
                             DrawManager.GetTool(ToolType.Pencil).AddFuel(pointsList.Count);
-                            DrawManager.GetTool(ToolType.Eraser).SpendFuel(pointsList.Count);
+                            if (fromPlayer)
+                                DrawManager.GetTool(ToolType.Eraser).SpendFuel(pointsList.Count);
                         }
                         lineRenderer.GetComponent<Line>().deleted = true;
                         Destroy(c.gameObject);
@@ -118,7 +120,7 @@ public class EraserFunctions : MonoBehaviour
        }
     }
 
-    private static void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel) {
+    private static void removePoint (int index, CircleCollider2D c, List<Vector3> pl, List<CircleCollider2D> cl, bool addFuel, bool fromPlayer = true) {
         pl.RemoveAt(index); // Remove point from the list
         cl.RemoveAt(index); // Remove collider from the list
         c.GetComponent<Line>().points.RemoveAt(index); // Remove point from the other 2D list
@@ -127,7 +129,8 @@ public class EraserFunctions : MonoBehaviour
         if (addFuel)
         {
             DrawManager.GetTool(ToolType.Pencil).AddFuel(1); // Add fuel
-            DrawManager.GetTool(ToolType.Eraser).SpendFuel(1); // Spend eraser
+            if (fromPlayer)
+                DrawManager.GetTool(ToolType.Eraser).SpendFuel(1); // Spend eraser
         }
         return;
     }

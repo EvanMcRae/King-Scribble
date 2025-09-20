@@ -22,6 +22,9 @@ public class EBInkPipe : MonoBehaviour
     void Start()
     {
         physics = inkfall.transform.GetChild(0).gameObject;
+        Bounds bounds = physics.GetComponent<Collider2D>().bounds;
+        physics.GetComponent<WaterFall>().minHeight = active.position.y + bounds.extents.y;
+
         anim = GetComponent<Animator>();
         if (!is_active)
         {
@@ -54,6 +57,8 @@ public class EBInkPipe : MonoBehaviour
     private IEnumerator Activate_()
     {
         is_busy = true;
+        physics.SetActive(true);
+        physics.GetComponent<WaterFall>().isAnimating = true;
         anim.Play("Pipe_Start");
         yield return new WaitForSeconds(1.0f);
         inkfall.transform.DOMoveY(active.position.y, 0.5f);
@@ -64,7 +69,7 @@ public class EBInkPipe : MonoBehaviour
             AudioManager.instance.StartCoroutine(AudioManager.instance.FadeAudioSource(sound_player.sources[0], 0.25f, 1f, () => { }));
         }
         yield return new WaitForSeconds(0.5f);
-        physics.SetActive(true);
+        physics.GetComponent<WaterFall>().isAnimating = false;
         is_active = true;
         is_busy = false;
         inkSoundPlayers++;
@@ -82,6 +87,7 @@ public class EBInkPipe : MonoBehaviour
         physics.SetActive(false);
         anim.Play("Pipe_Stop");
         inkfall.transform.DOMoveY(end.position.y, 0.5f);
+        physics.GetComponent<WaterFall>().isAnimating = true;
         yield return new WaitForSeconds(0.5f);
         anim.Play("Pipe_Idle");
         inkSoundPlayers--;
@@ -92,6 +98,7 @@ public class EBInkPipe : MonoBehaviour
         inkfall.transform.position = start.transform.position;
         is_active = false;
         is_busy = false;
+        physics.GetComponent<WaterFall>().isAnimating = false;
     }
 
     public void Break()
