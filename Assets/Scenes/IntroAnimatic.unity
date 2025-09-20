@@ -369,6 +369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newTrack: {fileID: 11400000, guid: 9cdf2294007ea406a8c1257d560c0672, type: 2}
   newArea: 2
+  duration: 1
 --- !u!4 &638802487
 Transform:
   m_ObjectHideFlags: 0
@@ -467,7 +468,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 41655719136116293, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1
+      value: 541
       objectReference: {fileID: 0}
     - target: {fileID: 170225097541822451, guid: e7a0d965232f61148b597af5d2d46d0b, type: 3}
       propertyPath: m_AnchorMax.y
