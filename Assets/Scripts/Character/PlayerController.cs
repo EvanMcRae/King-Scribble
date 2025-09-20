@@ -469,7 +469,7 @@ public class PlayerController : MonoBehaviour
                 //moveX *= 0.5f;
             }
         }
-        else if (rb.linearVelocity.y < 0)
+        else if (rb.linearVelocity.y < -0.01f)
         {
             landCheck.transform.localPosition = groundCheck.transform.localPosition + 1.25f * Vector3.down;
             if (landCheck.IsTouchingLayers(whatIsGround))
