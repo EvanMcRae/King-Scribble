@@ -74,6 +74,7 @@ public class AudioManager : MonoBehaviour
             s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
+            s.pitch = 1;
             s.outputAudioMixerGroup = musicMixerGroup;
         }
 
@@ -82,6 +83,7 @@ public class AudioManager : MonoBehaviour
             s.loop = false;
             s.playOnAwake = false;
             s.volume = 0.0f;
+            s.pitch = 1;
             s.outputAudioMixerGroup = musicMixerGroup;
         }
 
@@ -114,6 +116,15 @@ public class AudioManager : MonoBehaviour
         // Sync low pass value
         musicMixer.SetFloat("LowPass", lowPass);
 
+        foreach (AudioSource s in BGM1)
+        {
+            s.pitch = 1;
+        }
+        foreach (AudioSource s in BGM2)
+        {
+            s.pitch = 1;
+        }
+
         // Check for desyncing during crossfades
         if (carryOn && (fader[0] != null || fader[1] != null) && BGM2[activePlayer].isPlaying && BGM1[activePlayer].isPlaying)
         {
@@ -137,6 +148,7 @@ public class AudioManager : MonoBehaviour
                     BGM1[activePlayer].clip = currentSong.GetClip();
                 BGM1[activePlayer].volume = 1.0f;
                 BGM1[activePlayer].time = preEntryPointSeconds;
+                BGM1[activePlayer].pitch = 1;
                 BGM1[activePlayer].Play();
             }
             if (BGM1[activePlayer] != null && BGM1[activePlayer].isPlaying)
@@ -151,6 +163,7 @@ public class AudioManager : MonoBehaviour
                     BGM2[activePlayer].clip = currentSong.GetClip();
                 BGM2[activePlayer].volume = 1.0f;
                 BGM2[activePlayer].time = preEntryPointSeconds;
+                BGM2[activePlayer].pitch = 1;
                 BGM2[activePlayer].Play();
             }
             if (BGM2[activePlayer] != null && BGM2[activePlayer].isPlaying)
@@ -269,6 +282,7 @@ public class AudioManager : MonoBehaviour
 
             // Fade-in the new clip
             BGM2[activePlayer].clip = music.GetClip();
+            BGM2[activePlayer].pitch = 1;
             BGM2[activePlayer].Play();
             if (carryOn && BGM1[activePlayer].isPlaying && BGM1[activePlayer].clip != null)
             {
@@ -308,6 +322,7 @@ public class AudioManager : MonoBehaviour
 
             // Fade-in the new clip
             BGM1[activePlayer].clip = music.GetClip();
+            BGM1[activePlayer].pitch = 1;
             BGM1[activePlayer].Play();
             if (carryOn && BGM2[activePlayer].isPlaying && BGM2[activePlayer].clip != null)
             {
